@@ -92,8 +92,8 @@ transform:scale(2);
 position:relative;
 z-index:10;
 
-width:90%;
-max-width:900px;
+flex:1;
+margin:30px;
 
 padding:60px;
 
@@ -450,5 +450,99 @@ gap:15px;
 flex:1;
 
 margin:0;
+
+}
+
+/* ===========================
+   AP Synapse Layout
+=========================== */
+
+.app{
+display:flex;
+width:100%;
+height:100vh;
+}
+
+.sidebar{
+
+width:260px;
+
+background:rgba(255,255,255,.08);
+
+backdrop-filter:blur(20px);
+
+border-right:1px solid rgba(255,255,255,.08);
+
+padding:25px;
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:space-between;
+
+}
+
+.brand{
+
+font-size:28px;
+
+font-weight:700;
+
+margin-bottom:40px;
+
+display:flex;
+
+align-items:center;
+
+gap:12px;
+
+}
+
+nav{
+
+display:flex;
+
+flex-direction:column;
+
+gap:15px;
+
+}
+
+.menu-item{
+
+background:transparent;
+
+border:none;
+
+color:white;
+
+padding:15px;
+
+border-radius:15px;
+
+text-align:left;
+
+cursor:pointer;
+
+transition:.3s;
+
+font-size:17px;
+
+}
+
+.menu-item:hover{
+
+background:rgba(255,255,255,.12);
+
+}
+
+.version{
+
+opacity:.6;
+
+font-size:14px;
+
+text-align:center;
 
 }

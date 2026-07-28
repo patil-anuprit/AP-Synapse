@@ -671,7 +671,7 @@ window.deepThinking
 
 });
 
-webBtn.addEventListener(() => {
+webBtn.addEventListener("click", () => {
 
     window.webMode = !window.webMode;
 

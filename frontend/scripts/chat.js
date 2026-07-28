@@ -203,7 +203,7 @@ async function sendMessage() {
         controller = new AbortController();
 
 const response = await fetch(
-    "http://localhost:5000/chat",
+    "https://ap-synapse-backend.onrender.com/chat",
     {
         method: "POST",
 
@@ -729,7 +729,7 @@ try {
     formData.append("file", file);
 
     const response = await fetch(
-        "http://localhost:5000/upload",
+        "https://ap-synapse-backend.onrender.com/upload",
         {
             method: "POST",
             body: formData

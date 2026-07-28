@@ -1,0 +1,231 @@
+/* ===================================================
+   AP Synapse Layout Engine v1
+   =================================================== */
+
+.app{
+    display:grid;
+    grid-template-columns:240px 1fr;
+    height:100vh;
+    background:transparent;
+}
+
+/* ---------------- Sidebar ---------------- */
+
+.sidebar{
+    display:flex;
+    flex-direction:column;
+    width:240px;
+    height:100vh;
+    padding:28px;
+    overflow-y:auto;
+    background:rgba(18,20,24,.82);
+    backdrop-filter:blur(22px);
+    border-right:1px solid var(--border);
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin-bottom:42px;
+}
+
+.sidebar nav{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.sidebar nav a{
+    padding:13px 16px;
+
+    border-radius:14px;
+
+    color:var(--text-secondary);
+
+    transition:.18s ease;
+}
+
+.sidebar nav a:hover{
+
+    background:rgba(255,255,255,.04);
+
+    color:var(--text);
+
+}
+
+.sidebar nav a.active{
+
+    background:rgba(198,166,107,.12);
+
+    border:1px solid rgba(198,166,107,.22);
+
+    color:var(--text);
+
+}
+
+/* ---------------- Workspace ---------------- */
+
+.workspace{
+
+display:flex;
+
+flex-direction:column;
+
+height:100vh;
+
+overflow:hidden;
+
+padding:24px 36px;
+
+}
+
+.workspace-content{
+
+position:relative;
+
+flex:1;
+
+overflow:hidden;
+
+display:flex;
+
+width:100%;
+
+height:100%;
+
+}
+
+/* ---------------- Header ---------------- */
+
+.topbar{
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+height:95px;
+
+margin-bottom:10px;
+
+}
+
+.greeting h1{
+
+    font-size:28px;
+
+    font-weight:700;
+
+    margin-bottom:4px;
+
+}
+
+.greeting p{
+
+    color:var(--text-secondary);
+
+    font-size:19px;
+
+}
+
+.top-actions{
+
+    display:flex;
+
+    gap:14px;
+
+}
+
+/* ---------------- Sections ---------------- */
+
+.command-section{
+
+    position:absolute;
+
+    left:36px;
+
+    right:36px;
+
+    bottom:24px;
+
+    z-index:100;
+
+}
+
+.workspace-tabs{
+
+    display:flex;
+
+    gap:18px;
+
+    margin-top:28px;
+
+}
+
+.divider{
+
+    margin:34px 0;
+
+    height:1px;
+
+    background:var(--border);
+
+}
+
+/* ---------------- Conversation ---------------- */
+
+.conversation{
+
+display:flex;
+
+flex:1;
+
+justify-content:center;
+
+align-items:center;
+
+position:relative;
+
+overflow:hidden;
+
+}
+
+#chatWindow{
+
+    width:100%;
+
+    max-width:900px;
+
+    height:100%;
+
+    display:none;
+
+    flex-direction:column;
+
+    overflow-y:auto;
+
+    margin:auto;
+
+}
+
+/* ==========================================
+   Intelligence Field Layer
+========================================== */
+
+#intelligence-field{
+
+position:fixed;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+z-index:-1;
+
+pointer-events:none;
+
+}

@@ -1,0 +1,223 @@
+@import url("sidebar.css");
+@import url("variables.css");
+@import url("base.css");
+@import url("layout.css");
+@import url("components.css");
+@import url("animations.css");
+@import url("topbar.css");
+@import url("chat.css");
+@import url("messages.css");
+@import url("hero.css");
+@import url("project.css");
+@import url("toast.css");
+
+.user{
+
+margin:18px 0;
+
+padding:16px;
+
+background:#1d2433;
+
+border-radius:18px;
+
+align-self:flex-end;
+
+max-width:70%;
+
+}
+
+.assistant{
+
+margin:18px 0;
+
+padding:16px;
+
+background:#111827;
+
+border-radius:18px;
+
+border:1px solid rgba(198,166,107,.15);
+
+max-width:70%;
+
+white-space:pre-wrap;
+
+}
+
+#chatWindow{
+
+display:flex;
+
+flex-direction:column;
+
+}
+
+#uploadBtn{
+
+cursor:pointer;
+
+font-size:22px;
+
+padding:10px;
+
+border-radius:12px;
+
+transition:.25s;
+
+}
+
+#uploadBtn:hover{
+
+background:#1d1d1d;
+
+}
+
+.popup-panel{
+
+position:fixed;
+
+top:90px;
+
+right:30px;
+
+width:320px;
+
+background:#171717;
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:18px;
+
+padding:20px;
+
+display:none;
+
+z-index:9999;
+
+box-shadow:0 20px 50px rgba(0,0,0,.45);
+
+}
+
+.popup-panel h3{
+
+margin-bottom:15px;
+
+}
+
+.popup-panel button{
+
+margin-top:20px;
+
+width:100%;
+
+padding:10px;
+
+border:none;
+
+border-radius:10px;
+
+cursor:pointer;
+
+}
+
+.light-mode{
+
+background:#ececec;
+color:#111;
+
+}
+
+.light-mode .workspace{
+
+background:#ffffff;
+
+}
+
+.light-mode .sidebar{
+
+background:#f5f5f5;
+
+}
+
+.light-mode .command-bar{
+
+background:#ffffff;
+
+}
+
+.light-mode input{
+
+color:#111;
+
+}
+
+.command-palette{
+
+position:fixed;
+
+inset:0;
+
+background:rgba(0,0,0,.55);
+
+display:none;
+
+justify-content:center;
+
+align-items:flex-start;
+
+padding-top:120px;
+
+z-index:99999;
+
+backdrop-filter:blur(8px);
+
+}
+
+.command-box{
+
+width:650px;
+
+background:#171717;
+
+border-radius:18px;
+
+overflow:hidden;
+
+border:1px solid #303030;
+
+}
+
+#commandSearch{
+
+width:100%;
+
+padding:22px;
+
+font-size:18px;
+
+background:#171717;
+
+color:white;
+
+border:none;
+
+outline:none;
+
+}
+
+.command-item{
+
+padding:18px 22px;
+
+cursor:pointer;
+
+transition:.2s;
+
+}
+
+.command-item:hover{
+
+background:#262626;
+
+}

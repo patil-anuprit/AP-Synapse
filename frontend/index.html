@@ -8,85 +8,550 @@
 
 <title>AP Synapse</title>
 
-<link rel="stylesheet" href="styles/style.css">
+<link rel="stylesheet" href="styles/main.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 </head>
 
 <body>
 
-<div class="stars"></div>
+<h1 style="color:red;font-size:40px;">TEST 12345</h1>
+
+<div class="background"></div>
+
+<canvas id="intelligence-field"></canvas>
 
 <div class="app">
 
+    <!-- Sidebar -->
+
     <aside class="sidebar">
 
+    <!-- Brand -->
+
+    <div class="sidebar-header">
+
         <div class="brand">
-            🧠
-            <span>AP Synapse</span>
+
+            <div class="brand-mark">
+                AP
+            </div>
+
+            <div class="brand-text">
+
+                <h2>AP Synapse</h2>
+
+                <span>Intelligence Workspace</span>
+
+            </div>
+
         </div>
+
+        <button class="new-chat-btn">
+
+            <span>+</span>
+
+            <span>New Conversation</span>
+
+        </button>
+
+        <div class="sidebar-search">
+
+            <input
+                type="text"
+                placeholder="Search everything..."
+            >
+
+        </div>
+
+    </div>
+
+    <!-- Recent -->
+
+    <div class="sidebar-group">
+
+        <h4>RECENT</h4>
+
+        <button class="history-item active">
+
+            Product Strategy
+
+        </button>
+
+        <button class="history-item">
+
+            AI Architecture
+
+        </button>
+
+        <button class="history-item">
+
+            Website Redesign
+
+        </button>
+
+        <button class="history-item">
+
+            Research Session
+
+        </button>
+
+    </div>
+
+    <!-- Workspace -->
+
+    <div class="sidebar-group">
+
+        <h4>WORKSPACE</h4>
 
         <nav>
 
-            <button class="menu-item">➕ New Chat</button>
+            <a href="#" id="assistantBtn">Assistant</a>
 
-            <button class="menu-item">💬 History</button>
+            <a href="#" id="projectsBtn">Projects</a>
 
-            <button class="menu-item">📚 Library</button>
+            <a href="#">Knowledge</a>
 
-            <button class="menu-item">🧪 Science Lab</button>
+            <a href="#">Documents</a>
 
-            <button class="menu-item">💻 Code Studio</button>
+            <a href="#">Automation</a>
 
-            <button class="menu-item">📄 Documents</button>
+            <a href="#">Code Studio</a>
 
-            <button class="menu-item">⚙️ Settings</button>
+            <a href="#">Canvas</a>
+
+        </nav>
+
+    </div>
+
+    <!-- Bottom -->
+
+    <div class="sidebar-footer">
+
+        <nav>
+
+            <a href="#">Settings</a>
+
+            <a href="#">Profile</a>
 
         </nav>
 
         <div class="version">
-            Version 0.1
+
+            AP Synapse v1.0
+
         </div>
 
-    </aside>
+    </div>
 
-    <main class="container">
+</aside>
 
-<div class="earth-container">
-<div class="earth"></div>
-<div class="earth-glow"></div>
+    <!-- Main -->
+
+    <main class="workspace">
+
+    <header class="topbar">
+
+    <div class="topbar-left">
+
+        <div class="workspace-title">
+
+             <span class="workspace-badge">
+                 AP Synapse
+             </span>
+
+             <h1 id="greeting">
+                 Welcome Back
+             </h1>
+
+             <p>
+                 Your Intelligent Workspace
+             </p>
+
+        </div>
+
+    <div class="topbar-center">
+
+        <div class="global-search">
+
+            <span class="search-icon">⌕</span>
+
+            <input
+            id="globalSearch"
+            type="text"
+            placeholder="Search conversations, documents or commands..."
+            >
+
+            <span class="shortcut">
+                Ctrl + K
+            </span>
+
+        </div>
+
+    </div>
+
+    <div class="topbar-right">
+
+        <button id="notificationBtn" class="top-icon">
+        🔔
+        </button>
+
+        <button id="settingsBtn" class="top-icon">
+        ⚙
+        </button>
+
+        <button id="profileBtn" class="profile-button">
+
+         AP
+
+        </button>
+
+    </div>
+
+</header>
+
+    <!-- Conversation -->
+
+<div class="workspace-content">
+
+<section class="conversation">
+
+     <div id="chatWindow" class="chat-window"></div>
+
+     <div id="thinking" class="thinking">
+
+    <div class="thinking-dot"></div>
+
+    <div class="thinking-dot"></div>
+
+    <div class="thinking-dot"></div>
+
+    <span>Thinking...</span>
+
 </div>
 
-<h1>AP Synapse</h1>
+     <div id="heroScreen" class="hero-screen">
 
-<p>The Next Generation Artificial Intelligence</p>
+         <div class="hero-container">
 
-<div class="chat-window" id="chatWindow">
+         <div class="hero-badge">
+    AP SYNAPSE
+</div>
 
-<div class="message ai">
-Hello! I am AP Synapse.
-Ask me anything.
+<h1 class="hero-title">
+    The Intelligence
+    <br>
+    <span>Operating System</span>
+</h1>
+
+<p class="hero-description">
+    Research. Write. Code. Analyse.
+    Plan. Create.
+
+    <br><br>
+
+    One intelligent workspace for everything you build.
+</p>
+
+<div class="hero-prompt">
+
+    <div class="prompt-chip">Research</div>
+
+    <div class="prompt-chip">Create Project</div>
+
+    <div class="prompt-chip">Write Code</div>
+
+    <div class="prompt-chip">Analyse Files</div>
+
+    <div class="prompt-chip">Deep Thinking</div>
+
+    <div class="prompt-chip">Learn Anything</div>
+
+</div>
+
+</div> <!-- hero-prompt -->
+
+</div> <!-- hero-container -->
+
+</div> <!-- heroScreen -->
+
+</section>
+
+<section id="projectsPage" class="projects-page">
+
+    <div class="projects-header">
+
+        <h1>Projects</h1>
+
+        <p>Manage all your AI projects in one intelligent workspace.</p>
+
+        <button class="create-project-btn">
+            + New Project
+        </button>
+
+    </div>
+
+    <div class="projects-grid">
+
+        <div class="project-card">
+            <h2>AP Synapse</h2>
+            <p>Artificial Intelligence Platform</p>
+            <span>82% Complete</span>
+        </div>
+
+        <div class="project-card">
+            <h2>ScienceVerse</h2>
+            <p>Educational Platform</p>
+            <span>100% Complete</span>
+        </div>
+
+        <div class="project-card">
+            <h2>Board Mastery</h2>
+            <p>Student Learning Platform</p>
+            <span>90% Complete</span>
+        </div>
+
+    </div>
+
+</section>
+
+<section id="workspacePage" class="projects-page" style="display:none;">
+
+<div class="projects-header">
+
+<h1 id="workspaceTitle">
+Workspace
+</h1>
+
+<p id="workspaceDescription">
+Loading...
+</p>
+
+</div>
+
+<div class="projects-grid">
+
+<div class="project-card">
+
+<h2>Coming Soon</h2>
+
+<p>This workspace is under development.</p>
+
+<span>AP Synapse v1.0</span>
+
 </div>
 
 </div>
 
-<div class="input-area">
+</section>
+
+</div>
+
+<!-- Floating Command Bar -->
+
+<section class="command-section">
+
+    <div class="command-bar">
+
+        <input
+            id="userInput"
+            type="text"
+            placeholder="Ask AP Synapse anything..."
+        >
+
+       <button id="attachBtn">
+＋
+</button>
 
 <input
-id="userInput"
-type="text"
-placeholder="Ask AP Synapse anything..."
->
+id="fileInput"
+type="file"
+hidden
+accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.csv,.xlsx,image/*">
 
-<button id="sendBtn">
-Send
+<button id="imageGenBtn">
+🖼️
 </button>
+
+<button id="voiceBtn">
+🎤
+</button>
+
+<button id="speakBtn">
+🔊
+</button>
+
+        <button id="webBtn">🌐</button>
+
+        <button id="deepThinkBtn">🧠</button>
+
+        <button id="stopBtn" style="display:none;">■</button>
+
+        <button id="sendBtn">→</button>
+
+    </div>
+
+</section>
+
+<div id="projectModal" class="project-modal">
+
+    <div class="project-box">
+
+        <h2>Create New Project</h2>
+
+        <input
+            id="projectName"
+            type="text"
+            placeholder="Project name"
+        >
+
+        <textarea
+            id="projectDescription"
+            placeholder="Describe your project..."
+        ></textarea>
+
+        <div class="project-actions">
+
+            <button id="cancelProject">
+
+                Cancel
+
+            </button>
+
+            <button id="createProject">
+
+                Create Project
+
+            </button>
+
+        </div>
+
+    </div>
 
 </div>
 
 </main>
+</div>
+
+<!-- Project Modal -->
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+
+<script type="module" src="scripts/intelligence-field.js"></script>
+<script type="module" src="scripts/chat.js"></script>
+<script type="module" src="scripts/sidebar.js"></script>
+<script type="module" src="scripts/topbar.js"></script>
+<script type="module" src="scripts/app.js"></script>
+<script type="module" src="scripts/commandPalette.js"></script>
+
+<div id="imageViewer" class="image-viewer">
+
+<img id="viewerImage">
 
 </div>
 
-<script src="scripts/script.js"></script>
+<div id="popupPanel" class="popup-panel">
+
+<h3 id="popupTitle"></h3>
+
+<div id="popupContent"></div>
+
+<button id="closePopup">
+Close
+</button>
+
+</div>
+
+<div id="profileCard" class="popup-panel">
+
+<h2>AP Synapse</h2>
+
+<p><strong>Version:</strong> 1.0</p>
+
+<p><strong>Creator:</strong> Anuprit Patil</p>
+
+<p><strong>Engine:</strong> AP Synapse Intelligence</p>
+
+<p><strong>Status:</strong> Online</p>
+
+<p><strong>Languages:</strong> English • Hindi • Marathi</p>
+
+<p><strong>Capabilities</strong></p>
+
+<ul>
+
+<li>Conversation</li>
+
+<li>Code</li>
+
+<li>Research</li>
+
+<li>Documents</li>
+
+<li>Image Generation</li>
+
+<li>Voice</li>
+
+</ul>
+
+<button id="closeProfile">
+
+Close
+
+</button>
+
+</div>
+
+<div id="commandPalette" class="command-palette">
+
+<div class="command-box">
+
+<input
+id="commandSearch"
+type="text"
+placeholder="Type a command..."
+autocomplete="off">
+
+<div class="command-list">
+
+<div class="command-item" data-command="new">
+➕ New Conversation
+</div>
+
+<div class="command-item" data-command="project">
+📁 Create Project
+</div>
+
+<div class="command-item" data-command="search">
+🌐 Web Search
+</div>
+
+<div class="command-item" data-command="voice">
+🎤 Voice Assistant
+</div>
+
+<div class="command-item" data-command="theme">
+🌙 Toggle Theme
+</div>
+
+<div class="command-item" data-command="about">
+ℹ About AP Synapse
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 </body>
+</html>

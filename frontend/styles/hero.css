@@ -1,0 +1,260 @@
+/* ==================================================
+   AP Synapse Hero v2
+================================================== */
+
+.hero-screen{
+
+flex:1;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+padding:0 40px;
+
+}
+
+.hero-container{
+
+    width:100%;
+
+    max-width:760px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    gap:12px;
+
+    margin:auto;
+
+}
+
+.hero-badge{
+
+display:inline-flex;
+
+padding:6px 18px;
+
+border-radius:999px;
+
+border:1px solid rgba(198,166,107,.28);
+
+background:rgba(198,166,107,.08);
+
+color:var(--accent);
+
+font-size:12px;
+
+font-weight:700;
+
+letter-spacing:2px;
+
+text-transform:uppercase;
+
+margin-bottom:16px;
+
+}
+
+.hero-title{
+
+    font-size:44px;
+
+    font-weight:800;
+
+    line-height:1.02;
+
+    letter-spacing:-2px;
+
+    max-width:650px;
+
+    margin:0 auto;
+
+    color:white;
+
+}
+
+@keyframes titleReveal{
+
+from{
+
+opacity:0;
+
+transform:translateY(20px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:none;
+
+}
+
+}
+
+.hero-title span{
+
+color:var(--accent);
+
+}
+
+.hero-description{
+
+    max-width:520px;
+
+    margin:0 auto 26px;
+
+    font-size:16px;
+
+    line-height:1.65;
+
+    color:var(--text-secondary);
+
+}
+
+.hero-prompt{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    width:100%;
+
+    max-width:700px;
+
+    gap:12px;
+
+}
+.prompt-chip{
+
+height:52px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+border-radius:18px;
+
+background:rgba(255,255,255,.03);
+
+border:1px solid rgba(255,255,255,.08);
+
+backdrop-filter:blur(20px);
+
+font-size:14px;
+
+font-weight:600;
+
+transition:
+
+transform .3s ease,
+
+background .3s ease,
+
+border-color .3s ease,
+
+box-shadow .3s ease,
+
+color .3s ease;
+
+cursor:pointer;
+
+}
+
+.prompt-chip:hover{
+
+transform:translateY(-6px);
+
+background:rgba(198,166,107,.08);
+
+border-color:rgba(198,166,107,.35);
+
+box-shadow:0 18px 40px rgba(198,166,107,.15);
+
+color:white;
+
+}
+
+@keyframes fadeHero{
+
+from{
+
+opacity:0;
+
+transform:translateY(25px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:none;
+
+}
+
+}
+
+@media(max-width:900px){
+
+.hero-title{
+
+font-size:42px;
+
+}
+
+.hero-description{
+
+font-size:16px;
+
+}
+
+.hero-prompt{
+
+grid-template-columns:1fr;
+
+}
+
+}
+
+.hero-container{
+
+animation:
+
+heroFloat 1s ease,
+
+fadeHero .8s ease;
+
+}
+
+@keyframes heroFloat{
+
+0%{
+
+transform:translateY(35px);
+
+opacity:0;
+
+}
+
+100%{
+
+transform:translateY(0);
+
+opacity:1;
+
+}
+
+}

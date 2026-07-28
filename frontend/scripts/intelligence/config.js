@@ -1,0 +1,41 @@
+export const CONFIG = {
+
+    // Canvas
+    NODE_RADIUS: 2,
+    NODE_COLOR: "198,166,107",
+    LINE_WIDTH: 0.6,
+    LINE_COLOR: "198,166,107",
+
+    // Network
+    CLUSTERS: 4,
+    NODES_PER_CLUSTER: 8,
+    CLUSTER_RADIUS: 180,
+    MAX_CONNECTION_DISTANCE: 170,
+    MAX_CONNECTIONS_PER_NODE: 3,
+
+    // Animation
+    APPEAR_SPEED: 0.002,
+    MAX_NODE_OPACITY: 0.18,
+    MAX_LINE_OPACITY: 0.08,
+    SETTLE_TIME: 180000,
+    PULSE_INTERVAL: 12000,
+
+    // Motion
+    MOVE_SPEED: 0.15,
+    SETTLE_FACTOR: 0.995,
+
+    // Mouse
+    MOUSE_RADIUS: 120,
+    MOUSE_FORCE: 0.015,
+
+    // Pulse
+    PULSE_SPEED: 0.003,
+
+    // Glow
+    NODE_GLOW: 12,
+
+    // Camera
+    PARALLAX_STRENGTH: 25,
+    PARALLAX_SMOOTHING: 0.04
+
+};

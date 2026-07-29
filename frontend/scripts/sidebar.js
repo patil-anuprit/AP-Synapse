@@ -4,6 +4,8 @@ const projectsBtn = document.getElementById("projectsBtn");
 
 console.log(projectsBtn);
 
+const codeStudioBtn = document.getElementById("codeStudioBtn");
+
 const historyItems = document.querySelectorAll(".history-item");
 
 const workspaceItems = document.querySelectorAll(".sidebar nav a");
@@ -73,6 +75,8 @@ const conversation = document.querySelector(".conversation");
 
 const projectsPage = document.getElementById("projectsPage");
 
+const codeStudioPage = document.getElementById("codeStudioPage");
+
 console.log("Conversation:", conversation);
 console.log("Projects Page:", projectsPage);
 
@@ -108,15 +112,35 @@ document.getElementById("workspaceDescription");
 function openWorkspace(title){
 
 conversation.style.display="none";
-
 projectsPage.style.display="none";
+codeStudioPage.style.display="none";
+workspacePage.style.display="none";
+
+if(title==="Code Studio"){
+
+codeStudioPage.style.display="block";
+return;
+
+}
 
 workspacePage.style.display="block";
 
 workspaceTitle.innerText=title;
 
+const descriptions={
+
+"Knowledge":"Personal AI knowledge base with semantic search, notes and memory.",
+
+"Documents":"Analyse PDFs, DOCX, TXT, spreadsheets and images using AI.",
+
+"Automation":"Create intelligent workflows and AI automations.",
+
+"Canvas":"Infinite AI whiteboard for brainstorming and visual thinking."
+
+};
+
 workspaceDescription.innerText=
-title+" workspace is coming soon.";
+descriptions[title];
 
 }
 

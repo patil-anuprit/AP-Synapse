@@ -221,3 +221,93 @@ transition:.2s;
 background:#262626;
 
 }
+
+/* ===========================
+   AP Synapse Final Polish
+=========================== */
+
+*{
+scroll-behavior:smooth;
+}
+
+::selection{
+background:#c6a66b;
+color:#111;
+}
+
+button{
+transition:.25s ease;
+}
+
+button:hover{
+transform:translateY(-2px);
+}
+
+button:active{
+transform:scale(.96);
+}
+
+input,
+textarea{
+transition:.25s ease;
+}
+
+input:focus,
+textarea:focus{
+outline:none;
+box-shadow:0 0 0 2px rgba(198,166,107,.35);
+}
+
+::-webkit-scrollbar{
+width:8px;
+}
+
+::-webkit-scrollbar-track{
+background:#101114;
+}
+
+::-webkit-scrollbar-thumb{
+background:#3a3a3a;
+border-radius:50px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+background:#c6a66b;
+}
+
+img{
+user-select:none;
+-webkit-user-drag:none;
+}
+
+.card,
+.project-card,
+.prompt-chip,
+.message-body,
+.command-bar{
+transition:.3s ease;
+}
+
+.project-card:hover,
+.prompt-chip:hover{
+transform:translateY(-5px);
+box-shadow:0 15px 35px rgba(0,0,0,.25);
+}
+
+.fade-in{
+animation:fadeIn .45s ease;
+}
+
+@keyframes fadeIn{
+
+from{
+opacity:0;
+transform:translateY(15px);
+}
+
+to{
+opacity:1;
+transform:none;
+}
+
+}

@@ -122,9 +122,13 @@ function addMessage(type, text){
         ? `
         <div class="message-actions">
 
-            <button class="speakBtn">
-                🔊 Read Aloud
-            </button>
+        <button class="copyBtn">
+        📋 Copy
+        </button>
+
+        <button class="speakBtn">
+        🔊 Read Aloud
+        </button>
 
         </div>
         `
@@ -189,9 +193,9 @@ async function sendMessage() {
     thinking.className="thinking";
 
     thinking.innerHTML=`
-    <span></span>
-    <span></span>
-    <span></span>
+
+    🧠 AP Synapse is thinking...
+
     `;
 
     chatWindow.appendChild(thinking);
@@ -390,9 +394,9 @@ wrapper.querySelector("#downloadImage").onclick = async () => {
 
             lastAIResponse = aiMessage.dataset.raw;
 
-            aiMessage.innerHTML=marked.parse(
-                aiMessage.dataset.raw
-            );
+            aiMessage.innerHTML =
+            marked.parse(aiMessage.dataset.raw) +
+            '<span class="typingCursor">▋</span>';
 
             if(window.hljs){
 
@@ -984,3 +988,19 @@ Online
 });
 
 }
+
+document.addEventListener("click",(e)=>{
+
+if(!e.target.classList.contains("copyBtn")) return;
+
+const text=e.target
+.closest(".message-body")
+.innerText
+.replace("📋 Copy","")
+.replace("🔊 Read Aloud","");
+
+navigator.clipboard.writeText(text);
+
+showToast("Copied");
+
+});

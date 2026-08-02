@@ -2,6 +2,11 @@ import { getSessionId } from "./session.js";
 import {
     saveProject
 } from "./projects.js";
+import {
+    getConversations,
+    createConversation,
+    addMessage as saveHistoryMessage
+} from "./workspace/history.js";
 
 console.log("✅ chat.js loaded");
 console.log("PAGE LOADED:", Date.now());
@@ -12,6 +17,22 @@ const sendBtn = document.getElementById("sendBtn");
 console.log("STEP 3");
 const voiceBtn = document.getElementById("voiceBtn");
 const speakBtn = document.getElementById("speakBtn");
+let lastAIResponse = "";
+
+let currentConversationId =
+    window.currentConversationId || null;
+    window.setActiveConversation = function (id) {
+
+    currentConversationId = id;
+
+    window.currentConversationId = id;
+
+    console.log(
+        "🔄 Active conversation:",
+        currentConversationId
+    );
+
+};
 const fileInput = document.getElementById("fileInput");
 const attachBtn = document.getElementById("attachBtn");
 
@@ -27,7 +48,27 @@ attachBtn.addEventListener("click", () => {
 
 });
 
-let lastAIResponse = "";
+// ==============================
+// AP Synapse Active Conversation
+// ==============================
+
+function ensureConversation() {
+
+    if (currentConversationId) {
+        return currentConversationId;
+    }
+
+    const conversation = createConversation("New Conversation");
+
+    currentConversationId = conversation.id;
+
+    console.log(
+        "📚 Active conversation:",
+        currentConversationId
+    );
+
+    return currentConversationId;
+}
 
 console.log("File Input:", fileInput);
 const imageUpload=document.getElementById("imageUpload");
@@ -72,76 +113,27 @@ console.log("Chat Window:", chatWindow);
 console.log("Hero Screen:", heroScreen);
 
 console.log("STEP 5");
-const observer = new MutationObserver(() => {
 
-    scrollToBottom();
+function scrollChatToBottom(force = false) {
 
-});
+    if (!chatWindow) return;
 
-observer.observe(chatWindow, {
+    const distance =
+        chatWindow.scrollHeight -
+        chatWindow.scrollTop -
+        chatWindow.clientHeight;
 
-    childList: true
+    // Don't pull the user down while they are
+    // reading older messages.
+    if (!force && distance > 180) {
+        return;
+    }
 
-});
-
-function scrollToBottom(){
-
-requestAnimationFrame(()=>{
-
-chatWindow.scrollTo({
-
-top:chatWindow.scrollHeight,
-
-behavior:"smooth"
-
-});
-
-});
-
+    chatWindow.scrollTop =
+        chatWindow.scrollHeight;
 }
 
 console.log("STEP 6");
-function addMessage(type, text){
-
-    const wrapper = document.createElement("div");
-
-    wrapper.className =
-        `message ${type === "user-message" ? "user" : "ai"}`;
-
-    wrapper.innerHTML = `
-        <div class="avatar">
-            ${type === "user-message" ? "U" : "AP"}
-        </div>
-
-        <div class="message-body">
-
-    ${marked.parse(text)}
-
-    ${
-        type === "ai-message"
-        ? `
-        <div class="message-actions">
-
-        <button class="copyBtn">
-        📋 Copy
-        </button>
-
-        <button class="speakBtn">
-        🔊 Read Aloud
-        </button>
-
-        </div>
-        `
-        : ""
-    }
-
-</div>
-    `;
-
-    chatWindow.appendChild(wrapper);
-
-    scrollToBottom();
-}
 
 const newChatBtn = document.querySelector(".new-chat-btn");
 
@@ -162,11 +154,129 @@ newChatBtn.addEventListener("click", () => {
 });
 
 console.log("STEP 7");
+
+// =====================================
+// MESSAGE RENDERER
+// =====================================
+
+function addMessage(type, text) {
+
+    const wrapper = document.createElement("div");
+
+    wrapper.className =
+        `message ${type === "user-message" ? "user" : "ai"}`;
+
+    wrapper.innerHTML = `
+        <div class="avatar">
+            ${type === "user-message" ? "U" : "AP"}
+        </div>
+
+        <div class="message-body">
+            ${marked.parse(String(text ?? ""))}
+        </div>
+    `;
+
+    chatWindow.appendChild(wrapper);
+
+    requestAnimationFrame(() => {
+    scrollChatToBottom(true);
+    });
+}
+
+
+// =====================================
+// SEND MESSAGE
+// =====================================
+
 async function sendMessage() {
 
     const message = input.value.trim();
 
     if (!message) return;
+
+    // Switch from home screen to conversation mode
+if (heroScreen) {
+    heroScreen.style.setProperty(
+        "display",
+        "none",
+        "important"
+    );
+
+    heroScreen.style.setProperty(
+        "visibility",
+        "hidden",
+        "important"
+    );
+
+    heroScreen.style.setProperty(
+        "pointer-events",
+        "none",
+        "important"
+    );
+}
+
+chatWindow.style.setProperty(
+    "display",
+    "flex",
+    "important"
+);
+
+chatWindow.style.setProperty(
+    "visibility",
+    "visible",
+    "important"
+);
+
+
+    // =====================================
+    // ENSURE ACTIVE CONVERSATION
+    // =====================================
+
+    if (!currentConversationId) {
+
+        const conversation = createConversation(
+            message.length > 40
+                ? message.substring(0, 40) + "..."
+                : message
+        );
+
+        currentConversationId = conversation.id;
+
+        window.currentConversationId =
+            currentConversationId;
+
+    }
+
+
+    // =====================================
+    // SAVE USER MESSAGE — EXACTLY ONCE
+    // =====================================
+
+    saveHistoryMessage(
+        currentConversationId,
+        "user",
+        message
+    );
+
+
+    // =====================================
+    // SHOW USER MESSAGE — EXACTLY ONCE
+    // =====================================
+
+    addMessage(
+        "user-message",
+        message
+    );
+
+
+    if (window.renderHistory) {
+        window.renderHistory();
+    }
+
+
+    // =====================================
+    // UI
+    // =====================================
 
     const isImageRequest =
         message.toLowerCase().includes("create image") ||
@@ -174,260 +284,349 @@ async function sendMessage() {
         message.toLowerCase().includes("draw") ||
         message.toLowerCase().includes("paint");
 
-    if(heroScreen){
 
-        chatWindow.style.display="flex";
+    // =====================================
+// ENTER CHAT MODE
+// =====================================
 
-        heroScreen.style.display="none";
+document.body.classList.add("chat-active");
 
-    }
+if (heroScreen) {
 
-    addMessage("user-message",message);
+    heroScreen.style.setProperty(
+        "display",
+        "none",
+        "important"
+    );
 
-    input.value="";
+    heroScreen.style.visibility = "hidden";
+    heroScreen.style.pointerEvents = "none";
 
-    const thinking=document.createElement("div");
+}
 
-    thinking.id="thinking";
+if (chatWindow) {
 
-    thinking.className="thinking";
+    chatWindow.style.setProperty(
+        "display",
+        "flex",
+        "important"
+    );
 
-    thinking.innerHTML=`
+    chatWindow.style.visibility = "visible";
+    chatWindow.style.pointerEvents = "auto";
 
-    🧠 AP Synapse is thinking...
+}
 
-    `;
+
+    input.value = "";
+
+
+    const thinking =
+        document.createElement("div");
+
+    thinking.id = "thinking";
+    thinking.className = "thinking";
+
+    thinking.innerHTML =
+        "🧠 AP Synapse is thinking...";
 
     chatWindow.appendChild(thinking);
 
-    scrollToBottom();
+    scrollChatToBottom();
 
-    try{
 
-        controller = new AbortController();
+    // =====================================
+    // REQUEST
+    // =====================================
 
-const response = await fetch(
-    "https://ap-synapse-backend.onrender.com/chat",
-    {
-        method: "POST",
+    try {
 
-        headers: {
-            "Content-Type": "application/json",
-            "x-session-id": getSessionId()
-        },
+        controller =
+            new AbortController();
 
-        body: JSON.stringify({
-            message,
-            document: window.currentDocument || "",
-            web: window.webMode,
-            deep: deepThinking
-        }),
 
-        signal: controller.signal
+        const response = await fetch(
+            "https://ap-synapse-backend.onrender.com/chat",
+            {
+                method: "POST",
 
-    }
-);
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-session-id": getSessionId()
+                },
 
-        if(!response.ok){
+                body: JSON.stringify({
+                    message,
+                    document:
+                        window.currentDocument || "",
+                    web: window.webMode,
+                    deep: window.deepThinking
+                }),
 
+                signal: controller.signal
+            }
+        );
+
+
+        if (!response.ok) {
             throw new Error("Server Error");
-
         }
 
-        document.getElementById("thinking")?.remove();
 
-        if(isImageRequest){
+        document
+            .getElementById("thinking")
+            ?.remove();
 
-            const data=await response.json();
 
-            const wrapper=document.createElement("div");
+        // =====================================
+        // IMAGE RESPONSE
+        // =====================================
 
-            wrapper.className="message ai";
+        if (isImageRequest) {
 
-            wrapper.innerHTML=`
+            const data =
+                await response.json();
 
-            <div class="avatar">
+            const wrapper =
+                document.createElement("div");
 
-            AP
+            wrapper.className =
+                "message ai";
 
-            </div>
+            wrapper.innerHTML = `
 
-            <div class="message-body">
+                <div class="avatar">
+                    AP
+                </div>
 
-            <strong>Generated Image</strong>
+                <div class="message-body">
 
-            <br><br>
+                    <strong>Generated Image</strong>
 
-           <div class="image-container">
+                    <br><br>
 
-<img
-src="${data.url}"
-class="generated-image"
->
+                    <div class="image-container">
 
-<div class="image-actions">
+                        <img
+                            src="${data.url}"
+                            class="generated-image"
+                        >
 
-<button id="downloadImage">
-⬇ Download
-</button>
+                        <div class="image-actions">
 
-<button id="openImage">
-🔍 View Full
-</button>
+                            <button class="openImage">
+                                🔍 View Full
+                            </button>
 
-</div>
+                            <button class="downloadImage">
+                                ⬇ Download
+                            </button>
 
-</div>
+                        </div>
 
+                    </div>
+
+                </div>
             `;
 
             chatWindow.appendChild(wrapper);
 
-            const image = wrapper.querySelector(".generated-image");
 
-wrapper.querySelector("#openImage").onclick = () => {
+            const image =
+                wrapper.querySelector(".generated-image");
 
-    const win = window.open("", "_blank");
 
-    win.document.write(`
-        <html>
+            wrapper
+                .querySelector(".openImage")
+                .onclick = () => {
 
-        <head>
+                    window.open(
+                        image.src,
+                        "_blank"
+                    );
 
-        <title>AP Synapse Image</title>
+                };
 
-        <style>
 
-        body{
-            margin:0;
-            background:#0b0b0b;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            height:100vh;
-        }
+            wrapper
+                .querySelector(".downloadImage")
+                .onclick = async () => {
 
-        img{
-            max-width:100%;
-            max-height:100%;
-        }
+                    const imageResponse =
+                        await fetch(image.src);
 
-        </style>
+                    const blob =
+                        await imageResponse.blob();
 
-        </head>
+                    const url =
+                        URL.createObjectURL(blob);
 
-        <body>
+                    const a =
+                        document.createElement("a");
 
-        <img src="${image.src}">
+                    a.href = url;
 
-        </body>
+                    a.download =
+                        `AP-Synapse-${Date.now()}.png`;
 
-        </html>
-    `);
+                    a.click();
 
-};
+                    URL.revokeObjectURL(url);
 
-wrapper.querySelector("#downloadImage").onclick = async () => {
+                };
 
-    const response = await fetch(image.src);
 
-    const blob = await response.blob();
-
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-
-    a.href = url;
-
-    a.download = `AP-Synapse-${Date.now()}.png`;
-
-    a.click();
-
-    URL.revokeObjectURL(url);
-
-};
-
-            scrollToBottom();
+            scrollChatToBottom();
 
             return;
 
         }
 
-        const reader=response.body.getReader();
 
-        const decoder=new TextDecoder();
+        // =====================================
+        // NORMAL AI STREAM
+        // =====================================
 
-        const wrapper=document.createElement("div");
+        const reader =
+            response.body.getReader();
 
-        wrapper.className="message ai";
+        const decoder =
+            new TextDecoder();
 
-        wrapper.innerHTML=`
 
-        <div class="avatar">
+        const wrapper =
+            document.createElement("div");
 
-        AP
+        wrapper.className =
+            "message ai";
 
-        </div>
+        wrapper.innerHTML = `
 
-        <div class="message-body"></div>
+            <div class="avatar">
+                AP
+            </div>
+
+            <div class="message-body"></div>
 
         `;
 
         chatWindow.appendChild(wrapper);
 
-        const aiMessage=
-        wrapper.querySelector(".message-body");
 
-        aiMessage.dataset.raw="";
+        const aiMessage =
+            wrapper.querySelector(".message-body");
 
-        while(true){
+        aiMessage.dataset.raw = "";
 
-            const {done,value}=await reader.read();
 
-            if(done) break;
+        // =====================================
+        // READ STREAM
+        // =====================================
 
-            const chunk=decoder.decode(value,{
-                stream:true
-            });
+        while (true) {
 
-            aiMessage.dataset.raw+=chunk;
+            const {
+                done,
+                value
+            } = await reader.read();
 
-            lastAIResponse = aiMessage.dataset.raw;
+
+            if (done) {
+                break;
+            }
+
+
+            const chunk =
+                decoder.decode(
+                    value,
+                    { stream: true }
+                );
+
+
+            aiMessage.dataset.raw +=
+                chunk;
+
+
+            lastAIResponse =
+                aiMessage.dataset.raw;
+
 
             aiMessage.innerHTML =
-            marked.parse(aiMessage.dataset.raw) +
-            '<span class="typingCursor">▋</span>';
+                marked.parse(
+                    aiMessage.dataset.raw
+                ) +
+                '<span class="typingCursor">▋</span>';
 
-            if(window.hljs){
+
+            if (window.hljs) {
 
                 aiMessage
-                .querySelectorAll("pre code")
-                .forEach(block=>{
+                    .querySelectorAll("pre code")
+                    .forEach(block => {
 
-                    hljs.highlightElement(block);
+                        hljs.highlightElement(
+                            block
+                        );
 
-                });
+                    });
 
             }
 
-            scrollToBottom();
+        }
+
+
+        // =====================================
+        // SAVE COMPLETE AI RESPONSE — ONCE
+        // =====================================
+
+        const completeAIResponse =
+            aiMessage.dataset.raw.trim();
+
+
+        if (completeAIResponse) {
+
+            saveHistoryMessage(
+                currentConversationId,
+                "assistant",
+                completeAIResponse
+            );
+
+
+            lastAIResponse =
+                completeAIResponse;
+
+
+            if (window.renderHistory) {
+
+                window.renderHistory();
+
+            }
 
         }
 
     }
 
-    catch(error){
 
-        console.error(error);
+    // =====================================
+    // ERROR
+    // =====================================
 
-        document.getElementById("thinking")?.remove();
+    catch (error) {
+
+        console.error(
+            "AP SYNAPSE ERROR:",
+            error
+        );
+
+
+        document
+            .getElementById("thinking")
+            ?.remove();
+
 
         addMessage(
-
             "ai-message",
-
             "⚠️ Unable to connect to AP Synapse."
-
         );
 
     }
@@ -633,6 +832,16 @@ toast.remove();
 
 imageGenBtn.addEventListener("click",()=>{
 
+    document.querySelectorAll(".code-toolbar button").forEach(btn=>{
+
+btn.addEventListener("click",()=>{
+
+showToast(btn.innerText+" feature coming in AP Synapse v1.1");
+
+});
+
+});
+
 addMessage(
 
 "ai-message",
@@ -717,7 +926,7 @@ fileInput.addEventListener("change", async (event) => {
 
     const file = event.target.files[0];
 
-    console.log(file);
+    console.log("Selected File:", file);
 
     if (!file) return;
 
@@ -749,6 +958,10 @@ try {
     const data = await response.json();
 
     window.currentDocument = data.content || "";
+
+    console.log("Document stored.");
+
+    console.log(window.currentDocument);
 
     addMessage(
         "ai-message",
@@ -884,6 +1097,8 @@ speechSynthesis.cancel();
 
 lastAIResponse="";
 
+currentConversationId = null;
+
 window.currentDocument="";
 
 chatWindow.innerHTML="";
@@ -1004,3 +1219,19 @@ navigator.clipboard.writeText(text);
 showToast("Copied");
 
 });
+
+const language=document.getElementById("languageSelect");
+
+if(language){
+
+language.addEventListener("change",()=>{
+
+showToast(
+
+"Language: "+language.value
+
+);
+
+});
+
+}

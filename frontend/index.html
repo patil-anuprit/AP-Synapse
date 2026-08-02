@@ -1,12 +1,19 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
 
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>AP Synapse</title>
+<title>AP Synapse — Next-Generation AI by Anuprit Patil</title>
+
+<meta name="description" content="AP Synapse is a next-generation artificial intelligence platform created by Anuprit Patil, designed for intelligent conversations, research, creativity, coding, and productivity.">
+<meta name="author" content="Anuprit Patil">
+<meta name="keywords" content="AP Synapse, Anuprit Patil, AI assistant, artificial intelligence, AI platform">
 
 <link rel="stylesheet" href="styles/main.css">
 
@@ -15,9 +22,43 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "AP Synapse",
+      "applicationCategory": "AIApplication",
+      "description": "AP Synapse is a next-generation artificial intelligence platform created by Anuprit Patil.",
+      "creator": {
+        "@type": "Person",
+        "name": "Anuprit Patil"
+      }
+    },
+    {
+      "@type": "Person",
+      "name": "Anuprit Patil",
+      "jobTitle": "Creator of AP Synapse"
+    }
+  ]
+}
+</script>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
 </head>
 
 <body>
+
+    <section class="ap-synapse-seo" aria-label="About AP Synapse">
+  <h1>AP Synapse</h1>
+  <p>
+    AP Synapse is a next-generation artificial intelligence platform created by
+    Anuprit Patil. It is designed to help users with intelligent conversations,
+    research, creativity, coding, documents, and productivity.
+  </p>
+</section>
 
 <div class="background"></div>
 
@@ -70,35 +111,13 @@
 
     <!-- Recent -->
 
-    <div class="sidebar-group">
+<div class="sidebar-group recent-group">
 
-        <h4>RECENT</h4>
+    <h4>RECENT</h4>
 
-        <button class="history-item active">
+    <div class="history-list"></div>
 
-            Product Strategy
-
-        </button>
-
-        <button class="history-item">
-
-            AI Architecture
-
-        </button>
-
-        <button class="history-item">
-
-            Website Redesign
-
-        </button>
-
-        <button class="history-item">
-
-            Research Session
-
-        </button>
-
-    </div>
+</div>
 
     <!-- Workspace -->
 
@@ -112,15 +131,15 @@
 
             <a href="#" id="projectsBtn">Projects</a>
 
-            <a href="#">Knowledge</a>
+            <a href="#" id="knowledgeBtn">Knowledge</a>
 
-            <a href="#">Documents</a>
+            <a href="#" id="documentsBtn">Documents</a>
 
-            <a href="#">Automation</a>
+            <a href="#" id="automationBtn">Automation</a>
 
             <a href="#" id="codeStudioBtn">Code Studio</a>
 
-            <a href="#">Canvas</a>
+            <a href="#" id="canvasBtn">Canvas</a>
 
         </nav>
 
@@ -130,13 +149,18 @@
 
     <div class="sidebar-footer">
 
-        <nav>
+    <nav>
 
-            <a href="#">Settings</a>
+        <a href="#" id="settingsSidebarBtn">Settings</a>
+        <a href="javascript:void(0)" id="profileSidebarBtn">Profile</a>
 
-            <a href="#">Profile</a>
+    </nav>
 
-        </nav>
+    <div class="version">
+        AP Synapse v1.0
+    </div>
+
+</div>
 
         <div class="version">
 
@@ -152,26 +176,31 @@
 
     <main class="workspace">
 
-    <header class="topbar">
+   <header class="topbar">
 
+    <!-- LEFT -->
     <div class="topbar-left">
 
         <div class="workspace-title">
 
-             <span class="workspace-badge">
-                 AP Synapse
-             </span>
+            <span class="workspace-badge">
+                AP SYNAPSE
+            </span>
 
-             <h1 id="greeting">
-                 Welcome Back
-             </h1>
+            <h1 id="greeting">
+                Welcome Back
+            </h1>
 
-             <p>
-                 Your Intelligent Workspace
-             </p>
+            <p>
+                Your Intelligent Workspace
+            </p>
 
         </div>
 
+    </div>
+
+
+    <!-- CENTER -->
     <div class="topbar-center">
 
         <div class="global-search">
@@ -179,9 +208,9 @@
             <span class="search-icon">⌕</span>
 
             <input
-            id="globalSearch"
-            type="text"
-            placeholder="Search conversations, documents or commands..."
+                id="globalSearch"
+                type="text"
+                placeholder="Search conversations, documents or commands..."
             >
 
             <span class="shortcut">
@@ -192,116 +221,158 @@
 
     </div>
 
+
+    <!-- RIGHT -->
     <div class="topbar-right">
 
-        <button id="notificationBtn" class="top-icon">
-        🔔
+        <button
+            id="notificationBtn"
+            class="top-icon"
+            aria-label="Notifications"
+        >
+            🔔
         </button>
 
-        <button id="settingsBtn" class="top-icon">
-        ⚙
+        <button
+            id="settingsBtn"
+            class="top-icon"
+            aria-label="Settings"
+        >
+            ⚙
         </button>
 
-        <button id="profileBtn" class="profile-button">
-
-         AP
-
+        <button
+            id="profileBtn"
+            class="profile-button"
+            aria-label="Profile"
+        >
+            AP
         </button>
 
     </div>
 
 </header>
-
     <!-- Conversation -->
 
 <div class="workspace-content">
 
-<section class="conversation">
+<section id="assistantPage" class="conversation">
 
-     <div id="chatWindow" class="chat-window"></div>
+    <div
+    id="chatWindow"
+    class="chat-window"
+    tabindex="0"
+></div>
 
-     <div id="thinking" class="thinking">
+    <div id="thinking" class="thinking">
 
-    <div class="thinking-dot"></div>
+        <div class="thinking-dot"></div>
+        <div class="thinking-dot"></div>
+        <div class="thinking-dot"></div>
 
-    <div class="thinking-dot"></div>
+        <span>Thinking...</span>
 
-    <div class="thinking-dot"></div>
+    </div>
+    <div id="heroScreen" class="hero-screen">
 
-    <span>Thinking...</span>
+    <div class="hero-container">
+
+        <!-- AP SYNAPSE IDENTITY -->
+
+        <div class="hero-badge">
+            AP SYNAPSE
+        </div>
+
+        <h1 class="hero-title">
+            The Intelligence
+            <span>Operating System</span>
+        </h1>
+
+        <p class="hero-description">
+           Research. Write. Code. Analyse.
+           Plan. Create.
+
+          <br><br>
+
+           One intelligent workspace for everything you build.
+        </p>
+
+        <!-- =========================================
+             RECENT INTELLIGENCE
+             ========================================= -->
+
+        <section class="recent-intelligence">
+
+            <div class="recent-intelligence-header">
+
+                <div>
+
+                    <span class="recent-kicker">
+                        RECENT INTELLIGENCE
+                    </span>
+
+                    <h2>
+                        Continue where you left off
+                    </h2>
+
+                </div>
+
+                <button
+                    id="viewAllHistoryBtn"
+                    type="button"
+                >
+                    View all →
+                </button>
+
+            </div>
+
+
+            <div
+                id="recentIntelligenceGrid"
+                class="recent-intelligence-grid"
+            >
+
+                <!-- Dynamically populated -->
+
+            </div>
+
+        </section>
+
+    </div>
 
 </div>
 
-     <div id="heroScreen" class="hero-screen">
+        <!-- RECENT INTELLIGENCE -->
 
-         <div class="hero-container">
+        <section class="recent-intelligence">
 
-         <div class="hero-badge">
-    AP SYNAPSE
-</div>
+            <div class="recent-intelligence-header">
 
-<h1 class="hero-title">
-    The Intelligence
-    <br>
-    <span>Operating System</span>
-</h1>
+                <div>
+                    <span class="recent-kicker">RECENT INTELLIGENCE</span>
+                    <h2>Continue where you left off</h2>
+                </div>
 
-<p class="hero-description">
-    Research. Write. Code. Analyse.
-    Plan. Create.
+                <button id="viewAllHistoryBtn">
+                    View all →
+                </button>
 
-    <br><br>
+            </div>
 
-    One intelligent workspace for everything you build.
-</p>
+            <div id="recentIntelligenceGrid"
+                 class="recent-intelligence-grid">
 
-<div class="hero-prompt">
+                <!-- dynamically populated -->
 
-    <div class="prompt-chip">Research</div>
+            </div>
 
-    <div class="prompt-chip">Create Project</div>
+        </section>
 
-    <div class="prompt-chip">Write Code</div>
-
-    <div class="prompt-chip">Analyse Files</div>
-
-    <div class="prompt-chip">Deep Thinking</div>
-
-    <div class="prompt-chip">Learn Anything</div>
+    </div>
 
 </div>
 
 </div> <!-- hero-prompt -->
-
-<div class="hero-stats">
-
-<div class="stat-card">
-<h3>AI</h3>
-<p>Online</p>
-</div>
-
-<div class="stat-card">
-<h3>Voice</h3>
-<p>Enabled</p>
-</div>
-
-<div class="stat-card">
-<h3>Projects</h3>
-<p>3 Active</p>
-</div>
-
-<div class="stat-card">
-<h3>Languages</h3>
-<p>3</p>
-</div>
-
-</div>
-
-</div> <!-- hero-container -->
-
-</div> <!-- heroScreen -->
-
-</section>
 
 <section id="codeStudioPage" class="projects-page">
 
@@ -445,6 +516,206 @@ Loading...
 
 </section>
 
+<section id="knowledgePage" class="projects-page" style="display:none;">
+
+<div class="projects-header">
+
+<h1>📚 Knowledge Base</h1>
+
+<p>Your personal AI knowledge library.</p>
+
+<input
+id="knowledgeSearch"
+type="text"
+placeholder="Search knowledge..."
+style="
+width:320px;
+padding:14px;
+margin-top:20px;
+border-radius:14px;
+background:#171717;
+color:white;
+border:1px solid #303030;
+">
+
+</div>
+
+<div
+id="knowledgeGrid"
+class="projects-grid">
+
+</div>
+
+</section>
+
+<section id="documentsPage" class="projects-page" style="display:none;">
+
+<div class="projects-header">
+
+<h1>📄 Documents</h1>
+
+<p>Analyse PDFs, DOCX, TXT, CSV, XLSX and Images.</p>
+
+</div>
+
+<div class="projects-grid">
+
+<div class="project-card">
+
+<h2>Upload Document</h2>
+
+<p>Ask AP Synapse anything about your files.</p>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="automationPage" class="projects-page" style="display:none;">
+
+<div class="projects-header">
+
+<h1>⚡ Automation</h1>
+
+<p>Create intelligent AI workflows.</p>
+
+</div>
+
+<div class="projects-grid">
+
+<div class="project-card">
+
+<h2>Coming Soon</h2>
+
+<p>Automation Engine v10.1</p>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="settingsPage" class="projects-page" style="display:none;">
+
+    <div class="projects-header">
+
+        <span class="workspace-badge">
+            AP SYNAPSE SETTINGS
+        </span>
+
+        <h1>Settings</h1>
+
+        <p>
+            Configure your AP Synapse intelligence workspace.
+        </p>
+
+    </div>
+
+    <div class="projects-grid">
+
+        <div class="project-card">
+
+            <h2>🎨 Appearance</h2>
+
+            <p>Control the visual experience of AP Synapse.</p>
+
+            <button class="settings-option" id="themeSettingBtn">
+                Toggle Light / Dark Mode
+            </button>
+
+        </div>
+
+        <div class="project-card">
+
+            <h2>🧠 Intelligence</h2>
+
+            <p>Choose how AP Synapse approaches your tasks.</p>
+
+            <button class="settings-option" id="smartModeBtn">
+                Smart Intelligence
+            </button>
+
+        </div>
+
+        <div class="project-card">
+
+            <h2>🎤 Voice</h2>
+
+            <p>Configure voice input and spoken responses.</p>
+
+            <button class="settings-option" id="voiceSettingBtn">
+                Voice Assistant
+            </button>
+
+        </div>
+
+        <div class="project-card">
+
+            <h2>🔊 Read Aloud</h2>
+
+            <p>Control spoken AI responses.</p>
+
+            <button class="settings-option" id="readAloudSettingBtn">
+                Read Aloud
+            </button>
+
+        </div>
+
+        <div class="project-card">
+
+            <h2>🌐 Language</h2>
+
+            <p>Choose your preferred workspace language.</p>
+
+            <select id="settingsLanguage">
+                <option>English</option>
+                <option>Hindi</option>
+                <option>Marathi</option>
+            </select>
+
+        </div>
+
+        <div class="project-card">
+
+            <h2>🔐 Privacy</h2>
+
+            <p>Manage your AP Synapse workspace preferences.</p>
+
+            <button class="settings-option">
+                Privacy & Security
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section id="canvasPage" class="projects-page" style="display:none;">
+
+<div class="projects-header">
+
+<h1>🎨 Canvas</h1>
+
+<p>Infinite AI Whiteboard.</p>
+
+</div>
+
+<div class="projects-grid">
+
+<div class="project-card">
+
+<h2>Visual Thinking</h2>
+
+<p>Brainstorm with AP Synapse.</p>
+
+</div>
+
+</div>
+
+</section>
+
 </div>
 
 <!-- Floating Command Bar -->
@@ -488,6 +759,220 @@ accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.csv,.xlsx,image/*">
         <button id="stopBtn" style="display:none;">■</button>
 
         <button id="sendBtn">→</button>
+
+    </div>
+
+</section>
+
+<!-- =========================================
+     AP SYNAPSE — SETTINGS
+========================================= -->
+
+<section id="settingsPage" class="projects-page" style="display:none;">
+
+    <div class="projects-header">
+
+        <span class="workspace-badge">
+            AP SYNAPSE SETTINGS
+        </span>
+
+        <h1>Settings</h1>
+
+        <p>
+            Personalize your AP Synapse intelligence workspace.
+        </p>
+
+    </div>
+
+    <div class="settings-grid">
+
+        <!-- Appearance -->
+
+        <div class="settings-card">
+
+            <div class="settings-card-icon">◐</div>
+
+            <div class="settings-card-content">
+
+                <h2>Appearance</h2>
+
+                <p>
+                    Control how AP Synapse looks and feels.
+                </p>
+
+                <button
+                    class="settings-control"
+                    id="themeSettingsBtn"
+                >
+                    🌙 Dark Mode
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- Intelligence -->
+
+        <div class="settings-card">
+
+            <div class="settings-card-icon">✦</div>
+
+            <div class="settings-card-content">
+
+                <h2>Intelligence</h2>
+
+                <p>
+                    Configure the default AI experience.
+                </p>
+
+                <button
+                    class="settings-control"
+                    id="smartModeBtn"
+                >
+                    🧠 Smart Mode
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- Voice -->
+
+        <div class="settings-card">
+
+            <div class="settings-card-icon">🎤</div>
+
+            <div class="settings-card-content">
+
+                <h2>Voice</h2>
+
+                <p>
+                    Manage voice interaction preferences.
+                </p>
+
+                <button
+                    class="settings-control"
+                    id="voiceSettingsBtn"
+                >
+                    🎤 Voice Enabled
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- Read Aloud -->
+
+        <div class="settings-card">
+
+            <div class="settings-card-icon">🔊</div>
+
+            <div class="settings-card-content">
+
+                <h2>Read Aloud</h2>
+
+                <p>
+                    Control spoken AI responses.
+                </p>
+
+                <button
+                    class="settings-control"
+                    id="readAloudSettingsBtn"
+                >
+                    🔊 Read Aloud Enabled
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- Language -->
+
+        <div class="settings-card">
+
+            <div class="settings-card-icon">文</div>
+
+            <div class="settings-card-content">
+
+                <h2>Language</h2>
+
+                <p>
+                    Choose your preferred workspace language.
+                </p>
+
+                <select
+                    id="settingsLanguage"
+                    class="settings-select"
+                >
+
+                    <option>English</option>
+                    <option>Hindi</option>
+                    <option>Marathi</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- Account -->
+
+        <div class="settings-card">
+
+            <div class="settings-card-icon">AP</div>
+
+            <div class="settings-card-content">
+
+                <h2>AP Synapse Account</h2>
+
+                <p>
+                    Manage your workspace identity and preferences.
+                </p>
+
+                <button
+                    class="settings-control"
+                    id="accountSettingsBtn"
+                >
+                    View Account
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- System Information -->
+
+    <div class="settings-system">
+
+        <div>
+
+            <span>AP SYNAPSE</span>
+
+            <h2>Intelligence Workspace</h2>
+
+        </div>
+
+        <div class="system-status">
+
+            <span class="status-dot"></span>
+
+            System Online
+
+        </div>
+
+        <div class="system-version">
+
+            Version 1.0
+
+        </div>
 
     </div>
 
@@ -545,8 +1030,11 @@ href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-
 <script type="module" src="scripts/intelligence-field.js"></script>
 <script type="module" src="scripts/chat.js"></script>
 <script type="module" src="scripts/sidebar.js"></script>
+<script type="module" src="scripts/settings.js"></script>
 <script type="module" src="scripts/topbar.js"></script>
 <script type="module" src="scripts/app.js"></script>
+<script type="module" src="scripts/workspace/assistant.js"></script>
+<script type="module" src="scripts/workspace/workspaceManager.js"></script>
 <script type="module" src="scripts/commandPalette.js"></script>
 
 <div id="imageViewer" class="image-viewer">
@@ -557,53 +1045,104 @@ href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-
 
 <div id="popupPanel" class="popup-panel">
 
-<h3 id="popupTitle"></h3>
+    <div class="popup-header">
 
-<div id="popupContent"></div>
+        <div>
+            <span class="popup-kicker">AP SYNAPSE</span>
+            <h3 id="popupTitle">Settings</h3>
+        </div>
 
-<button id="closePopup">
-Close
-</button>
+        <button
+            id="closePopup"
+            class="popup-close"
+            type="button"
+            aria-label="Close"
+        >
+            ×
+        </button>
+
+    </div>
+
+    <div id="popupContent"></div>
 
 </div>
 
 <div id="profileCard" class="popup-panel">
 
-<h2>AP Synapse</h2>
+    <div class="popup-header">
 
-<p><strong>Version:</strong> 1.0</p>
+        <div>
+            <span class="popup-kicker">AP SYNAPSE IDENTITY</span>
+            <h2>AP Synapse</h2>
+        </div>
 
-<p><strong>Creator:</strong> Anuprit Patil</p>
+        <button
+            id="closeProfile"
+            class="popup-close"
+            type="button"
+            aria-label="Close profile"
+        >
+            ×
+        </button>
 
-<p><strong>Engine:</strong> AP Synapse Intelligence</p>
+    </div>
 
-<p><strong>Status:</strong> Online</p>
+    <div class="profile-hero">
 
-<p><strong>Languages:</strong> English • Hindi • Marathi</p>
+        <div class="profile-avatar">
+            AP
+        </div>
 
-<p><strong>Capabilities</strong></p>
+        <div>
+            <h3>Anuprit Patil</h3>
+            <p>Creator · AP Synapse</p>
+        </div>
 
-<ul>
+    </div>
 
-<li>Conversation</li>
+    <div class="profile-status">
+        <span class="status-dot"></span>
+        AP Synapse Intelligence · Online
+    </div>
 
-<li>Code</li>
+    <div class="profile-details">
 
-<li>Research</li>
+        <div>
+            <span>Version</span>
+            <strong>1.0</strong>
+        </div>
 
-<li>Documents</li>
+        <div>
+            <span>Engine</span>
+            <strong>AP Synapse Intelligence</strong>
+        </div>
 
-<li>Image Generation</li>
+        <div>
+            <span>Languages</span>
+            <strong>English · Hindi · Marathi</strong>
+        </div>
 
-<li>Voice</li>
+    </div>
 
-</ul>
+    <div class="profile-capabilities">
 
-<button id="closeProfile">
+        <span>Conversation</span>
+        <span>Research</span>
+        <span>Code</span>
+        <span>Documents</span>
+        <span>Image Generation</span>
+        <span>Voice</span>
 
-Close
+    </div>
 
-</button>
+    <div class="google-signin-section">
+
+    <div
+        id="googleSignInButton"
+        class="google-signin-button"
+    ></div>
+
+</div>
 
 </div>
 

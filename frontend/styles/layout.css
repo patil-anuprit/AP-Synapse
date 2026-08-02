@@ -66,30 +66,21 @@
 
 /* ---------------- Workspace ---------------- */
 
-.workspace{
-    display:flex;
-    flex-direction:column;
-
-    height:100vh;
-
-    overflow:hidden;
-
-    padding:0;
-}
-
 .workspace-content{
-    flex:1;
 
-    display:flex;
+flex:1;
 
-    justify-content:center;
+position:relative;
 
-    align-items:center;
+overflow:hidden;
 
-    padding:0;
+padding:0;
 
-    overflow:hidden;
+display:flex;
+
 }
+
+
 
 /* ---------------- Header ---------------- */
 
@@ -173,12 +164,16 @@ flex-shrink:0;
 /* ---------------- Conversation ---------------- */
 
 .conversation{
-    width:100%;
-    height:100%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    position:relative;
+
+width:100%;
+height:100%;
+
+display:flex;
+
+flex-direction:column;
+
+position:relative;
+
 }
 
 #chatWindow{

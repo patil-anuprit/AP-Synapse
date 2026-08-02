@@ -311,3 +311,5919 @@ transform:none;
 }
 
 }
+
+/* ==========================
+Assistant Dashboard
+========================== */
+
+.assistant-page{
+
+display:flex;
+
+flex-direction:column;
+
+gap:30px;
+
+width:100%;
+
+height:100%;
+
+overflow:auto;
+
+}
+
+.assistant-header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:20px;
+
+}
+
+.assistant-grid{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+
+gap:22px;
+
+}
+
+.assistant-card{
+
+background:rgba(255,255,255,.04);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:22px;
+
+padding:26px;
+
+backdrop-filter:blur(18px);
+
+transition:.3s;
+
+}
+
+.assistant-card:hover{
+
+transform:translateY(-6px);
+
+border-color:rgba(198,166,107,.35);
+
+box-shadow:0 20px 45px rgba(198,166,107,.12);
+
+}
+
+.primary-btn{
+
+padding:14px 24px;
+
+border:none;
+
+border-radius:16px;
+
+background:var(--accent);
+
+font-weight:700;
+
+cursor:pointer;
+
+}
+
+.quick-action{
+
+width:100%;
+
+margin-top:10px;
+
+padding:12px;
+
+border-radius:14px;
+
+border:none;
+
+cursor:pointer;
+
+}
+
+/* ===========================
+Code Studio
+=========================== */
+
+.code-toolbar{
+
+display:flex;
+
+gap:12px;
+
+margin-bottom:18px;
+
+flex-wrap:wrap;
+
+}
+
+.code-toolbar button{
+
+padding:12px 18px;
+
+border:none;
+
+border-radius:14px;
+
+cursor:pointer;
+
+}
+
+.code-layout{
+
+display:grid;
+
+grid-template-columns:2fr 1fr;
+
+gap:20px;
+
+}
+
+.code-editor textarea{
+
+width:100%;
+
+height:600px;
+
+background:#0b0f18;
+
+color:#f8f8f8;
+
+border-radius:18px;
+
+padding:20px;
+
+font-family:Consolas,monospace;
+
+font-size:15px;
+
+border:1px solid rgba(255,255,255,.08);
+
+resize:none;
+
+}
+
+.code-ai{
+
+padding:24px;
+
+border-radius:20px;
+
+background:rgba(255,255,255,.04);
+
+border:1px solid rgba(255,255,255,.08);
+
+}
+
+/* =========================================================
+   AP SYNAPSE — CLEAN CHAT LAYOUT
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+.app {
+    width: 100%;
+    height: 100vh;
+    min-height: 0;
+    display: flex;
+    overflow: hidden;
+}
+
+.workspace {
+    flex: 1 1 0;
+    width: 0;
+    height: 100vh;
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+.workspace-content {
+    flex: 1 1 0;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+.conversation {
+    flex: 1 1 0;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+/* =========================================================
+   CHAT — THE ONLY VERTICAL SCROLL CONTAINER
+   ========================================================= */
+
+#chatWindow {
+    flex: 1 1 0;
+
+    width: 100%;
+    height: 0;
+
+    min-width: 0;
+    min-height: 0;
+
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow-y: scroll !important;
+    overflow-x: hidden !important;
+
+    padding: 30px 40px;
+
+    scroll-behavior: auto;
+
+    overscroll-behavior: auto;
+}
+
+/* Messages must be allowed to grow vertically */
+
+#chatWindow .message {
+    flex: 0 0 auto;
+
+    width: 100%;
+    max-width: 100%;
+
+    box-sizing: border-box;
+
+    min-height: fit-content;
+}
+
+/* Message contents */
+
+#chatWindow .message-body {
+    min-width: 0;
+    max-width: 100%;
+
+    box-sizing: border-box;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+/* Code */
+
+#chatWindow pre {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+/* Images */
+
+#chatWindow img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Thinking stays inside conversation */
+
+#thinking {
+    flex: 0 0 auto;
+}
+
+/* Hero does not steal chat height */
+
+#heroScreen {
+    flex: 0 0 auto;
+}
+
+/* Command bar remains fixed at bottom of workspace */
+
+.command-section {
+    flex: 0 0 auto;
+}
+
+/* =========================================================
+   AP SYNAPSE — FULL SCREEN WORKSPACE FIX
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+body {
+    min-height: 100vh;
+}
+
+.app {
+    position: fixed;
+    inset: 0;
+
+    width: 100vw;
+    height: 100vh;
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+
+    overflow: hidden;
+}
+
+.sidebar {
+    flex: 0 0 auto;
+    height: 100vh;
+    min-height: 0;
+}
+
+.workspace {
+    position: relative;
+
+    flex: 1 1 auto;
+
+    width: auto;
+    height: 100vh;
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+.topbar {
+    flex: 0 0 auto;
+    width: 100%;
+}
+
+.workspace-content {
+    flex: 1 1 0;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+.conversation {
+    flex: 1 1 0;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+#chatWindow {
+    flex: 1 1 0;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    box-sizing: border-box;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    padding: 30px 40px;
+
+    display: flex;
+    flex-direction: column;
+
+    scroll-behavior: auto;
+}
+
+.command-section {
+    flex: 0 0 auto;
+
+    width: 100%;
+
+    position: relative;
+    z-index: 20;
+}
+
+.command-bar {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#heroScreen {
+    flex: 1 1 0;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    box-sizing: border-box;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.projects-page {
+    flex: 1 1 0;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    box-sizing: border-box;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* =========================================================
+   AP SYNAPSE — CLEAN WORKSPACE LAYOUT
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* APP */
+.app {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+}
+
+/* WORKSPACE */
+.workspace {
+    position: relative;
+
+    width: calc(100vw - 280px);
+    height: 100vh;
+
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+/* TOP BAR */
+.topbar {
+    flex: 0 0 auto;
+    width: 100%;
+}
+
+/* EVERYTHING BELOW TOPBAR */
+.workspace-content {
+    position: relative;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    flex: 1 1 auto;
+
+    box-sizing: border-box;
+
+    padding: 0;
+
+    overflow: hidden;
+}
+
+/* =========================================================
+   AP SYNAPSE — FULL WORKSPACE PAGES
+   ========================================================= */
+
+#codeStudioPage,
+#projectsPage,
+#workspacePage,
+#knowledgePage,
+#documentsPage,
+#automationPage,
+#canvasPage {
+    width: 100%;
+    height: 100%;
+
+    min-width: 0;
+    min-height: 0;
+
+    box-sizing: border-box;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 40px 6% 80px;
+
+    margin: 0;
+}
+
+/* ASSISTANT PAGE */
+#assistantPage {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+/* CHAT AREA */
+#chatWindow {
+    width: 100%;
+    height: 100%;
+
+    min-width: 0;
+    min-height: 0;
+
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 30px 8% 150px 8%;
+
+    scroll-behavior: auto;
+}
+
+/* CHAT MESSAGES */
+#chatWindow .message {
+    width: 100%;
+    max-width: 100%;
+
+    flex: 0 0 auto;
+
+    box-sizing: border-box;
+}
+
+/* MESSAGE CONTENT */
+#chatWindow .message-body {
+    min-width: 0;
+    max-width: 100%;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+/* CODE */
+#chatWindow pre {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+/* IMAGES */
+#chatWindow img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* =========================================================
+   COMMAND BAR — ASSISTANT ONLY
+   ========================================================= */
+
+.command-section {
+    display: block;
+}
+
+body[data-page="projects"] .command-section,
+body[data-page="knowledge"] .command-section,
+body[data-page="documents"] .command-section,
+body[data-page="automation"] .command-section,
+body[data-page="codestudio"] .command-section,
+body[data-page="canvas"] .command-section {
+    display: none !important;
+}
+
+/* =========================================================
+   COMMAND BAR — ALWAYS AT BOTTOM
+   ========================================================= */
+
+.command-section {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 15px 8% 20px;
+
+    z-index: 1000;
+}
+
+/* COMMAND BAR ITSELF */
+.command-bar {
+    width: 100%;
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   HERO / WELCOME SCREEN
+   ========================================================= */
+
+#heroScreen {
+    width: 100%;
+    height: 100%;
+
+    min-height: 0;
+
+    box-sizing: border-box;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding-bottom: 40px;
+}
+
+/* =========================================================
+   OTHER WORKSPACE PAGES
+   ========================================================= */
+
+.projects-page {
+    width: 100%;
+    height: 100%;
+
+    min-width: 0;
+    min-height: 0;
+
+    box-sizing: border-box;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding-bottom: 130px;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .workspace {
+        width: 100%;
+    }
+
+    .command-section {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    #chatWindow {
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-bottom: 150px;
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL WORKSPACE PAGE FIX
+   ========================================================= */
+
+/* Keep the whole application inside the viewport */
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+/* Main application */
+.app {
+    width: 100%;
+    height: 100vh;
+    min-height: 0;
+    display: flex;
+    overflow: hidden;
+}
+
+/* Main workspace */
+.workspace {
+    flex: 1 1 auto;
+    width: 0;
+    height: 100vh;
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+/* Top bar stays fixed */
+.topbar {
+    flex: 0 0 auto;
+}
+
+/* Area underneath topbar */
+.workspace-content {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL GLOBAL SCROLL FIX
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+
+    overflow: hidden;
+}
+
+/* Main application */
+.app {
+    width: 100%;
+    height: 100vh;
+
+    min-height: 0;
+
+    display: flex;
+
+    overflow: hidden;
+}
+
+/* Sidebar gets its own scroll */
+.sidebar {
+    height: 100vh;
+    min-height: 0;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+/* Main workspace */
+.workspace {
+    flex: 1 1 auto;
+
+    height: 100vh;
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+/* Everything inside workspace */
+.workspace-content {
+    flex: 1 1 auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    overflow: auto !important;
+}
+
+/* Assistant page */
+.assistant-page {
+    width: 100%;
+    min-height: 100%;
+
+    box-sizing: border-box;
+
+    overflow: visible !important;
+}
+
+/* Other workspace pages */
+.workspace-page,
+.page,
+.content-page {
+    width: 100%;
+    min-height: 100%;
+
+    box-sizing: border-box;
+
+    overflow: visible !important;
+}
+
+/* Chat itself */
+.conversation {
+    flex: 1 1 auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+/* Actual conversation scroll */
+#chatWindow {
+    flex: 1 1 auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    scroll-behavior: auto !important;
+
+    overscroll-behavior: auto !important;
+}
+
+/* Command/input bar stays fixed within layout */
+.command-section {
+    flex: 0 0 auto;
+}
+
+/* =========================================================
+   ALL WORKSPACE PAGES
+   ========================================================= */
+
+.projects-page,
+#assistantPage,
+#codeStudioPage,
+#projectsPage,
+#workspacePage,
+#knowledgePage,
+#documentsPage,
+#automationPage,
+#canvasPage {
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    box-sizing: border-box;
+
+    /* IMPORTANT: start content from TOP */
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+
+    /* Do NOT vertically center page content */
+    place-content: flex-start !important;
+    align-content: flex-start !important;
+
+}
+
+/* =========================================================
+   PROJECT / CODE / KNOWLEDGE / DOCUMENT PAGES
+   ========================================================= */
+
+.projects-page {
+
+    flex: 1 1 auto;
+
+    height: 100%;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    box-sizing: border-box;
+
+    padding: 40px;
+
+    scroll-behavior: auto;
+
+}
+
+/* Make page content begin at the top */
+.projects-page > * {
+
+    flex-shrink: 0;
+
+}
+
+/* =========================================================
+   PAGE HEADERS
+   ========================================================= */
+
+.projects-page .projects-header {
+
+    width: 100%;
+
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+
+    box-sizing: border-box;
+
+    align-self: flex-start;
+
+}
+
+/* =========================================================
+   PROJECT GRIDS
+   ========================================================= */
+
+.projects-page .projects-grid {
+
+    width: 100%;
+
+    margin-top: 30px;
+
+    align-self: flex-start;
+
+}
+
+/* =========================================================
+   ASSISTANT CHAT
+   ========================================================= */
+
+#assistantPage.conversation {
+
+    flex: 1 1 auto;
+
+    width: 100%;
+    height: 100%;
+
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+}
+
+/* Actual chat scrolling */
+#assistantPage #chatWindow {
+
+    flex: 1 1 auto;
+
+    width: 100%;
+
+    min-width: 0;
+    min-height: 0;
+
+    height: auto;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    box-sizing: border-box;
+
+    padding: 32px 40px;
+
+}
+
+/* =========================================================
+   COMMAND BAR
+   ========================================================= */
+
+.command-section {
+
+    flex: 0 0 auto;
+
+    width: 100%;
+
+}
+
+/* =========================================================
+   PREVENT OLD CENTERING RULES
+   ========================================================= */
+
+.projects-page,
+.projects-page *,
+#codeStudioPage,
+#codeStudioPage *,
+#projectsPage,
+#projectsPage *,
+#knowledgePage,
+#knowledgePage *,
+#documentsPage,
+#documentsPage *,
+#automationPage,
+#automationPage *,
+#canvasPage,
+#canvasPage * {
+
+    box-sizing: border-box;
+
+}
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+.projects-page::-webkit-scrollbar,
+#chatWindow::-webkit-scrollbar {
+
+    width: 8px;
+
+}
+
+.projects-page::-webkit-scrollbar-track,
+#chatWindow::-webkit-scrollbar-track {
+
+    background: transparent;
+
+}
+
+.projects-page::-webkit-scrollbar-thumb,
+#chatWindow::-webkit-scrollbar-thumb {
+
+    background: #3a3a3a;
+
+    border-radius: 20px;
+
+}
+
+.projects-page::-webkit-scrollbar-thumb:hover,
+#chatWindow::-webkit-scrollbar-thumb:hover {
+
+    background: #c6a66b;
+
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL PREMIUM HOME COMPOSITION
+   ========================================================= */
+
+/* ---------- SIDEBAR HISTORY ---------- */
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    margin-top: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 4px;
+}
+
+.history-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+    background: rgba(198,166,107,.35);
+    border-radius: 20px;
+}
+
+.history-empty {
+    padding: 10px 12px;
+    color: rgba(255,255,255,.35);
+    font-size: 12px;
+}
+
+.history-item {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 34px 11px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: .2s ease;
+    color: rgba(255,255,255,.72);
+}
+
+.history-item:hover {
+    background: rgba(198,166,107,.07);
+    color: #fff;
+}
+
+.history-item.active {
+    background: rgba(198,166,107,.11);
+    border: 1px solid rgba(198,166,107,.18);
+}
+
+.history-item-content {
+    min-width: 0;
+}
+
+.history-title {
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.history-preview {
+    margin-top: 4px;
+    font-size: 11px;
+    color: rgba(255,255,255,.38);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.history-time {
+    margin-top: 5px;
+    font-size: 10px;
+    color: rgba(198,166,107,.65);
+}
+
+.history-delete {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px !important;
+    height: 22px;
+    padding: 0 !important;
+    background: transparent !important;
+    color: rgba(255,255,255,.25);
+    border: none;
+    opacity: 0;
+}
+
+.history-item:hover .history-delete {
+    opacity: 1;
+}
+
+.history-delete:hover {
+    color: #fff !important;
+    transform: translateY(-50%) !important;
+}
+
+
+/* =========================================================
+   HOME SCREEN
+   ========================================================= */
+
+#assistantPage {
+    position: relative;
+    overflow: hidden;
+}
+
+#heroScreen {
+    position: absolute !important;
+    inset: 0 !important;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px 50px 120px;
+    box-sizing: border-box;
+
+    overflow: hidden;
+}
+
+
+/* ---------- HERO CONTAINER ---------- */
+
+#heroScreen .hero-container {
+    width: min(900px, 90%);
+    max-width: 900px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+
+    margin: 0 auto;
+
+    transform: translateY(-15px);
+}
+
+
+/* ---------- BADGE ---------- */
+
+#heroScreen .hero-badge {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 7px 14px;
+
+    border-radius: 999px;
+
+    background: rgba(198,166,107,.07);
+    border: 1px solid rgba(198,166,107,.25);
+
+    color: #c6a66b;
+
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+
+    margin-bottom: 20px;
+}
+
+
+/* ---------- MAIN TITLE ---------- */
+
+#heroScreen .hero-title {
+    margin: 0;
+
+    max-width: 850px;
+
+    font-size: clamp(52px, 5.5vw, 82px);
+    line-height: .98;
+    letter-spacing: -4px;
+    font-weight: 700;
+
+    color: #f5f5f5;
+}
+
+#heroScreen .hero-title span {
+    color: rgba(255,255,255,.52);
+}
+
+
+/* ---------- DESCRIPTION ---------- */
+
+#heroScreen .hero-description {
+    max-width: 650px;
+
+    margin: 24px auto 0;
+
+    font-size: 15px;
+    line-height: 1.7;
+
+    color: rgba(255,255,255,.48);
+}
+
+
+/* ---------- PROMPT CHIPS ---------- */
+
+#heroScreen .hero-prompt {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 24px;
+}
+
+#heroScreen .prompt-chip {
+    padding: 8px 13px;
+
+    border-radius: 999px;
+
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.09);
+
+    color: rgba(255,255,255,.58);
+
+    font-size: 11px;
+
+    transition: .2s ease;
+}
+
+#heroScreen .prompt-chip:hover {
+    background: rgba(198,166,107,.09);
+    border-color: rgba(198,166,107,.28);
+    color: #d7bd87;
+    transform: translateY(-2px);
+}
+
+
+/* ---------- REMOVE OLD CHILDISH STATS ---------- */
+
+#heroScreen .hero-stats {
+    display: none !important;
+}
+
+
+/* =========================================================
+   COMMAND BAR
+   ========================================================= */
+
+.command-section {
+    position: relative;
+    z-index: 50;
+
+    padding: 0 42px 28px;
+
+    background: transparent;
+}
+
+.command-bar {
+    width: min(1050px, 100%);
+    margin: 0 auto;
+
+    min-height: 64px;
+
+    box-sizing: border-box;
+
+    border-radius: 22px;
+
+    background: rgba(20,21,24,.88);
+
+    border: 1px solid rgba(255,255,255,.10);
+
+    box-shadow:
+        0 18px 50px rgba(0,0,0,.32),
+        inset 0 1px 0 rgba(255,255,255,.035);
+
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+}
+
+
+/* ---------- COMMAND INPUT ---------- */
+
+#userInput {
+    color: #f5f5f5;
+}
+
+#userInput::placeholder {
+    color: rgba(255,255,255,.36);
+}
+
+
+/* ---------- SEND BUTTON ---------- */
+
+#sendBtn {
+    background: #c6a66b !important;
+    color: #111 !important;
+
+    border: none !important;
+
+    box-shadow:
+        0 8px 25px rgba(198,166,107,.18);
+}
+
+#sendBtn:hover {
+    background: #d6b979 !important;
+}
+
+
+/* =========================================================
+   TOPBAR BALANCE
+   ========================================================= */
+
+.topbar {
+    padding-left: 36px;
+    padding-right: 36px;
+}
+
+.workspace-title {
+    flex-shrink: 0;
+}
+
+.workspace-title h1 {
+    letter-spacing: -1px;
+}
+
+.topbar-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.global-search {
+    width: min(650px, 100%);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    #heroScreen {
+        padding:
+            30px
+            20px
+            110px;
+    }
+
+    #heroScreen .hero-title {
+        font-size: clamp(42px, 11vw, 60px);
+        letter-spacing: -2.5px;
+    }
+
+    #heroScreen .hero-description {
+        font-size: 14px;
+    }
+
+    .command-section {
+        padding: 0 14px 14px;
+    }
+
+    .command-bar {
+        border-radius: 18px;
+    }
+
+    .topbar {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL STABLE APP LAYOUT
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+
+    overflow: hidden;
+}
+
+.app {
+    width: 100%;
+    height: 100vh;
+
+    min-height: 0;
+
+    display: flex;
+
+    overflow: hidden;
+}
+
+.sidebar {
+    flex: 0 0 auto;
+
+    height: 100vh;
+
+    min-height: 0;
+
+    overflow: hidden;
+}
+
+.workspace {
+    flex: 1 1 auto;
+
+    width: 0;
+    height: 100vh;
+
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+.topbar {
+    flex: 0 0 auto;
+}
+
+.workspace-content {
+    position: relative;
+
+    flex: 1 1 auto;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* -----------------------------------------
+   HOME
+----------------------------------------- */
+
+#heroScreen {
+    flex: 1 1 auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    overflow: hidden;
+}
+
+/* -----------------------------------------
+   CHAT
+----------------------------------------- */
+
+#chatWindow {
+    flex: 1 1 auto;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    box-sizing: border-box;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    overscroll-behavior: contain;
+
+    scroll-behavior: auto;
+
+    padding:
+        32px
+        clamp(20px, 5vw, 80px)
+        130px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+/* -----------------------------------------
+   COMMAND BAR
+----------------------------------------- */
+
+.command-section {
+    flex: 0 0 auto;
+
+    position: relative;
+
+    z-index: 50;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding:
+        12px
+        clamp(14px, 4vw, 50px)
+        18px;
+}
+
+/* -----------------------------------------
+   HISTORY
+----------------------------------------- */
+
+.recent-group {
+    min-height: 0;
+}
+
+.history-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    max-height: min(300px, 34vh);
+
+    min-height: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding-right: 5px;
+}
+
+.history-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.history-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+    background: rgba(198,166,107,.28);
+
+    border-radius: 20px;
+}
+
+.history-item {
+    flex: 0 0 auto;
+
+    width: 100%;
+
+    box-sizing: border-box;
+}
+
+/* -----------------------------------------
+   NEVER LET WORKSPACE PAGES BREAK VIEWPORT
+----------------------------------------- */
+
+.projects-page {
+    flex: 1 1 auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    box-sizing: border-box;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 32px clamp(20px, 5vw, 70px) 120px;
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL SCROLL SYSTEM
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+body {
+    min-height: 100vh;
+}
+
+/* Main application shell */
+.app,
+.app-container,
+.workspace,
+.main-content {
+    min-height: 0;
+}
+
+/* Chat area */
+#chatWindow {
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: auto;
+    overscroll-behavior: contain;
+}
+
+/* History/sidebar */
+.sidebar,
+.sidebar-content,
+.history-list {
+    min-height: 0;
+}
+
+.history-list {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Home screen should NOT create another page-level scrollbar */
+#heroScreen {
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL SCROLL + HISTORY STABILITY FIX
+   DO NOT ADD MORE LAYOUT RULES AFTER THIS BLOCK
+   ========================================================= */
+
+/* ---------- GLOBAL APP ---------- */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden !important;
+}
+
+.app {
+    width: 100vw;
+    height: 100vh;
+    min-height: 0;
+    display: flex;
+    overflow: hidden !important;
+}
+
+
+/* ---------- SIDEBAR ---------- */
+
+.sidebar {
+    flex: 0 0 auto;
+    height: 100vh;
+    min-height: 0;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    overflow: hidden !important;
+}
+
+/* If sidebar has a content wrapper */
+.sidebar-content {
+    flex: 1 1 auto;
+    min-height: 0;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+
+/* ---------- HISTORY ---------- */
+
+.recent-group {
+    min-height: 0;
+    flex: 0 0 auto;
+}
+
+.history-list {
+    display: flex !important;
+    flex-direction: column !important;
+
+    width: 100%;
+
+    min-height: 0;
+    max-height: 34vh;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    box-sizing: border-box;
+
+    padding-right: 5px;
+}
+
+.history-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.history-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+    background: rgba(198,166,107,.35);
+    border-radius: 20px;
+}
+
+.history-item {
+    flex: 0 0 auto !important;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+/* ---------- MAIN WORKSPACE ---------- */
+
+.workspace {
+    flex: 1 1 0 !important;
+
+    width: 0 !important;
+    height: 100vh;
+
+    min-width: 0 !important;
+    min-height: 0 !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    overflow: hidden !important;
+}
+
+.topbar {
+    flex: 0 0 auto !important;
+}
+
+.workspace-content {
+    flex: 1 1 0 !important;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    overflow: hidden !important;
+}
+
+
+/* =========================================================
+   ASSISTANT
+   ========================================================= */
+
+#assistantPage {
+    flex: 1 1 0 !important;
+
+    width: 100%;
+    height: auto !important;
+
+    min-width: 0;
+    min-height: 0 !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    overflow: hidden !important;
+
+    position: relative;
+}
+
+
+/* =========================================================
+   CHAT — ONLY CHAT SCROLLS
+   ========================================================= */
+
+#chatWindow {
+    flex: 1 1 0 !important;
+
+    width: 100%;
+
+    height: auto !important;
+
+    min-width: 0;
+    min-height: 0 !important;
+
+    box-sizing: border-box;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    padding:
+        32px
+        clamp(20px, 5vw, 80px)
+        150px;
+
+    scroll-behavior: auto !important;
+    overscroll-behavior: contain;
+}
+
+#chatWindow .message {
+    flex: 0 0 auto !important;
+
+    width: 100%;
+    max-width: 100%;
+
+    min-height: fit-content;
+
+    box-sizing: border-box;
+}
+
+#chatWindow .message-body {
+    min-width: 0;
+    max-width: 100%;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+#chatWindow pre {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+#chatWindow img {
+    max-width: 100%;
+    height: auto;
+}
+
+
+/* =========================================================
+   COMMAND BAR
+   ========================================================= */
+
+.command-section {
+    flex: 0 0 auto !important;
+
+    position: relative !important;
+
+    width: 100%;
+
+    z-index: 100;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+/*
+   IMPORTANT:
+   Hero is NOT allowed to become another scrolling page.
+*/
+
+#heroScreen {
+    position: relative !important;
+
+    inset: auto !important;
+
+    flex: 1 1 0 !important;
+
+    width: 100%;
+    height: auto !important;
+
+    min-width: 0;
+    min-height: 0 !important;
+
+    box-sizing: border-box;
+
+    overflow: hidden !important;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* =========================================================
+   OTHER PAGES
+   ========================================================= */
+
+#codeStudioPage,
+#projectsPage,
+#workspacePage,
+#knowledgePage,
+#documentsPage,
+#automationPage,
+#canvasPage,
+.projects-page {
+
+    flex: 1 1 0 !important;
+
+    width: 100%;
+    height: auto !important;
+
+    min-width: 0;
+    min-height: 0 !important;
+
+    box-sizing: border-box;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    padding: 40px clamp(20px, 5vw, 70px) 120px;
+
+    align-content: flex-start !important;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    #chatWindow {
+        padding:
+            24px
+            18px
+            140px;
+    }
+
+    #heroScreen {
+        padding:
+            25px
+            18px
+            30px;
+    }
+
+    .history-list {
+        max-height: 30vh;
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — HISTORY VISIBILITY FINAL
+   ========================================================= */
+
+.sidebar .recent-group {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.sidebar .history-list {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    flex-direction: column !important;
+
+    width: 100% !important;
+    min-height: 20px !important;
+
+    max-height: 34vh !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+.sidebar .history-item,
+.sidebar .history-empty {
+    display: block !important;
+    visibility: visible !important;
+}
+
+.sidebar .history-item {
+    flex-shrink: 0 !important;
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL INTELLIGENCE DASHBOARD
+   ========================================================= */
+
+#heroScreen .hero-container {
+    width: min(1050px, 94%);
+    max-width: 1050px;
+    transform: none;
+}
+
+/* ---------- CONSOLE ---------- */
+
+#heroScreen .intelligence-console {
+    width: 100%;
+    margin-top: 42px !important;
+    padding: 25px;
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.018)
+        );
+
+    border: 1px solid rgba(198,166,107,.18);
+
+    box-shadow:
+        0 25px 80px rgba(0,0,0,.25),
+        inset 0 1px 0 rgba(255,255,255,.035);
+
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+}
+
+.console-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 20px;
+}
+
+.console-heading-icon {
+    width: 35px;
+    height: 35px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 10px;
+
+    color: #c6a66b;
+
+    background: rgba(198,166,107,.08);
+    border: 1px solid rgba(198,166,107,.18);
+}
+
+.console-heading h2 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(255,255,255,.92);
+}
+
+.console-heading p {
+    margin: 4px 0 0;
+    font-size: 11px;
+    color: rgba(255,255,255,.38);
+}
+
+
+/* ---------- ACTION GRID ---------- */
+
+#heroScreen .console-actions {
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr)) !important;
+
+    gap: 10px;
+}
+
+#heroScreen .console-action {
+    position: relative;
+
+    min-height: 88px;
+
+    padding: 16px;
+
+    border-radius: 16px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.035),
+            rgba(255,255,255,.012)
+        );
+
+    border: 1px solid rgba(255,255,255,.075);
+
+    color: white;
+
+    cursor: pointer;
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        background .25s ease,
+        box-shadow .25s ease;
+}
+
+#heroScreen .console-action strong {
+    margin-bottom: 10px;
+
+    color: #c6a66b;
+
+    font-size: 20px;
+    font-weight: 500;
+}
+
+#heroScreen .console-action span {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+#heroScreen .console-action small {
+    margin-top: 4px;
+
+    color: rgba(255,255,255,.35);
+
+    font-size: 10px;
+}
+
+#heroScreen .console-action:hover {
+    transform: translateY(-3px);
+
+    border-color:
+        rgba(198,166,107,.35);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(198,166,107,.08),
+            rgba(255,255,255,.025)
+        );
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.22);
+}
+
+#heroScreen .console-action:active {
+    transform: scale(.985);
+}
+
+
+/* ---------- RECENT INTELLIGENCE ---------- */
+
+.recent-intelligence {
+    width: 100%;
+    margin-top: 22px;
+    padding: 22px;
+
+    border-radius: 22px;
+
+    background: rgba(255,255,255,.018);
+
+    border: 1px solid rgba(255,255,255,.065);
+
+    box-sizing: border-box;
+}
+
+.recent-intelligence-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 16px;
+}
+
+.recent-kicker {
+    display: block;
+
+    color: #c6a66b;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: 2px;
+}
+
+.recent-intelligence-header h2 {
+    margin: 5px 0 0;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    color: rgba(255,255,255,.85);
+}
+
+#viewAllHistoryBtn {
+    border: none;
+    background: transparent;
+
+    color: rgba(255,255,255,.45);
+
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+#viewAllHistoryBtn:hover {
+    color: #c6a66b;
+}
+
+
+/* ---------- RECENT CARDS ---------- */
+
+.recent-intelligence-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 10px;
+}
+
+.recent-card {
+    min-width: 0;
+
+    padding: 15px;
+
+    border-radius: 15px;
+
+    background: rgba(255,255,255,.025);
+
+    border: 1px solid rgba(255,255,255,.06);
+
+    cursor: pointer;
+
+    transition: .25s ease;
+}
+
+.recent-card:hover {
+    transform: translateY(-2px);
+
+    border-color:
+        rgba(198,166,107,.28);
+
+    background:
+        rgba(198,166,107,.045);
+}
+
+.recent-card-title {
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    color: rgba(255,255,255,.8);
+}
+
+.recent-card-meta {
+    margin-top: 7px;
+
+    font-size: 10px;
+
+    color: rgba(255,255,255,.32);
+}
+
+.recent-card-action {
+    margin-top: 13px;
+
+    color: #c6a66b;
+
+    font-size: 10px;
+}
+
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 900px) {
+
+    #heroScreen .console-actions {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .recent-intelligence-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+@media (max-width: 550px) {
+
+    #heroScreen .console-actions {
+        grid-template-columns: 1fr !important;
+    }
+
+    .recent-intelligence-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #heroScreen .intelligence-console,
+    .recent-intelligence {
+        padding: 18px;
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL PERFECT SCREEN FIT
+   HOME / ASSISTANT
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.app {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.workspace {
+    height: 100vh;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* Main assistant area */
+#assistantPage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+/* =========================================================
+   HERO — FIT EXACTLY INSIDE AVAILABLE SPACE
+   ========================================================= */
+
+#heroScreen {
+    position: relative !important;
+    inset: auto !important;
+
+    width: 100%;
+    flex: 1 1 auto;
+
+    min-height: 0;
+    height: auto;
+
+    box-sizing: border-box;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    overflow: hidden !important;
+
+    padding: 20px 30px 20px !important;
+}
+
+/* Hero content */
+#heroScreen .hero-container {
+    width: min(850px, 90%);
+    max-width: 850px;
+
+    margin: 0 auto !important;
+
+    flex: 0 1 auto;
+
+    transform: none !important;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+}
+
+/* Badge */
+#heroScreen .hero-badge {
+    margin-bottom: 12px !important;
+
+    padding: 6px 12px;
+
+    font-size: 9px;
+    letter-spacing: 2.5px;
+}
+
+/* Main title */
+#heroScreen .hero-title {
+    margin: 0 !important;
+
+    width: 100%;
+    max-width: 820px;
+
+    font-size: clamp(38px, 4.2vw, 62px) !important;
+
+    line-height: .98 !important;
+    letter-spacing: -3px !important;
+
+    font-weight: 700;
+}
+
+/* Description */
+#heroScreen .hero-description {
+    max-width: 600px;
+
+    margin: 16px auto 0 !important;
+
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+}
+
+/* Prompt chips */
+#heroScreen .hero-prompt {
+    margin-top: 16px !important;
+
+    gap: 6px;
+
+    max-width: 650px;
+}
+
+#heroScreen .prompt-chip {
+    padding: 6px 10px;
+
+    font-size: 10px;
+}
+
+/* =========================================================
+   COMMAND BAR — FIT AT BOTTOM
+   ========================================================= */
+
+.command-section {
+    position: relative !important;
+
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+
+    flex: 0 0 auto;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding:
+        8px
+        clamp(18px, 4vw, 50px)
+        14px !important;
+
+    z-index: 100;
+}
+
+.command-bar {
+    width: min(1000px, 100%);
+
+    min-height: 58px !important;
+
+    margin: 0 auto;
+
+    border-radius: 18px;
+}
+
+/* =========================================================
+   DESKTOP HEIGHT CONTROL
+   ========================================================= */
+
+@media (min-width: 1000px) {
+
+    #heroScreen .hero-container {
+        max-width: 800px;
+    }
+
+    #heroScreen .hero-title {
+        font-size: clamp(42px, 4vw, 60px) !important;
+    }
+
+}
+
+/* =========================================================
+   SHORT LAPTOP SCREENS
+   ========================================================= */
+
+@media (max-height: 800px) {
+
+    #heroScreen {
+        padding:
+            12px
+            24px
+            12px !important;
+    }
+
+    #heroScreen .hero-badge {
+        margin-bottom: 8px !important;
+    }
+
+    #heroScreen .hero-title {
+        font-size: clamp(34px, 4vw, 52px) !important;
+    }
+
+    #heroScreen .hero-description {
+        margin-top: 10px !important;
+        font-size: 12px !important;
+    }
+
+    #heroScreen .hero-prompt {
+        margin-top: 10px !important;
+    }
+
+    #heroScreen .prompt-chip {
+        padding: 5px 9px;
+        font-size: 9px;
+    }
+
+    .command-section {
+        padding-bottom: 10px !important;
+    }
+
+    .command-bar {
+        min-height: 54px !important;
+    }
+
+}
+
+/* =========================================================
+   VERY SHORT SCREENS
+   ========================================================= */
+
+@media (max-height: 650px) {
+
+    #heroScreen .hero-title {
+        font-size: 38px !important;
+    }
+
+    #heroScreen .hero-description {
+        display: none;
+    }
+
+    #heroScreen .hero-prompt {
+        display: none;
+    }
+
+    #heroScreen .hero-badge {
+        margin-bottom: 7px !important;
+    }
+
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    #heroScreen {
+        padding:
+            20px
+            16px
+            15px !important;
+    }
+
+    #heroScreen .hero-container {
+        width: 100%;
+    }
+
+    #heroScreen .hero-title {
+        font-size:
+            clamp(34px, 10vw, 52px) !important;
+
+        letter-spacing: -2px !important;
+    }
+
+    #heroScreen .hero-description {
+        font-size: 12px !important;
+    }
+
+    .command-section {
+        padding:
+            7px
+            12px
+            10px !important;
+    }
+
+    .command-bar {
+        min-height: 55px !important;
+        border-radius: 16px;
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL VIEWPORT FIT
+   HOME + SIDEBAR HISTORY
+   FINAL POLISH OVERRIDE
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. APP SHELL
+--------------------------------------------------------- */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden !important;
+}
+
+.app {
+    width: 100vw;
+    height: 100vh;
+    min-height: 0;
+
+    display: flex;
+
+    overflow: hidden !important;
+}
+
+
+/* ---------------------------------------------------------
+   2. SIDEBAR — CLEAN VERTICAL SYSTEM
+--------------------------------------------------------- */
+
+.sidebar {
+    width: 272px;
+    height: 100vh;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden !important;
+
+    box-sizing: border-box;
+}
+
+
+/* Sidebar main content */
+
+.sidebar-content {
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    flex: 1 1 auto;
+
+    overflow: hidden;
+}
+
+
+/* ---------------------------------------------------------
+   3. HISTORY — NEVER OVERLAP WORKSPACE
+--------------------------------------------------------- */
+
+.recent-group {
+    flex: 0 0 auto;
+
+    width: 100%;
+    min-height: 0;
+
+    box-sizing: border-box;
+}
+
+
+/* History container */
+
+.history-list {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+
+    max-height: 235px;
+    min-height: 0;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    box-sizing: border-box;
+
+    padding-right: 5px;
+}
+
+
+/* Individual history items */
+
+.history-item {
+    flex: 0 0 auto;
+
+    width: 100%;
+    min-height: 54px;
+
+    box-sizing: border-box;
+}
+
+
+/* ---------------------------------------------------------
+   4. WORKSPACE NAVIGATION
+--------------------------------------------------------- */
+
+/* Keep Workspace below history */
+
+.sidebar .workspace-nav,
+.sidebar nav {
+    position: relative;
+
+    flex: 0 0 auto;
+
+    width: 100%;
+
+    margin-top: 18px;
+
+    box-sizing: border-box;
+
+    z-index: 5;
+}
+
+
+/* Navigation links */
+
+.sidebar nav a {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    min-height: 40px;
+
+    box-sizing: border-box;
+}
+
+
+/* ---------------------------------------------------------
+   5. SIDEBAR BOTTOM AREA
+--------------------------------------------------------- */
+
+.sidebar > *:last-child {
+    flex: 0 0 auto;
+}
+
+
+/* ---------------------------------------------------------
+   6. MAIN WORKSPACE
+--------------------------------------------------------- */
+
+.workspace {
+    flex: 1 1 0;
+
+    width: auto;
+    height: 100vh;
+
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden !important;
+}
+
+
+/* ---------------------------------------------------------
+   7. TOPBAR
+--------------------------------------------------------- */
+
+.topbar {
+    flex: 0 0 auto;
+
+    width: 100%;
+
+    box-sizing: border-box;
+}
+
+
+/* ---------------------------------------------------------
+   8. WORKSPACE CONTENT
+--------------------------------------------------------- */
+
+.workspace-content {
+    position: relative;
+
+    flex: 1 1 0;
+
+    width: 100%;
+
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden !important;
+
+    box-sizing: border-box;
+}
+
+
+/* ---------------------------------------------------------
+   9. ASSISTANT PAGE
+--------------------------------------------------------- */
+
+#assistantPage {
+    position: relative;
+
+    flex: 1 1 0;
+
+    width: 100%;
+    height: auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden !important;
+
+    box-sizing: border-box;
+}
+
+
+/* ---------------------------------------------------------
+   10. HOME SCREEN
+--------------------------------------------------------- */
+
+/*
+   IMPORTANT:
+   Remove the old absolute positioning.
+   Hero now occupies ONLY the available area
+   underneath the topbar.
+*/
+
+#heroScreen {
+    position: relative !important;
+
+    inset: auto !important;
+
+    flex: 1 1 0;
+
+    width: 100%;
+    height: auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    display: flex !important;
+
+    flex-direction: column !important;
+
+    align-items: center !important;
+
+    justify-content: center !important;
+
+    box-sizing: border-box;
+
+    overflow: hidden !important;
+
+    padding:
+        28px
+        clamp(24px, 5vw, 70px)
+        115px !important;
+}
+
+
+/* ---------------------------------------------------------
+   11. HERO CONTENT
+--------------------------------------------------------- */
+
+#heroScreen .hero-container {
+    width: min(900px, 92%);
+
+    flex: 0 1 auto;
+
+    margin: 0 auto !important;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    transform: none !important;
+}
+
+
+/* Badge */
+
+#heroScreen .hero-badge {
+    margin-bottom: 14px;
+}
+
+
+/* Main title */
+
+#heroScreen .hero-title {
+    font-size: clamp(44px, 5vw, 72px);
+
+    line-height: .98;
+
+    letter-spacing: -3px;
+
+    margin: 0;
+}
+
+
+/* Description */
+
+#heroScreen .hero-description {
+    margin-top: 18px;
+
+    font-size: 14px;
+
+    line-height: 1.55;
+}
+
+
+/* Chips */
+
+#heroScreen .hero-prompt {
+    margin-top: 18px;
+}
+
+
+/* ---------------------------------------------------------
+   12. RECENT INTELLIGENCE PANEL
+--------------------------------------------------------- */
+
+#heroScreen .intelligence-console {
+    width: min(900px, 92%);
+
+    flex: 0 1 auto;
+
+    margin:
+        26px
+        auto
+        0 !important;
+
+    padding:
+        22px
+        24px;
+
+    box-sizing: border-box;
+
+    max-height: 210px;
+
+    overflow: hidden;
+}
+
+
+/* Console heading */
+
+#heroScreen .intelligence-console h2 {
+    font-size: 20px;
+}
+
+
+/* Console description */
+
+#heroScreen .intelligence-console > p {
+    margin:
+        6px
+        0
+        16px;
+
+    font-size: 12px;
+}
+
+
+/* Console cards */
+
+#heroScreen .console-actions {
+    gap: 8px;
+}
+
+
+/* Console buttons */
+
+#heroScreen .console-action {
+    padding: 13px;
+
+    min-height: 62px;
+}
+
+
+/* ---------------------------------------------------------
+   13. COMMAND BAR
+--------------------------------------------------------- */
+
+.command-section {
+    position: absolute !important;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    width: 100%;
+
+    flex: 0 0 auto;
+
+    padding:
+        10px
+        clamp(20px, 5vw, 60px)
+        18px;
+
+    box-sizing: border-box;
+
+    z-index: 100;
+}
+
+
+/* Command bar */
+
+.command-bar {
+    width: min(1050px, 100%);
+
+    min-height: 60px;
+
+    margin: 0 auto;
+
+    box-sizing: border-box;
+}
+
+
+/* ---------------------------------------------------------
+   14. RESPONSIVE FIT
+--------------------------------------------------------- */
+
+@media (max-height: 800px) {
+
+    #heroScreen {
+        padding-top: 15px !important;
+        padding-bottom: 100px !important;
+    }
+
+    #heroScreen .hero-badge {
+        margin-bottom: 9px;
+    }
+
+    #heroScreen .hero-title {
+        font-size: clamp(38px, 4.5vw, 58px);
+    }
+
+    #heroScreen .hero-description {
+        margin-top: 12px;
+    }
+
+    #heroScreen .hero-prompt {
+        margin-top: 12px;
+    }
+
+    #heroScreen .intelligence-console {
+        margin-top: 18px !important;
+
+        padding: 17px 20px;
+
+        max-height: 170px;
+    }
+
+    #heroScreen .intelligence-console > p {
+        margin-bottom: 10px;
+    }
+
+    #heroScreen .console-action {
+        padding: 10px;
+        min-height: 52px;
+    }
+}
+
+
+/* ---------------------------------------------------------
+   15. VERY SHORT LAPTOP SCREENS
+--------------------------------------------------------- */
+
+@media (max-height: 700px) {
+
+    #heroScreen {
+        justify-content: flex-start !important;
+
+        padding-top: 18px !important;
+        padding-bottom: 90px !important;
+    }
+
+    #heroScreen .hero-title {
+        font-size: 42px;
+    }
+
+    #heroScreen .hero-description {
+        font-size: 12px;
+        margin-top: 9px;
+    }
+
+    #heroScreen .hero-prompt {
+        display: none;
+    }
+
+    #heroScreen .intelligence-console {
+        margin-top: 14px !important;
+
+        padding: 14px 18px;
+
+        max-height: 145px;
+    }
+}
+
+
+/* ---------------------------------------------------------
+   16. SIDEBAR HISTORY SCROLLBAR
+--------------------------------------------------------- */
+
+.history-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.history-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+    background: rgba(198,166,107,.30);
+
+    border-radius: 20px;
+}
+
+.history-list::-webkit-scrollbar-thumb:hover {
+    background: #c6a66b;
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL CLEAN VIEWPORT SYSTEM
+   DO NOT ADD MORE LAYOUT OVERRIDES AFTER THIS
+   ========================================================= */
+
+/* ---------- GLOBAL ---------- */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden !important;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   APP
+   ========================================================= */
+
+.app {
+    position: fixed !important;
+    inset: 0 !important;
+
+    width: 100vw !important;
+    height: 100vh !important;
+
+    display: flex !important;
+
+    overflow: hidden !important;
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar {
+    position: relative !important;
+
+    flex: 0 0 272px !important;
+
+    width: 272px !important;
+    height: 100vh !important;
+
+    overflow: hidden !important;
+
+    box-sizing: border-box !important;
+}
+
+
+/* =========================================================
+   HISTORY
+   ========================================================= */
+
+.history-list {
+    position: relative !important;
+
+    width: 100% !important;
+
+    max-height: 220px !important;
+    min-height: 0 !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    gap: 4px !important;
+
+    padding-right: 5px !important;
+
+    box-sizing: border-box !important;
+}
+
+.history-item {
+    position: relative !important;
+
+    flex: 0 0 auto !important;
+
+    width: 100% !important;
+
+    min-height: 48px !important;
+
+    box-sizing: border-box !important;
+}
+
+.history-title {
+    max-width: calc(100% - 20px) !important;
+}
+
+.history-preview {
+    max-width: calc(100% - 20px) !important;
+}
+
+
+/* =========================================================
+   WORKSPACE
+   ========================================================= */
+
+.workspace {
+    position: relative !important;
+
+    flex: 1 1 auto !important;
+
+    width: auto !important;
+    height: 100vh !important;
+
+    min-width: 0 !important;
+    min-height: 0 !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    overflow: hidden !important;
+}
+
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
+.topbar {
+    position: relative !important;
+
+    flex: 0 0 82px !important;
+
+    width: 100% !important;
+    height: 82px !important;
+
+    z-index: 20 !important;
+}
+
+
+/* =========================================================
+   CONTENT AREA
+   ========================================================= */
+
+.workspace-content {
+    position: relative !important;
+
+    flex: 1 1 auto !important;
+
+    width: 100% !important;
+    height: auto !important;
+
+    min-width: 0 !important;
+    min-height: 0 !important;
+
+    overflow: hidden !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+
+/* =========================================================
+   ASSISTANT
+   ========================================================= */
+
+#assistantPage {
+    position: relative !important;
+
+    flex: 1 1 auto !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    min-height: 0 !important;
+
+    overflow: hidden !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+
+/* =========================================================
+   HERO — NORMAL FLOW
+   ========================================================= */
+
+#heroScreen {
+    position: relative !important;
+
+    inset: auto !important;
+
+    flex: 1 1 auto !important;
+
+    width: 100% !important;
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    display: flex !important;
+
+    flex-direction: column !important;
+
+    align-items: center !important;
+
+    justify-content: center !important;
+
+    text-align: center !important;
+
+    overflow: hidden !important;
+
+    padding:
+        20px 35px 100px !important;
+
+    transform: none !important;
+}
+
+
+/* =========================================================
+   HERO CONTAINER
+   ========================================================= */
+
+#heroScreen .hero-container {
+    width: min(760px, 90%) !important;
+
+    max-width: 760px !important;
+
+    margin: 0 auto !important;
+
+    transform: none !important;
+
+    flex: 0 0 auto !important;
+}
+
+
+/* =========================================================
+   HERO BADGE
+   ========================================================= */
+
+#heroScreen .hero-badge {
+    font-size: 9px !important;
+
+    padding: 5px 11px !important;
+
+    margin-bottom: 12px !important;
+
+    letter-spacing: 2.5px !important;
+}
+
+
+/* =========================================================
+   HERO TITLE — MUCH SMALLER
+   ========================================================= */
+
+#heroScreen .hero-title {
+    width: 100% !important;
+
+    max-width: 760px !important;
+
+    margin: 0 !important;
+
+    font-size: clamp(34px, 3.4vw, 52px) !important;
+
+    line-height: 1.02 !important;
+
+    letter-spacing: -2.5px !important;
+
+    font-weight: 700 !important;
+}
+
+
+/* =========================================================
+   HERO DESCRIPTION
+   ========================================================= */
+
+#heroScreen .hero-description {
+    max-width: 560px !important;
+
+    margin:
+        14px auto 0 !important;
+
+    font-size: 12px !important;
+
+    line-height: 1.5 !important;
+}
+
+
+/* =========================================================
+   PROMPTS
+   ========================================================= */
+
+#heroScreen .hero-prompt {
+    margin-top: 14px !important;
+
+    gap: 6px !important;
+}
+
+#heroScreen .prompt-chip {
+    padding: 6px 10px !important;
+
+    font-size: 10px !important;
+}
+
+
+/* =========================================================
+   RECENT INTELLIGENCE
+   ========================================================= */
+
+#heroScreen .intelligence-console {
+    width: min(760px, 90%) !important;
+
+    max-width: 760px !important;
+
+    margin:
+        22px auto 0 !important;
+
+    padding:
+        17px 18px !important;
+
+    max-height: 150px !important;
+
+    overflow: hidden !important;
+
+    border-radius: 18px !important;
+}
+
+
+/* Console heading */
+
+#heroScreen .intelligence-console h2 {
+    margin: 0 !important;
+
+    font-size: 17px !important;
+}
+
+
+/* Console text */
+
+#heroScreen .intelligence-console > p {
+    margin:
+        4px 0 12px !important;
+
+    font-size: 10px !important;
+}
+
+
+/* Console buttons */
+
+#heroScreen .console-actions {
+    gap: 7px !important;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr)) !important;
+}
+
+#heroScreen .console-action {
+    min-height: 45px !important;
+
+    padding: 9px !important;
+
+    border-radius: 11px !important;
+}
+
+#heroScreen .console-action span {
+    font-size: 11px !important;
+}
+
+#heroScreen .console-action small {
+    font-size: 8px !important;
+
+    margin-top: 2px !important;
+}
+
+
+/* =========================================================
+   COMMAND BAR
+   CRITICAL FIX:
+   FIXED TO BOTTOM OF WORKSPACE, NOT TOP
+   ========================================================= */
+
+.command-section {
+    position: fixed !important;
+
+    left: 272px !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    top: auto !important;
+
+    width: auto !important;
+
+    padding:
+        10px 30px 15px !important;
+
+    z-index: 999 !important;
+
+    pointer-events: none !important;
+}
+
+.command-bar {
+    width: min(900px, 100%) !important;
+
+    min-height: 58px !important;
+
+    margin: 0 auto !important;
+
+    pointer-events: auto !important;
+}
+
+
+/* =========================================================
+   SHORT SCREEN
+   ========================================================= */
+
+@media (max-height: 800px) {
+
+    #heroScreen {
+        padding:
+            10px 25px 90px !important;
+    }
+
+    #heroScreen .hero-title {
+        font-size:
+            clamp(31px, 3vw, 45px) !important;
+    }
+
+    #heroScreen .hero-description {
+        margin-top: 10px !important;
+    }
+
+    #heroScreen .hero-prompt {
+        margin-top: 9px !important;
+    }
+
+    #heroScreen .intelligence-console {
+        margin-top: 15px !important;
+
+        padding: 14px 16px !important;
+
+        max-height: 125px !important;
+    }
+
+    #heroScreen .intelligence-console > p {
+        display: none !important;
+    }
+}
+
+
+/* =========================================================
+   VERY SHORT SCREEN
+   ========================================================= */
+
+@media (max-height: 680px) {
+
+    #heroScreen {
+        justify-content: flex-start !important;
+
+        padding-top: 15px !important;
+    }
+
+    #heroScreen .hero-title {
+        font-size: 36px !important;
+    }
+
+    #heroScreen .hero-description {
+        display: none !important;
+    }
+
+    #heroScreen .hero-prompt {
+        display: none !important;
+    }
+
+    #heroScreen .intelligence-console {
+        margin-top: 12px !important;
+
+        max-height: 115px !important;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .sidebar {
+        flex-basis: 240px !important;
+        width: 240px !important;
+    }
+
+    .command-section {
+        left: 240px !important;
+
+        padding:
+            8px 12px 12px !important;
+    }
+
+    #heroScreen .console-actions {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+/* =========================================
+   AP SYNAPSE — SETTINGS
+========================================= */
+
+.settings-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 18px;
+
+    width: min(1100px, 100%);
+
+    margin-top: 32px;
+
+}
+
+
+.settings-card {
+
+    display: flex;
+
+    gap: 18px;
+
+    padding: 24px;
+
+    border: 1px solid rgba(255,255,255,.08);
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.055),
+            rgba(255,255,255,.018)
+        );
+
+    backdrop-filter: blur(16px);
+
+    transition:
+        transform .2s ease,
+        border-color .2s ease,
+        background .2s ease;
+
+}
+
+
+.settings-card:hover {
+
+    transform: translateY(-3px);
+
+    border-color:
+        rgba(198,166,107,.35);
+
+}
+
+
+.settings-card-icon {
+
+    width: 46px;
+
+    height: 46px;
+
+    min-width: 46px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: rgba(198,166,107,.10);
+
+    border:
+        1px solid rgba(198,166,107,.20);
+
+    font-weight: 700;
+
+    color: #c6a66b;
+
+}
+
+
+.settings-card-content {
+
+    flex: 1;
+
+}
+
+
+.settings-card h2 {
+
+    margin: 0 0 7px;
+
+    font-size: 17px;
+
+}
+
+
+.settings-card p {
+
+    margin: 0 0 18px;
+
+    color: rgba(255,255,255,.55);
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+}
+
+
+.settings-control {
+
+    border: 1px solid rgba(255,255,255,.10);
+
+    background: rgba(255,255,255,.05);
+
+    color: white;
+
+    border-radius: 11px;
+
+    padding: 10px 14px;
+
+    cursor: pointer;
+
+    transition: .2s ease;
+
+}
+
+
+.settings-control:hover {
+
+    background: rgba(198,166,107,.12);
+
+    border-color: rgba(198,166,107,.35);
+
+}
+
+
+.settings-select {
+
+    width: 100%;
+
+    max-width: 220px;
+
+    padding: 11px 13px;
+
+    border-radius: 11px;
+
+    background: #171717;
+
+    color: white;
+
+    border: 1px solid rgba(255,255,255,.10);
+
+    outline: none;
+
+}
+
+
+.settings-system {
+
+    width: min(1100px, 100%);
+
+    margin-top: 22px;
+
+    padding: 22px 24px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 30px;
+
+    border-radius: 20px;
+
+    border: 1px solid rgba(255,255,255,.08);
+
+    background: rgba(255,255,255,.025);
+
+}
+
+
+.settings-system span {
+
+    font-size: 11px;
+
+    letter-spacing: 1.5px;
+
+    color: #c6a66b;
+
+}
+
+
+.settings-system h2 {
+
+    margin: 5px 0 0;
+
+    font-size: 16px;
+
+}
+
+
+.system-status {
+
+    margin-left: auto;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 13px;
+
+}
+
+
+.status-dot {
+
+    width: 8px;
+
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: #5fd68a;
+
+    box-shadow: 0 0 10px rgba(95,214,138,.5);
+
+}
+
+
+.system-version {
+
+    font-size: 12px;
+
+    color: rgba(255,255,255,.45);
+
+}
+
+
+@media (max-width: 800px) {
+
+    .settings-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .settings-system {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 12px;
+
+    }
+
+    .system-status {
+
+        margin-left: 0;
+
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — EMERGENCY HERO CONSOLE RESTORE
+   ========================================================= */
+
+#heroScreen .console-actions {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    width: 100% !important;
+}
+
+#heroScreen .console-action {
+    display: flex !important;
+    flex-direction: column !important;
+
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 90px !important;
+
+    padding: 16px !important;
+    margin: 0 !important;
+
+    box-sizing: border-box !important;
+
+    border-radius: 15px !important;
+
+    background: rgba(255,255,255,0.025) !important;
+    border: 1px solid rgba(255,255,255,0.07) !important;
+
+    color: white !important;
+
+    cursor: pointer !important;
+
+    text-align: left !important;
+}
+
+#heroScreen .console-action strong {
+    display: block !important;
+    font-size: 20px !important;
+    margin-bottom: 8px !important;
+}
+
+#heroScreen .console-action span {
+    display: block !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+}
+
+#heroScreen .console-action small {
+    display: block !important;
+    margin-top: 5px !important;
+    font-size: 11px !important;
+    color: rgba(255,255,255,0.42) !important;
+}
+
+#heroScreen .console-action:hover {
+    transform: translateY(-2px) !important;
+    background: rgba(198,166,107,0.08) !important;
+    border-color: rgba(198,166,107,0.32) !important;
+}
+
+/* Prevent generic button rules from destroying console layout */
+#heroScreen button {
+    box-sizing: border-box;
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+
+    #heroScreen .console-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+}
+
+@media (max-width: 430px) {
+
+    #heroScreen .console-actions {
+        grid-template-columns: 1fr !important;
+    }
+
+}
+
+/* ==========================================
+   AP SYNAPSE — EMERGENCY LAYOUT RESTORE
+   ========================================== */
+
+.background {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: -2 !important;
+    pointer-events: none !important;
+}
+
+#intelligence-field {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+}
+
+.app {
+    position: relative !important;
+    z-index: 1 !important;
+    min-height: 100vh !important;
+}
+
+.sidebar {
+    position: relative !important;
+    z-index: 20 !important;
+}
+
+.workspace {
+    position: relative !important;
+    z-index: 10 !important;
+    min-height: 100vh !important;
+}
+
+.topbar {
+    position: relative !important;
+    z-index: 30 !important;
+}
+
+#assistantPage {
+    position: relative !important;
+    display: block !important;
+    min-height: 0 !important;
+    height: auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+#heroScreen {
+    position: relative !important;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+
+    width: 100% !important;
+    min-height: 650px !important;
+    height: auto !important;
+
+    align-items: flex-start !important;
+    justify-content: center !important;
+
+    padding: 80px 40px 180px !important;
+    box-sizing: border-box !important;
+
+    overflow: visible !important;
+}
+
+#heroScreen .hero-container {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    width: min(1000px, 90%) !important;
+    margin: 0 auto !important;
+
+    position: relative !important;
+    z-index: 20 !important;
+}
+
+#heroScreen .hero-badge,
+#heroScreen .hero-title,
+#heroScreen .hero-description,
+#heroScreen .intelligence-console,
+#heroScreen .recent-intelligence {
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+#heroScreen .hero-badge {
+    display: inline-flex !important;
+}
+
+#heroScreen .hero-title {
+    display: block !important;
+}
+
+#heroScreen .hero-description {
+    display: block !important;
+}
+
+#heroScreen .intelligence-console {
+    display: block !important;
+}
+
+#heroScreen .console-actions {
+    display: grid !important;
+}
+
+#heroScreen .recent-intelligence {
+    display: block !important;
+}
+
+#chatWindow {
+    position: relative !important;
+    z-index: 30 !important;
+}
+
+/* Keep floating command bar above everything */
+.command-section {
+    position: fixed !important;
+    z-index: 1000 !important;
+}
+
+/* Prevent accidental global hiding */
+.hero-screen,
+.hero-container,
+.hero-title,
+.hero-description,
+.intelligence-console,
+.recent-intelligence {
+    visibility: visible;
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL VIEWPORT STABILIZER
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden !important;
+}
+
+.app {
+    width: 100%;
+    height: 100vh !important;
+    min-height: 0 !important;
+    display: flex !important;
+    overflow: hidden !important;
+}
+
+.workspace {
+    position: relative !important;
+    width: calc(100% - 280px) !important;
+    height: 100vh !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+}
+
+.workspace-content {
+    position: relative !important;
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.conversation {
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+/* HERO */
+#heroScreen {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 30px 120px !important;
+    box-sizing: border-box !important;
+
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    z-index: 5 !important;
+}
+
+#heroScreen .hero-container {
+    position: relative !important;
+
+    width: min(900px, 100%) !important;
+    max-width: 900px !important;
+
+    margin: 35px auto 0 !important;
+    padding: 0 !important;
+
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+
+    transform: none !important;
+}
+
+/* CHAT */
+#chatWindow {
+    position: absolute !important;
+    inset: 0 !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    margin: 0 !important;
+    padding: 30px 30px 130px !important;
+    box-sizing: border-box !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    z-index: 10 !important;
+}
+
+/* COMMAND BAR */
+.command-section {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+
+    z-index: 100 !important;
+
+    margin: 0 !important;
+}
+
+/* PREVENT OLD HERO POSITIONING */
+.hero-screen,
+.hero-container {
+    transform-origin: center top !important;
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL EMERGENCY LAYOUT FIX
+   Restores hero/content to the visible workspace
+   ========================================================= */
+
+.workspace {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100vh !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+}
+
+.workspace-content {
+    position: relative !important;
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: hidden !important;
+}
+
+.conversation {
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+}
+
+/* HERO — force it back into the actual viewport */
+#heroScreen {
+    position: absolute !important;
+    inset: 0 !important;
+
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+
+    margin: 0 !important;
+    padding: 28px 40px 120px !important;
+
+    box-sizing: border-box !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    align-items: center !important;
+    justify-content: flex-start !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    transform: none !important;
+    top: 0 !important;
+    left: 0 !important;
+}
+
+/* HERO CONTENT */
+#heroScreen .hero-container {
+    position: relative !important;
+
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+
+    transform: none !important;
+
+    margin: 0 auto !important;
+
+    width: min(100%, 1050px) !important;
+    max-width: 1050px !important;
+
+    height: auto !important;
+    min-height: 0 !important;
+
+    box-sizing: border-box !important;
+}
+
+/* Keep everything visually compact */
+#heroScreen .hero-title {
+    margin-top: 12px !important;
+    margin-bottom: 12px !important;
+}
+
+#heroScreen .hero-description {
+    margin-bottom: 24px !important;
+}
+
+#heroScreen .quick-actions {
+    width: 100% !important;
+    margin-top: 0 !important;
+}
+
+#heroScreen .recent-intelligence {
+    width: 100% !important;
+    margin-top: 24px !important;
+    margin-bottom: 20px !important;
+}
+
+/* Chat stays inside workspace */
+#chatWindow {
+    position: absolute !important;
+    inset: 0 !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    min-height: 0 !important;
+
+    box-sizing: border-box !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+/* Don't allow the hidden hero to interfere with chat */
+body.chat-active #heroScreen {
+    pointer-events: none !important;
+}
+
+/* COMMAND BAR stays above content */
+.command-section {
+    position: relative !important;
+    z-index: 100 !important;
+    flex-shrink: 0 !important;
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL VIEWPORT POSITION RESET
+   ========================================================= */
+
+.workspace,
+.workspace-content,
+.conversation,
+#assistantPage {
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: auto !important;
+    bottom: auto !important;
+
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+
+    transform: none !important;
+}
+
+.workspace {
+    height: 100vh !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+}
+
+.workspace-content {
+    flex: 1 1 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+}
+
+#assistantPage {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+}
+
+/* HERO */
+#heroScreen {
+    position: absolute !important;
+
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    margin: 0 !important;
+    padding: 30px 40px 110px !important;
+
+    box-sizing: border-box !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    transform: none !important;
+}
+
+#heroScreen .hero-container {
+    position: relative !important;
+
+    width: min(100%, 1050px) !important;
+    height: auto !important;
+    min-height: 0 !important;
+
+    margin: 0 auto !important;
+    padding: 0 !important;
+
+    top: auto !important;
+    left: auto !important;
+
+    transform: none !important;
+}
+
+/* CHAT */
+#chatWindow {
+    position: absolute !important;
+
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    margin: 0 !important;
+
+    box-sizing: border-box !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+/* COMMAND BAR */
+.command-section {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+
+    z-index: 999 !important;
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL VIEWPORT POSITION FIX
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.app {
+    width: 100%;
+    height: 100vh;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.workspace {
+    position: relative !important;
+    top: 0 !important;
+    height: 100vh !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    transform: none !important;
+}
+
+.workspace-content {
+    position: relative !important;
+    top: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: calc(100vh - 80px) !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+}
+
+.conversation {
+    position: relative !important;
+    top: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 100% !important;
+    min-height: 0 !important;
+}
+
+#heroScreen {
+    position: absolute !important;
+    inset: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+    transform: none !important;
+    overflow-y: auto !important;
+    box-sizing: border-box !important;
+}
+
+#heroScreen .hero-container {
+    position: relative !important;
+    top: 0 !important;
+    margin: 0 auto !important;
+    transform: none !important;
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL VIEWPORT ALIGNMENT FIX
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.app {
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+}
+
+.workspace {
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+
+    height: 100vh !important;
+    min-height: 0 !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    flex: 1 1 auto !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.topbar {
+    flex: 0 0 auto !important;
+    margin-top: 0 !important;
+}
+
+.workspace-content {
+    position: relative !important;
+
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+
+    margin: 0 !important;
+}
+
+.conversation {
+    position: relative !important;
+
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+
+    min-height: 0 !important;
+}
+
+/* =====================================================
+   AP SYNAPSE — FINAL VIEWPORT EMERGENCY FIX
+   ===================================================== */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+.app {
+    width: 100vw !important;
+    height: 100vh !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    position: relative !important;
+    top: 0 !important;
+    transform: none !important;
+}
+
+.workspace {
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 100vh !important;
+    min-height: 0 !important;
+    max-height: 100vh !important;
+    flex: 1 1 auto !important;
+    transform: none !important;
+    overflow: hidden !important;
+}
+
+.topbar {
+    position: relative !important;
+    top: 0 !important;
+    margin-top: 0 !important;
+    transform: none !important;
+}
+
+.workspace-content {
+    position: relative !important;
+    top: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: calc(100vh - 82px) !important;
+    min-height: 0 !important;
+    max-height: calc(100vh - 82px) !important;
+    overflow: hidden !important;
+}
+
+.conversation {
+    position: relative !important;
+    top: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+}
+
+#heroScreen {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    margin: 0 !important;
+    transform: none !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+}
+
+#heroScreen .hero-container {
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 auto !important;
+    transform: none !important;
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL VIEWPORT POSITION FIX
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.app {
+    position: relative !important;
+    width: 100% !important;
+    height: 100vh !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    overflow: hidden !important;
+}
+
+.sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    height: 100vh !important;
+}
+
+.workspace {
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    margin-left: 290px !important;
+    width: calc(100% - 290px) !important;
+    height: 100vh !important;
+    min-height: 0 !important;
+    max-height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    transform: none !important;
+    overflow: hidden !important;
+}
+
+.topbar {
+    position: relative !important;
+    top: 0 !important;
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+}
+
+.workspace-content {
+    position: relative !important;
+    top: 0 !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+.conversation {
+    position: relative !important;
+    top: 0 !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+#heroScreen {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 24px !important;
+    box-sizing: border-box !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+#heroScreen .hero-container {
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 auto !important;
+    transform: none !important;
+}
+
+#chatWindow {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL VIEWPORT LOCK
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+.app {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    min-height: 0 !important;
+    display: flex !important;
+    overflow: hidden !important;
+}
+
+.workspace {
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 !important;
+    transform: none !important;
+    height: 100vh !important;
+    min-height: 0 !important;
+    max-height: 100vh !important;
+    flex: 1 1 auto !important;
+    overflow: hidden !important;
+}
+
+.workspace-content {
+    position: relative !important;
+    top: 0 !important;
+    margin: 0 !important;
+    min-height: 0 !important;
+    flex: 1 1 auto !important;
+    overflow: hidden !important;
+}
+
+.conversation {
+    position: relative !important;
+    top: 0 !important;
+    margin: 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    overflow: hidden !important;
+}
+
+#heroScreen {
+    position: absolute !important;
+    inset: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    margin: 0 !important;
+    transform: none !important;
+    overflow-y: auto !important;
+    box-sizing: border-box !important;
+}
+/* =========================================================
+   FINAL UI FIX — FULL SCREEN + LEFT ALIGNMENT + CLICKABLE
+   Paste at the VERY BOTTOM of main.css
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  min-height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  width: 100%;
+  min-width: 0;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* ---------- APP / MAIN WRAPPER ---------- */
+
+#root,
+#__next,
+.app,
+.app-container,
+.main-container,
+.page-container {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* ---------- SIDEBAR / LEFT PANEL ---------- */
+
+aside,
+.sidebar,
+.side-bar,
+nav.sidebar {
+  position: relative;
+  z-index: 100;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+/* ---------- MAIN CONTENT ---------- */
+
+main,
+.main,
+.main-content,
+.content,
+.content-area {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Prevent content from forcing the entire page wider */
+img,
+video,
+canvas,
+iframe {
+  max-width: 100%;
+}
+
+pre,
+code {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* ---------- FLEX ITEMS ---------- */
+
+.flex,
+.row,
+.layout,
+.workspace,
+.dashboard,
+.app-layout {
+  min-width: 0;
+}
+
+.flex > *,
+.row > *,
+.layout > *,
+.workspace > *,
+.dashboard > *,
+.app-layout > * {
+  min-width: 0;
+}
+
+/* ---------- BUTTONS / LINKS MUST BE CLICKABLE ---------- */
+
+button,
+a,
+input,
+textarea,
+select,
+[role="button"] {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+/* Don't allow decorative layers to block clicks */
+body::before,
+body::after,
+.app::before,
+.app::after,
+.main-container::before,
+.main-container::after,
+.main-content::before,
+.main-content::after,
+.content::before,
+.content::after {
+  pointer-events: none;
+}
+
+/* ---------- COMMON OVERLAY / BACKGROUND FIX ---------- */
+
+.background,
+.bg,
+.background-layer,
+.gradient-layer,
+.glow,
+.glow-layer,
+.noise,
+.noise-layer,
+.grid-background,
+.animated-background,
+.intelligence-field {
+  pointer-events: none;
+}
+
+/* ---------- CARDS / PANELS ---------- */
+
+.card,
+.panel,
+.section,
+.widget,
+.modal,
+.dropdown,
+.menu,
+.popover {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* ---------- TEXT ---------- */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span {
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+/* ---------- MOBILE / SMALL SCREEN ---------- */
+
+@media (max-width: 900px) {
+
+  body {
+    overflow-x: hidden;
+  }
+
+  .app-layout,
+  .layout,
+  .workspace,
+  .dashboard {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  aside,
+  .sidebar {
+    max-width: 100%;
+  }
+
+  main,
+  .main-content,
+  .content-area {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* ---------- LARGE SCREEN ---------- */
+
+@media (min-width: 1400px) {
+
+  .main-content,
+  .content-area,
+  main {
+    min-width: 0;
+  }
+}
+
+/* ---------- SAFETY: NEVER LET A CHILD BREAK SCREEN WIDTH ---------- */
+
+* {
+  max-width: 100%;
+}
+
+/* Allow normal full-width layout elements */
+html,
+body,
+#root,
+#__next {
+  max-width: none;
+}
+
+/* =========================================================
+   AP SYNAPSE — FULL SCREEN LAYOUT OVERRIDE
+   ========================================================= */
+
+html,
+body {
+  width: 100% !important;
+  min-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body {
+  overflow-x: hidden !important;
+}
+
+/* Main application should occupy the entire viewport */
+#root,
+#__next {
+  width: 100% !important;
+  min-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Common app-level containers */
+.app,
+.app-container,
+.app-layout,
+.layout,
+.dashboard,
+.workspace {
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 100vh !important;
+  margin: 0 !important;
+}
+
+/* Sidebar stays on the left */
+.sidebar,
+.side-bar,
+aside {
+  flex-shrink: 0 !important;
+}
+
+/* Main area uses remaining screen */
+main,
+.main,
+.main-content,
+.content-area {
+  min-width: 0 !important;
+  max-width: none !important;
+}
+
+/* Remove accidental horizontal offsets */
+main,
+.main,
+.main-content,
+.content-area,
+.workspace,
+.dashboard {
+  margin-left: 0 !important;
+}
+
+/* Don't let invisible layers cover buttons */
+[class*="background"],
+[class*="overlay"],
+[class*="gradient"],
+[class*="glow"],
+[class*="noise"],
+canvas {
+  pointer-events: none !important;
+}
+
+/* Actual interface elements remain clickable */
+button,
+a,
+input,
+textarea,
+select,
+[role="button"],
+[role="link"] {
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 20;
+}
+
+/* Make buttons visibly clickable */
+button,
+[role="button"] {
+  cursor: pointer !important;
+}
+
+/* Prevent oversized children from creating weird positioning */
+img,
+video,
+iframe {
+  max-width: 100% !important;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  html,
+  body {
+    width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  #root,
+  .app,
+  .app-container,
+  .app-layout,
+  .layout {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL POSITION + CLICK FIX
+   ========================================================= */
+
+/* ---------- FULL VIEWPORT ---------- */
+
+html,
+body {
+  width: 100% !important;
+  min-width: 100% !important;
+  min-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: hidden !important;
+}
+
+/* ---------- ROOT ---------- */
+
+#root,
+#__next {
+  width: 100vw !important;
+  min-width: 100vw !important;
+  min-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* ---------- APP SHELL ---------- */
+
+.app,
+.app-container,
+.app-layout,
+.layout,
+.dashboard,
+.workspace {
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: none !important;
+  min-height: 100vh !important;
+  margin: 0 !important;
+}
+
+/* ---------- REMOVE ACCIDENTAL LEFT OFFSET ---------- */
+
+main,
+.main,
+.main-content,
+.content,
+.content-area,
+.workspace-content {
+  margin-left: 0 !important;
+  transform: none !important;
+}
+
+/* ---------- FLEX / GRID SPACE ---------- */
+
+.app-layout,
+.layout,
+.workspace,
+.dashboard {
+  box-sizing: border-box !important;
+}
+
+/* Let the main section actually take remaining space */
+.app-layout > main,
+.app-layout > .main,
+.app-layout > .main-content,
+.layout > main,
+.layout > .main,
+.layout > .main-content {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+/* ---------- SIDEBAR ---------- */
+
+.sidebar,
+.side-bar,
+aside {
+  flex: 0 0 auto !important;
+  z-index: 1000 !important;
+}
+
+/* ---------- CLICK FIX ---------- */
+
+/*
+   Decorative elements must NEVER capture clicks.
+*/
+
+canvas,
+[class*="background"],
+[class*="Background"],
+[class*="overlay"],
+[class*="Overlay"],
+[class*="gradient"],
+[class*="Gradient"],
+[class*="glow"],
+[class*="Glow"],
+[class*="noise"],
+[class*="Noise"],
+[class*="particles"],
+[class*="Particles"],
+[class*="neural"],
+[class*="Neural"] {
+  pointer-events: none !important;
+}
+
+/*
+   Real interface elements get the click layer.
+*/
+
+button,
+a,
+input,
+textarea,
+select,
+option,
+label,
+[role="button"],
+[role="link"],
+[role="menuitem"],
+[role="tab"],
+[role="checkbox"],
+[role="switch"] {
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 1001 !important;
+}
+
+/* ---------- SIDEBAR INTERACTION ---------- */
+
+.sidebar *,
+.side-bar *,
+aside * {
+  pointer-events: auto !important;
+}
+
+/* ---------- HEADER INTERACTION ---------- */
+
+header,
+header *,
+.navbar,
+.navbar * {
+  pointer-events: auto !important;
+}
+
+/* ---------- DROPDOWNS / MENUS ---------- */
+
+.dropdown,
+.dropdown-menu,
+.menu,
+.menu-container,
+.popover,
+[role="menu"] {
+  z-index: 5000 !important;
+  pointer-events: auto !important;
+}
+
+/* ---------- MODALS ---------- */
+
+.modal,
+.modal *,
+[role="dialog"],
+[role="dialog"] * {
+  pointer-events: auto !important;
+}
+
+/* ---------- BUTTON FEEDBACK ---------- */
+
+button,
+[role="button"] {
+  cursor: pointer !important;
+  user-select: none !important;
+}
+
+/* ---------- DON'T LET TEXT SELECTION BLOCK BUTTONS ---------- */
+
+button *,
+[role="button"] * {
+  pointer-events: none !important;
+}
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 768px) {
+
+  #root,
+  #__next,
+  .app,
+  .app-container,
+  .app-layout,
+  .layout {
+    width: 100vw !important;
+    min-width: 100vw !important;
+  }
+
+  main,
+  .main,
+  .main-content,
+  .content,
+  .content-area {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* ===== SIDEBAR CLICK FIX ===== */
+
+.sidebar,
+.side-bar,
+aside {
+  position: relative !important;
+  z-index: 99999 !important;
+  pointer-events: auto !important;
+}
+
+.sidebar *,
+.side-bar *,
+aside * {
+  pointer-events: auto !important;
+}
+
+/* Sidebar buttons and links */
+.sidebar button,
+.sidebar a,
+.sidebar [role="button"],
+.side-bar button,
+.side-bar a,
+.side-bar [role="button"],
+aside button,
+aside a,
+aside [role="button"] {
+  position: relative !important;
+  z-index: 100000 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Keep decorative layers away from clicks */
+canvas,
+.sidebar canvas,
+.side-bar canvas,
+aside canvas {
+  pointer-events: none !important;
+}
+
+/* =========================================
+   AP SYNAPSE — FINAL TRUE CENTER
+   ========================================= */
+
+.workspace-content {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+#assistantPage {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+#heroScreen {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+
+    display: block !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+#heroScreen .hero-container {
+    width: 100% !important;
+    max-width: 760px !important;
+
+    margin-left: auto !important;
+    margin-right: auto !important;
+
+    padding: 55px 24px 40px !important;
+    box-sizing: border-box !important;
+
+    transform: none !important;
+    left: auto !important;
+    right: auto !important;
+}
+
+#heroScreen .recent-intelligence {
+    width: 100% !important;
+    max-width: 760px !important;
+
+    margin-left: auto !important;
+    margin-right: auto !important;
+
+    margin-top: 35px !important;
+    margin-bottom: 140px !important;
+
+    box-sizing: border-box !important;
+}
+
+/* =========================================
+   AP SYNAPSE — FINAL WORKSPACE WIDTH FIX
+   ========================================= */
+
+.app {
+    width: 100vw !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+}
+
+.workspace {
+    position: fixed !important;
+    left: 290px !important;
+    top: 0 !important;
+
+    width: calc(100vw - 290px) !important;
+    height: 100vh !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+}
+
+.workspace-content {
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+#assistantPage,
+#heroScreen {
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* =========================================
+   AP SYNAPSE — CLEAN LAYOUT RESET
+   ========================================= */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.app {
+    position: relative !important;
+    display: flex !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.sidebar {
+    position: fixed !important;
+    inset: 0 auto 0 0 !important;
+    width: 290px !important;
+    height: 100vh !important;
+    box-sizing: border-box !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    z-index: 10000 !important;
+}
+
+.workspace {
+    position: fixed !important;
+    inset: 0 0 0 290px !important;
+    width: auto !important;
+    height: 100vh !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+}
+
+.topbar {
+    flex: 0 0 82px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.workspace-content {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+}
+
+#assistantPage {
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+#heroScreen {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+#heroScreen .hero-container {
+    width: min(760px, calc(100% - 48px)) !important;
+    margin: 0 auto !important;
+    padding: 55px 0 140px !important;
+    box-sizing: border-box !important;
+    transform: none !important;
+    left: auto !important;
+    right: auto !important;
+}
+
+/* =========================================
+   AP SYNAPSE — WORKSPACE PAGES
+   ========================================= */
+
+.projects-page {
+    position: relative !important;
+
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+
+    margin: 0 !important;
+    padding: 48px 50px 140px !important;
+
+    box-sizing: border-box !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    transform: none !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+}
+
+.projects-page .projects-header {
+    position: relative !important;
+    top: auto !important;
+    margin: 0 0 35px !important;
+}
+
+.projects-page .projects-grid {
+    position: relative !important;
+    top: auto !important;
+    margin: 0 !important;
+}
+
+/* =========================================
+   AP SYNAPSE — FULL WORKSPACE PAGE SYSTEM
+   ========================================= */
+
+.workspace-content {
+    position: relative !important;
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Every workspace page occupies the complete content viewport */
+
+.workspace-content > section {
+    position: absolute !important;
+    inset: 0 !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    margin: 0 !important;
+    box-sizing: border-box !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+/* Assistant */
+
+#assistantPage {
+    padding: 0 !important;
+}
+
+/* All application pages */
+
+#projectsPage,
+#codeStudioPage,
+#workspacePage,
+#knowledgePage,
+#documentsPage,
+#automationPage,
+#canvasPage {
+    padding: 55px 60px 140px !important;
+}
+
+/* Page header */
+
+.projects-page .projects-header {
+    width: 100% !important;
+    max-width: 1100px !important;
+    margin: 0 auto 40px !important;
+}
+
+/* Page grid */
+
+.projects-page .projects-grid {
+    width: 100% !important;
+    max-width: 1100px !important;
+    margin: 0 auto !important;
+
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 22px !important;
+}
+
+/* Cards */
+
+.projects-page .project-card {
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+@media (max-width: 800px) {
+
+    #projectsPage,
+    #codeStudioPage,
+    #workspacePage,
+    #knowledgePage,
+    #documentsPage,
+    #automationPage,
+    #canvasPage {
+        padding: 35px 25px 120px !important;
+    }
+
+    .projects-page .projects-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+}

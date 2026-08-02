@@ -1,28 +1,522 @@
+import { openPage } from "./workspace/workspaceRouter.js";
+import { openAssistant } from "./workspace/assistant.js";
+import {
+    getConversations,
+    getConversation,
+    deleteConversation
+} from "./workspace/history.js";
+import { createConversation } from "./workspace/history.js";
+
 const sidebar = document.querySelector(".sidebar");
+window.renderHistory = renderHistory;
 
 const projectsBtn = document.getElementById("projectsBtn");
+
+const historyItems = document.querySelectorAll(".history-item");
 
 console.log(projectsBtn);
 
 const codeStudioBtn = document.getElementById("codeStudioBtn");
 
-const historyItems = document.querySelectorAll(".history-item");
+const historyContainer =
+    document.querySelector(".history-list");
+
+    // ======================================
+// AP SYNAPSE — DYNAMIC HISTORY
+// ======================================
+
+function renderHistory() {
+
+    const historyContainer =
+        document.querySelector(".history-list");
+
+    if (!historyContainer) {
+        console.error("❌ .history-list NOT FOUND");
+        return;
+    }
+
+    let rawHistory = [];
+
+    try {
+        rawHistory = getConversations();
+    } catch (error) {
+        console.error("❌ getConversations failed:", error);
+        return;
+    }
+
+    // Always normalize history into an array
+    let conversations = [];
+
+    if (Array.isArray(rawHistory)) {
+
+        conversations = rawHistory;
+
+    } else if (
+        rawHistory &&
+        Array.isArray(rawHistory.conversations)
+    ) {
+
+        conversations = rawHistory.conversations;
+
+    } else if (
+        rawHistory &&
+        typeof rawHistory === "object"
+    ) {
+
+        conversations = Object.values(rawHistory);
+
+    }
+
+    console.log(
+        "📚 FINAL HISTORY ARRAY:",
+        conversations
+    );
+
+    historyContainer.innerHTML = "";
+
+    if (conversations.length === 0) {
+
+        historyContainer.innerHTML = `
+            <div class="history-empty">
+                No conversations yet
+            </div>
+        `;
+
+        return;
+    }
+
+    conversations.forEach((conversation) => {
+
+        if (!conversation) return;
+
+        const id = conversation.id;
+
+        const title =
+            conversation.title ||
+            conversation.name ||
+            "New Conversation";
+
+        const messages =
+            Array.isArray(conversation.messages)
+                ? conversation.messages
+                : [];
+
+        const lastMessage =
+            messages.length > 0
+                ? messages[messages.length - 1]
+                : null;
+
+        const preview =
+            lastMessage?.content ||
+            lastMessage?.text ||
+            "No messages yet";
+
+        const item =
+            document.createElement("div");
+
+        item.className = "history-item";
+
+        item.dataset.conversationId =
+            id ?? "";
+
+        item.innerHTML = `
+            <div class="history-item-content">
+
+                <div class="history-title">
+                    ${escapeHTML(title)}
+                </div>
+
+                <div class="history-preview">
+                    ${escapeHTML(preview).slice(0, 70)}
+                </div>
+
+                <div class="history-time">
+                    ${formatHistoryTime(
+                        conversation.updatedAt ||
+                        conversation.createdAt
+                    )}
+                </div>
+
+            </div>
+
+            <button
+                class="history-delete"
+                title="Delete conversation"
+                type="button"
+            >
+                ×
+            </button>
+        `;
+
+        // OPEN CONVERSATION
+        item.addEventListener("click", (event) => {
+
+            if (
+                event.target.closest(".history-delete")
+            ) {
+                return;
+            }
+
+            document
+                .querySelectorAll(".history-item")
+                .forEach(element => {
+                    element.classList.remove("active");
+                });
+
+            item.classList.add("active");
+
+            openSavedConversation(id);
+
+        });
+
+        // DELETE CONVERSATION
+        const deleteBtn =
+            item.querySelector(".history-delete");
+
+        deleteBtn.addEventListener("click", (event) => {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (!id) return;
+
+            deleteConversation(id);
+
+            renderHistory();
+
+        });
+
+        historyContainer.appendChild(item);
+
+    });
+
+    console.log(
+        `✅ ${conversations.length} conversations rendered`
+    );
+}
+
+function escapeHTML(value) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        String(value ?? "");
+
+    return div.innerHTML;
+
+}
+
+function formatHistoryTime(dateString) {
+
+    const date = new Date(dateString);
+
+    if (Number.isNaN(date.getTime())) {
+        return "";
+    }
+
+    const now = new Date();
+
+    const diff =
+        Math.floor(
+            (now - date) / 1000
+        );
+
+    if (diff < 60) {
+        return "Just now";
+    }
+
+    if (diff < 3600) {
+        return `${Math.floor(diff / 60)}m ago`;
+    }
+
+    if (diff < 86400) {
+        return `${Math.floor(diff / 3600)}h ago`;
+    }
+
+    if (diff < 604800) {
+        return `${Math.floor(diff / 86400)}d ago`;
+    }
+
+    return date.toLocaleDateString(
+        "en-IN",
+        {
+            day: "numeric",
+            month: "short"
+        }
+    );
+}
+
+// ======================================
+// RESTORE SAVED CONVERSATION
+// ======================================
+
+function openSavedConversation(id) {
+
+    const conversation = getConversation(id);
+
+    if (!conversation) {
+        console.warn(
+            "Conversation not found:",
+            id
+        );
+        return;
+    }
+
+    const chatWindow =
+        document.getElementById("chatWindow");
+
+    const heroScreen =
+        document.getElementById("heroScreen");
+
+    if (!chatWindow) {
+        console.warn("Chat window not found.");
+        return;
+    }
+
+    // ======================================
+    // HIDE HERO
+    // ======================================
+
+    if (heroScreen) {
+        heroScreen.style.display = "none";
+    }
+
+    // ======================================
+    // SHOW CHAT
+    // ======================================
+
+    chatWindow.style.display = "flex";
+
+    // ======================================
+    // CLEAR OLD CHAT
+    // ======================================
+
+    chatWindow.innerHTML = "";
+
+    // ======================================
+    // RESTORE SAVED MESSAGES
+    // ======================================
+
+    conversation.messages.forEach(message => {
+
+        const wrapper =
+            document.createElement("div");
+
+        wrapper.className =
+           `message ${
+              message.role === "user"
+                  ? "user"
+                  : "assistant"
+        }`;
+
+        // ----------------------------------
+        // AVATAR
+        // ----------------------------------
+
+        const avatar =
+            document.createElement("div");
+
+        avatar.className = "avatar";
+
+        avatar.textContent =
+            message.role === "user"
+                ? "U"
+                : "AP";
+
+        // ----------------------------------
+        // MESSAGE BODY
+        // ----------------------------------
+
+        const body =
+            document.createElement("div");
+
+        body.className = "message-body";
+
+        // ----------------------------------
+        // MARKDOWN
+        // ----------------------------------
+
+        if (window.marked) {
+
+            body.innerHTML =
+                marked.parse(
+                    message.content || ""
+                );
+
+        } else {
+
+            body.textContent =
+                message.content || "";
+
+        }
+
+        // ----------------------------------
+        // AI ACTIONS
+        // ----------------------------------
+
+        if (message.role === "assistant") {
+
+            const actions =
+                document.createElement("div");
+
+            actions.className =
+                "message-actions";
+
+            actions.innerHTML = `
+
+                <button class="copyBtn">
+                    📋 Copy
+                </button>
+
+                <button class="speakBtn">
+                    🔊 Read Aloud
+                </button>
+
+            `;
+
+            body.appendChild(actions);
+
+        }
+
+        // ==================================
+        // IMPORTANT:
+        // avatar and body are SIBLINGS
+        // ==================================
+
+        wrapper.appendChild(avatar);
+        wrapper.appendChild(body);
+
+        chatWindow.appendChild(wrapper);
+
+    });
+
+    // ======================================
+    // SET ACTIVE CONVERSATION
+    // ======================================
+
+    window.currentConversationId =
+        conversation.id;
+
+    if (window.setActiveConversation) {
+
+        window.setActiveConversation(
+            conversation.id
+        );
+
+    }
+
+    // ======================================
+    // DEBUG
+    // ======================================
+
+    console.log(
+        "✅ Conversation restored:",
+        conversation.title
+    );
+
+    console.log(
+        "Messages restored:",
+        conversation.messages.length
+    );
+
+    // ======================================
+// FINAL VIEW — OPEN SAVED CONVERSATION
+// ======================================
+
+requestAnimationFrame(() => {
+
+    requestAnimationFrame(() => {
+
+        // Hide homepage completely
+        if (heroScreen) {
+
+            heroScreen.style.setProperty(
+                "display",
+                "none",
+                "important"
+            );
+
+            heroScreen.style.setProperty(
+                "visibility",
+                "hidden",
+                "important"
+            );
+
+            heroScreen.style.setProperty(
+                "pointer-events",
+                "none",
+                "important"
+            );
+
+        }
+
+        // Show conversation
+        chatWindow.style.setProperty(
+            "display",
+            "flex",
+            "important"
+        );
+
+        chatWindow.style.setProperty(
+            "visibility",
+            "visible",
+            "important"
+        );
+
+        chatWindow.style.setProperty(
+            "opacity",
+            "1",
+            "important"
+        );
+
+        // Move to latest message
+        chatWindow.scrollTop =
+            chatWindow.scrollHeight;
+
+        console.log(
+            "✅ Conversation positioned correctly:",
+            conversation.title
+        );
+
+    });
+
+});
+
+    // ======================================
+// RESTORE EXACT CONVERSATION POSITION
+// ======================================
+
+requestAnimationFrame(() => {
+
+    requestAnimationFrame(() => {
+
+        const messages =
+            chatWindow.querySelectorAll(".message");
+
+        const lastMessage =
+            messages[messages.length - 1];
+
+        if (lastMessage) {
+
+            lastMessage.scrollIntoView({
+                behavior: "instant",
+                block: "end"
+            });
+
+        }
+
+    });
+
+});
+
+}
+
+renderHistory();
 
 const workspaceItems = document.querySelectorAll(".sidebar nav a");
 
-const newChatBtn = document.querySelector(".new-chat-btn");
-
-historyItems.forEach(item=>{
-
-item.addEventListener("click",()=>{
-
-historyItems.forEach(i=>i.classList.remove("active"));
-
-item.classList.add("active");
-
-});
-
-});
+const newChatBtn = document.querySelector(".new-chat-btn")
 
 workspaceItems.forEach(item=>{
 
@@ -46,22 +540,31 @@ newChatBtn.addEventListener("click", () => {
     const hero = document.getElementById("heroScreen");
     const input = document.getElementById("userInput");
 
-    // Clear all previous messages
-    chatWindow.innerHTML = "";
+    // Clear current conversation UI
+    if (chatWindow) {
+        chatWindow.innerHTML = "";
+        chatWindow.style.display = "none";
+    }
 
-    // Hide chat
-    chatWindow.style.display = "none";
-
-    // Show hero screen again
-    hero.style.display = "flex";
-    hero.style.opacity = "1";
-    hero.style.transform = "translateY(0)";
+    // Return to hero
+    if (hero) {
+        hero.style.display = "flex";
+        hero.style.opacity = "1";
+        hero.style.transform = "translateY(0)";
+    }
 
     // Clear input
-    input.value = "";
+    if (input) {
+        input.value = "";
+        input.focus();
+    }
 
-    // Focus cursor
-    input.focus();
+    // Create a new saved conversation
+    const conversation = createConversation("New Conversation");
+
+    console.log("🆕 New conversation created:", conversation);
+
+    renderHistory();
 
 });
 
@@ -69,107 +572,308 @@ newChatBtn.addEventListener("click", () => {
 // Projects Page
 // ===============================
 
-const assistantBtn = document.getElementById("assistantBtn");
+document.querySelectorAll(".sidebar nav a").forEach(link => {
 
-const conversation = document.querySelector(".conversation");
+    link.addEventListener("click", (e) => {
 
-const projectsPage = document.getElementById("projectsPage");
+        e.preventDefault();
 
-const codeStudioPage = document.getElementById("codeStudioPage");
+        // Highlight active menu
+        document.querySelectorAll(".sidebar nav a")
+            .forEach(a => a.classList.remove("active"));
 
-console.log("Conversation:", conversation);
-console.log("Projects Page:", projectsPage);
+        link.classList.add("active");
 
-projectsBtn.addEventListener("click", (e) => {
+        const page = link.textContent.trim().toLowerCase();
 
-    e.preventDefault();
+        switch(page){
 
-    conversation.style.display = "none";
+    case "assistant":
 
-    projectsPage.style.display = "block";
+        document.body.dataset.page = "assistant";
 
-});
+        openPage("assistant");
+        openAssistant();
 
-assistantBtn.addEventListener("click", (e) => {
+        break;
 
-    e.preventDefault();
 
-    projectsPage.style.display = "none";
+    case "projects":
 
-    conversation.style.display = "flex";
+        document.body.dataset.page = "projects";
 
-});
+        openPage("projects");
 
-const workspacePage =
-document.getElementById("workspacePage");
+        break;
 
-const workspaceTitle =
-document.getElementById("workspaceTitle");
 
-const workspaceDescription =
-document.getElementById("workspaceDescription");
+    case "knowledge":
 
-function openWorkspace(title){
+        document.body.dataset.page = "knowledge";
 
-conversation.style.display="none";
-projectsPage.style.display="none";
-codeStudioPage.style.display="none";
-workspacePage.style.display="none";
+        openPage("knowledge");
 
-if(title==="Code Studio"){
+        break;
 
-codeStudioPage.style.display="block";
-return;
+
+    case "documents":
+
+        document.body.dataset.page = "documents";
+
+        openPage("documents");
+
+        break;
+
+
+    case "automation":
+
+        document.body.dataset.page = "automation";
+
+        openPage("automation");
+
+        break;
+
+
+    case "canvas":
+
+        document.body.dataset.page = "canvas";
+
+        openPage("canvas");
+
+        break;
+
+
+    case "code studio":
+
+        document.body.dataset.page = "codestudio";
+
+        openPage("codestudio");
+
+        break;
+
+    case "settings":
+
+    document.body.dataset.page = "settings";
+
+    openPage("settings");
+
+    break;
 
 }
 
-workspacePage.style.display="block";
+    });
 
-workspaceTitle.innerText=title;
+});
 
-const descriptions={
+window.renderHistory = renderHistory;
 
-"Knowledge":"Personal AI knowledge base with semantic search, notes and memory.",
-
-"Documents":"Analyse PDFs, DOCX, TXT, spreadsheets and images using AI.",
-
-"Automation":"Create intelligent workflows and AI automations.",
-
-"Canvas":"Infinite AI whiteboard for brainstorming and visual thinking."
-
+window.refreshHistory = function () {
+    renderHistory();
 };
 
-workspaceDescription.innerText=
-descriptions[title];
-
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+        renderHistory();
+    });
+} else {
+    renderHistory();
 }
 
-document.querySelectorAll(".sidebar nav a").forEach(link=>{
+// ======================================================
+// AP SYNAPSE — INTELLIGENCE ACTIONS
+// ======================================================
 
-link.addEventListener("click",(e)=>{
+document.querySelectorAll(".console-action").forEach(button => {
 
-const text=link.innerText.trim();
+    button.addEventListener("click", () => {
 
-if(
+        const action = button.dataset.action;
 
-text==="Knowledge"||
+        console.log("AP Synapse action:", action);
 
-text==="Documents"||
+        switch (action) {
 
-text==="Automation"||
+            case "research":
+                startIntelligenceMode(
+                    "Research",
+                    "What would you like to research?"
+                );
+                break;
 
-text==="Code Studio"||
+            case "write":
+                startIntelligenceMode(
+                    "Write",
+                    "What would you like to write?"
+                );
+                break;
 
-text==="Canvas"
+            case "code":
+                openPage("codestudio");
+                document.body.dataset.page = "codestudio";
+                break;
 
-){
+            case "analyze":
+                startIntelligenceMode(
+                    "Analyze",
+                    "What would you like to analyze?"
+                );
+                break;
 
-e.preventDefault();
+            case "learn":
+                startIntelligenceMode(
+                    "Learn",
+                    "What would you like to learn?"
+                );
+                break;
 
-openWorkspace(text);
+            case "plan":
+                startIntelligenceMode(
+                    "Plan",
+                    "What would you like to plan?"
+                );
+                break;
 
-}
+            case "create":
+                startIntelligenceMode(
+                    "Create",
+                    "What would you like to create?"
+                );
+                break;
+
+            case "explore":
+                startIntelligenceMode(
+                    "Explore",
+                    "What would you like to explore?"
+                );
+                break;
+
+        }
+
+    });
 
 });
 
-});
+
+function startIntelligenceMode(mode, placeholder) {
+
+    const hero =
+        document.getElementById("heroScreen");
+
+    const chat =
+        document.getElementById("chatWindow");
+
+    const input =
+        document.getElementById("userInput");
+
+    if (hero) {
+        hero.style.display = "none";
+    }
+
+    if (chat) {
+        chat.style.display = "flex";
+        chat.innerHTML = "";
+    }
+
+    if (input) {
+
+        input.placeholder =
+            placeholder;
+
+        input.focus();
+
+    }
+
+    window.apSynapseMode = mode;
+
+    console.log(
+        `🧠 AP Synapse mode: ${mode}`
+    );
+
+}
+
+// ======================================================
+// RECENT INTELLIGENCE
+// ======================================================
+
+function renderRecentIntelligence() {
+
+    const grid =
+        document.getElementById(
+            "recentIntelligenceGrid"
+        );
+
+    if (!grid) return;
+
+    const conversations =
+        getConversations();
+
+    grid.innerHTML = "";
+
+    const recent =
+        conversations.slice(0, 4);
+
+    if (!recent.length) {
+
+        grid.innerHTML = `
+            <div class="recent-card">
+                <div class="recent-card-title">
+                    No recent intelligence
+                </div>
+
+                <div class="recent-card-meta">
+                    Start a conversation with AP Synapse.
+                </div>
+            </div>
+        `;
+
+        return;
+    }
+
+    recent.forEach(conversation => {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "recent-card";
+
+        card.innerHTML = `
+
+            <div class="recent-card-title">
+                ${escapeHTML(
+                    conversation.title ||
+                    "New Conversation"
+                )}
+            </div>
+
+            <div class="recent-card-meta">
+                ${formatHistoryTime(
+                    conversation.updatedAt ||
+                    conversation.createdAt
+                )}
+            </div>
+
+            <div class="recent-card-action">
+                Continue →
+            </div>
+
+        `;
+
+        card.addEventListener(
+            "click",
+            () => {
+
+                openSavedConversation(
+                    conversation.id
+                );
+
+            }
+        );
+
+        grid.appendChild(card);
+
+    });
+
+}
+
+renderRecentIntelligence();

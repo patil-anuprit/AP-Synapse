@@ -1,227 +1,629 @@
-.topbar{
+/* =========================================================
+   AP SYNAPSE — PREMIUM TOPBAR
+   ========================================================= */
 
-display:flex;
+.topbar {
 
-align-items:center;
+    width: 100%;
+    height: 92px;
 
-justify-content:space-between;
+    flex: 0 0 92px;
 
-gap:30px;
+    display: grid;
 
-padding:22px 32px;
+    grid-template-columns:
+        minmax(280px, 1fr)
+        minmax(420px, 680px)
+        minmax(180px, 1fr);
 
-border-bottom:1px solid rgba(255,255,255,.06);
+    align-items: center;
 
-background:rgba(18,18,18,.72);
+    gap: 30px;
 
-backdrop-filter:blur(24px);
+    padding: 0 34px;
 
-position:sticky;
+    box-sizing: border-box;
 
-top:0;
+    position: relative;
 
-z-index:50;
+    z-index: 50;
 
-}
+    background:
+        linear-gradient(
+            180deg,
+            rgba(15, 16, 18, 0.96),
+            rgba(15, 16, 18, 0.88)
+        );
 
-.topbar-left{
+    border-bottom:
+        1px solid rgba(255,255,255,0.055);
 
-display:flex;
+    backdrop-filter: blur(24px);
 
-align-items:center;
-
-}
-
-.workspace-badge{
-
-display:inline-block;
-
-padding:5px 12px;
-
-border-radius:999px;
-
-background:rgba(212,175,55,.12);
-
-color:#d4af37;
-
-font-size:11px;
-
-font-weight:600;
-
-letter-spacing:.08em;
-
-text-transform:uppercase;
-
-margin-bottom:10px;
+    -webkit-backdrop-filter: blur(24px);
 
 }
 
-.workspace-title h1{
 
-margin:0;
+/* =========================================================
+   LEFT — WORKSPACE IDENTITY
+   ========================================================= */
 
-font-size:30px;
+.topbar-left {
 
-font-weight:700;
+    min-width: 0;
 
-color:#fff;
+    display: flex;
 
-}
+    align-items: center;
 
-.workspace-title p{
-
-margin-top:8px;
-
-color:#8d8d8d;
-
-font-size:14px;
+    justify-content: flex-start;
 
 }
 
-.topbar-center{
 
-flex:1;
+/* =========================================================
+   WORKSPACE TITLE
+   ========================================================= */
 
-display:flex;
+.workspace-title {
 
-justify-content:center;
+    display: flex;
 
-}
+    flex-direction: column;
 
-.global-search{
+    justify-content: center;
 
-display:flex;
-
-align-items:center;
-
-width:100%;
-
-max-width:600px;
-
-height:52px;
-
-background:#171717;
-
-border:1px solid rgba(255,255,255,.06);
-
-border-radius:18px;
-
-padding:0 18px;
-
-gap:14px;
-
-transition:.3s;
+    min-width: 0;
 
 }
 
-.global-search:hover{
 
-border-color:rgba(212,175,55,.25);
+.workspace-badge {
 
-}
+    width: fit-content;
 
-.global-search input{
+    margin-bottom: 5px;
 
-flex:1;
+    font-size: 10px;
 
-background:transparent;
+    font-weight: 700;
 
-border:none;
+    letter-spacing: 0.18em;
 
-outline:none;
+    color: #c6a66b;
 
-color:#fff;
-
-font-size:14px;
+    opacity: 0.9;
 
 }
 
-.global-search input::placeholder{
 
-color:#777;
+.workspace-title h1 {
 
-}
+    margin: 0;
 
-.search-icon{
+    font-size: 21px;
 
-font-size:16px;
+    line-height: 1.15;
 
-color:#888;
+    font-weight: 600;
 
-}
+    letter-spacing: -0.025em;
 
-.shortcut{
+    color: #f5f5f5;
 
-font-size:11px;
-
-color:#888;
-
-padding:5px 10px;
-
-border-radius:8px;
-
-background:#202020;
+    white-space: nowrap;
 
 }
 
-.topbar-right{
 
-display:flex;
+.workspace-title p {
 
-align-items:center;
+    margin: 5px 0 0;
 
-gap:12px;
+    font-size: 12px;
 
-}
+    line-height: 1.2;
 
-.top-icon{
+    color: rgba(255,255,255,0.42);
 
-width:44px;
-
-height:44px;
-
-border:none;
-
-border-radius:14px;
-
-background:#171717;
-
-color:#fff;
-
-cursor:pointer;
-
-transition:.28s;
+    white-space: nowrap;
 
 }
 
-.top-icon:hover{
 
-background:#202020;
+/* =========================================================
+   CENTER — GLOBAL SEARCH
+   ========================================================= */
 
-transform:translateY(-2px);
+.topbar-center {
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
 
 }
 
-.profile-button{
 
-width:48px;
+.global-search {
 
-height:48px;
+    width: 100%;
 
-border:none;
+    max-width: 640px;
 
-border-radius:16px;
+    height: 46px;
 
-background:linear-gradient(145deg,#d4af37,#b89427);
+    display: flex;
 
-font-weight:700;
+    align-items: center;
 
-font-size:16px;
+    gap: 12px;
 
-cursor:pointer;
+    padding: 0 14px;
 
-color:#111;
+    box-sizing: border-box;
 
-box-shadow:0 12px 30px rgba(212,175,55,.25);
+    border-radius: 15px;
 
+    background:
+        rgba(255,255,255,0.035);
+
+    border:
+        1px solid rgba(255,255,255,0.075);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.025),
+        0 8px 30px rgba(0,0,0,0.12);
+
+    transition:
+        border-color .25s ease,
+        background .25s ease,
+        box-shadow .25s ease;
+
+}
+
+
+.global-search:hover {
+
+    background:
+        rgba(255,255,255,0.045);
+
+    border-color:
+        rgba(198,166,107,0.18);
+
+}
+
+
+.global-search:focus-within {
+
+    background:
+        rgba(255,255,255,0.055);
+
+    border-color:
+        rgba(198,166,107,0.42);
+
+    box-shadow:
+        0 0 0 3px rgba(198,166,107,0.07),
+        0 12px 35px rgba(0,0,0,0.16);
+
+}
+
+
+.search-icon {
+
+    flex: 0 0 auto;
+
+    font-size: 23px;
+
+    line-height: 1;
+
+    color:
+        rgba(255,255,255,0.42);
+
+}
+
+
+.global-search input {
+
+    flex: 1;
+
+    min-width: 0;
+
+    height: 100%;
+
+    padding: 0;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    color: #f5f5f5;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+}
+
+
+.global-search input::placeholder {
+
+    color:
+        rgba(255,255,255,0.32);
+
+}
+
+
+.shortcut {
+
+    flex: 0 0 auto;
+
+    padding: 5px 8px;
+
+    border-radius: 7px;
+
+    background:
+        rgba(255,255,255,0.055);
+
+    border:
+        1px solid rgba(255,255,255,0.06);
+
+    color:
+        rgba(255,255,255,0.34);
+
+    font-size: 10px;
+
+    white-space: nowrap;
+
+}
+
+
+/* =========================================================
+   RIGHT — CONTROLS
+   ========================================================= */
+
+.topbar-right {
+
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+}
+
+
+/* =========================================================
+   ICON BUTTONS
+   ========================================================= */
+
+.top-icon {
+
+    width: 42px;
+
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 0;
+
+    border-radius: 13px;
+
+    border:
+        1px solid rgba(255,255,255,0.065);
+
+    background:
+        rgba(255,255,255,0.035);
+
+    color:
+        rgba(255,255,255,0.72);
+
+    cursor: pointer;
+
+    font-size: 16px;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.025);
+
+    transition:
+        transform .2s ease,
+        background .2s ease,
+        border-color .2s ease,
+        color .2s ease;
+
+}
+
+
+.top-icon:hover {
+
+    transform: translateY(-1px);
+
+    background:
+        rgba(255,255,255,0.07);
+
+    border-color:
+        rgba(198,166,107,0.25);
+
+    color: #c6a66b;
+
+}
+
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
+.profile-button {
+
+    width: 44px;
+
+    height: 44px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 0;
+
+    margin-left: 4px;
+
+    border-radius: 14px;
+
+    border:
+        1px solid rgba(198,166,107,0.35);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(198,166,107,0.18),
+            rgba(198,166,107,0.06)
+        );
+
+    color: #c6a66b;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    letter-spacing: .05em;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 20px rgba(0,0,0,0.18);
+
+    transition:
+        transform .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease;
+
+}
+
+
+.profile-button:hover {
+
+    transform: translateY(-1px);
+
+    border-color:
+        rgba(198,166,107,0.65);
+
+    box-shadow:
+        0 8px 25px rgba(198,166,107,0.12);
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .topbar {
+
+        grid-template-columns:
+            minmax(220px, 1fr)
+            minmax(320px, 1.5fr)
+            auto;
+
+        gap: 18px;
+
+        padding: 0 22px;
+
+    }
+
+    .shortcut {
+
+        display: none;
+
+    }
+
+}
+
+
+@media (max-width: 780px) {
+
+    .topbar {
+
+        height: auto;
+
+        min-height: 78px;
+
+        grid-template-columns: 1fr auto;
+
+        grid-template-areas:
+            "left right"
+            "center center";
+
+        row-gap: 12px;
+
+        padding: 14px 18px;
+
+    }
+
+    .topbar-left {
+
+        grid-area: left;
+
+    }
+
+    .topbar-center {
+
+        grid-area: center;
+
+    }
+
+    .topbar-right {
+
+        grid-area: right;
+
+    }
+
+    .global-search {
+
+        max-width: none;
+
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — EXECUTIVE TOPBAR
+   ========================================================= */
+
+.topbar {
+    min-height: 82px;
+
+    box-sizing: border-box;
+
+    padding: 0 28px;
+
+    border-bottom: 1px solid rgba(255,255,255,.055);
+
+    background: rgba(10,11,13,.72);
+
+    backdrop-filter: blur(18px);
+}
+
+
+/* Left identity */
+
+.workspace-title {
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+}
+
+.workspace-badge {
+    margin-bottom: 4px;
+
+    color: #c6a66b;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+}
+
+.workspace-title h1 {
+    margin: 0;
+
+    color: rgba(255,255,255,.90);
+
+    font-size: 17px;
+
+    font-weight: 600;
+
+    letter-spacing: -.3px;
+}
+
+.workspace-title p {
+    margin: 3px 0 0;
+
+    color: rgba(255,255,255,.30);
+
+    font-size: 10px;
+}
+
+
+/* Search */
+
+.global-search {
+    height: 46px;
+
+    border-radius: 14px;
+
+    background: rgba(255,255,255,.035);
+
+    border: 1px solid rgba(255,255,255,.075);
+}
+
+.global-search input {
+    font-size: 12px;
+}
+
+
+/* Right controls */
+
+.top-icon {
+    width: 44px;
+    height: 44px;
+
+    border-radius: 13px;
+
+    background: rgba(255,255,255,.035);
+
+    border: 1px solid rgba(255,255,255,.07);
+
+    color: rgba(255,255,255,.60);
+}
+
+.top-icon:hover {
+    color: #c6a66b;
+
+    border-color: rgba(198,166,107,.25);
+
+    background: rgba(198,166,107,.06);
+
+    transform: none !important;
+}
+
+.profile-button {
+    width: 46px;
+    height: 46px;
+
+    border-radius: 14px;
+
+    background: rgba(198,166,107,.08);
+
+    border: 1px solid rgba(198,166,107,.30);
+
+    color: #c6a66b;
+
+    font-weight: 700;
+}
+
+.profile-button:hover {
+    background: rgba(198,166,107,.13);
+
+    transform: none !important;
 }

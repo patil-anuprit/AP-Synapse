@@ -1,329 +1,354 @@
-/* ==================================================
-   AP Synapse Hero v2
-================================================== */
+/* =========================================================
+   AP SYNAPSE — PREMIUM HERO / HOME
+   Compact • Centered • Viewport Safe
+   ========================================================= */
 
-.hero-screen{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    width:100%;
-    height:100%;
-    padding:40px;
-    box-sizing:border-box;
+.hero-screen {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    min-height: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    padding: 24px 40px;
+
+    overflow: hidden;
 }
 
-.hero-container{
-    width:100%;
-    max-width:1000px;
 
-    display:flex;
-    flex-direction:column;
+/* =========================================================
+   MAIN HERO CONTAINER
+   ========================================================= */
 
-    justify-content:center;
-    align-items:center;
+.hero-container {
+    width: min(100%, 1050px);
 
-    text-align:center;
+    display: flex;
+    flex-direction: column;
 
-    gap:24px;
+    align-items: center;
+    justify-content: center;
 
-    margin:auto;
+    text-align: center;
+
+    margin: 0 auto;
+
+    gap: 0;
+
+    transform: translateY(-8px);
 }
 
-.hero-badge{
 
-display:inline-flex;
+/* =========================================================
+   SMALL BRAND LABEL
+   ========================================================= */
 
-padding:6px 18px;
+.hero-badge {
+    display: inline-flex;
 
-border-radius:999px;
+    align-items: center;
+    justify-content: center;
 
-border:1px solid rgba(198,166,107,.28);
+    padding: 7px 14px;
 
-background:rgba(198,166,107,.08);
+    margin-bottom: 18px;
 
-color:var(--accent);
+    border: 1px solid rgba(198,166,107,.28);
 
-font-size:12px;
+    border-radius: 999px;
 
-font-weight:700;
+    background: rgba(198,166,107,.06);
 
-letter-spacing:2px;
+    color: #c6a66b;
 
-text-transform:uppercase;
+    font-size: 11px;
 
-margin-bottom:16px;
+    font-weight: 700;
 
+    letter-spacing: 2.5px;
+
+    line-height: 1;
 }
 
-.hero-title{
 
-    font-size:44px;
+/* =========================================================
+   MAIN TITLE
+   ========================================================= */
 
-    font-weight:800;
+.hero-title {
+    margin: 0;
 
-    line-height:1.02;
+    max-width: 900px;
 
-    letter-spacing:-2px;
+    color: #f5f5f5;
 
-    max-width:650px;
+    font-size: clamp(42px, 5vw, 72px);
 
-    margin:0 auto;
+    font-weight: 700;
 
-    color:white;
+    line-height: 1.02;
 
+    letter-spacing: -3px;
 }
 
-@keyframes titleReveal{
 
-from{
+/* Second line */
 
-opacity:0;
+.hero-title span {
+    color: rgba(245,245,245,.72);
 
-transform:translateY(20px);
-
+    font-weight: 500;
 }
 
-to{
 
-opacity:1;
+/* =========================================================
+   DESCRIPTION
+   ========================================================= */
 
-transform:none;
+.hero-description {
+    max-width: 650px;
 
+    margin: 22px auto 0;
+
+    color: rgba(255,255,255,.58);
+
+    font-size: 16px;
+
+    line-height: 1.7;
+
+    font-weight: 400;
 }
 
+
+/* =========================================================
+   PREMIUM CAPABILITY STRIP
+   ========================================================= */
+
+.hero-prompt {
+    width: min(100%, 760px);
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 9px;
+
+    margin-top: 28px;
 }
 
-.hero-title span{
 
-color:var(--accent);
+.prompt-chip {
+    padding: 9px 15px;
 
+    border-radius: 999px;
+
+    border: 1px solid rgba(255,255,255,.09);
+
+    background: rgba(255,255,255,.035);
+
+    color: rgba(255,255,255,.62);
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    letter-spacing: .2px;
+
+    transition:
+        background .25s ease,
+        border-color .25s ease,
+        color .25s ease,
+        transform .25s ease;
 }
 
-.hero-description{
+.prompt-chip:hover {
+    background: rgba(198,166,107,.08);
 
-    max-width:520px;
+    border-color: rgba(198,166,107,.3);
 
-    margin:0 auto 26px;
+    color: #c6a66b;
 
-    font-size:16px;
-
-    line-height:1.65;
-
-    color:var(--text-secondary);
-
+    transform: translateY(-2px);
 }
 
-.hero-prompt{
 
-    display:grid;
+/* =========================================================
+   REMOVE OLD CHILDISH STAT CARDS
+   ========================================================= */
 
-    grid-template-columns:repeat(3,1fr);
-
-    width:100%;
-
-    max-width:700px;
-
-    gap:12px;
-
-}
-.prompt-chip{
-
-height:52px;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-border-radius:18px;
-
-background:rgba(255,255,255,.03);
-
-border:1px solid rgba(255,255,255,.08);
-
-backdrop-filter:blur(20px);
-
-font-size:14px;
-
-font-weight:600;
-
-transition:
-
-transform .3s ease,
-
-background .3s ease,
-
-border-color .3s ease,
-
-box-shadow .3s ease,
-
-color .3s ease;
-
-cursor:pointer;
-
+.hero-stats {
+    display: none !important;
 }
 
-.prompt-chip:hover{
 
-transform:translateY(-6px);
+/* =========================================================
+   MOBILE
+   ========================================================= */
 
-background:rgba(198,166,107,.08);
+@media (max-width: 768px) {
 
-border-color:rgba(198,166,107,.35);
+    .hero-screen {
+        padding: 20px 18px;
 
-box-shadow:0 18px 40px rgba(198,166,107,.15);
+        overflow: hidden;
+    }
 
-color:white;
+    .hero-container {
+        width: 100%;
 
+        transform: translateY(-4px);
+    }
+
+    .hero-badge {
+        margin-bottom: 14px;
+
+        font-size: 10px;
+
+        padding: 7px 12px;
+
+        letter-spacing: 2px;
+    }
+
+    .hero-title {
+        font-size: clamp(38px, 11vw, 54px);
+
+        line-height: 1.04;
+
+        letter-spacing: -2px;
+    }
+
+    .hero-description {
+        max-width: 520px;
+
+        margin-top: 18px;
+
+        font-size: 14px;
+
+        line-height: 1.6;
+    }
+
+    .hero-prompt {
+        margin-top: 22px;
+
+        gap: 7px;
+    }
+
+    .prompt-chip {
+        padding: 8px 12px;
+
+        font-size: 11px;
+    }
 }
 
-@keyframes fadeHero{
 
-from{
+/* =========================================================
+   SMALL HEIGHT LAPTOPS
+   ========================================================= */
 
-opacity:0;
+@media (max-height: 750px) and (min-width: 769px) {
 
-transform:translateY(25px);
+    .hero-screen {
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
 
+    .hero-container {
+        transform: translateY(-3px);
+    }
+
+    .hero-badge {
+        margin-bottom: 12px;
+    }
+
+    .hero-title {
+        font-size: clamp(38px, 4.5vw, 58px);
+    }
+
+    .hero-description {
+        margin-top: 14px;
+
+        font-size: 14px;
+    }
+
+    .hero-prompt {
+        margin-top: 18px;
+    }
+
+    .prompt-chip {
+        padding: 7px 12px;
+    }
 }
 
-to{
 
-opacity:1;
+/* =========================================================
+   VERY SMALL MOBILE HEIGHT
+   ========================================================= */
 
-transform:none;
+@media (max-height: 650px) {
 
+    .hero-description {
+        margin-top: 12px;
+    }
+
+    .hero-prompt {
+        margin-top: 15px;
+    }
+
+    .prompt-chip {
+        padding: 6px 10px;
+    }
 }
 
+/* =========================================================
+   AP SYNAPSE — REMOVE LARGE HOME CONSOLE
+   KEEP COMPACT ACTION CHIPS
+   ========================================================= */
+
+.intelligence-console {
+    display: none !important;
 }
 
-@media(max-width:900px){
+/* =========================================================
+   AP SYNAPSE — HOME / CHAT MODE SEPARATION
+   ========================================================= */
 
-.hero-title{
-
-font-size:42px;
-
+/* Home screen exists only before the first message */
+body.chat-active #heroScreen {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
 }
 
-.hero-description{
-
-font-size:16px;
-
+/* Conversation takes over the workspace */
+body.chat-active #chatWindow {
+    display: flex !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
 }
 
-.hero-prompt{
+/* Normal chat scrolling */
+body.chat-active #chatWindow {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
 
-grid-template-columns:1fr;
+    scroll-behavior: auto !important;
 
+    min-height: 0 !important;
+    height: auto !important;
 }
 
-}
-
-.hero-container{
-
-animation:
-
-heroFloat 1s ease,
-
-fadeHero .8s ease;
-
-}
-
-@keyframes heroFloat{
-
-0%{
-
-transform:translateY(35px);
-
-opacity:0;
-
-}
-
-100%{
-
-transform:translateY(0);
-
-opacity:1;
-
-}
-
-}
-
-.hero-stats{
-
-display:grid;
-
-grid-template-columns:repeat(4,1fr);
-
-gap:18px;
-
-margin-top:40px;
-
-width:100%;
-
-max-width:760px;
-
-}
-
-.stat-card{
-
-padding:22px;
-
-background:rgba(255,255,255,.04);
-
-border:1px solid rgba(255,255,255,.08);
-
-border-radius:18px;
-
-backdrop-filter:blur(20px);
-
-text-align:center;
-
-}
-
-.stat-card h3{
-
-font-size:26px;
-
-color:#c6a66b;
-
-margin-bottom:8px;
-
-}
-
-.stat-card p{
-
-color:#d0d0d0;
-
-}
-
-@media(max-width:850px){
-
-.hero-stats{
-
-grid-template-columns:repeat(2,1fr);
-
-}
-
-}
-
-.hero-title{
-
-text-shadow:
-0 0 30px rgba(198,166,107,.08);
-
-}
-
-.hero-badge{
-
-box-shadow:
-0 0 20px rgba(198,166,107,.18);
-
-}
-
-.hero-container{
-
-animation:fadeHero .7s ease;
-
+/* Keep messages readable */
+body.chat-active #chatWindow .message {
+    flex: 0 0 auto !important;
 }

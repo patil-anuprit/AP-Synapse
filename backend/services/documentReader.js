@@ -1,5 +1,6 @@
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 import fs from "fs/promises";
+import mammoth from "mammoth";
 
 export async function readDocument(file) {
 
@@ -9,9 +10,9 @@ export async function readDocument(file) {
             .pop()
             .toLowerCase();
 
-    // =====================
+    // ==========================
     // PDF
-    // =====================
+    // ==========================
 
     if (extension === "pdf") {
 
@@ -35,16 +36,14 @@ export async function readDocument(file) {
                 .join(" ");
 
             text += "\n\n";
-
         }
 
         return text;
-
     }
 
-    // =====================
+    // ==========================
     // TXT
-    // =====================
+    // ==========================
 
     if (extension === "txt") {
 
@@ -52,7 +51,34 @@ export async function readDocument(file) {
             file.path,
             "utf8"
         );
+    }
 
+    // ==========================
+    // DOCX
+    // ==========================
+
+    if (extension === "docx") {
+
+        const result =
+            await mammoth.extractRawText({
+                path: file.path
+            });
+
+        return result.value;
+    }
+
+    // ==========================
+    // Images
+    // ==========================
+
+    if (
+        extension === "png" ||
+        extension === "jpg" ||
+        extension === "jpeg" ||
+        extension === "webp"
+    ) {
+
+        return "[IMAGE_FILE]";
     }
 
     return "Unsupported document type.";

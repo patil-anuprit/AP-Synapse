@@ -1233,3 +1233,714 @@ grid-template-columns:1fr;
 }
 
 }
+
+/* =========================================================
+   AP SYNAPSE — HISTORY RESTORED CONVERSATION FIX
+   ========================================================= */
+
+/* Make restored chat use the complete available width */
+#chatWindow {
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+/* Every restored message gets proper width */
+#chatWindow .message {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    gap: 14px;
+    padding: 14px 24px;
+    margin: 0;
+}
+
+/* User message */
+#chatWindow .message.user {
+    justify-content: flex-end;
+}
+
+/* AI message */
+#chatWindow .message.ai {
+    justify-content: flex-start;
+}
+
+/* Message body */
+#chatWindow .message .message-body {
+    box-sizing: border-box;
+    max-width: min(78%, 850px);
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: normal;
+}
+
+/* User bubble */
+#chatWindow .message.user .message-body {
+    margin-left: auto;
+    text-align: left;
+}
+
+/* AI bubble */
+#chatWindow .message.ai .message-body {
+    margin-right: auto;
+    text-align: left;
+}
+
+/* Avatar must never shrink */
+#chatWindow .message .avatar {
+    flex: 0 0 auto;
+}
+
+/* Markdown inside restored messages */
+#chatWindow .message-body p,
+#chatWindow .message-body ul,
+#chatWindow .message-body ol,
+#chatWindow .message-body pre,
+#chatWindow .message-body blockquote {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Long code blocks */
+#chatWindow .message-body pre {
+    overflow-x: auto;
+    white-space: pre;
+}
+
+/* Images inside restored messages */
+#chatWindow .message-body img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Mobile / smaller windows */
+@media (max-width: 700px) {
+
+    #chatWindow .message {
+        padding: 12px 14px;
+        gap: 9px;
+    }
+
+    #chatWindow .message .message-body {
+        max-width: 86%;
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — HISTORY RESTORED CHAT VISIBILITY FIX
+   ========================================================= */
+
+#chatWindow {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    padding: 24px 32px;
+}
+
+/* Every restored message */
+#chatWindow .message {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin: 18px 0;
+    padding: 0;
+}
+
+/* Message content must be allowed to shrink/wrap */
+#chatWindow .message-body {
+    min-width: 0;
+    max-width: calc(100% - 55px);
+    box-sizing: border-box;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: normal;
+}
+
+/* User messages */
+#chatWindow .message.user {
+    justify-content: flex-end;
+    padding-left: 15%;
+}
+
+#chatWindow .message.user .avatar {
+    order: 2;
+    flex: 0 0 auto;
+}
+
+#chatWindow .message.user .message-body {
+    order: 1;
+    max-width: min(75%, 850px);
+    text-align: left;
+}
+
+/* AI messages */
+#chatWindow .message.ai {
+    justify-content: flex-start;
+    padding-right: 15%;
+}
+
+#chatWindow .message.ai .avatar {
+    order: 1;
+    flex: 0 0 auto;
+}
+
+#chatWindow .message.ai .message-body {
+    order: 2;
+    max-width: min(75%, 850px);
+    text-align: left;
+}
+
+/* Avatar */
+#chatWindow .message .avatar {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+/* Markdown inside restored messages */
+#chatWindow .message-body p,
+#chatWindow .message-body ul,
+#chatWindow .message-body ol,
+#chatWindow .message-body pre,
+#chatWindow .message-body h1,
+#chatWindow .message-body h2,
+#chatWindow .message-body h3,
+#chatWindow .message-body h4 {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Long code blocks must scroll instead of pushing the chat sideways */
+#chatWindow .message-body pre {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+/* Images inside restored conversations */
+#chatWindow .message-body img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Mobile / smaller screens */
+@media (max-width: 800px) {
+
+    #chatWindow {
+        padding: 18px 14px;
+    }
+
+    #chatWindow .message.user,
+    #chatWindow .message.ai {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    #chatWindow .message-body {
+        max-width: calc(100% - 52px);
+    }
+
+}
+
+/* =========================================
+   AP SYNAPSE — HISTORY MESSAGE VISIBILITY FIX
+   ========================================= */
+
+/* Chat area */
+#chatWindow {
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+/* Every message */
+#chatWindow .message {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    gap: 14px;
+    padding: 14px 24px;
+    margin: 0;
+    overflow: visible;
+}
+
+/* USER MESSAGE */
+#chatWindow .message.user {
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+/* AI MESSAGE */
+#chatWindow .message.ai {
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+/* Message body */
+#chatWindow .message .message-body {
+    box-sizing: border-box;
+    width: auto;
+    max-width: min(75%, 850px);
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: normal;
+    overflow: visible;
+}
+
+/* User bubble */
+#chatWindow .message.user .message-body {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+/* AI bubble */
+#chatWindow .message.ai .message-body {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+/* Avatar must never shrink */
+#chatWindow .message .avatar {
+    flex: 0 0 auto;
+}
+
+/* Make long code/text stay inside screen */
+#chatWindow .message-body pre,
+#chatWindow .message-body code {
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: auto;
+}
+
+/* Images */
+#chatWindow .message-body img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Desktop */
+@media (min-width: 769px) {
+
+    #chatWindow .message.user {
+        padding-left: 120px;
+        padding-right: 40px;
+    }
+
+    #chatWindow .message.ai {
+        padding-left: 40px;
+        padding-right: 120px;
+    }
+
+}
+
+/* Laptop / smaller screens */
+@media (max-width: 768px) {
+
+    #chatWindow .message {
+        padding: 12px 16px;
+    }
+
+    #chatWindow .message .message-body {
+        max-width: 82%;
+    }
+
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+
+    #chatWindow .message {
+        padding: 10px;
+    }
+
+    #chatWindow .message .message-body {
+        max-width: 88%;
+    }
+
+}
+
+/* =====================================================
+   AP SYNAPSE — FINAL CHAT SCROLL FIX
+   ===================================================== */
+
+.app,
+.workspace,
+.chat {
+    min-height: 0;
+}
+
+.chat {
+    min-height: 0;
+    overflow: hidden;
+}
+
+#chatWindow {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scroll-behavior: smooth;
+
+    overscroll-behavior: contain;
+
+    scrollbar-width: thin;
+
+    padding: 28px 40px;
+}
+
+#chatWindow .message {
+    flex-shrink: 0;
+}
+
+#chatWindow .message-body {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+#chatWindow pre {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+#chatWindow img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL HISTORY POSITION FIX
+   ========================================================= */
+
+/* History chat container */
+#chatWindow {
+    width: 100% !important;
+    max-width: none !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+    padding: 30px 50px !important;
+}
+
+/* Every message row */
+#chatWindow .message,
+#chatWindow .user-message,
+#chatWindow .ai-message {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+    margin: 16px 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+}
+
+/* =========================================================
+   USER MESSAGE — RIGHT SIDE
+   ========================================================= */
+
+#chatWindow .message.user,
+#chatWindow .message.user-message,
+#chatWindow .user-message {
+    justify-content: flex-end !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 20% !important;
+    padding-right: 0 !important;
+}
+
+/* User message content */
+#chatWindow .message.user .message-body,
+#chatWindow .message.user-message .message-body,
+#chatWindow .user-message .message-body {
+    width: auto !important;
+    max-width: 75% !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+    text-align: left !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+}
+
+/* =========================================================
+   AI MESSAGE — LEFT SIDE
+   ========================================================= */
+
+#chatWindow .message.ai,
+#chatWindow .message.ai-message,
+#chatWindow .ai-message {
+    justify-content: flex-start !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 20% !important;
+}
+
+/* AI message content */
+#chatWindow .message.ai .message-body,
+#chatWindow .message.ai-message .message-body,
+#chatWindow .ai-message .message-body {
+    width: auto !important;
+    max-width: 75% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    text-align: left !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+}
+
+/* =========================================================
+   AVATAR
+   ========================================================= */
+
+#chatWindow .avatar {
+    flex: 0 0 38px !important;
+    width: 38px !important;
+    height: 38px !important;
+}
+
+/* =========================================================
+   MARKDOWN CONTENT
+   ========================================================= */
+
+#chatWindow .message-body {
+    box-sizing: border-box !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    white-space: normal !important;
+}
+
+#chatWindow .message-body p,
+#chatWindow .message-body ul,
+#chatWindow .message-body ol,
+#chatWindow .message-body h1,
+#chatWindow .message-body h2,
+#chatWindow .message-body h3,
+#chatWindow .message-body h4 {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Code */
+#chatWindow .message-body pre {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    box-sizing: border-box !important;
+}
+
+/* Images */
+#chatWindow .message-body img {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    #chatWindow {
+        padding: 25px 25px !important;
+    }
+
+    #chatWindow .message.user,
+    #chatWindow .message.user-message,
+    #chatWindow .user-message {
+        padding-left: 10% !important;
+    }
+
+    #chatWindow .message.ai,
+    #chatWindow .message.ai-message,
+    #chatWindow .ai-message {
+        padding-right: 10% !important;
+    }
+
+    #chatWindow .message-body {
+        max-width: 82% !important;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    #chatWindow {
+        padding: 18px 12px !important;
+    }
+
+    #chatWindow .message.user,
+    #chatWindow .message.user-message,
+    #chatWindow .user-message,
+    #chatWindow .message.ai,
+    #chatWindow .message.ai-message,
+    #chatWindow .ai-message {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    #chatWindow .message-body {
+        max-width: 88% !important;
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL APP LAYOUT + SIDEBAR CLICK FIX
+   ========================================================= */
+
+/* Keep animated background behind the entire application */
+body::before,
+.stars,
+.background {
+    pointer-events: none;
+}
+
+/* Main application must sit above background layers */
+.app {
+    position: relative;
+    z-index: 20;
+
+    display: flex;
+    width: 100%;
+    height: 100vh;
+
+    margin: 0;
+    padding: 0;
+
+    overflow: hidden;
+}
+
+/* Sidebar */
+.app .sidebar {
+    position: relative;
+    z-index: 100;
+
+    flex: 0 0 260px;
+    width: 260px;
+    height: 100vh;
+
+    pointer-events: auto;
+
+    box-sizing: border-box;
+}
+
+/* Sidebar navigation must receive clicks */
+.app .sidebar nav,
+.app .sidebar nav a,
+.app .sidebar .menu-item {
+    position: relative;
+    z-index: 101;
+    pointer-events: auto;
+}
+
+/* Workspace */
+.app .workspace {
+    position: relative;
+    z-index: 20;
+
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+
+    width: auto;
+    height: 100vh;
+
+    overflow: hidden;
+
+    box-sizing: border-box;
+}
+
+/* Prevent content from pushing the workspace sideways */
+.workspace > *,
+.workspace header,
+.workspace .actions,
+.workspace .chat,
+.workspace .input-box {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Chat must stay inside workspace */
+.workspace .chat {
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* Make sure the welcome/action cards don't create horizontal overflow */
+.actions {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Background animation can NEVER block UI interaction */
+body::before {
+    z-index: 0;
+    pointer-events: none;
+}
+
+.stars {
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* UI stays above animated layers */
+.app,
+.app * {
+    pointer-events: auto;
+}
+
+/* But decorative elements remain non-interactive */
+.app .background,
+.app .stars,
+.app canvas {
+    pointer-events: none;
+}
+
+/* Desktop layout */
+@media (min-width: 851px) {
+
+    .app .sidebar {
+        display: flex;
+    }
+
+    .app .workspace {
+        margin-left: 0;
+        transform: none;
+    }
+}
+
+/* Smaller screens */
+@media (max-width: 850px) {
+
+    .app .sidebar {
+        display: none;
+    }
+
+    .app .workspace {
+        width: 100%;
+        margin-left: 0;
+        transform: none;
+    }
+}

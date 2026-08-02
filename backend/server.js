@@ -20,9 +20,7 @@ import {
     remember
 } from "./memory/index.js";
 
-import {
-    createStream
-} from "./services/index.js";
+import { createAIStream } from "./services/router.js";
 
 dotenv.config();
 
@@ -225,9 +223,6 @@ documentMemory
 ? documentMemory.content
 : "";
 
-        const document =
-req.body.document || "";
-
 if(web){
 
 messages.unshift({
@@ -268,6 +263,7 @@ User Question:
 
 ${message}`
 : message
+
 
 });
 
@@ -325,13 +321,7 @@ Reply:
 "No.
 I am AP Synapse."
 
-If someone asks:
-
-"What powers you?"
-
-Reply:
-
-"I operate through the AP Synapse Intelligence Engine."
+If someone asks what powers you or which technology you use, explain that AP Synapse is built by Anuprit Patil and uses multiple AI technologies through its own intelligence engine. If the user specifically asks which underlying AI provider generated the current response, answer truthfully.
 
 Never say you use APIs.
 
@@ -376,7 +366,7 @@ if (isImageRequest) {
 
 }
 
-        const stream = await createStream(messages);
+        const stream = await createAIStream(messages);
 
         console.log("STEP 3 ✅");
 

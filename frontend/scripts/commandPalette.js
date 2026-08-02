@@ -63,7 +63,7 @@ break;
 
 case "about":
 
-document.getElementById("aboutBtn").click();
+window.location.href = "about.html";
 
 break;
 
@@ -72,3 +72,45 @@ break;
 };
 
 });
+
+const profileSidebarBtn = document.getElementById("profileSidebarBtn");
+
+if (profileSidebarBtn) {
+    profileSidebarBtn.addEventListener("click", () => {
+        const profileBtn = document.getElementById("profileBtn");
+
+        if (profileBtn) {
+            profileBtn.click();
+        }
+    });
+}
+
+// AP Synapse — Google Sign-In
+window.onload = function () {
+
+    google.accounts.id.initialize({
+        client_id: "94855354634-27opp9jpmco5lt5010b35rgdt9ll1dto.apps.googleusercontent.com",
+        callback: handleGoogleSignIn
+    });
+
+    google.accounts.id.renderButton(
+    document.getElementById("googleSignInButton"),
+    {
+        theme: "outline",
+        size: "large",
+        text: "signin_with",
+        shape: "rectangular",
+        width: 280
+    }
+);
+
+};
+
+function handleGoogleSignIn(response) {
+
+    console.log("Google sign-in successful.");
+
+    // The Google credential is received here.
+    // We will connect it to the AP Synapse profile next.
+    console.log(response);
+};

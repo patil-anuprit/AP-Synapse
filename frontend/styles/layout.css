@@ -911,3 +911,489 @@ pointer-events:none;
         height:36px;
     }
 }
+
+/* =========================================================
+   AP SYNAPSE — EMERGENCY MOBILE LAYOUT OVERRIDE
+   MUST BE LAST
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    html,
+    body {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+
+    /* REMOVE THE BROKEN GRID BEHAVIOR */
+    .app {
+        display: block !important;
+        position: relative !important;
+
+        width: 100vw !important;
+        max-width: 100vw !important;
+        min-width: 0 !important;
+
+        height: 100dvh !important;
+        overflow: hidden !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* FORCE SIDEBAR TO EXIST */
+    .sidebar {
+        display: flex !important;
+
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        width: 64px !important;
+        min-width: 64px !important;
+        max-width: 64px !important;
+
+        height: 100dvh !important;
+
+        padding: 12px 6px !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+
+        z-index: 9999 !important;
+
+        flex-direction: column !important;
+        align-items: center !important;
+
+        background: rgba(18,20,24,.97) !important;
+        backdrop-filter: blur(24px) !important;
+
+        border-right: 1px solid var(--border) !important;
+    }
+
+    /* HIDE TEXT, KEEP SIDEBAR CONTROLS */
+    .sidebar .brand-text,
+    .sidebar .sidebar-search,
+    .sidebar .sidebar-group h4,
+    .sidebar .version {
+        display: none !important;
+    }
+
+    .sidebar .brand {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    .sidebar .brand-mark {
+        width: 40px !important;
+        height: 40px !important;
+        min-width: 40px !important;
+    }
+
+    .sidebar .new-chat-btn {
+        width: 42px !important;
+        height: 42px !important;
+
+        margin: 18px auto !important;
+        padding: 0 !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        font-size: 0 !important;
+    }
+
+    .sidebar .new-chat-btn span:first-child {
+        display: block !important;
+        font-size: 21px !important;
+    }
+
+    .sidebar .new-chat-btn span:last-child {
+        display: none !important;
+    }
+
+    .sidebar nav {
+        width: 100% !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+
+        gap: 7px !important;
+    }
+
+    .sidebar nav a {
+        display: flex !important;
+
+        width: 42px !important;
+        height: 42px !important;
+
+        min-width: 42px !important;
+
+        padding: 0 !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        font-size: 0 !important;
+    }
+
+    /* MOBILE ICONS */
+    .sidebar-group nav a:nth-child(1)::before {
+        content: "⌂" !important;
+        font-size: 18px !important;
+    }
+
+    .sidebar-group nav a:nth-child(2)::before {
+        content: "▦" !important;
+        font-size: 18px !important;
+    }
+
+    .sidebar-group nav a:nth-child(3)::before {
+        content: "✦" !important;
+        font-size: 17px !important;
+    }
+
+    .sidebar-group nav a:nth-child(4)::before {
+        content: "▤" !important;
+        font-size: 17px !important;
+    }
+
+    .sidebar-group nav a:nth-child(5)::before {
+        content: "⚡" !important;
+        font-size: 16px !important;
+    }
+
+    .sidebar-group nav a:nth-child(6)::before {
+        content: "</>" !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+    }
+
+    .sidebar-group nav a:nth-child(7)::before {
+        content: "□" !important;
+        font-size: 18px !important;
+    }
+
+    .sidebar-footer {
+        width: 100% !important;
+        margin-top: auto !important;
+    }
+
+    .sidebar-footer nav a:first-child::before {
+        content: "⚙" !important;
+        font-size: 17px !important;
+    }
+
+    .sidebar-footer nav a:last-child::before {
+        content: "●" !important;
+        font-size: 13px !important;
+    }
+
+    /* =====================================================
+       MAIN WORKSPACE
+       ===================================================== */
+
+    .workspace {
+        display: flex !important;
+
+        position: relative !important;
+
+        width: calc(100vw - 64px) !important;
+        max-width: calc(100vw - 64px) !important;
+        min-width: 0 !important;
+
+        height: 100dvh !important;
+
+        margin-left: 64px !important;
+
+        padding: 0 !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+    }
+
+    /* TOP BAR */
+    .topbar {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: 62px !important;
+
+        padding: 9px 12px !important;
+
+        margin: 0 !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .topbar-center {
+        display: none !important;
+    }
+
+    .topbar-left {
+        min-width: 0 !important;
+        flex: 1 !important;
+    }
+
+    .workspace-title {
+        min-width: 0 !important;
+    }
+
+    .workspace-title h1,
+    .greeting h1 {
+        font-size: 17px !important;
+        white-space: nowrap !important;
+    }
+
+    .workspace-title p,
+    .greeting p {
+        display: none !important;
+    }
+
+    .topbar-right {
+        flex-shrink: 0 !important;
+        gap: 4px !important;
+    }
+
+    .top-icon {
+        width: 32px !important;
+        height: 32px !important;
+        padding: 0 !important;
+    }
+
+    .profile-button {
+        width: 34px !important;
+        height: 34px !important;
+    }
+
+    /* =====================================================
+       CONTENT — FORCE EVERYTHING INSIDE VIEWPORT
+       ===================================================== */
+
+    .workspace-content {
+        display: block !important;
+
+        position: relative !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: calc(100dvh - 62px) !important;
+
+        padding: 0 10px 75px !important;
+
+        margin: 0 !important;
+
+        box-sizing: border-box !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+    }
+
+    .conversation {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        min-height: calc(100dvh - 140px) !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        box-sizing: border-box !important;
+    }
+
+    /* =====================================================
+       HERO — CENTERED
+       ===================================================== */
+
+    .hero-screen {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        min-height: calc(100dvh - 145px) !important;
+
+        padding: 15px 5px 80px !important;
+
+        box-sizing: border-box !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .hero-container {
+        width: 100% !important;
+        max-width: 360px !important;
+        min-width: 0 !important;
+
+        margin: auto !important;
+        padding: 0 !important;
+
+        box-sizing: border-box !important;
+
+        text-align: center !important;
+    }
+
+    .hero-title {
+        width: 100% !important;
+        max-width: 360px !important;
+
+        font-size: 29px !important;
+        line-height: 1.08 !important;
+
+        letter-spacing: -1px !important;
+
+        overflow-wrap: break-word !important;
+    }
+
+    .hero-description {
+        width: 100% !important;
+        max-width: 320px !important;
+
+        margin: 12px auto 20px !important;
+
+        font-size: 12px !important;
+        line-height: 1.5 !important;
+    }
+
+    .hero-prompt {
+        width: 100% !important;
+        max-width: 340px !important;
+
+        margin: 0 auto !important;
+
+        display: grid !important;
+
+        grid-template-columns: 1fr 1fr !important;
+
+        gap: 8px !important;
+    }
+
+    .prompt-chip {
+        width: 100% !important;
+        min-width: 0 !important;
+
+        height: 44px !important;
+
+        padding: 0 3px !important;
+
+        box-sizing: border-box !important;
+
+        font-size: 10px !important;
+
+        border-radius: 12px !important;
+    }
+
+    /* =====================================================
+       COMMAND BAR
+       ===================================================== */
+
+    .command-section {
+        position: fixed !important;
+
+        left: 70px !important;
+        right: 6px !important;
+        bottom: 6px !important;
+
+        width: auto !important;
+
+        margin: 0 !important;
+
+        z-index: 10000 !important;
+    }
+
+    .command-bar {
+        width: 100% !important;
+        min-width: 0 !important;
+
+        height: 52px !important;
+
+        padding: 5px 5px 5px 10px !important;
+
+        gap: 3px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    #userInput {
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+
+        font-size: 11px !important;
+    }
+
+    .command-bar button {
+        flex: 0 0 27px !important;
+
+        width: 27px !important;
+        height: 34px !important;
+
+        padding: 0 !important;
+    }
+
+    #sendBtn {
+        flex: 0 0 36px !important;
+
+        width: 36px !important;
+        height: 37px !important;
+    }
+
+    /* CHAT */
+    #chatWindow {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+
+        padding-bottom: 75px !important;
+
+        overflow-x: hidden !important;
+    }
+
+    /* PROJECT / WORKSPACE PAGES */
+    .projects-page {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        padding: 20px 4px 80px !important;
+
+        box-sizing: border-box !important;
+
+        overflow-x: hidden !important;
+    }
+
+    .projects-grid {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        grid-template-columns: 1fr !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .project-card {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        box-sizing: border-box !important;
+    }
+}

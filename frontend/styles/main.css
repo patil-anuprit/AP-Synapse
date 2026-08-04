@@ -8287,3 +8287,469 @@ body {
     }
 
 }
+
+/* =========================================================
+   AP SYNAPSE — FINAL MOBILE RESPONSIVE SYSTEM
+   Mobile: 320px → 430px+
+   Desktop design remains untouched
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    /* ---------- GLOBAL ---------- */
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    html {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        margin: 0;
+        overflow-x: hidden;
+        overscroll-behavior-x: none;
+    }
+
+    img,
+    video,
+    canvas,
+    iframe {
+        max-width: 100%;
+        height: auto;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+        max-width: 100%;
+        font: inherit;
+    }
+
+    button,
+    [role="button"] {
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ---------- APP SHELL ---------- */
+
+    #app,
+    .app,
+    .app-container,
+    .app-shell,
+    .main-app {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+    }
+
+    /* ---------- SIDEBAR ---------- */
+
+    .sidebar {
+        width: min(84vw, 320px);
+        max-width: 320px;
+        min-width: 0;
+        z-index: 1000;
+    }
+
+    .sidebar *,
+    .sidebar button,
+    .sidebar a {
+        max-width: 100%;
+    }
+
+    /* Prevent desktop sidebar from crushing content */
+    .sidebar.open + .main-content,
+    .sidebar.open ~ .main-content {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* ---------- TOPBAR ---------- */
+
+    .topbar,
+    .top-bar,
+    header.topbar {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        padding-left: max(12px, env(safe-area-inset-left));
+        padding-right: max(12px, env(safe-area-inset-right));
+    }
+
+    .topbar > *,
+    .top-bar > * {
+        min-width: 0;
+    }
+
+    .topbar-title,
+    .topbar .title,
+    .top-bar .title {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* ---------- MAIN CONTENT ---------- */
+
+    .main-content,
+    .main,
+    .content,
+    .workspace,
+    .workspace-container {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    /* ---------- HERO ---------- */
+
+    .hero,
+    .hero-section,
+    .hero-content {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .hero {
+        padding:
+            32px
+            max(18px, env(safe-area-inset-right))
+            24px
+            max(18px, env(safe-area-inset-left));
+    }
+
+    .hero h1,
+    .hero-title {
+        font-size: clamp(2rem, 9vw, 3.2rem);
+        line-height: 1.05;
+        letter-spacing: -0.04em;
+        overflow-wrap: anywhere;
+    }
+
+    .hero p,
+    .hero-description {
+        max-width: 100%;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    /* ---------- CHAT AREA ---------- */
+
+    .chat,
+    .chat-container,
+    .chat-area,
+    .conversation,
+    .messages {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+    }
+
+    .message,
+    .message-container,
+    .user-message,
+    .assistant-message,
+    .message-content {
+        max-width: 100%;
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .message-content pre {
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .message-content code {
+        overflow-wrap: anywhere;
+    }
+
+    /* ---------- COMPOSER ---------- */
+
+    .composer,
+    .chat-composer,
+    .input-container,
+    .message-input-container {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    textarea,
+    .chat-input,
+    .message-input,
+    .composer textarea {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        font-size: 16px; /* prevents iOS zoom */
+        line-height: 1.45;
+    }
+
+    .composer {
+        padding:
+            8px
+            max(12px, env(safe-area-inset-right))
+            max(8px, env(safe-area-inset-bottom))
+            max(12px, env(safe-area-inset-left));
+    }
+
+    .composer button,
+    .chat-composer button,
+    .send-button {
+        min-width: 42px;
+        min-height: 42px;
+        flex-shrink: 0;
+    }
+
+    /* ---------- WORKSPACE PANELS ---------- */
+
+    .workspace-panel,
+    .panel,
+    .workspace-card,
+    .tool-panel,
+    .content-panel {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+    }
+
+    .workspace-grid,
+    .dashboard-grid,
+    .cards-grid,
+    .tool-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* ---------- BUTTONS ---------- */
+
+    .actions,
+    .button-row,
+    .toolbar,
+    .topbar-actions {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .actions button,
+    .button-row button,
+    .toolbar button {
+        min-height: 42px;
+    }
+
+    /* ---------- MODALS ---------- */
+
+    .modal,
+    .modal-content,
+    .dialog,
+    .command-palette {
+        width: calc(100vw - 24px);
+        max-width: calc(100vw - 24px);
+        min-width: 0;
+        max-height: calc(100dvh - 24px);
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    /* ---------- SETTINGS ---------- */
+
+    .settings,
+    .settings-panel,
+    .settings-content {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .settings-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* ---------- TABLES ---------- */
+
+    table {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* ---------- FORMS ---------- */
+
+    form {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    input,
+    textarea,
+    select {
+        min-width: 0;
+    }
+
+    /* ---------- MOBILE TYPOGRAPHY ---------- */
+
+    h1 {
+        font-size: clamp(1.8rem, 8vw, 2.6rem);
+    }
+
+    h2 {
+        font-size: clamp(1.4rem, 6vw, 2rem);
+    }
+
+    h3 {
+        font-size: clamp(1.15rem, 5vw, 1.5rem);
+    }
+
+    /* ---------- MOBILE SCROLL ---------- */
+
+    .scroll-area,
+    .messages,
+    .workspace-content {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+
+/* =========================================================
+   SMALL PHONES — 320px–380px
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .hero {
+        padding-top: 24px;
+        padding-bottom: 20px;
+    }
+
+    .hero h1,
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .topbar,
+    .top-bar {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .composer {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .sidebar {
+        width: min(88vw, 300px);
+    }
+}
+
+
+/* =========================================================
+   STANDARD PHONES — 381px–430px
+   ========================================================= */
+
+@media (min-width: 381px) and (max-width: 430px) {
+
+    .hero {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .composer {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+}
+
+
+/* =========================================================
+   LANDSCAPE PHONES
+   ========================================================= */
+
+@media (max-width: 768px) and (orientation: landscape) {
+
+    .hero {
+        padding-top: 20px;
+        padding-bottom: 16px;
+    }
+
+    .modal,
+    .command-palette {
+        max-height: calc(100dvh - 16px);
+    }
+}
+
+
+/* =========================================================
+   VERY SHORT SCREENS
+   ========================================================= */
+
+@media (max-width: 768px) and (max-height: 600px) {
+
+    .hero {
+        padding-top: 16px;
+        padding-bottom: 12px;
+    }
+}
+
+
+/* =========================================================
+   SAFE AREA — MODERN PHONES
+   ========================================================= */
+
+@supports (padding: env(safe-area-inset-bottom)) {
+
+    .app,
+    .app-shell {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .sidebar {
+        padding-left: env(safe-area-inset-left);
+    }
+}
+
+
+/* =========================================================
+   ACCESSIBILITY / TOUCH
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    button,
+    a,
+    input,
+    select,
+    textarea {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    :focus-visible {
+        outline-offset: 3px;
+    }
+}

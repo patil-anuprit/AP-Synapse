@@ -1934,3 +1934,531 @@ pointer-events:none;
         font-size:10px !important;
     }
 }
+
+/* =========================================================
+   AP SYNAPSE — MOBILE RESPONSIVE ENGINE
+   FINAL MOBILE OVERRIDE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    /* ---------- GLOBAL ---------- */
+
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+
+    body {
+        position: relative;
+    }
+
+    /* ---------- APP ---------- */
+
+    .app {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        height: 100dvh !important;
+        overflow: hidden !important;
+    }
+
+    /* ---------- SIDEBAR ---------- */
+
+    .sidebar {
+        display: none !important;
+    }
+
+    /* ---------- WORKSPACE ---------- */
+
+    .workspace {
+        display: flex !important;
+        flex-direction: column !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: 100dvh !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    /* ---------- TOPBAR ---------- */
+
+    .topbar {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: auto !important;
+        min-height: 64px !important;
+
+        padding: 14px 16px !important;
+        margin: 0 !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .topbar-left {
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .workspace-title {
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .workspace-badge {
+        font-size: 9px !important;
+        letter-spacing: 1.5px !important;
+    }
+
+    .workspace-title h1,
+    #greeting {
+        font-size: 20px !important;
+        line-height: 1.1 !important;
+
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+
+        margin: 2px 0 !important;
+    }
+
+    .workspace-title p {
+        display: none !important;
+    }
+
+    /* Hide large desktop controls */
+
+    .topbar-center {
+        display: none !important;
+    }
+
+    .topbar-right {
+        display: flex !important;
+        flex-shrink: 0 !important;
+        gap: 6px !important;
+    }
+
+    .top-icon {
+        width: 36px !important;
+        height: 36px !important;
+        padding: 0 !important;
+    }
+
+    .profile-button {
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        padding: 0 !important;
+    }
+
+    /* ---------- CONTENT ---------- */
+
+    .workspace-content {
+        display: flex !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        flex: 1 !important;
+
+        height: auto !important;
+        min-height: 0 !important;
+
+        overflow: hidden !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .conversation {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: 100% !important;
+        min-height: 0 !important;
+
+        padding: 0 16px !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+    }
+
+    /* ---------- HERO ---------- */
+
+    .hero-screen {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        min-height: 0 !important;
+        height: 100% !important;
+
+        padding: 20px 0 110px !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        box-sizing: border-box !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    .hero-container {
+        width: 100% !important;
+        max-width: 520px !important;
+        min-width: 0 !important;
+
+        margin: auto !important;
+        padding: 20px 0 !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        text-align: center !important;
+
+        gap: 16px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .hero-badge {
+        margin: 0 0 4px !important;
+        padding: 6px 14px !important;
+
+        font-size: 9px !important;
+        letter-spacing: 1.7px !important;
+    }
+
+    .hero-title {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        font-size: clamp(32px, 10vw, 46px) !important;
+
+        line-height: 1.02 !important;
+        letter-spacing: -1.5px !important;
+
+        margin: 0 !important;
+
+        overflow-wrap: normal !important;
+    }
+
+    .hero-description {
+        width: 100% !important;
+        max-width: 400px !important;
+
+        margin: 0 auto !important;
+
+        padding: 0 10px !important;
+
+        font-size: 14px !important;
+        line-height: 1.55 !important;
+
+        box-sizing: border-box !important;
+    }
+
+    /* ---------- HERO CHIPS ---------- */
+
+    .hero-prompt {
+        width: 100% !important;
+        max-width: 420px !important;
+
+        display: grid !important;
+
+        grid-template-columns: 1fr 1fr !important;
+
+        gap: 10px !important;
+
+        margin-top: 4px !important;
+    }
+
+    .prompt-chip {
+        width: 100% !important;
+        min-width: 0 !important;
+
+        height: 48px !important;
+
+        padding: 0 8px !important;
+
+        border-radius: 14px !important;
+
+        font-size: 13px !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
+    /* ---------- CHAT WINDOW ---------- */
+
+    #chatWindow {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: 100% !important;
+
+        padding: 10px 0 100px !important;
+
+        box-sizing: border-box !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+    }
+
+    .message {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        box-sizing: border-box !important;
+    }
+
+    /* ---------- PROJECT / WORKSPACE PAGES ---------- */
+
+    .projects-page {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: 100% !important;
+
+        padding: 24px 16px 110px !important;
+
+        box-sizing: border-box !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    .projects-header {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .projects-header h1 {
+        font-size: 28px !important;
+        line-height: 1.15 !important;
+    }
+
+    .projects-header p {
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+    }
+
+    .projects-grid {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+
+        gap: 12px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .project-card {
+        width: 100% !important;
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+    }
+
+    /* ---------- COMMAND BAR ---------- */
+
+    .command-section {
+        position: fixed !important;
+
+        left: 8px !important;
+        right: 8px !important;
+        bottom: 8px !important;
+
+        width: auto !important;
+
+        z-index: 1000 !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .command-bar {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        display: flex !important;
+        align-items: center !important;
+
+        padding: 7px !important;
+
+        border-radius: 18px !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+    }
+
+    #userInput {
+        flex: 1 1 auto !important;
+
+        width: auto !important;
+        min-width: 0 !important;
+
+        font-size: 13px !important;
+
+        padding: 10px 8px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .command-bar button {
+        flex: 0 0 auto !important;
+
+        width: 34px !important;
+        height: 34px !important;
+
+        min-width: 34px !important;
+
+        padding: 0 !important;
+
+        border-radius: 10px !important;
+
+        font-size: 15px !important;
+    }
+
+    #deepThinkBtn {
+        display: none !important;
+    }
+
+    #stopBtn {
+        display: none !important;
+    }
+
+    #sendBtn {
+        width: 38px !important;
+        min-width: 38px !important;
+        height: 38px !important;
+
+        border-radius: 12px !important;
+    }
+
+    /* ---------- MODALS ---------- */
+
+    .project-modal {
+        position: fixed !important;
+
+        inset: 0 !important;
+
+        width: 100vw !important;
+        height: 100dvh !important;
+
+        padding: 16px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .project-box {
+        width: 100% !important;
+        max-width: 440px !important;
+
+        box-sizing: border-box !important;
+    }
+
+}
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 430px) {
+
+    .hero-screen {
+        padding-top: 10px !important;
+    }
+
+    .hero-container {
+        max-width: 100% !important;
+        padding: 12px 0 !important;
+    }
+
+    .hero-title {
+        font-size: clamp(30px, 9.5vw, 40px) !important;
+    }
+
+    .hero-description {
+        font-size: 13px !important;
+        max-width: 340px !important;
+    }
+
+    .hero-prompt {
+        max-width: 340px !important;
+        gap: 8px !important;
+    }
+
+    .prompt-chip {
+        height: 44px !important;
+        font-size: 12px !important;
+        border-radius: 12px !important;
+    }
+
+    .command-section {
+        left: 6px !important;
+        right: 6px !important;
+        bottom: 6px !important;
+    }
+
+    .command-bar {
+        padding: 5px !important;
+        border-radius: 16px !important;
+    }
+
+    #userInput {
+        font-size: 12px !important;
+    }
+
+    .command-bar button {
+        width: 31px !important;
+        min-width: 31px !important;
+        height: 31px !important;
+        font-size: 14px !important;
+    }
+
+    #sendBtn {
+        width: 36px !important;
+        min-width: 36px !important;
+        height: 36px !important;
+    }
+
+}

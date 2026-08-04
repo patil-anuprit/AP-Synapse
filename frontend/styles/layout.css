@@ -215,80 +215,278 @@ pointer-events:none;
 }
 
 /* =========================================================
-   AP SYNAPSE — MOBILE RESPONSIVE ENGINE
+   AP SYNAPSE — FINAL MOBILE RESPONSIVE ENGINE
    ========================================================= */
 
 @media (max-width: 700px){
 
+    /* ---------- GLOBAL ---------- */
+
     html,
     body{
         width:100%;
-        max-width:100%;
         min-width:0;
+        max-width:100%;
         margin:0;
         padding:0;
-        overflow-x:hidden;
+        overflow:hidden;
     }
+
+    body{
+        min-height:100dvh;
+    }
+
+    /* ---------- APP ---------- */
 
     .app{
-        display:block;
+        display:grid;
+        grid-template-columns:72px minmax(0,1fr);
         width:100%;
-        min-width:0;
         height:100dvh;
+        min-width:0;
         overflow:hidden;
     }
 
-    /* ---------- MOBILE SIDEBAR ---------- */
+    /* =====================================================
+       MOBILE SIDEBAR
+       ===================================================== */
 
     .sidebar{
-        display:none;
-    }
-
-    /* ---------- MAIN WORKSPACE ---------- */
-
-    .workspace{
-        width:100%;
-        max-width:100%;
-        min-width:0;
-        height:100dvh;
-        padding:0;
-        margin:0;
-        overflow:hidden;
-        box-sizing:border-box;
-    }
-
-    /* ---------- TOP BAR ---------- */
-
-    .topbar{
-        width:100%;
-        height:auto;
-        min-height:64px;
-        padding:14px 16px;
-        margin:0;
-        box-sizing:border-box;
         display:flex;
+        position:relative;
+        width:72px;
+        min-width:72px;
+        height:100dvh;
+        padding:14px 8px;
+        box-sizing:border-box;
+        overflow:hidden;
+
+        flex-direction:column;
         align-items:center;
+
+        background:rgba(18,20,24,.94);
+        backdrop-filter:blur(24px);
+
+        border-right:1px solid var(--border);
+
+        z-index:500;
+    }
+
+    .sidebar-header{
+        width:100%;
+    }
+
+    .brand{
+        width:100%;
         justify-content:center;
     }
 
-    .topbar-left{
+    .brand-mark{
+        width:42px;
+        height:42px;
+        min-width:42px;
+
+        display:flex;
+        align-items:center;
+        justify-content:center;
+
+        border-radius:13px;
+    }
+
+    .brand-text{
+        display:none;
+    }
+
+    .new-chat-btn{
+        width:48px;
+        height:48px;
+        margin:20px auto 14px;
+
+        padding:0;
+
+        display:flex;
+        align-items:center;
+        justify-content:center;
+
+        border-radius:14px;
+
+        font-size:0;
+    }
+
+    .new-chat-btn span:first-child{
+        font-size:22px;
+    }
+
+    .new-chat-btn span:last-child{
+        display:none;
+    }
+
+    .sidebar-search{
+        display:none;
+    }
+
+    .sidebar-group{
+        width:100%;
+        margin-top:12px;
+    }
+
+    .sidebar-group h4{
+        display:none;
+    }
+
+    .sidebar-group nav{
+        width:100%;
+        align-items:center;
+        gap:8px;
+    }
+
+    .sidebar nav a{
+        width:48px;
+        height:44px;
+
+        padding:0;
+
+        display:flex;
+        align-items:center;
+        justify-content:center;
+
+        border-radius:13px;
+
+        font-size:0;
+        white-space:nowrap;
+    }
+
+    /*
+       Show compact symbols without changing HTML.
+    */
+
+    .sidebar-group nav a::before{
+        font-size:17px;
+    }
+
+    .sidebar-group nav a:nth-child(1)::before{
+        content:"⌂";
+    }
+
+    .sidebar-group nav a:nth-child(2)::before{
+        content:"▦";
+    }
+
+    .sidebar-group nav a:nth-child(3)::before{
+        content:"✦";
+    }
+
+    .sidebar-group nav a:nth-child(4)::before{
+        content:"▤";
+    }
+
+    .sidebar-group nav a:nth-child(5)::before{
+        content:"⚡";
+    }
+
+    .sidebar-group nav a:nth-child(6)::before{
+        content:"</>";
+        font-size:12px;
+        font-weight:700;
+    }
+
+    .sidebar-group nav a:nth-child(7)::before{
+        content:"□";
+    }
+
+    .sidebar-footer{
+        width:100%;
+        margin-top:auto;
+    }
+
+    .sidebar-footer nav{
+        width:100%;
+        align-items:center;
+    }
+
+    .sidebar-footer nav a{
+        width:48px;
+        height:44px;
+        padding:0;
+
+        display:flex;
+        align-items:center;
+        justify-content:center;
+
+        font-size:0;
+    }
+
+    .sidebar-footer nav a:first-child::before{
+        content:"⚙";
+        font-size:17px;
+    }
+
+    .sidebar-footer nav a:nth-child(2)::before{
+        content:"●";
+        font-size:14px;
+    }
+
+    .version{
+        display:none;
+    }
+
+    /* =====================================================
+       WORKSPACE
+       ===================================================== */
+
+    .workspace{
         width:100%;
         min-width:0;
+        max-width:none;
+
+        height:100dvh;
+
+        padding:0;
+
+        overflow:hidden;
+
+        box-sizing:border-box;
+    }
+
+    /* =====================================================
+       TOPBAR
+       ===================================================== */
+
+    .topbar{
+        width:100%;
+        min-width:0;
+        height:64px;
+
+        padding:10px 14px;
+
+        margin:0;
+
+        box-sizing:border-box;
+
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+    }
+
+    .topbar-left{
+        width:auto;
+        min-width:0;
+        flex:1;
     }
 
     .workspace-title{
-        width:100%;
-        text-align:center;
+        min-width:0;
     }
 
     .workspace-badge{
         font-size:8px;
-        letter-spacing:1.5px;
+        letter-spacing:1.4px;
     }
 
     .greeting h1{
-        font-size:18px;
-        margin:3px 0 0;
+        margin:2px 0 0;
+        font-size:17px;
+        line-height:1.1;
     }
 
     .greeting p{
@@ -300,234 +498,341 @@ pointer-events:none;
     }
 
     .topbar-right{
-        display:none;
+        display:flex;
+        gap:5px;
+        flex:0 0 auto;
     }
 
-    /* ---------- CONTENT ---------- */
+    .topbar-right .top-icon{
+        width:34px;
+        height:34px;
+        padding:0;
+        font-size:14px;
+    }
+
+    .profile-button{
+        width:36px;
+        height:36px;
+        padding:0;
+        font-size:12px;
+    }
+
+    /* =====================================================
+       CONTENT
+       ===================================================== */
 
     .workspace-content{
         width:100%;
         min-width:0;
-        height:calc(100dvh - 70px);
-        padding:0 14px 90px;
+
+        height:calc(100dvh - 64px);
+
+        padding:0 12px 78px;
+
         box-sizing:border-box;
+
         overflow-y:auto;
         overflow-x:hidden;
+
         display:block;
     }
 
     .conversation{
         width:100%;
         min-width:0;
-        height:auto;
+
         min-height:100%;
+
         display:flex;
-        justify-content:flex-start;
+
         align-items:center;
+        justify-content:center;
+
         box-sizing:border-box;
     }
 
-    /* ---------- HERO ---------- */
+    /* =====================================================
+       HERO
+       ===================================================== */
 
     .hero-screen{
         width:100%;
         min-width:0;
-        min-height:calc(100dvh - 150px);
-        padding:30px 4px 100px;
+
+        min-height:calc(100dvh - 145px);
+
+        padding:20px 0 80px;
+
         box-sizing:border-box;
+
         display:flex;
-        justify-content:center;
         align-items:center;
+        justify-content:center;
     }
 
     .hero-container{
         width:100%;
-        max-width:100%;
+        max-width:430px;
         min-width:0;
+
         margin:0 auto;
-        padding:0;
-        gap:16px;
+
+        padding:0 8px;
+
         box-sizing:border-box;
+
+        display:flex;
+        flex-direction:column;
+
+        align-items:center;
+        justify-content:center;
+
+        text-align:center;
+
+        gap:14px;
     }
 
     .hero-badge{
-        font-size:9px;
+        margin-bottom:2px;
+
         padding:5px 13px;
-        margin-bottom:5px;
+
+        font-size:8px;
         letter-spacing:1.5px;
     }
 
     .hero-title{
         width:100%;
-        max-width:100%;
-        font-size:32px;
+        max-width:390px;
+
+        margin:0;
+
+        padding:0;
+
+        font-size:30px;
         line-height:1.08;
-        letter-spacing:-1.4px;
-        padding:0 4px;
-        box-sizing:border-box;
+        letter-spacing:-1.3px;
+
+        overflow-wrap:break-word;
     }
 
     .hero-description{
         width:100%;
-        max-width:340px;
-        font-size:13px;
-        line-height:1.55;
+        max-width:330px;
+
         margin:0 auto 8px;
-        padding:0 8px;
-        box-sizing:border-box;
+        padding:0;
+
+        font-size:12px;
+        line-height:1.55;
     }
 
     .hero-prompt{
         width:100%;
-        max-width:360px;
+        max-width:350px;
+
         grid-template-columns:1fr 1fr;
-        gap:9px;
+
+        gap:8px;
+
         margin:0 auto;
     }
 
     .prompt-chip{
         width:100%;
-        height:48px;
         min-width:0;
-        padding:0 6px;
-        border-radius:14px;
-        font-size:12px;
+        height:46px;
+
+        padding:0 5px;
+
+        border-radius:13px;
+
+        font-size:11px;
+
         box-sizing:border-box;
     }
 
-    /* ---------- CHAT ---------- */
+    /* =====================================================
+       CHAT
+       ===================================================== */
 
     #chatWindow{
         width:100%;
         max-width:100%;
         min-width:0;
-        height:auto;
-        min-height:100%;
-        padding:15px 2px 100px;
+
+        height:100%;
+
+        padding:12px 0 85px;
+
         box-sizing:border-box;
+
         overflow-x:hidden;
+        overflow-y:auto;
     }
 
     .message{
-        max-width:100%;
         width:100%;
+        max-width:100%;
+
         box-sizing:border-box;
     }
 
     .message-body{
-        max-width:calc(100% - 42px);
+        max-width:calc(100% - 45px);
+
         min-width:0;
+
         overflow-wrap:anywhere;
         word-break:break-word;
     }
 
-    /* ---------- PROJECT / WORKSPACE PAGES ---------- */
+    /* =====================================================
+       PROJECTS / WORKSPACES
+       ===================================================== */
 
     .projects-page{
         width:100%;
         max-width:100%;
         min-width:0;
+
+        padding:22px 4px 90px;
+
         box-sizing:border-box;
-        padding:20px 4px 110px;
+
         overflow:hidden;
     }
 
     .projects-header{
         width:100%;
+        max-width:100%;
+
         text-align:center;
+
         box-sizing:border-box;
     }
 
     .projects-header h1{
-        font-size:26px;
+        font-size:25px;
         line-height:1.2;
     }
 
     .projects-header p{
-        font-size:13px;
+        font-size:12px;
         line-height:1.5;
     }
 
     .projects-grid{
         width:100%;
         max-width:100%;
+
         grid-template-columns:1fr;
-        gap:12px;
+
+        gap:10px;
+
         box-sizing:border-box;
     }
 
     .project-card{
         width:100%;
         min-width:0;
+
         box-sizing:border-box;
+
+        overflow:hidden;
     }
 
-    /* ---------- FLOATING COMMAND BAR ---------- */
+    /* =====================================================
+       COMMAND BAR
+       ===================================================== */
 
     .command-section{
         position:fixed;
-        left:8px;
-        right:8px;
-        bottom:8px;
+
+        left:7px;
+        right:7px;
+        bottom:7px;
+
         width:auto;
         max-width:none;
-        z-index:1000;
+
+        z-index:2000;
+
         box-sizing:border-box;
     }
 
     .command-bar{
         width:100%;
-        max-width:100%;
+        max-width:none;
         min-width:0;
+
         height:54px;
+
         padding:5px 6px 5px 12px;
-        gap:5px;
-        border-radius:18px;
-        box-sizing:border-box;
+
+        gap:4px;
+
+        border-radius:17px;
+
         display:flex;
         align-items:center;
+
+        box-sizing:border-box;
     }
 
     #userInput{
-        flex:1;
+        flex:1 1 auto;
+
         min-width:0;
-        width:100%;
-        font-size:12px;
+        width:auto;
+
         padding:0;
+
+        font-size:12px;
     }
 
     .command-bar button{
         flex:0 0 28px;
+
         width:28px;
         height:34px;
+
         padding:0;
-        font-size:13px;
+
+        font-size:12px;
     }
 
     #sendBtn{
-        flex:0 0 36px;
-        width:36px;
+        flex:0 0 37px;
+
+        width:37px;
         height:38px;
+
         border-radius:12px;
+
         font-size:17px;
     }
 
-    /* Hide less-important controls on very narrow screens */
+    /* Keep all major controls accessible */
     #webBtn,
     #deepThinkBtn{
-        display:none;
+        display:flex;
     }
 
-    /* ---------- MODALS ---------- */
+    /* =====================================================
+       MODALS
+       ===================================================== */
 
     .project-modal{
-        padding:16px;
+        padding:14px;
+
         box-sizing:border-box;
     }
 
     .project-box{
         width:100%;
         max-width:390px;
+
         box-sizing:border-box;
     }
 
@@ -535,46 +840,69 @@ pointer-events:none;
 
 
 /* =========================================================
-   VERY SMALL PHONES
+   SMALL PHONES
    ========================================================= */
 
 @media (max-width:390px){
 
+    .app{
+        grid-template-columns:62px minmax(0,1fr);
+    }
+
+    .sidebar{
+        width:62px;
+        min-width:62px;
+        padding-left:5px;
+        padding-right:5px;
+    }
+
+    .brand-mark{
+        width:38px;
+        height:38px;
+        min-width:38px;
+    }
+
+    .new-chat-btn,
+    .sidebar nav a,
+    .sidebar-footer nav a{
+        width:42px;
+    }
+
     .hero-title{
-        font-size:28px;
+        font-size:27px;
     }
 
     .hero-description{
-        font-size:12px;
-        max-width:310px;
+        font-size:11.5px;
+        max-width:300px;
     }
 
     .hero-prompt{
         max-width:320px;
-        gap:7px;
     }
 
     .prompt-chip{
-        height:44px;
-        font-size:11px;
+        height:43px;
+        font-size:10.5px;
     }
 
     .command-section{
-        left:5px;
-        right:5px;
-        bottom:5px;
+        left:4px;
+        right:4px;
+        bottom:4px;
     }
 
     .command-bar{
         height:50px;
-        border-radius:16px;
+        border-radius:15px;
+        padding-left:9px;
     }
 
     .command-bar button{
-        flex-basis:26px;
-        width:26px;
-        height:32px;
-        font-size:12px;
+        flex-basis:25px;
+        width:25px;
+        height:31px;
+        font-size:11px;
     }
 
     #sendBtn{

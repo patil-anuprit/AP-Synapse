@@ -19,6 +19,8 @@ const voiceBtn = document.getElementById("voiceBtn");
 const speakBtn = document.getElementById("speakBtn");
 let lastAIResponse = "";
 
+window.currentDocumentImage = "";
+
 let currentConversationId =
     window.currentConversationId || null;
     window.setActiveConversation = function (id) {
@@ -148,6 +150,7 @@ newChatBtn.addEventListener("click", () => {
     chatWindow.style.display = "none";
 
     window.currentDocument = "";
+    window.currentDocumentImage = "";
 
     showToast("New Conversation Started");
 
@@ -278,12 +281,17 @@ chatWindow.style.setProperty(
     // UI
     // =====================================
 
-    const isImageRequest =
-        message.toLowerCase().includes("create image") ||
-        message.toLowerCase().includes("generate image") ||
-        message.toLowerCase().includes("draw") ||
-        message.toLowerCase().includes("paint");
+    const normalizedMessage = message.toLowerCase();
 
+    const isImageRequest =
+    normalizedMessage.includes("create an image") ||
+    normalizedMessage.includes("create image") ||
+    normalizedMessage.includes("generate an image") ||
+    normalizedMessage.includes("generate image") ||
+    normalizedMessage.startsWith("draw ") ||
+    normalizedMessage.startsWith("paint ") ||
+    normalizedMessage.startsWith("illustrate ") ||
+    normalizedMessage.includes("make an image of");
 
     // =====================================
 // ENTER CHAT MODE
@@ -356,12 +364,20 @@ if (chatWindow) {
                 },
 
                 body: JSON.stringify({
-                    message,
-                    document:
-                        window.currentDocument || "",
-                    web: window.webMode,
-                    deep: window.deepThinking
-                }),
+
+                   message,
+
+                   document:
+                       window.currentDocument || "",
+
+                   documentImage:
+                       window.currentDocumentImage || "",
+
+                   web: window.webMode,
+
+                   deep: window.deepThinking
+
+               }),
 
                 signal: controller.signal
             }
@@ -942,12 +958,17 @@ try {
     formData.append("file", file);
 
     const response = await fetch(
-        "https://ap-synapse-backend.onrender.com/upload",
-        {
-            method: "POST",
-            body: formData
-        }
-    );
+    "https://ap-synapse-backend.onrender.com/upload",
+    {
+        method: "POST",
+
+        headers: {
+            "x-session-id": getSessionId()
+        },
+
+        body: formData
+    }
+);
 
     if (!response.ok) {
 
@@ -959,9 +980,34 @@ try {
 
     window.currentDocument = data.content || "";
 
-    console.log("Document stored.");
+window.currentDocumentImage = "";
 
-    console.log(window.currentDocument);
+if (
+    file.type === "image/png" ||
+    file.type === "image/jpeg" ||
+    file.type === "image/webp"
+) {
+
+    const imageData = await new Promise((resolve, reject) => {
+
+        const reader = new FileReader();
+
+        reader.onload = () => resolve(reader.result);
+
+        reader.onerror = reject;
+
+        reader.readAsDataURL(file);
+
+    });
+
+    window.currentDocumentImage = imageData;
+
+    console.log("🖼️ Image data stored.");
+
+}
+
+console.log("Document stored.");
+console.log(window.currentDocument);
 
     addMessage(
         "ai-message",

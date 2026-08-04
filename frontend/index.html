@@ -156,19 +156,11 @@
 
     </nav>
 
-    <div class="version">
-        AP Synapse v1.0
+        <div class="version">
+         AP Synapse v1.0
     </div>
 
 </div>
-
-        <div class="version">
-
-            AP Synapse v1.0
-
-        </div>
-
-    </div>
 
 </aside>
 
@@ -284,18 +276,71 @@
         </div>
 
         <h1 class="hero-title">
-            The Intelligence
-            <span>Operating System</span>
+            <span class="hero-title-main">The Intelligence</span>
+            <span class="hero-title-accent">Operating System.</span>
         </h1>
 
         <p class="hero-description">
-           Research. Write. Code. Analyse.
-           Plan. Create.
-
-          <br><br>
-
-           One intelligent workspace for everything you build.
+            One intelligent workspace for everything you build.
         </p>
+
+        <div class="hero-actions">
+
+            <button
+                type="button"
+                class="hero-action-btn"
+                id="researchBtn"
+                data-mode="research"
+           >
+                Research
+           </button>
+
+           <button
+               type="button"
+               class="hero-action-btn"
+               id="writeBtn"
+               data-mode="write"
+           >
+               Write
+           </button>
+
+           <button
+               type="button"
+               class="hero-action-btn"
+               id="heroCodeBtn"
+               data-mode="code"
+           >
+               Code
+          </button>
+
+          <button
+              type="button"
+              class="hero-action-btn"
+              id="analyseBtn"
+             data-mode="analyse"
+           >
+             Analyse
+          </button>
+
+          <button
+              type="button"
+              class="hero-action-btn"
+              id="planBtn"
+              data-mode="plan"
+           >
+              Plan
+           </button>
+
+           <button
+               type="button"
+               class="hero-action-btn"
+               id="createBtn"
+               data-mode="create"
+           >
+               Create
+           </button>
+
+        </div>
 
         <!-- =========================================
              RECENT INTELLIGENCE
@@ -342,177 +387,186 @@
 
 </div>
 
-        <!-- RECENT INTELLIGENCE -->
-
-        <section class="recent-intelligence">
-
-            <div class="recent-intelligence-header">
-
-                <div>
-                    <span class="recent-kicker">RECENT INTELLIGENCE</span>
-                    <h2>Continue where you left off</h2>
-                </div>
-
-                <button id="viewAllHistoryBtn">
-                    View all →
-                </button>
-
-            </div>
-
-            <div id="recentIntelligenceGrid"
-                 class="recent-intelligence-grid">
-
-                <!-- dynamically populated -->
-
-            </div>
-
-        </section>
-
-    </div>
-
-</div>
-
-</div> <!-- hero-prompt -->
-
-<section id="codeStudioPage" class="projects-page">
-
-<div class="projects-header">
-
-<h1>💻 Code Studio</h1>
-
-<p>Professional AI coding workspace powered by AP Synapse.</p>
-
-</div>
-
-<div class="projects-grid">
-
-<div class="project-card">
-
-<h2>AI Code Generation</h2>
-
-<p>Create production-ready code in seconds.</p>
-
-</div>
-
-<div class="project-card">
-
-<h2>Bug Detection</h2>
-
-<p>Automatically detect and explain bugs.</p>
-
-</div>
-
-<div class="project-card">
-
-<h2>Code Explanation</h2>
-
-<p>Understand complex code instantly.</p>
-
-</div>
-
-<div class="project-card">
-
-<h2>Refactoring</h2>
-
-<p>Improve performance and readability.</p>
-
-</div>
-
-<div class="project-card">
-
-<h2>Multi-language</h2>
-
-<p>Python • Java • C++ • JavaScript • HTML • CSS</p>
-
-</div>
-
-<div class="project-card">
-
-<h2>Status</h2>
-
-<p>🟢 Under Active Development</p>
-
-</div>
-
-</div>
-
 </section>
 
-<section id="projectsPage" class="projects-page">
+<section id="codeStudioPage" class="projects-page" style="display:none;">
 
     <div class="projects-header">
 
+        <span class="workspace-badge">AP SYNAPSE CODE STUDIO</span>
+
+        <h1>💻 Code Studio</h1>
+
+        <p>
+            Analyze, debug, explain, improve and generate code with AP Synapse Intelligence.
+        </p>
+
+    </div>
+
+    <div class="project-card code-studio-main">
+
+        <h2>AI Coding Workspace</h2>
+
+        <p>
+            Paste code or describe what you want to build.
+        </p>
+
+        <textarea
+            id="codeStudioInput"
+            placeholder="Example:
+
+Build a responsive landing page using HTML, CSS and JavaScript.
+
+OR
+
+Paste your code here and ask AP Synapse to find bugs..."
+            style="
+                width:100%;
+                min-height:220px;
+                margin-top:20px;
+                padding:18px;
+                border-radius:16px;
+                background:#111;
+                color:#fff;
+                border:1px solid #333;
+                resize:vertical;
+                font-family:monospace;
+                box-sizing:border-box;
+            "
+        ></textarea>
+
+        <button
+            id="codeGenerateBtn"
+            class="create-project-btn"
+            type="button"
+            style="margin-top:16px;"
+        >
+            ⚡ Analyze with AP Synapse
+        </button>
+
+        <div
+            id="codeStudioOutput"
+            style="
+                margin-top:20px;
+                padding:20px;
+                border-radius:16px;
+                background:#0d0d0d;
+                border:1px solid #292929;
+                color:#fff;
+                white-space:pre-wrap;
+                overflow:auto;
+                line-height:1.6;
+                min-height:100px;
+            "
+        >
+            Your AP Synapse Code Studio result will appear here.
+        </div>
+
+    </div>
+
+</section>
+
+<section id="projectsPage" class="projects-page" style="display:none;">
+
+    <div class="projects-header">
+
+        <span class="workspace-badge">PROJECT WORKSPACE</span>
+
         <h1>Projects</h1>
 
-        <p>Manage all your AI projects in one intelligent workspace.</p>
+        <p>
+            Organize ideas, plans, research and work in one intelligent workspace.
+        </p>
 
-        <button class="create-project-btn">
+        <button
+            id="createProjectDashboardBtn"
+            class="create-project-btn"
+            type="button"
+        >
             + New Project
         </button>
 
     </div>
 
-    <div class="projects-grid">
+    <div class="project-dashboard-stats">
 
-        <div class="project-card">
-            <h2>AP Synapse</h2>
-            <p>Artificial Intelligence Platform</p>
-            <span>82% Complete</span>
+        <div class="project-stat-card">
+            <span>PROJECTS</span>
+            <strong id="projectCount">0</strong>
         </div>
 
-        <div class="project-card">
-            <h2>ScienceVerse</h2>
-            <p>Educational Platform</p>
-            <span>100% Complete</span>
+        <div class="project-stat-card">
+            <span>ACTIVE</span>
+            <strong id="activeProjectCount">0</strong>
         </div>
 
-        <div class="project-card">
-            <h2>Board Mastery</h2>
-            <p>Student Learning Platform</p>
-            <span>90% Complete</span>
+        <div class="project-stat-card">
+            <span>COMPLETED</span>
+            <strong id="completedProjectCount">0</strong>
         </div>
 
     </div>
+
+    <div class="project-dashboard-toolbar">
+
+        <input
+            id="projectSearchInput"
+            type="text"
+            placeholder="Search projects..."
+        >
+
+        <select id="projectFilter">
+
+            <option value="all">All Projects</option>
+            <option value="active">Active</option>
+            <option value="completed">Completed</option>
+
+        </select>
+
+    </div>
+
+    <div
+        id="realProjectsGrid"
+        class="projects-grid"
+    ></div>
 
 </section>
 
 <section id="workspacePage" class="projects-page" style="display:none;">
 
-<div class="projects-header">
+    <div class="projects-header">
 
-<h1 id="workspaceTitle">
-Workspace
-</h1>
+        <h1 id="workspaceTitle">Workspace</h1>
 
-<p id="workspaceDescription">
-Loading...
-</p>
+        <p id="workspaceDescription">
+            Your AP Synapse workspace.
+        </p>
 
-</div>
+    </div>
 
-<div class="projects-grid">
+    <div class="workspace-toolbox">
 
-<div class="project-card">
-<h2>✨ Premium Experience</h2>
-<p>Modern Apple-inspired interface.</p>
-</div>
+        <button id="canvasPen">✏️ Pen</button>
+        <button id="canvasErase">🧹 Eraser</button>
+        <button id="canvasClear">🗑 Clear</button>
 
-<div class="project-card">
-<h2>⚡ AI Powered</h2>
-<p>Driven by AP Synapse Intelligence.</p>
-</div>
+    </div>
 
-<div class="project-card">
-<h2>🌍 Multi Language</h2>
-<p>English • Hindi • Marathi</p>
-</div>
-
-<div class="project-card">
-<h2>🟢 Status</h2>
-<p>Active Development</p>
-</div>
-
-</div>
+    <canvas
+        id="apCanvas"
+        width="1000"
+        height="500"
+        style="
+            width:100%;
+            max-width:1000px;
+            height:500px;
+            background:#ffffff;
+            border-radius:20px;
+            cursor:crosshair;
+            display:block;
+            margin:20px auto;
+        "
+    ></canvas>
 
 </section>
 
@@ -538,6 +592,16 @@ color:white;
 border:1px solid #303030;
 ">
 
+<textarea
+    id="knowledgeInput"
+    placeholder="Add knowledge, notes, ideas, research..."
+    style="width:100%;max-width:700px;min-height:120px;margin-top:15px;padding:16px;border-radius:16px;">
+</textarea>
+
+<button id="saveKnowledgeBtn" class="create-project-btn">
+    + Save Knowledge
+</button>
+
 </div>
 
 <div
@@ -550,142 +614,246 @@ class="projects-grid">
 
 <section id="documentsPage" class="projects-page" style="display:none;">
 
-<div class="projects-header">
+    <div class="projects-header">
 
-<h1>📄 Documents</h1>
+        <span class="workspace-badge">
+            AP SYNAPSE DOCUMENT INTELLIGENCE
+        </span>
 
-<p>Analyse PDFs, DOCX, TXT, CSV, XLSX and Images.</p>
+        <h1>📄 Documents</h1>
 
-</div>
+        <p>
+            Upload a document, then ask AP Synapse anything about it.
+        </p>
 
-<div class="projects-grid">
+    </div>
 
-<div class="project-card">
+    <div class="document-workspace">
 
-<h2>Upload Document</h2>
+        <!-- Upload Area -->
 
-<p>Ask AP Synapse anything about your files.</p>
+        <div class="document-upload-card">
 
-</div>
+            <div class="document-upload-icon">
+                📎
+            </div>
 
-</div>
+            <h2>Upload a document</h2>
+
+            <p>
+                PDF, DOCX, TXT, CSV, XLSX and images supported.
+            </p>
+
+            <button
+                id="documentsUploadBtn"
+                class="document-primary-btn"
+                type="button"
+            >
+                + Select File
+            </button>
+
+            <input
+                id="documentsFileInput"
+                type="file"
+                hidden
+                accept=".pdf,.doc,.docx,.txt,.csv,.xlsx,.png,.jpg,.jpeg,image/*"
+            >
+
+            <div
+                id="documentStatus"
+                class="document-status"
+            >
+                No document selected
+            </div>
+
+        </div>
+
+
+        <!-- Current Document -->
+
+        <div
+            id="currentDocumentCard"
+            class="document-current-card"
+            style="display:none;"
+        >
+
+            <div class="document-file-icon">
+                📄
+            </div>
+
+            <div class="document-file-info">
+
+                <strong id="documentFileName">
+                    Document
+                </strong>
+
+                <span id="documentFileStatus">
+                    Ready
+                </span>
+
+            </div>
+
+            <button
+                id="removeDocumentBtn"
+                class="document-remove-btn"
+                type="button"
+            >
+                Remove
+            </button>
+
+        </div>
+
+
+        <!-- Document Question Area -->
+
+        <div
+            id="documentAskArea"
+            class="document-ask-card"
+            style="display:none;"
+        >
+
+            <div class="document-ask-header">
+
+                <div>
+
+                    <span class="recent-kicker">
+                        DOCUMENT INTELLIGENCE
+                    </span>
+
+                    <h2>
+                        Ask AP Synapse
+                    </h2>
+
+                </div>
+
+                <span class="document-ready-badge">
+                    ● Ready
+                </span>
+
+            </div>
+
+
+            <div class="document-question-row">
+
+                <textarea
+                    id="documentQuestionInput"
+                    rows="3"
+                    placeholder="Ask anything about this document..."
+                ></textarea>
+
+                <button
+                    id="askDocumentBtn"
+                    class="document-primary-btn"
+                    type="button"
+                >
+                    Ask AP Synapse →
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- Answer -->
+
+        <div
+            id="documentAnswerCard"
+            class="document-answer-card"
+            style="display:none;"
+        >
+
+            <div class="document-answer-header">
+
+                <span>
+                    AP SYNAPSE
+                </span>
+
+                <button
+                    id="clearDocumentAnswerBtn"
+                    type="button"
+                >
+                    Clear
+                </button>
+
+            </div>
+
+            <div
+                id="documentAnswer"
+                class="document-answer"
+            ></div>
+
+        </div>
+
+    </div>
 
 </section>
 
 <section id="automationPage" class="projects-page" style="display:none;">
 
-<div class="projects-header">
-
-<h1>⚡ Automation</h1>
-
-<p>Create intelligent AI workflows.</p>
-
-</div>
-
-<div class="projects-grid">
-
-<div class="project-card">
-
-<h2>Coming Soon</h2>
-
-<p>Automation Engine v10.1</p>
-
-</div>
-
-</div>
-
-</section>
-
-<section id="settingsPage" class="projects-page" style="display:none;">
-
     <div class="projects-header">
 
-        <span class="workspace-badge">
-            AP SYNAPSE SETTINGS
-        </span>
+        <span class="workspace-badge">AP SYNAPSE AUTOMATION</span>
 
-        <h1>Settings</h1>
+        <h1>⚡ Automation</h1>
 
         <p>
-            Configure your AP Synapse intelligence workspace.
+            Turn instructions into intelligent workflows powered by AP Synapse.
         </p>
 
     </div>
 
-    <div class="projects-grid">
+    <div class="project-card">
 
-        <div class="project-card">
+        <h2>Workflow Builder</h2>
 
-            <h2>🎨 Appearance</h2>
+        <p>
+            Describe what you want AP Synapse to accomplish.
+        </p>
 
-            <p>Control the visual experience of AP Synapse.</p>
+        <textarea
+            id="automationInput"
+            placeholder="Example:
 
-            <button class="settings-option" id="themeSettingBtn">
-                Toggle Light / Dark Mode
-            </button>
+Research the latest information about solar energy, summarize the key findings and create a study plan."
+            style="
+                width:100%;
+                min-height:180px;
+                margin-top:20px;
+                padding:18px;
+                border-radius:16px;
+                background:#111;
+                color:#fff;
+                border:1px solid #333;
+                resize:vertical;
+                box-sizing:border-box;
+            "
+        ></textarea>
 
-        </div>
+        <button
+            id="runAutomationBtn"
+            class="create-project-btn"
+            type="button"
+            style="margin-top:16px;"
+        >
+            ▶ Run Workflow
+        </button>
 
-        <div class="project-card">
-
-            <h2>🧠 Intelligence</h2>
-
-            <p>Choose how AP Synapse approaches your tasks.</p>
-
-            <button class="settings-option" id="smartModeBtn">
-                Smart Intelligence
-            </button>
-
-        </div>
-
-        <div class="project-card">
-
-            <h2>🎤 Voice</h2>
-
-            <p>Configure voice input and spoken responses.</p>
-
-            <button class="settings-option" id="voiceSettingBtn">
-                Voice Assistant
-            </button>
-
-        </div>
-
-        <div class="project-card">
-
-            <h2>🔊 Read Aloud</h2>
-
-            <p>Control spoken AI responses.</p>
-
-            <button class="settings-option" id="readAloudSettingBtn">
-                Read Aloud
-            </button>
-
-        </div>
-
-        <div class="project-card">
-
-            <h2>🌐 Language</h2>
-
-            <p>Choose your preferred workspace language.</p>
-
-            <select id="settingsLanguage">
-                <option>English</option>
-                <option>Hindi</option>
-                <option>Marathi</option>
-            </select>
-
-        </div>
-
-        <div class="project-card">
-
-            <h2>🔐 Privacy</h2>
-
-            <p>Manage your AP Synapse workspace preferences.</p>
-
-            <button class="settings-option">
-                Privacy & Security
-            </button>
-
+        <div
+            id="automationResult"
+            style="
+                margin-top:20px;
+                padding:20px;
+                border-radius:16px;
+                background:#0d0d0d;
+                border:1px solid #292929;
+                color:#fff;
+                white-space:pre-wrap;
+                overflow:auto;
+                line-height:1.6;
+                min-height:100px;
+            "
+        >
+            Your automation result will appear here.
         </div>
 
     </div>
@@ -1072,15 +1240,19 @@ href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-
     <div class="popup-header">
 
         <div>
-            <span class="popup-kicker">AP SYNAPSE IDENTITY</span>
-            <h2>AP Synapse</h2>
+
+            <span class="popup-kicker">
+                AP SYNAPSE IDENTITY
+            </span>
+
+            <h2>Your Profile</h2>
+
         </div>
 
         <button
             id="closeProfile"
             class="popup-close"
             type="button"
-            aria-label="Close profile"
         >
             ×
         </button>
@@ -1089,37 +1261,61 @@ href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-
 
     <div class="profile-hero">
 
-        <div class="profile-avatar">
+        <div
+            class="profile-avatar"
+            id="profileAvatar"
+        >
             AP
         </div>
 
         <div>
-            <h3>Anuprit Patil</h3>
-            <p>Creator · AP Synapse</p>
+
+            <h3 id="profileName">
+                Anuprit Patil
+            </h3>
+
+            <p id="profileEmail">
+                AP Synapse User
+            </p>
+
         </div>
 
     </div>
 
     <div class="profile-status">
+
         <span class="status-dot"></span>
+
         AP Synapse Intelligence · Online
+
     </div>
 
     <div class="profile-details">
 
         <div>
-            <span>Version</span>
-            <strong>1.0</strong>
+            <span>Workspace</span>
+            <strong>AP Synapse</strong>
         </div>
 
         <div>
-            <span>Engine</span>
-            <strong>AP Synapse Intelligence</strong>
+            <span>Language</span>
+            <strong id="profileLanguage">
+                English
+            </strong>
         </div>
 
         <div>
-            <span>Languages</span>
-            <strong>English · Hindi · Marathi</strong>
+            <span>Projects</span>
+            <strong id="profileProjectCount">
+                0
+            </strong>
+        </div>
+
+        <div>
+            <span>Documents</span>
+            <strong id="profileDocumentCount">
+                0
+            </strong>
         </div>
 
     </div>
@@ -1130,17 +1326,21 @@ href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-
         <span>Research</span>
         <span>Code</span>
         <span>Documents</span>
-        <span>Image Generation</span>
+        <span>Projects</span>
         <span>Voice</span>
+        <span>Web</span>
+        <span>Deep Thinking</span>
 
     </div>
 
     <div class="google-signin-section">
 
-    <div
-        id="googleSignInButton"
-        class="google-signin-button"
-    ></div>
+        <div
+            id="googleSignInButton"
+            class="google-signin-button"
+        ></div>
+
+    </div>
 
 </div>
 

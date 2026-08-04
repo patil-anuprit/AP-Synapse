@@ -877,3 +877,90 @@ function renderRecentIntelligence() {
 }
 
 renderRecentIntelligence();
+
+// =====================================
+// AP SYNAPSE CANVAS
+// =====================================
+
+const canvas = document.getElementById("apCanvas");
+
+if (canvas) {
+
+    const ctx = canvas.getContext("2d");
+
+    let drawing = false;
+    let erasing = false;
+
+    function position(e) {
+
+        const rect = canvas.getBoundingClientRect();
+
+        return {
+            x: (e.clientX - rect.left) *
+               (canvas.width / rect.width),
+
+            y: (e.clientY - rect.top) *
+               (canvas.height / rect.height)
+        };
+
+    }
+
+    canvas.addEventListener("pointerdown", e => {
+
+        drawing = true;
+
+        const p = position(e);
+
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+
+    });
+
+    canvas.addEventListener("pointermove", e => {
+
+        if (!drawing) return;
+
+        const p = position(e);
+
+        ctx.lineWidth = erasing ? 30 : 4;
+        ctx.lineCap = "round";
+        ctx.strokeStyle = erasing ? "#ffffff" : "#111111";
+
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+
+    });
+
+    canvas.addEventListener("pointerup", () => {
+
+        drawing = false;
+
+    });
+
+    canvas.addEventListener("pointerleave", () => {
+
+        drawing = false;
+
+    });
+
+    document.getElementById("canvasPen")?.addEventListener(
+        "click",
+        () => erasing = false
+    );
+
+    document.getElementById("canvasErase")?.addEventListener(
+        "click",
+        () => erasing = true
+    );
+
+    document.getElementById("canvasClear")?.addEventListener(
+        "click",
+        () => ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        )
+    );
+
+}

@@ -101,50 +101,41 @@ app.post("/chat", async (req, res) => {
 
         const web = req.body?.web || false;
 
-        if(
+        const documentImage =
+            req.body?.documentImage || "";
 
-message.toLowerCase().includes("create image") ||
+        if (!message) {
 
-message.toLowerCase().includes("generate image") ||
+            return res.status(400).json({
 
-message.toLowerCase().includes("draw") ||
+               error: "Message is required."
 
-message.toLowerCase().includes("paint")
+           });
 
-){
+        }
 
-const imageUrl = await generateImage(message);
+        const normalizedMessage =
+    message.toLowerCase();
 
-return res.json({
+// ==========================================
+// AP SYNAPSE — EXPLICIT IMAGE GENERATION
+// ==========================================
 
-type:"image",
+const normalizedMessage = message.toLowerCase();
 
-url:imageUrl
+const explicitImageRequest =
+    normalizedMessage.includes("create an image") ||
+    normalizedMessage.includes("create image") ||
+    normalizedMessage.includes("generate an image") ||
+    normalizedMessage.includes("generate image") ||
+    normalizedMessage.startsWith("draw ") ||
+    normalizedMessage.startsWith("paint ") ||
+    normalizedMessage.startsWith("illustrate ") ||
+    normalizedMessage.includes("make an image of");
 
-});
+if (explicitImageRequest) {
 
-}
-
-        // ============================
-// Image Generation Detection
-// ============================
-
-const imageWords = [
-    "image",
-    "draw",
-    "generate image",
-    "create image",
-    "picture",
-    "art",
-    "painting",
-    "illustration"
-];
-
-const wantsImage = imageWords.some(word =>
-    message.toLowerCase().includes(word)
-);
-
-if (wantsImage) {
+    console.log("🖼️ Explicit image-generation request detected.");
 
     const imageUrl = await generateImage(message);
 
@@ -155,34 +146,9 @@ if (wantsImage) {
 
 }
 
-        if (!message) {
-
-    return res.status(400).json({
-
-        error: "Message is required."
-
-    });
-
-}
-
 // ===============================
 // Detect Image Requests
 // ===============================
-
-const prompt = message.toLowerCase();
-
-const isImageRequest =
-    prompt.includes("image") ||
-    prompt.includes("draw") ||
-    prompt.includes("paint") ||
-    prompt.includes("illustration") ||
-    prompt.includes("generate image") ||
-    prompt.includes("create image") ||
-    prompt.includes("logo") ||
-    prompt.includes("wallpaper") ||
-    prompt.includes("photo");
-
-console.log("Image Request:", isImageRequest);
 
         res.setHeader(
             "Content-Type",
@@ -223,25 +189,6 @@ documentMemory
 ? documentMemory.content
 : "";
 
-if(web){
-
-messages.unshift({
-
-role:"system",
-
-content:`
-You have internet search mode enabled.
-
-If you are unsure,
-say that current information may require verification.
-
-Answer as completely as possible.
-`
-
-});
-
-}
-
 const messages =
 buildMessages({
 
@@ -266,6 +213,74 @@ ${message}`
 
 
 });
+
+// ==========================================
+// AP SYNAPSE — UPLOADED IMAGE VISION INPUT
+// ==========================================
+
+if (documentImage) {
+
+    const lastUserMessage =
+        [...messages]
+            .reverse()
+            .find(
+                item => item.role === "user"
+            );
+
+    if (lastUserMessage) {
+
+        const existingText =
+            typeof lastUserMessage.content === "string"
+                ? lastUserMessage.content
+                : message;
+
+        lastUserMessage.content = [
+
+            {
+                type: "text",
+
+                text: existingText
+            },
+
+            {
+                type: "image_url",
+
+                image_url: {
+
+                    url: documentImage
+
+                }
+
+            }
+
+        ];
+
+        console.log(
+            "🖼️ Uploaded image attached to AI request."
+        );
+
+    }
+
+}
+
+if (web) {
+
+    messages.unshift({
+
+        role: "system",
+
+        content: `
+You have internet search mode enabled.
+
+If you are unsure,
+say that current information may require verification.
+
+Answer as completely as possible.
+`
+
+    });
+
+}
 
             // =============================
 // AP Synapse Identity Shield
@@ -353,18 +368,6 @@ Remain professional.
         // ===============================
 // AP Synapse AI Router
 // ===============================
-
-if (isImageRequest) {
-
-    console.log("🖼 Routing to Image Engine...");
-
-    res.write(
-        "🎨 Image generation engine is starting...\n"
-    );
-
-    return res.end();
-
-}
 
         const stream = await createAIStream(messages);
 

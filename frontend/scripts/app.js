@@ -27,11 +27,12 @@ document.addEventListener("DOMContentLoaded", () => {
     registerPage("assistant", "assistantPage", "block");
     registerPage("projects", "projectsPage", "block");
     registerPage("codestudio", "codeStudioPage", "block");
-    registerPage("workspace", "workspacePage", "block");
+    registerPage("workspace", "workspacePage", "block"); 
     registerPage("knowledge", "knowledgePage", "block");
     registerPage("documents", "documentsPage", "block");
     registerPage("automation", "automationPage", "block");
     registerPage("canvas", "canvasPage", "block");
+    registerPage("settings", "settingsPage", "block");
 
     // Start AP Synapse on Assistant
     requestAnimationFrame(() => {

@@ -121,8 +121,6 @@ app.post("/chat", async (req, res) => {
 // AP SYNAPSE — EXPLICIT IMAGE GENERATION
 // ==========================================
 
-const normalizedMessage = message.toLowerCase();
-
 const explicitImageRequest =
     normalizedMessage.includes("create an image") ||
     normalizedMessage.includes("create image") ||

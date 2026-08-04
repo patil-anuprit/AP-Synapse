@@ -1397,3 +1397,540 @@ pointer-events:none;
         box-sizing: border-box !important;
     }
 }
+
+/* =========================================================
+   AP SYNAPSE — MOBILE EMERGENCY OVERRIDE
+   FINAL RESPONSIVE FIX
+   ========================================================= */
+
+@media screen and (max-width:700px){
+
+    html,
+    body{
+        width:100% !important;
+        min-width:0 !important;
+        max-width:100% !important;
+        height:100% !important;
+        margin:0 !important;
+        padding:0 !important;
+        overflow:hidden !important;
+    }
+
+    .app{
+        display:grid !important;
+
+        grid-template-columns:64px minmax(0,1fr) !important;
+
+        width:100vw !important;
+        min-width:0 !important;
+        max-width:100vw !important;
+
+        height:100dvh !important;
+
+        overflow:hidden !important;
+    }
+
+    /* =========================
+       SIDEBAR
+       ========================= */
+
+    .sidebar{
+        display:flex !important;
+
+        visibility:visible !important;
+        opacity:1 !important;
+        transform:none !important;
+
+        position:relative !important;
+
+        left:auto !important;
+        right:auto !important;
+
+        width:64px !important;
+        min-width:64px !important;
+        max-width:64px !important;
+
+        height:100dvh !important;
+
+        padding:12px 5px !important;
+
+        margin:0 !important;
+
+        box-sizing:border-box !important;
+
+        overflow:hidden !important;
+
+        z-index:9999 !important;
+    }
+
+    .sidebar-header{
+        width:100% !important;
+        min-width:0 !important;
+    }
+
+    .brand{
+        width:100% !important;
+        justify-content:center !important;
+    }
+
+    .brand-text{
+        display:none !important;
+    }
+
+    .brand-mark{
+        width:40px !important;
+        height:40px !important;
+        min-width:40px !important;
+    }
+
+    .new-chat-btn{
+        width:44px !important;
+        height:44px !important;
+
+        margin:18px auto !important;
+        padding:0 !important;
+
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+
+        font-size:0 !important;
+    }
+
+    .new-chat-btn span:last-child{
+        display:none !important;
+    }
+
+    .sidebar-search{
+        display:none !important;
+    }
+
+    .sidebar-group{
+        width:100% !important;
+        min-width:0 !important;
+    }
+
+    .sidebar-group h4{
+        display:none !important;
+    }
+
+    .sidebar nav{
+        width:100% !important;
+
+        display:flex !important;
+        flex-direction:column !important;
+        align-items:center !important;
+
+        gap:7px !important;
+    }
+
+    .sidebar nav a{
+        width:44px !important;
+        min-width:44px !important;
+        max-width:44px !important;
+
+        height:42px !important;
+
+        padding:0 !important;
+        margin:0 !important;
+
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+
+        font-size:0 !important;
+
+        box-sizing:border-box !important;
+    }
+
+    .sidebar-footer{
+        width:100% !important;
+        margin-top:auto !important;
+    }
+
+    .sidebar-footer .version{
+        display:none !important;
+    }
+
+    /* =========================
+       MAIN WORKSPACE
+       ========================= */
+
+    .workspace{
+        width:100% !important;
+        min-width:0 !important;
+        max-width:none !important;
+
+        height:100dvh !important;
+
+        padding:0 !important;
+        margin:0 !important;
+
+        overflow:hidden !important;
+
+        box-sizing:border-box !important;
+    }
+
+    /* =========================
+       TOP BAR
+       ========================= */
+
+    .topbar{
+        width:100% !important;
+        min-width:0 !important;
+
+        height:62px !important;
+
+        padding:8px 10px !important;
+        margin:0 !important;
+
+        box-sizing:border-box !important;
+
+        overflow:hidden !important;
+    }
+
+    .topbar-left{
+        min-width:0 !important;
+        flex:1 !important;
+    }
+
+    .workspace-title{
+        min-width:0 !important;
+    }
+
+    .workspace-badge{
+        font-size:7px !important;
+        letter-spacing:1px !important;
+    }
+
+    .greeting h1{
+        font-size:16px !important;
+        margin:2px 0 0 !important;
+    }
+
+    .greeting p{
+        display:none !important;
+    }
+
+    .topbar-center{
+        display:none !important;
+    }
+
+    .topbar-right{
+        flex-shrink:0 !important;
+        gap:4px !important;
+    }
+
+    .topbar-right .top-icon{
+        width:32px !important;
+        height:32px !important;
+        padding:0 !important;
+    }
+
+    .profile-button{
+        width:34px !important;
+        height:34px !important;
+        padding:0 !important;
+    }
+
+    /* =========================
+       CONTENT
+       ========================= */
+
+    .workspace-content{
+        display:block !important;
+
+        width:100% !important;
+        min-width:0 !important;
+        max-width:none !important;
+
+        height:calc(100dvh - 62px) !important;
+
+        padding:0 10px 76px !important;
+        margin:0 !important;
+
+        box-sizing:border-box !important;
+
+        overflow-x:hidden !important;
+        overflow-y:auto !important;
+    }
+
+    .conversation{
+        display:flex !important;
+
+        width:100% !important;
+        min-width:0 !important;
+        max-width:none !important;
+
+        min-height:100% !important;
+
+        margin:0 !important;
+        padding:0 !important;
+
+        box-sizing:border-box !important;
+    }
+
+    /* =========================
+       HERO
+       ========================= */
+
+    .hero-screen{
+        display:flex !important;
+
+        width:100% !important;
+        min-width:0 !important;
+        max-width:none !important;
+
+        min-height:calc(100dvh - 145px) !important;
+
+        margin:0 !important;
+        padding:20px 0 60px !important;
+
+        box-sizing:border-box !important;
+
+        align-items:center !important;
+        justify-content:center !important;
+    }
+
+    .hero-container{
+        display:flex !important;
+
+        width:100% !important;
+        min-width:0 !important;
+        max-width:400px !important;
+
+        margin:0 auto !important;
+        padding:0 5px !important;
+
+        box-sizing:border-box !important;
+
+        align-items:center !important;
+        justify-content:center !important;
+
+        text-align:center !important;
+    }
+
+    .hero-title{
+        width:100% !important;
+        max-width:360px !important;
+
+        font-size:29px !important;
+        line-height:1.08 !important;
+
+        letter-spacing:-1px !important;
+
+        overflow-wrap:anywhere !important;
+    }
+
+    .hero-description{
+        width:100% !important;
+        max-width:310px !important;
+
+        font-size:12px !important;
+        line-height:1.5 !important;
+    }
+
+    .hero-prompt{
+        display:grid !important;
+
+        width:100% !important;
+        max-width:340px !important;
+
+        grid-template-columns:1fr 1fr !important;
+
+        gap:8px !important;
+
+        margin:0 auto !important;
+    }
+
+    .prompt-chip{
+        width:100% !important;
+        min-width:0 !important;
+
+        height:44px !important;
+
+        font-size:11px !important;
+
+        box-sizing:border-box !important;
+    }
+
+    /* =========================
+       CHAT
+       ========================= */
+
+    #chatWindow{
+        width:100% !important;
+        min-width:0 !important;
+        max-width:none !important;
+
+        box-sizing:border-box !important;
+
+        overflow-x:hidden !important;
+    }
+
+    .message{
+        max-width:100% !important;
+        min-width:0 !important;
+
+        box-sizing:border-box !important;
+    }
+
+    .message-body{
+        max-width:calc(100% - 42px) !important;
+        min-width:0 !important;
+
+        overflow-wrap:anywhere !important;
+        word-break:break-word !important;
+    }
+
+    /* =========================
+       PROJECT / WORKSPACE PAGES
+       ========================= */
+
+    .projects-page{
+        width:100% !important;
+        min-width:0 !important;
+        max-width:none !important;
+
+        padding:20px 4px 85px !important;
+
+        box-sizing:border-box !important;
+
+        overflow-x:hidden !important;
+    }
+
+    .projects-header{
+        width:100% !important;
+        max-width:none !important;
+
+        text-align:center !important;
+    }
+
+    .projects-grid{
+        width:100% !important;
+        min-width:0 !important;
+        max-width:none !important;
+
+        grid-template-columns:1fr !important;
+
+        gap:10px !important;
+    }
+
+    .project-card{
+        width:100% !important;
+        min-width:0 !important;
+
+        box-sizing:border-box !important;
+    }
+
+    /* =========================
+       COMMAND BAR
+       ========================= */
+
+    .command-section{
+        position:fixed !important;
+
+        left:5px !important;
+        right:5px !important;
+        bottom:5px !important;
+
+        width:auto !important;
+
+        margin:0 !important;
+
+        z-index:10000 !important;
+    }
+
+    .command-bar{
+        width:100% !important;
+        min-width:0 !important;
+        max-width:none !important;
+
+        height:52px !important;
+
+        padding:5px 6px 5px 10px !important;
+
+        box-sizing:border-box !important;
+
+        display:flex !important;
+        align-items:center !important;
+
+        gap:3px !important;
+    }
+
+    #userInput{
+        flex:1 1 auto !important;
+
+        min-width:0 !important;
+        width:auto !important;
+
+        font-size:11px !important;
+
+        padding:0 !important;
+    }
+
+    .command-bar button{
+        flex:0 0 27px !important;
+
+        width:27px !important;
+        height:32px !important;
+
+        padding:0 !important;
+
+        font-size:11px !important;
+    }
+
+    #sendBtn{
+        flex:0 0 36px !important;
+
+        width:36px !important;
+        height:37px !important;
+
+        font-size:16px !important;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media screen and (max-width:390px){
+
+    .app{
+        grid-template-columns:58px minmax(0,1fr) !important;
+    }
+
+    .sidebar{
+        width:58px !important;
+        min-width:58px !important;
+        max-width:58px !important;
+    }
+
+    .brand-mark{
+        width:36px !important;
+        height:36px !important;
+        min-width:36px !important;
+    }
+
+    .new-chat-btn,
+    .sidebar nav a,
+    .sidebar-footer nav a{
+        width:40px !important;
+        min-width:40px !important;
+        max-width:40px !important;
+    }
+
+    .hero-title{
+        font-size:26px !important;
+    }
+
+    .hero-prompt{
+        max-width:310px !important;
+    }
+
+    .prompt-chip{
+        height:41px !important;
+        font-size:10px !important;
+    }
+}

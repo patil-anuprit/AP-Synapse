@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ap-synapse.vercel.app/sitemap.xml

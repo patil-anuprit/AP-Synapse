@@ -985,7 +985,11 @@ if (canvas) {
 
     function ensureElements() {
 
-        let { button, overlay } = elements();
+        let { sidebar, button, overlay } = elements();
+
+        if (sidebar) {
+        sidebar.style.zIndex = "2147483647";
+        }
 
         if (!button) {
             button = document.createElement("button");
@@ -1012,6 +1016,8 @@ if (canvas) {
                 "mobile-sidebar-overlay";
 
             document.body.appendChild(overlay);
+
+            overlay.style.zIndex = "2147483640";
         }
 
         return elements();
@@ -1047,6 +1053,270 @@ if (canvas) {
             }
 
         }
+
+        /* =========================================================
+   AP SYNAPSE — FINAL SIDEBAR VISIBILITY / STACKING FIX
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+    /* Overlay MUST stay behind sidebar */
+    .mobile-sidebar-overlay {
+        position: fixed !important;
+        inset: 0 !important;
+
+        z-index: 2147483000 !important;
+
+        background: rgba(0,0,0,.45) !important;
+
+        pointer-events: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+    }
+
+    .mobile-sidebar-overlay.ap-sidebar-visible {
+        pointer-events: auto !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    /* =====================================================
+       SIDEBAR — SINGLE SOLID SURFACE
+       ===================================================== */
+
+    aside.sidebar {
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        width: min(326px, 88vw) !important;
+        height: 100dvh !important;
+
+        z-index: 2147483640 !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                #17191e 0%,
+                #111318 48%,
+                #0c0e12 100%
+            ) !important;
+
+        background-color: #111318 !important;
+
+        color: #f5f5f3 !important;
+
+        opacity: 1 !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        isolation: isolate !important;
+
+        transform: translate3d(-105%,0,0) !important;
+
+        visibility: hidden !important;
+        pointer-events: none !important;
+    }
+
+    aside.sidebar.ap-sidebar-open {
+        transform: translate3d(0,0,0) !important;
+
+        visibility: visible !important;
+        pointer-events: auto !important;
+
+        opacity: 1 !important;
+    }
+
+    /* =====================================================
+       EVERY DIRECT SECTION — NORMAL FLOW
+       ===================================================== */
+
+    aside.sidebar > .sidebar-header,
+    aside.sidebar > .sidebar-group,
+    aside.sidebar > .sidebar-footer {
+        position: relative !important;
+
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+
+        flex: 0 0 auto !important;
+
+        box-sizing: border-box !important;
+
+        background: transparent !important;
+
+        transform: none !important;
+
+        overflow: visible !important;
+    }
+
+    /* Header */
+    aside.sidebar > .sidebar-header {
+        order: 1 !important;
+        z-index: 20 !important;
+    }
+
+    /* Recent/history */
+    aside.sidebar > .recent-group {
+        order: 2 !important;
+        z-index: 10 !important;
+    }
+
+    /* Main navigation */
+    aside.sidebar > .sidebar-group:not(.recent-group) {
+        order: 3 !important;
+        z-index: 30 !important;
+    }
+
+    /* Footer */
+    aside.sidebar > .sidebar-footer {
+        order: 4 !important;
+        z-index: 40 !important;
+    }
+
+    /* =====================================================
+       HISTORY — NEVER FLOAT / NEVER OVERLAP NAV
+       ===================================================== */
+
+    aside.sidebar .history-list {
+        position: relative !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        width: 100% !important;
+
+        height: auto !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        overflow: visible !important;
+
+        transform: none !important;
+
+        background: transparent !important;
+    }
+
+    aside.sidebar .history-item {
+        position: relative !important;
+
+        display: flex !important;
+
+        width: 100% !important;
+        height: auto !important;
+        min-height: 54px !important;
+
+        flex: 0 0 auto !important;
+
+        margin: 0 !important;
+
+        transform: none !important;
+
+        background: transparent !important;
+
+        z-index: 1 !important;
+    }
+
+    /* =====================================================
+       NAVIGATION — ITS OWN CLEAN COLUMN
+       ===================================================== */
+
+    aside.sidebar nav {
+        position: relative !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        width: 100% !important;
+        height: auto !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        flex: 0 0 auto !important;
+
+        overflow: visible !important;
+
+        background: transparent !important;
+
+        z-index: 50 !important;
+    }
+
+    aside.sidebar nav a {
+        position: relative !important;
+
+        display: flex !important;
+
+        width: 100% !important;
+        height: 46px !important;
+        min-height: 46px !important;
+
+        flex: 0 0 46px !important;
+
+        box-sizing: border-box !important;
+
+        margin: 0 !important;
+
+        transform: none !important;
+
+        background: transparent !important;
+
+        z-index: 51 !important;
+
+        pointer-events: auto !important;
+    }
+
+    /* =====================================================
+       CONTENT INSIDE SIDEBAR
+       ===================================================== */
+
+    aside.sidebar .history-item-content,
+    aside.sidebar .history-title,
+    aside.sidebar .history-preview,
+    aside.sidebar .history-time {
+        position: relative !important;
+
+        background: transparent !important;
+    }
+
+    /* =====================================================
+       NEW CHAT
+       ===================================================== */
+
+    aside.sidebar .new-chat-btn {
+        position: relative !important;
+
+        z-index: 100 !important;
+
+        pointer-events: auto !important;
+    }
+
+    /* =====================================================
+       BUTTONS / TEXT ALWAYS VISIBLE
+       ===================================================== */
+
+    aside.sidebar button,
+    aside.sidebar a,
+    aside.sidebar span,
+    aside.sidebar div {
+        box-sizing: border-box;
+    }
+
+    aside.sidebar a,
+    aside.sidebar button {
+        color: inherit;
+    }
+
+}
 
 
         /* =====================================================
@@ -1927,6 +2197,2619 @@ if (canvas) {
 
         initialize();
 
+    }
+
+})();
+
+/* =========================================================
+   AP SYNAPSE — FINAL MOBILE SIDEBAR CONTROLLER
+   SINGLE SOURCE OF TRUTH
+   ========================================================= */
+
+(() => {
+
+    "use strict";
+
+    const MOBILE_BREAKPOINT = 767;
+
+    function getSidebar() {
+        return document.querySelector(".app > aside.sidebar");
+    }
+
+    function getButton() {
+        return document.querySelector(".mobile-menu-button");
+    }
+
+    function getOverlay() {
+        return document.querySelector(".mobile-sidebar-overlay");
+    }
+
+
+    /* =====================================================
+       CREATE REQUIRED MOBILE ELEMENTS
+       ===================================================== */
+
+    function ensureElements() {
+
+        let button = getButton();
+        let overlay = getOverlay();
+
+        if (!button) {
+
+            button =
+                document.createElement("button");
+
+            button.className =
+                "mobile-menu-button";
+
+            button.type = "button";
+
+            button.textContent = "☰";
+
+            button.setAttribute(
+                "aria-label",
+                "Open AP Synapse navigation"
+            );
+
+            button.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            document.body.appendChild(button);
+        }
+
+
+        if (!overlay) {
+
+            overlay =
+                document.createElement("div");
+
+            overlay.className =
+                "mobile-sidebar-overlay";
+
+            document.body.appendChild(overlay);
+        }
+
+        return {
+            sidebar: getSidebar(),
+            button: getButton(),
+            overlay: getOverlay()
+        };
+    }
+
+
+    /* =====================================================
+       CLOSE
+       ===================================================== */
+
+    function closeSidebar() {
+
+        const {
+            sidebar,
+            button,
+            overlay
+        } = ensureElements();
+
+        sidebar?.classList.remove(
+            "ap-sidebar-open"
+        );
+
+        overlay?.classList.remove(
+            "ap-sidebar-visible"
+        );
+
+        document.body.classList.remove(
+            "ap-sidebar-locked"
+        );
+
+        if (button) {
+
+            button.textContent = "☰";
+
+            button.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            button.setAttribute(
+                "aria-label",
+                "Open AP Synapse navigation"
+            );
+        }
+
+        console.log(
+            "✅ AP Synapse sidebar closed"
+        );
+    }
+
+
+    /* =====================================================
+       OPEN
+       ===================================================== */
+
+    function openSidebar() {
+
+        const {
+            sidebar,
+            button,
+            overlay
+        } = ensureElements();
+
+        if (!sidebar) {
+
+            console.error(
+                "❌ AP Synapse sidebar not found"
+            );
+
+            return;
+        }
+
+        sidebar.classList.add(
+            "ap-sidebar-open"
+        );
+
+        overlay?.classList.add(
+            "ap-sidebar-visible"
+        );
+
+        document.body.classList.add(
+            "ap-sidebar-locked"
+        );
+
+        if (button) {
+
+            button.textContent = "×";
+
+            button.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+
+            button.setAttribute(
+                "aria-label",
+                "Close AP Synapse navigation"
+            );
+        }
+
+        console.log(
+            "✅ AP Synapse sidebar opened"
+        );
+    }
+
+
+    /* =====================================================
+       TOGGLE
+       ===================================================== */
+
+    function toggleSidebar(event) {
+
+        event?.preventDefault();
+        event?.stopPropagation();
+
+        const sidebar = getSidebar();
+
+        if (!sidebar) return;
+
+        if (
+            sidebar.classList.contains(
+                "ap-sidebar-open"
+            )
+        ) {
+
+            closeSidebar();
+
+        } else {
+
+            openSidebar();
+
+        }
+    }
+
+
+    /* =====================================================
+       NAVIGATION
+       IMPORTANT:
+       We DO NOT hijack navigation here.
+       The existing AP Synapse navigation code handles it.
+       We ONLY close the drawer on mobile.
+       ===================================================== */
+
+    function closeAfterNavigation(event) {
+
+        const link =
+            event.target.closest(
+                ".sidebar nav a"
+            );
+
+        if (!link) return;
+
+        if (
+            window.innerWidth <=
+            MOBILE_BREAKPOINT
+        ) {
+
+            setTimeout(
+                closeSidebar,
+                100
+            );
+        }
+    }
+
+
+    /* =====================================================
+       INITIALIZE
+       ===================================================== */
+
+    function initialize() {
+
+        const {
+            sidebar,
+            button,
+            overlay
+        } = ensureElements();
+
+        if (!sidebar) {
+
+            console.error(
+                "❌ AP Synapse sidebar missing"
+            );
+
+            return;
+        }
+
+
+        /* Remove duplicate generated controls */
+
+        document
+            .querySelectorAll(
+                ".mobile-menu-button"
+            )
+            .forEach((element, index) => {
+
+                if (index > 0) {
+                    element.remove();
+                }
+
+            });
+
+
+        document
+            .querySelectorAll(
+                ".mobile-sidebar-overlay"
+            )
+            .forEach((element, index) => {
+
+                if (index > 0) {
+                    element.remove();
+                }
+
+            });
+
+
+        /* =========================
+           BUTTON
+           ========================= */
+
+        button.onclick = null;
+
+        button.addEventListener(
+            "click",
+            toggleSidebar,
+            {
+                passive: false
+            }
+        );
+
+
+        /* =========================
+           OVERLAY
+           ========================= */
+
+        overlay.onclick = null;
+
+        overlay.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target === overlay
+                ) {
+
+                    closeSidebar();
+
+                }
+
+            }
+        );
+
+
+        /* =========================
+           NAVIGATION
+           ========================= */
+
+        sidebar.addEventListener(
+            "click",
+            closeAfterNavigation
+        );
+
+
+        /* =========================
+           ESCAPE
+           ========================= */
+
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Escape"
+                ) {
+
+                    closeSidebar();
+
+                }
+
+            }
+        );
+
+
+        /* =========================
+           RESIZE
+           ========================= */
+
+        window.addEventListener(
+            "resize",
+            () => {
+
+                if (
+                    window.innerWidth >
+                    MOBILE_BREAKPOINT
+                ) {
+
+                    closeSidebar();
+
+                }
+
+            },
+            {
+                passive: true
+            }
+        );
+
+
+        /* =========================
+           INITIAL STATE
+           ========================= */
+
+        closeSidebar();
+
+
+        console.log(
+            "🚀 AP SYNAPSE — FINAL MOBILE SIDEBAR READY"
+        );
+    }
+
+
+    if (
+        document.readyState === "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            initialize,
+            {
+                once: true
+            }
+        );
+
+    } else {
+
+        initialize();
+
+    }
+
+})();
+
+/* ============================================================
+   AP SYNAPSE — FINAL SIDEBAR CONTROLLER
+   DESKTOP + MOBILE
+   FINAL STABLE VERSION
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    const MOBILE_BREAKPOINT = 767;
+
+    /* ========================================================
+       ELEMENTS
+       ======================================================== */
+
+    function getElements() {
+        return {
+            sidebar: document.querySelector(".sidebar"),
+            button: document.querySelector(".mobile-menu-button"),
+            overlay: document.querySelector(".mobile-sidebar-overlay")
+        };
+    }
+
+    /* ========================================================
+       FINAL CSS
+       ======================================================== */
+
+    function installFinalSidebarCSS() {
+
+        document
+            .getElementById("AP-SYNAPSE-FINAL-SIDEBAR-CONTROLLER-CSS")
+            ?.remove();
+
+        const style = document.createElement("style");
+
+        style.id =
+            "AP-SYNAPSE-FINAL-SIDEBAR-CONTROLLER-CSS";
+
+        style.textContent = `
+
+        /* ====================================================
+           DESKTOP
+           ==================================================== */
+
+        @media (min-width: 768px) {
+
+            .sidebar {
+
+                position: relative !important;
+
+                left: auto !important;
+                top: auto !important;
+                bottom: auto !important;
+
+                width: 280px !important;
+                min-width: 280px !important;
+                max-width: 280px !important;
+
+                height: 100vh !important;
+
+                display: flex !important;
+
+                visibility: visible !important;
+                opacity: 1 !important;
+
+                transform: none !important;
+
+                pointer-events: auto !important;
+
+                z-index: 100 !important;
+
+                flex-shrink: 0 !important;
+
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+            }
+
+            .mobile-menu-button,
+            .mobile-sidebar-overlay {
+
+                display: none !important;
+
+            }
+
+        }
+
+
+        /* ====================================================
+           MOBILE
+           ==================================================== */
+
+        @media (max-width: 767px) {
+
+            html,
+            body {
+
+                width: 100% !important;
+                max-width: 100% !important;
+
+                overflow-x: hidden !important;
+
+            }
+
+
+            /* ------------------------------------------------
+               MOBILE MENU BUTTON
+               ------------------------------------------------ */
+
+            .mobile-menu-button {
+
+                position: fixed !important;
+
+                top:
+                    calc(
+                        12px +
+                        env(safe-area-inset-top)
+                    ) !important;
+
+                left: 12px !important;
+
+                width: 48px !important;
+                height: 48px !important;
+
+                display: flex !important;
+
+                align-items: center !important;
+                justify-content: center !important;
+
+                padding: 0 !important;
+                margin: 0 !important;
+
+                border:
+                    1px solid
+                    rgba(198,166,107,.55) !important;
+
+                border-radius: 15px !important;
+
+                background:
+                    rgba(14,16,20,.97) !important;
+
+                color: #f5f5f3 !important;
+
+                font-size: 24px !important;
+
+                line-height: 1 !important;
+
+                z-index: 2147483647 !important;
+
+                pointer-events: auto !important;
+
+                touch-action: manipulation !important;
+
+                cursor: pointer !important;
+
+                box-shadow:
+                    0 10px 30px
+                    rgba(0,0,0,.35) !important;
+
+            }
+
+
+            /* ------------------------------------------------
+               OVERLAY
+               ------------------------------------------------ */
+
+            .mobile-sidebar-overlay {
+
+                position: fixed !important;
+
+                inset: 0 !important;
+
+                width: 100vw !important;
+                height: 100dvh !important;
+
+                background:
+                    rgba(0,0,0,.42) !important;
+
+                opacity: 0 !important;
+
+                visibility: hidden !important;
+
+                pointer-events: none !important;
+
+                z-index: 999998 !important;
+
+                transition:
+                    opacity .22s ease,
+                    visibility .22s ease !important;
+
+            }
+
+
+            .mobile-sidebar-overlay.ap-sidebar-visible {
+
+                opacity: 1 !important;
+
+                visibility: visible !important;
+
+                pointer-events: auto !important;
+
+            }
+
+
+            /* ------------------------------------------------
+               SIDEBAR CLOSED
+               ------------------------------------------------ */
+
+            aside.sidebar {
+
+                position: fixed !important;
+
+                top: 0 !important;
+                left: 0 !important;
+                bottom: 0 !important;
+
+                width:
+                    min(320px, 88vw) !important;
+
+                min-width:
+                    min(320px, 88vw) !important;
+
+                max-width:
+                    min(320px, 88vw) !important;
+
+                height: 100dvh !important;
+
+                max-height: 100dvh !important;
+
+                display: flex !important;
+
+                flex-direction: column !important;
+
+                box-sizing: border-box !important;
+
+                margin: 0 !important;
+
+                padding: 0 !important;
+
+                background:
+                    linear-gradient(
+                        180deg,
+                        rgba(20,22,27,.995),
+                        rgba(10,12,16,.995)
+                    ) !important;
+
+                z-index: 999999 !important;
+
+                overflow-x: hidden !important;
+
+                overflow-y: auto !important;
+
+                -webkit-overflow-scrolling: touch !important;
+
+                visibility: hidden !important;
+
+                opacity: 1 !important;
+
+                transform:
+                    translate3d(-105%,0,0) !important;
+
+                pointer-events: none !important;
+
+                transition:
+                    transform .28s
+                    cubic-bezier(.22,.61,.36,1),
+                    visibility .28s ease !important;
+
+            }
+
+
+            /* ------------------------------------------------
+               SIDEBAR OPEN
+               ------------------------------------------------ */
+
+            aside.sidebar.ap-sidebar-open {
+
+                visibility: visible !important;
+
+                opacity: 1 !important;
+
+                transform:
+                    translate3d(0,0,0) !important;
+
+                pointer-events: auto !important;
+
+            }
+
+
+            /* ------------------------------------------------
+               SIDEBAR CHILDREN
+               ------------------------------------------------ */
+
+            aside.sidebar > * {
+
+                position: relative !important;
+
+                top: auto !important;
+                right: auto !important;
+                bottom: auto !important;
+                left: auto !important;
+
+                transform: none !important;
+
+                float: none !important;
+
+                box-sizing: border-box !important;
+
+                width: 100% !important;
+
+                flex-shrink: 0 !important;
+
+            }
+
+
+            /* ------------------------------------------------
+               SIDEBAR HEADER
+               ------------------------------------------------ */
+
+            .sidebar-header {
+
+                width: 100% !important;
+
+                min-height: 70px !important;
+
+                flex: 0 0 auto !important;
+
+            }
+
+
+            /* ------------------------------------------------
+               NAV
+               ------------------------------------------------ */
+
+            aside.sidebar nav {
+
+                position: relative !important;
+
+                display: flex !important;
+
+                flex-direction: column !important;
+
+                width: 100% !important;
+
+                height: auto !important;
+
+                margin: 0 !important;
+
+                padding: 0 !important;
+
+                overflow: visible !important;
+
+                transform: none !important;
+
+                flex: 0 0 auto !important;
+
+            }
+
+
+            aside.sidebar nav a {
+
+                position: relative !important;
+
+                display: flex !important;
+
+                align-items: center !important;
+
+                width: 100% !important;
+
+                min-height: 48px !important;
+
+                height: 48px !important;
+
+                max-height: 48px !important;
+
+                margin: 0 !important;
+
+                padding:
+                    0 18px !important;
+
+                box-sizing: border-box !important;
+
+                flex: 0 0 48px !important;
+
+                transform: none !important;
+
+                float: none !important;
+
+                overflow: hidden !important;
+
+                pointer-events: auto !important;
+
+                touch-action: manipulation !important;
+
+            }
+
+
+            /* ------------------------------------------------
+               HISTORY
+               ------------------------------------------------ */
+
+            aside.sidebar .history-list {
+
+                position: relative !important;
+
+                display: flex !important;
+
+                flex-direction: column !important;
+
+                width: 100% !important;
+
+                height: auto !important;
+
+                max-height: none !important;
+
+                margin: 0 !important;
+
+                padding: 0 !important;
+
+                overflow: visible !important;
+
+                transform: none !important;
+
+                flex: 0 0 auto !important;
+
+            }
+
+
+            aside.sidebar .history-item {
+
+                position: relative !important;
+
+                display: flex !important;
+
+                align-items: center !important;
+
+                width: 100% !important;
+
+                min-height: 54px !important;
+
+                height: auto !important;
+
+                margin: 0 !important;
+
+                padding: 8px 12px !important;
+
+                box-sizing: border-box !important;
+
+                transform: none !important;
+
+                overflow: visible !important;
+
+                pointer-events: auto !important;
+
+            }
+
+
+            .history-item-content {
+
+                min-width: 0 !important;
+
+                flex: 1 1 auto !important;
+
+                overflow: hidden !important;
+
+            }
+
+
+            .history-delete {
+
+                flex: 0 0 auto !important;
+
+                pointer-events: auto !important;
+
+            }
+
+
+            /* ------------------------------------------------
+               FOOTER
+               ------------------------------------------------ */
+
+            aside.sidebar > .sidebar-footer {
+
+                width: 100% !important;
+
+                min-height: 70px !important;
+
+                margin-top: auto !important;
+
+                flex: 0 0 auto !important;
+
+            }
+
+
+            /* ------------------------------------------------
+               BODY LOCK
+               ------------------------------------------------ */
+
+            body.ap-sidebar-locked {
+
+                overflow: hidden !important;
+
+            }
+
+        }
+        `;
+
+        document.head.appendChild(style);
+
+    }
+
+
+    /* ========================================================
+       REMOVE OLD INLINE DEBUG STYLES
+       ======================================================== */
+
+    function clearForcedInlineStyles() {
+
+        const { sidebar, button, overlay } =
+            getElements();
+
+        if (sidebar) {
+
+            sidebar.style.removeProperty(
+                "visibility"
+            );
+
+            sidebar.style.removeProperty(
+                "transform"
+            );
+
+            sidebar.style.removeProperty(
+                "pointer-events"
+            );
+
+            sidebar.style.removeProperty(
+                "display"
+            );
+
+        }
+
+        if (button) {
+
+            button.style.removeProperty(
+                "display"
+            );
+
+        }
+
+        if (overlay) {
+
+            overlay.style.removeProperty(
+                "display"
+            );
+
+        }
+
+    }
+
+
+    /* ========================================================
+       CLOSE SIDEBAR
+       ======================================================== */
+
+    function closeFinalSidebar() {
+
+        const {
+            sidebar,
+            button,
+            overlay
+        } = getElements();
+
+        if (!sidebar) return;
+
+        sidebar.classList.remove(
+            "ap-sidebar-open"
+        );
+
+        overlay?.classList.remove(
+            "ap-sidebar-visible"
+        );
+
+        document.body.classList.remove(
+            "ap-sidebar-locked"
+        );
+
+        if (button) {
+
+            button.textContent = "☰";
+
+            button.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            button.setAttribute(
+                "aria-label",
+                "Open AP Synapse navigation"
+            );
+
+        }
+
+        console.log(
+            "✅ AP SYNAPSE — SIDEBAR CLOSED"
+        );
+
+    }
+
+
+    /* ========================================================
+       OPEN SIDEBAR
+       ======================================================== */
+
+    function openFinalSidebar() {
+
+        const {
+            sidebar,
+            button,
+            overlay
+        } = getElements();
+
+        if (!sidebar) return;
+
+        sidebar.classList.add(
+            "ap-sidebar-open"
+        );
+
+        overlay?.classList.add(
+            "ap-sidebar-visible"
+        );
+
+        document.body.classList.add(
+            "ap-sidebar-locked"
+        );
+
+        if (button) {
+
+            button.textContent = "×";
+
+            button.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+
+            button.setAttribute(
+                "aria-label",
+                "Close AP Synapse navigation"
+            );
+
+        }
+
+        console.log(
+            "✅ AP SYNAPSE — SIDEBAR OPENED"
+        );
+
+    }
+
+
+    /* ========================================================
+       TOGGLE
+       ======================================================== */
+
+    function toggleFinalSidebar(event) {
+
+        event?.preventDefault();
+        event?.stopPropagation();
+
+        const { sidebar } =
+            getElements();
+
+        if (!sidebar) return;
+
+        if (
+            sidebar.classList.contains(
+                "ap-sidebar-open"
+            )
+        ) {
+
+            closeFinalSidebar();
+
+        } else {
+
+            openFinalSidebar();
+
+        }
+
+    }
+
+
+    /* ========================================================
+       INITIALIZE
+       ======================================================== */
+
+    function initializeFinalSidebar() {
+
+        installFinalSidebarCSS();
+
+        clearForcedInlineStyles();
+
+        const {
+            sidebar,
+            button,
+            overlay
+        } = getElements();
+
+        if (!sidebar) {
+
+            console.error(
+                "❌ AP SYNAPSE — SIDEBAR NOT FOUND"
+            );
+
+            return;
+
+        }
+
+
+        /* ----------------------------------------------------
+           MOBILE BUTTON
+           ---------------------------------------------------- */
+
+        if (button) {
+
+            /*
+             * Clone the button.
+             *
+             * This removes old click listeners from previous
+             * sidebar implementations and prevents duplicate
+             * toggle handlers.
+             */
+
+            const cleanButton =
+                button.cloneNode(true);
+
+            button.replaceWith(
+                cleanButton
+            );
+
+            cleanButton.addEventListener(
+                "click",
+                toggleFinalSidebar,
+                {
+                    passive: false
+                }
+            );
+
+        }
+
+
+        /* ----------------------------------------------------
+           OVERLAY
+           ---------------------------------------------------- */
+
+        const freshOverlay =
+            document.querySelector(
+                ".mobile-sidebar-overlay"
+            );
+
+        if (freshOverlay) {
+
+            freshOverlay.addEventListener(
+                "click",
+                event => {
+
+                    if (
+                        event.target ===
+                        freshOverlay
+                    ) {
+
+                        closeFinalSidebar();
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* ----------------------------------------------------
+           SIDEBAR NAVIGATION
+           
+           IMPORTANT:
+           Clicking a navigation item is allowed to execute
+           the existing AP Synapse navigation code first.
+
+           Then the mobile drawer closes automatically.
+           ---------------------------------------------------- */
+
+        sidebar.addEventListener(
+            "click",
+            event => {
+
+                const link =
+                    event.target.closest(
+                        "nav a"
+                    );
+
+                if (!link) return;
+
+                if (
+                    window.innerWidth <=
+                    MOBILE_BREAKPOINT
+                ) {
+
+                    setTimeout(
+                        () => {
+                            closeFinalSidebar();
+                        },
+                        180
+                    );
+
+                }
+
+            },
+            true
+        );
+
+
+        /* ----------------------------------------------------
+           NEW CHAT
+           ---------------------------------------------------- */
+
+        sidebar.addEventListener(
+            "click",
+            event => {
+
+                const newChat =
+                    event.target.closest(
+                        ".new-chat-btn"
+                    );
+
+                if (!newChat) return;
+
+                if (
+                    window.innerWidth <=
+                    MOBILE_BREAKPOINT
+                ) {
+
+                    setTimeout(
+                        closeFinalSidebar,
+                        120
+                    );
+
+                }
+
+            },
+            true
+        );
+
+
+        /* ----------------------------------------------------
+           ESCAPE
+           ---------------------------------------------------- */
+
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Escape"
+                ) {
+
+                    closeFinalSidebar();
+
+                }
+
+            }
+        );
+
+
+        /* ----------------------------------------------------
+           DESKTOP RESIZE
+           ---------------------------------------------------- */
+
+        window.addEventListener(
+            "resize",
+            () => {
+
+                if (
+                    window.innerWidth >
+                    MOBILE_BREAKPOINT
+                ) {
+
+                    closeFinalSidebar();
+
+                }
+
+            },
+            {
+                passive: true
+            }
+        );
+
+
+        /* ----------------------------------------------------
+           INITIAL STATE
+           ---------------------------------------------------- */
+
+        closeFinalSidebar();
+
+
+        console.log(
+            "🚀 AP SYNAPSE — FINAL SIDEBAR CONTROLLER READY"
+        );
+
+    }
+
+
+    /* ========================================================
+       START
+       ======================================================== */
+
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            initializeFinalSidebar,
+            {
+                once: true
+            }
+        );
+
+    } else {
+
+        initializeFinalSidebar();
+
+    }
+
+})();
+
+/* ============================================================
+   AP SYNAPSE — FINAL SIDEBAR CONTROLLER
+   ONE CONTROLLER ONLY
+   Desktop + Mobile
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    const MOBILE_BREAKPOINT = 767;
+
+    let sidebar;
+    let menuButton;
+    let overlay;
+
+    function getElements() {
+        sidebar = document.querySelector(".sidebar");
+        menuButton = document.querySelector(".mobile-menu-button");
+        overlay = document.querySelector(".mobile-sidebar-overlay");
+
+        return {
+            sidebar,
+            menuButton,
+            overlay
+        };
+    }
+
+    /* ========================================================
+       CREATE MOBILE CONTROLS
+       ======================================================== */
+
+    function ensureControls() {
+
+        getElements();
+
+        if (!menuButton) {
+
+            menuButton = document.createElement("button");
+
+            menuButton.className =
+                "mobile-menu-button";
+
+            menuButton.type = "button";
+
+            menuButton.setAttribute(
+                "aria-label",
+                "Open AP Synapse navigation"
+            );
+
+            menuButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            menuButton.textContent = "☰";
+
+            document.body.appendChild(menuButton);
+        }
+
+        if (!overlay) {
+
+            overlay = document.createElement("div");
+
+            overlay.className =
+                "mobile-sidebar-overlay";
+
+            document.body.appendChild(overlay);
+        }
+
+        getElements();
+    }
+
+
+    /* ========================================================
+       FINAL CSS
+       ======================================================== */
+
+    function installCSS() {
+
+        document
+            .getElementById(
+                "AP-SYNAPSE-SIDEBAR-FINAL-CSS"
+            )
+            ?.remove();
+
+        const style =
+            document.createElement("style");
+
+        style.id =
+            "AP-SYNAPSE-SIDEBAR-FINAL-CSS";
+
+        style.textContent = `
+
+/* ============================================================
+   BASE
+   ============================================================ */
+
+.sidebar {
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   DESKTOP — 768px+
+   SIDEBAR MUST BE VISIBLE
+   ============================================================ */
+
+@media (min-width: 768px) {
+
+    .mobile-menu-button,
+    .mobile-sidebar-overlay {
+        display: none !important;
+    }
+
+    body {
+        overflow-x: hidden !important;
+    }
+
+    .app {
+        display: flex !important;
+        width: 100% !important;
+        min-height: 100vh !important;
+    }
+
+    aside.sidebar {
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        width: 260px !important;
+        height: 100vh !important;
+
+        display: flex !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        transform: none !important;
+
+        pointer-events: auto !important;
+
+        z-index: 1000 !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        flex-direction: column !important;
+
+        margin: 0 !important;
+    }
+
+    main.workspace {
+        margin-left: 260px !important;
+
+        width: calc(
+            100% - 260px
+        ) !important;
+
+        min-width: 0 !important;
+
+        position: relative !important;
+    }
+
+}
+
+
+/* ============================================================
+   MOBILE — 767px AND BELOW
+   ============================================================ */
+
+@media (max-width: 767px) {
+
+    html,
+    body {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        overflow-x: hidden !important;
+    }
+
+
+    /* ========================================================
+       THREE-BAR BUTTON
+       ======================================================== */
+
+    .mobile-menu-button {
+
+        position: fixed !important;
+
+        top:
+            calc(
+                12px +
+                env(safe-area-inset-top)
+            ) !important;
+
+        left: 12px !important;
+
+        width: 48px !important;
+        height: 48px !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        border: 1px solid
+            rgba(198,166,107,.55) !important;
+
+        border-radius: 14px !important;
+
+        background:
+            rgba(14,16,20,.98) !important;
+
+        color: #f5f5f3 !important;
+
+        font-size: 24px !important;
+        line-height: 1 !important;
+
+        z-index: 2147483647 !important;
+
+        opacity: 1 !important;
+        visibility: visible !important;
+
+        pointer-events: auto !important;
+
+        cursor: pointer !important;
+
+        touch-action: manipulation !important;
+
+        box-shadow:
+            0 8px 28px
+            rgba(0,0,0,.35) !important;
+    }
+
+
+    /* ========================================================
+       OVERLAY
+       IMPORTANT:
+       IT IS BEHIND SIDEBAR
+       ======================================================== */
+
+    .mobile-sidebar-overlay {
+
+        position: fixed !important;
+
+        inset: 0 !important;
+
+        width: 100vw !important;
+        height: 100dvh !important;
+
+        display: block !important;
+
+        background:
+            rgba(0,0,0,.42) !important;
+
+        opacity: 0 !important;
+
+        visibility: hidden !important;
+
+        pointer-events: none !important;
+
+        z-index: 2147483000 !important;
+
+        transition:
+            opacity .2s ease,
+            visibility .2s ease !important;
+    }
+
+
+    .mobile-sidebar-overlay.ap-visible {
+
+        opacity: 1 !important;
+
+        visibility: visible !important;
+
+        pointer-events: auto !important;
+    }
+
+
+    /* ========================================================
+       SIDEBAR — CLOSED DEFAULT
+       ======================================================== */
+
+    aside.sidebar {
+
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        width:
+            min(320px, 86vw) !important;
+
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        box-sizing: border-box !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                #17191e 0%,
+                #0c0e12 100%
+            ) !important;
+
+        visibility: hidden !important;
+
+        opacity: 1 !important;
+
+        transform:
+            translate3d(
+                -105%,
+                0,
+                0
+            ) !important;
+
+        pointer-events: none !important;
+
+        z-index: 2147483646 !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        -webkit-overflow-scrolling: touch !important;
+
+        transition:
+            transform .25s
+            cubic-bezier(.22,.61,.36,1),
+            visibility 0s linear .25s !important;
+    }
+
+
+    /* ========================================================
+       SIDEBAR — OPEN
+       ======================================================== */
+
+    aside.sidebar.ap-open {
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+
+        transform:
+            translate3d(
+                0,
+                0,
+                0
+            ) !important;
+
+        pointer-events: auto !important;
+
+        transition:
+            transform .25s
+            cubic-bezier(.22,.61,.36,1),
+            visibility 0s !important;
+    }
+
+
+    /* ========================================================
+       SIDEBAR CONTENT
+       ======================================================== */
+
+    aside.sidebar > * {
+
+        position: relative !important;
+
+        top: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        left: auto !important;
+
+        transform: none !important;
+
+        float: none !important;
+
+        box-sizing: border-box !important;
+
+        max-width: 100% !important;
+
+        flex-shrink: 0 !important;
+    }
+
+
+    aside.sidebar nav {
+
+        position: relative !important;
+
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        width: 100% !important;
+
+        height: auto !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+        overflow: visible !important;
+
+        pointer-events: auto !important;
+
+        z-index: 20 !important;
+    }
+
+
+    aside.sidebar nav a {
+
+        position: relative !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        width: 100% !important;
+
+        min-height: 48px !important;
+        height: 48px !important;
+
+        box-sizing: border-box !important;
+
+        padding:
+            0 18px !important;
+
+        margin: 0 !important;
+
+        pointer-events: auto !important;
+
+        touch-action: manipulation !important;
+
+        z-index: 30 !important;
+    }
+
+
+    /* ========================================================
+       NEW CHAT
+       ======================================================== */
+
+    aside.sidebar .new-chat-btn {
+
+        position: relative !important;
+
+        pointer-events: auto !important;
+
+        z-index: 30 !important;
+    }
+
+
+    /* ========================================================
+       HISTORY
+       ======================================================== */
+
+    aside.sidebar .history-list {
+
+        position: relative !important;
+
+        width: 100% !important;
+
+        height: auto !important;
+
+        max-height: none !important;
+
+        overflow: visible !important;
+
+        pointer-events: auto !important;
+
+        z-index: 20 !important;
+    }
+
+
+    aside.sidebar .history-item {
+
+        position: relative !important;
+
+        width: 100% !important;
+
+        min-height: 54px !important;
+
+        box-sizing: border-box !important;
+
+        pointer-events: auto !important;
+    }
+
+
+    /* ========================================================
+       MOBILE BODY LOCK
+       ======================================================== */
+
+    body.ap-mobile-sidebar-open {
+
+        overflow: hidden !important;
+    }
+
+
+    /* ========================================================
+       MAIN CONTENT
+       ======================================================== */
+
+    main.workspace {
+
+        width: 100% !important;
+
+        min-width: 0 !important;
+
+        margin-left: 0 !important;
+
+        position: relative !important;
+    }
+
+}
+
+
+/* ============================================================
+   SAFETY — NEVER LET OLD CLASSES OVERRIDE FINAL STATE
+   ============================================================ */
+
+@media (max-width: 767px) {
+
+    aside.sidebar.ap-open {
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        transform: translate3d(0,0,0) !important;
+    }
+
+    aside.sidebar:not(.ap-open) {
+        visibility: hidden !important;
+        pointer-events: none !important;
+        transform: translate3d(-105%,0,0) !important;
+    }
+
+}
+
+        `;
+
+        document.head.appendChild(style);
+    }
+
+
+    /* ========================================================
+       CLOSE
+       ======================================================== */
+
+    function closeSidebar() {
+
+        getElements();
+
+        if (!sidebar) return;
+
+        sidebar.classList.remove(
+            "ap-open",
+            "ap-sidebar-open"
+        );
+
+        overlay?.classList.remove(
+            "ap-visible",
+            "ap-sidebar-visible"
+        );
+
+        document.body.classList.remove(
+            "ap-mobile-sidebar-open",
+            "ap-sidebar-locked"
+        );
+
+        if (menuButton) {
+
+            menuButton.textContent = "☰";
+
+            menuButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            menuButton.setAttribute(
+                "aria-label",
+                "Open AP Synapse navigation"
+            );
+        }
+
+        console.log(
+            "✅ AP SYNAPSE SIDEBAR CLOSED"
+        );
+    }
+
+
+    /* ========================================================
+       OPEN
+       ======================================================== */
+
+    function openSidebar() {
+
+        getElements();
+
+        if (!sidebar) return;
+
+        sidebar.classList.add("ap-open");
+
+        overlay?.classList.add("ap-visible");
+
+        document.body.classList.add(
+            "ap-mobile-sidebar-open"
+        );
+
+        if (menuButton) {
+
+            menuButton.textContent = "×";
+
+            menuButton.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+
+            menuButton.setAttribute(
+                "aria-label",
+                "Close AP Synapse navigation"
+            );
+        }
+
+        console.log(
+            "✅ AP SYNAPSE SIDEBAR OPENED"
+        );
+    }
+
+
+    /* ========================================================
+       TOGGLE
+       ======================================================== */
+
+    function toggleSidebar(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        getElements();
+
+        if (!sidebar) return;
+
+        if (
+            sidebar.classList.contains("ap-open")
+        ) {
+
+            closeSidebar();
+
+        } else {
+
+            openSidebar();
+
+        }
+    }
+
+
+    /* ========================================================
+       NAVIGATION
+       ======================================================== */
+
+    function handleNavigation(event) {
+
+        const link =
+            event.target.closest(
+                ".sidebar nav a"
+            );
+
+        if (!link) return;
+
+        /*
+         * Do NOT preventDefault here.
+         *
+         * The existing AP Synapse navigation
+         * handler in sidebar.js/app.js must
+         * receive the click.
+         */
+
+        console.log(
+            "🧭 AP SYNAPSE NAVIGATION:",
+            link.textContent.trim()
+        );
+
+        /*
+         * Give the existing navigation code
+         * a moment to open the requested page,
+         * then close the mobile sidebar.
+         */
+
+        if (
+            window.matchMedia(
+                "(max-width: 767px)"
+            ).matches
+        ) {
+
+            setTimeout(() => {
+
+                closeSidebar();
+
+            }, 180);
+        }
+    }
+
+
+    /* ========================================================
+       INITIALIZE
+       ======================================================== */
+
+    function initialize() {
+
+        installCSS();
+
+        ensureControls();
+
+        getElements();
+
+        if (!sidebar) {
+
+            console.error(
+                "❌ AP SYNAPSE SIDEBAR NOT FOUND"
+            );
+
+            return;
+        }
+
+
+        /* ----------------------------------------------------
+           Remove ONLY duplicate mobile controls.
+           Do NOT remove sidebar.
+           ---------------------------------------------------- */
+
+        document
+            .querySelectorAll(
+                ".mobile-menu-button"
+            )
+            .forEach((element, index) => {
+
+                if (index > 0) {
+                    element.remove();
+                }
+
+            });
+
+
+        document
+            .querySelectorAll(
+                ".mobile-sidebar-overlay"
+            )
+            .forEach((element, index) => {
+
+                if (index > 0) {
+                    element.remove();
+                }
+
+            });
+
+
+        getElements();
+
+
+        /* ----------------------------------------------------
+           Remove old state classes
+           ---------------------------------------------------- */
+
+        sidebar.classList.remove(
+            "ap-sidebar-open"
+        );
+
+        overlay?.classList.remove(
+            "ap-sidebar-visible"
+        );
+
+
+        /* ----------------------------------------------------
+           MENU BUTTON
+           ---------------------------------------------------- */
+
+        menuButton.onclick = null;
+
+        menuButton.addEventListener(
+            "click",
+            toggleSidebar,
+            {
+                passive: false
+            }
+        );
+
+
+        /* ----------------------------------------------------
+           OVERLAY
+           ---------------------------------------------------- */
+
+        if (overlay) {
+
+            overlay.onclick = null;
+
+            overlay.addEventListener(
+                "click",
+                event => {
+
+                    if (
+                        event.target === overlay
+                    ) {
+
+                        closeSidebar();
+
+                    }
+
+                }
+            );
+        }
+
+
+        /* ----------------------------------------------------
+           NAVIGATION
+           ---------------------------------------------------- */
+
+        sidebar.addEventListener(
+            "click",
+            handleNavigation,
+            false
+        );
+
+
+        /* ----------------------------------------------------
+           ESC
+           ---------------------------------------------------- */
+
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Escape"
+                ) {
+
+                    closeSidebar();
+
+                }
+
+            }
+        );
+
+
+        /* ----------------------------------------------------
+           RESIZE
+           ---------------------------------------------------- */
+
+        window.addEventListener(
+            "resize",
+            () => {
+
+                if (
+                    window.innerWidth >=
+                    MOBILE_BREAKPOINT + 1
+                ) {
+
+                    closeSidebar();
+
+                }
+
+            },
+            {
+                passive: true
+            }
+        );
+
+
+        /* ----------------------------------------------------
+           INITIAL STATE
+           ---------------------------------------------------- */
+
+        if (
+            window.innerWidth >=
+            MOBILE_BREAKPOINT + 1
+        ) {
+
+            sidebar.classList.remove(
+                "ap-open"
+            );
+
+        } else {
+
+            closeSidebar();
+
+        }
+
+
+        console.log(
+            "🚀 AP SYNAPSE FINAL SIDEBAR READY"
+        );
+    }
+
+
+    /* ========================================================
+       START
+       ======================================================== */
+
+    if (
+        document.readyState === "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            initialize,
+            {
+                once: true
+            }
+        );
+
+    } else {
+
+        initialize();
+
+    }
+
+})();
+
+/* ============================================================
+   AP SYNAPSE — MOBILE SIDEBAR
+   SINGLE CONTROLLER
+   Desktop navigation untouched
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    const BREAKPOINT = 767;
+
+    function getSidebar() {
+        return document.querySelector(".sidebar");
+    }
+
+    function getMenuButton() {
+        return document.querySelector(".mobile-menu-button");
+    }
+
+    function getOverlay() {
+        return document.querySelector(".mobile-sidebar-overlay");
+    }
+
+    function ensureControls() {
+
+        let button = getMenuButton();
+        let overlay = getOverlay();
+
+        if (!button) {
+            button = document.createElement("button");
+
+            button.className = "mobile-menu-button";
+            button.type = "button";
+            button.textContent = "☰";
+
+            button.setAttribute(
+                "aria-label",
+                "Open AP Synapse navigation"
+            );
+
+            button.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            document.body.appendChild(button);
+        }
+
+        if (!overlay) {
+            overlay = document.createElement("div");
+            overlay.className = "mobile-sidebar-overlay";
+
+            document.body.appendChild(overlay);
+        }
+
+        return {
+            sidebar: getSidebar(),
+            button: getMenuButton(),
+            overlay: getOverlay()
+        };
+    }
+
+    function closeSidebar() {
+
+        const {
+            sidebar,
+            button,
+            overlay
+        } = ensureControls();
+
+        if (!sidebar) return;
+
+        sidebar.classList.remove("ap-sidebar-open");
+
+        overlay?.classList.remove(
+            "ap-sidebar-visible"
+        );
+
+        document.body.classList.remove(
+            "ap-sidebar-locked"
+        );
+
+        if (button) {
+            button.textContent = "☰";
+
+            button.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            button.setAttribute(
+                "aria-label",
+                "Open AP Synapse navigation"
+            );
+        }
+    }
+
+    function openSidebar() {
+
+        const {
+            sidebar,
+            button,
+            overlay
+        } = ensureControls();
+
+        if (!sidebar) return;
+
+        sidebar.classList.add(
+            "ap-sidebar-open"
+        );
+
+        overlay?.classList.add(
+            "ap-sidebar-visible"
+        );
+
+        document.body.classList.add(
+            "ap-sidebar-locked"
+        );
+
+        if (button) {
+            button.textContent = "×";
+
+            button.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+
+            button.setAttribute(
+                "aria-label",
+                "Close AP Synapse navigation"
+            );
+        }
+    }
+
+    function toggleSidebar(event) {
+
+        event?.preventDefault();
+        event?.stopPropagation();
+
+        const sidebar = getSidebar();
+
+        if (!sidebar) return;
+
+        if (
+            sidebar.classList.contains(
+                "ap-sidebar-open"
+            )
+        ) {
+            closeSidebar();
+        } else {
+            openSidebar();
+        }
+    }
+
+    function initialize() {
+
+        const {
+            sidebar,
+            button,
+            overlay
+        } = ensureControls();
+
+        if (!sidebar) {
+            console.error(
+                "❌ AP Synapse sidebar not found"
+            );
+            return;
+        }
+
+        /*
+         * Remove duplicate generated controls.
+         */
+        document
+            .querySelectorAll(".mobile-menu-button")
+            .forEach((element, index) => {
+                if (index > 0) element.remove();
+            });
+
+        document
+            .querySelectorAll(".mobile-sidebar-overlay")
+            .forEach((element, index) => {
+                if (index > 0) element.remove();
+            });
+
+        /*
+         * Clean old state.
+         */
+        sidebar.classList.remove(
+            "ap-open",
+            "ap-sidebar-open",
+            "mobile-open",
+            "ap-mobile-open"
+        );
+
+        overlay?.classList.remove(
+            "ap-visible",
+            "visible",
+            "active",
+            "ap-sidebar-visible",
+            "ap-mobile-open"
+        );
+
+        /*
+         * Clone menu button so old listeners
+         * from previous controllers are removed.
+         */
+        const cleanButton =
+            button.cloneNode(true);
+
+        button.replaceWith(cleanButton);
+
+        cleanButton.addEventListener(
+            "click",
+            toggleSidebar,
+            { passive: false }
+        );
+
+        /*
+         * Overlay closes sidebar.
+         */
+        overlay.onclick = null;
+
+        overlay.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target === overlay
+                ) {
+                    closeSidebar();
+                }
+
+            }
+        );
+
+        /*
+         * Do NOT intercept navigation.
+         * Existing navigation code handles it.
+         */
+        sidebar.addEventListener(
+            "click",
+            event => {
+
+                const link =
+                    event.target.closest(
+                        "nav a"
+                    );
+
+                if (!link) return;
+
+                if (
+                    window.innerWidth <=
+                    BREAKPOINT
+                ) {
+                    setTimeout(
+                        closeSidebar,
+                        180
+                    );
+                }
+
+            }
+        );
+
+        /*
+         * New Chat.
+         */
+        sidebar.addEventListener(
+            "click",
+            event => {
+
+                const newChat =
+                    event.target.closest(
+                        ".new-chat-btn"
+                    );
+
+                if (!newChat) return;
+
+                if (
+                    window.innerWidth <=
+                    BREAKPOINT
+                ) {
+                    setTimeout(
+                        closeSidebar,
+                        120
+                    );
+                }
+
+            }
+        );
+
+        /*
+         * Escape.
+         */
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Escape"
+                ) {
+                    closeSidebar();
+                }
+
+            }
+        );
+
+        /*
+         * Desktop resize.
+         */
+        window.addEventListener(
+            "resize",
+            () => {
+
+                if (
+                    window.innerWidth >
+                    BREAKPOINT
+                ) {
+                    closeSidebar();
+                }
+
+            },
+            { passive: true }
+        );
+
+        closeSidebar();
+
+        console.log(
+            "✅ AP SYNAPSE — SINGLE MOBILE SIDEBAR CONTROLLER READY"
+        );
+    }
+
+    if (
+        document.readyState === "loading"
+    ) {
+        document.addEventListener(
+            "DOMContentLoaded",
+            initialize,
+            { once: true }
+        );
+    } else {
+        initialize();
     }
 
 })();

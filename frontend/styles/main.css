@@ -14054,6 +14054,109 @@ body {
     }
 }
 
+/* =================================================
+   AP SYNAPSE — PREMIUM MOBILE SIDEBAR LAYER
+   Sidebar ALWAYS above backdrop
+   ================================================= */
+
+.mobile-sidebar-overlay {
+
+    position: fixed !important;
+    inset: 0 !important;
+
+    width: 100vw !important;
+    height: 100dvh !important;
+
+    background: rgba(0, 0, 0, 0.42) !important;
+
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+
+    z-index: 9000 !important;
+
+    transition:
+        opacity 220ms ease,
+        visibility 220ms ease !important;
+}
+
+.mobile-sidebar-overlay.ap-sidebar-visible {
+
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+}
+
+
+/* =================================================
+   SIDEBAR — ABOVE EVERYTHING
+   ================================================= */
+
+aside.sidebar {
+
+    position: fixed !important;
+
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+
+    width: min(326px, 88vw) !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+
+    z-index: 10000 !important;
+
+    isolation: isolate !important;
+
+    background:
+        linear-gradient(
+            180deg,
+            #16181d 0%,
+            #101216 48%,
+            #0c0e12 100%
+        ) !important;
+
+    opacity: 1 !important;
+
+    filter: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    transform:
+        translate3d(-105%, 0, 0) !important;
+
+    visibility: hidden !important;
+
+    pointer-events: none !important;
+
+    transition:
+        transform 280ms cubic-bezier(.22,.61,.36,1),
+        visibility 280ms ease !important;
+}
+
+
+/* =================================================
+   OPEN SIDEBAR
+   ================================================= */
+
+aside.sidebar.ap-sidebar-open {
+
+    transform:
+        translate3d(0, 0, 0) !important;
+
+    visibility: visible !important;
+
+    pointer-events: auto !important;
+
+    opacity: 1 !important;
+
+    filter: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
 /* =========================================================
    AP SYNAPSE — FINAL MOBILE SIDEBAR TOUCH / SCROLL FIX
    Put this AFTER every other mobile CSS rule
@@ -14706,4 +14809,591 @@ body {
 
         margin: 2px 0 !important;
     }
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL SIDEBAR / WORKSPACE LAYOUT FIX
+   Paste at the VERY BOTTOM of main.css
+   ========================================================= */
+
+/* ---------- DESKTOP ---------- */
+@media (min-width: 769px) {
+
+    /* Sidebar stays permanently visible on desktop */
+    .sidebar {
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        bottom: 0 !important;
+
+        width: 300px !important;
+        height: 100vh !important;
+
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform: none !important;
+
+        z-index: 1000 !important;
+
+        filter: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+
+        pointer-events: auto !important;
+    }
+
+    /* Workspace must start AFTER sidebar */
+    .app {
+        margin-left: 300px !important;
+        width: calc(100% - 300px) !important;
+
+        min-width: 0 !important;
+        max-width: none !important;
+
+        display: block !important;
+    }
+
+    main.workspace,
+    .workspace {
+        margin-left: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+
+        min-width: 0 !important;
+    }
+
+    /* Prevent desktop content from being pushed beyond viewport */
+    .workspace > *,
+    .workspace-content,
+    .main-content,
+    .content,
+    .hero,
+    .hero-section {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Mobile-only controls must stay hidden */
+    .mobile-menu-button {
+        display: none !important;
+    }
+
+    .mobile-sidebar-overlay {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+    }
+}
+
+
+/* ---------- MOBILE / TABLET ---------- */
+@media (max-width: 768px) {
+
+    /* Sidebar becomes an independent top-level layer */
+    .sidebar {
+        position: fixed !important;
+
+        left: 0 !important;
+        top: 0 !important;
+        bottom: 0 !important;
+
+        width: min(320px, 86vw) !important;
+        height: 100dvh !important;
+
+        display: flex !important;
+
+        background: #0d0f13 !important;
+
+        opacity: 1 !important;
+        filter: none !important;
+        -webkit-filter: none !important;
+
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+
+        transform: translateX(-105%) !important;
+
+        visibility: hidden !important;
+        pointer-events: none !important;
+
+        z-index: 2147483647 !important;
+
+        isolation: isolate !important;
+
+        transition:
+            transform 260ms cubic-bezier(.2,.8,.2,1),
+            visibility 0s linear 260ms !important;
+    }
+
+    /* OPEN STATE */
+    .sidebar.ap-sidebar-open {
+        transform: translateX(0) !important;
+
+        visibility: visible !important;
+        pointer-events: auto !important;
+
+        opacity: 1 !important;
+        filter: none !important;
+        -webkit-filter: none !important;
+
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+
+        z-index: 2147483647 !important;
+
+        transition:
+            transform 260ms cubic-bezier(.2,.8,.2,1),
+            visibility 0s linear 0s !important;
+    }
+
+
+    /* ---------- CRITICAL: OVERLAY MUST NEVER COVER SIDEBAR ---------- */
+
+    .mobile-sidebar-overlay {
+        position: fixed !important;
+
+        inset: 0 !important;
+
+        display: none !important;
+
+        visibility: hidden !important;
+        opacity: 0 !important;
+
+        pointer-events: none !important;
+
+        z-index: 2147483646 !important;
+
+        filter: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    /*
+      Even if JavaScript adds ap-sidebar-visible,
+      overlay remains BEHIND sidebar.
+    */
+    .mobile-sidebar-overlay.ap-sidebar-visible {
+        display: block !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        pointer-events: auto !important;
+
+        z-index: 2147483646 !important;
+
+        background: rgba(0,0,0,.52) !important;
+
+        filter: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+
+    /* Sidebar itself always beats overlay */
+    .sidebar.ap-sidebar-open,
+    .sidebar.ap-sidebar-open * {
+        position: relative;
+        z-index: 2147483647 !important;
+    }
+
+
+    /* ---------- MOBILE MENU BUTTON ---------- */
+
+    .mobile-menu-button {
+        position: fixed !important;
+
+        top: 16px !important;
+        left: 16px !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        width: 52px !important;
+        height: 52px !important;
+
+        z-index: 2147483648 !important;
+
+        pointer-events: auto !important;
+
+        opacity: 1 !important;
+        visibility: visible !important;
+
+        transform: none !important;
+    }
+
+
+    /* ---------- MOBILE WORKSPACE ---------- */
+
+    .app {
+        margin-left: 0 !important;
+        width: 100% !important;
+
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        display: block !important;
+    }
+
+    main.workspace,
+    .workspace {
+        margin-left: 0 !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+    }
+
+    .workspace > *,
+    .workspace-content,
+    .main-content,
+    .content,
+    .hero,
+    .hero-section {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+}
+
+
+/* ---------- IMPORTANT: NEVER BLUR THE SIDEBAR ---------- */
+
+.sidebar,
+.sidebar.ap-sidebar-open,
+.sidebar.ap-sidebar-open * {
+    filter: none !important;
+    -webkit-filter: none !important;
+}
+
+
+/* ---------- SAFETY AGAINST OLD BODY LOCK CSS ---------- */
+
+body.ap-sidebar-locked {
+    overflow-x: hidden !important;
+}
+
+
+/* ---------- PREVENT HORIZONTAL DESKTOP OVERFLOW ---------- */
+
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden !important;
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL RESPONSIVE SIDEBAR SYSTEM
+   DO NOT ADD ANOTHER SIDEBAR CSS SYSTEM BELOW THIS
+   ========================================================= */
+
+/* ---------- DESKTOP ---------- */
+
+@media (min-width: 701px) {
+
+    html,
+    body {
+        width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+    }
+
+    .app {
+        width: 100%;
+        min-height: 100vh;
+        display: grid !important;
+        grid-template-columns: 300px minmax(0, 1fr) !important;
+        grid-template-areas: "sidebar workspace" !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        transform: none !important;
+    }
+
+    .sidebar {
+        grid-area: sidebar !important;
+
+        position: fixed !important;
+        inset: 0 auto 0 0 !important;
+
+        width: 300px !important;
+        height: 100vh !important;
+
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        transform: none !important;
+        translate: none !important;
+
+        z-index: 1000 !important;
+
+        filter: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+
+        pointer-events: auto !important;
+    }
+
+    .workspace,
+    main.workspace {
+        grid-area: workspace !important;
+
+        position: relative !important;
+
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: none !important;
+
+        margin-left: 300px !important;
+        margin-right: 0 !important;
+
+        transform: none !important;
+        translate: none !important;
+
+        left: auto !important;
+        right: auto !important;
+
+        overflow-x: hidden !important;
+    }
+
+    .mobile-menu-button {
+        display: none !important;
+    }
+
+    .mobile-sidebar-overlay {
+        display: none !important;
+        pointer-events: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    html,
+    body {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        overflow-x: hidden !important;
+    }
+
+    .app {
+        display: block !important;
+        width: 100% !important;
+        min-height: 100vh !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        transform: none !important;
+    }
+
+    /*
+       IMPORTANT:
+       The sidebar MUST NOT inherit opacity/filter/blur
+       from any previous mobile system.
+    */
+    .sidebar {
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        width: min(320px, 88vw) !important;
+        height: 100vh !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        z-index: 2147483000 !important;
+
+        background: #0d0f13 !important;
+
+        opacity: 1 !important;
+        visibility: hidden !important;
+
+        transform: translateX(-105%) !important;
+
+        filter: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+
+        pointer-events: none !important;
+
+        transition:
+            transform 240ms cubic-bezier(.2,.8,.2,1),
+            visibility 0s linear 240ms !important;
+
+        isolation: isolate !important;
+    }
+
+    /*
+       ONE authoritative open state.
+    */
+    .sidebar.ap-sidebar-open {
+        visibility: visible !important;
+        transform: translateX(0) !important;
+
+        opacity: 1 !important;
+        pointer-events: auto !important;
+
+        transition:
+            transform 240ms cubic-bezier(.2,.8,.2,1),
+            visibility 0s linear 0s !important;
+    }
+
+    /*
+       Overlay is BELOW sidebar.
+       It must NEVER cover/sidebar-blur the drawer.
+    */
+    .mobile-sidebar-overlay {
+        position: fixed !important;
+
+        inset: 0 !important;
+
+        z-index: 2147482000 !important;
+
+        display: block !important;
+
+        background: rgba(0, 0, 0, .48) !important;
+
+        opacity: 0 !important;
+        visibility: hidden !important;
+
+        pointer-events: none !important;
+
+        filter: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+
+        transition:
+            opacity 200ms ease,
+            visibility 0s linear 200ms !important;
+    }
+
+    .mobile-sidebar-overlay.ap-sidebar-visible {
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+
+        transition:
+            opacity 200ms ease,
+            visibility 0s linear 0s !important;
+    }
+
+    /*
+       Workspace must NOT be shifted on mobile.
+    */
+    .workspace,
+    main.workspace {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        margin: 0 !important;
+        padding-left: 0 !important;
+
+        left: auto !important;
+        right: auto !important;
+
+        transform: none !important;
+        translate: none !important;
+    }
+
+    /*
+       3-bars button stays above everything.
+    */
+    .mobile-menu-button {
+        position: fixed !important;
+
+        top: 16px !important;
+        left: 16px !important;
+
+        width: 52px !important;
+        height: 52px !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        z-index: 2147483647 !important;
+
+        pointer-events: auto !important;
+
+        opacity: 1 !important;
+        visibility: visible !important;
+
+        filter: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    /*
+       Sidebar content itself must remain sharp/clickable.
+    */
+    .sidebar *,
+    .sidebar nav,
+    .sidebar nav a,
+    .sidebar button {
+        filter: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    .sidebar nav a,
+    .sidebar button {
+        pointer-events: auto !important;
+    }
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL MOBILE SIDEBAR CLICK FIX
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+    aside.sidebar.ap-sidebar-open {
+        z-index: 9001 !important;
+        pointer-events: auto !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    aside.sidebar.ap-sidebar-open nav,
+    aside.sidebar.ap-sidebar-open nav a,
+    aside.sidebar.ap-sidebar-open button,
+    aside.sidebar.ap-sidebar-open .new-chat-btn,
+    aside.sidebar.ap-sidebar-open .history-item {
+        pointer-events: auto !important;
+    }
+
+    .mobile-sidebar-overlay {
+        z-index: 9000 !important;
+        pointer-events: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    .mobile-sidebar-overlay.ap-sidebar-visible {
+        pointer-events: auto !important;
+        z-index: 9000 !important;
+    }
+
+    .mobile-menu-button {
+        z-index: 9002 !important;
+        pointer-events: auto !important;
+    }
+
 }

@@ -1931,20 +1931,6 @@ body::before {
     }
 }
 
-/* Smaller screens */
-@media (max-width: 850px) {
-
-    .app .sidebar {
-        display: none;
-    }
-
-    .app .workspace {
-        width: 100%;
-        margin-left: 0;
-        transform: none;
-    }
-}
-
 /* =========================================================
    AP SYNAPSE — FINAL MOBILE WORKSPACE PATCH
    Desktop remains unchanged.
@@ -4870,4 +4856,2137 @@ body::before {
     .mobile-menu-button {
         z-index: 20002 !important;
     }
+}
+
+/* ============================================================
+   AP SYNAPSE — FINAL SIDEBAR CSS
+   Desktop + Mobile
+============================================================ */
+
+
+/* ============================================================
+   DESKTOP
+============================================================ */
+
+@media (min-width: 768px) {
+
+    aside.sidebar {
+
+        display: flex !important;
+
+        position: relative !important;
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+
+        pointer-events: auto !important;
+
+        transform: none !important;
+
+        z-index: 1000 !important;
+
+    }
+
+
+    .mobile-menu-button {
+
+        display: none !important;
+
+    }
+
+}
+
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 767px) {
+
+    html,
+    body {
+
+        width: 100%;
+
+        max-width: 100%;
+
+        overflow-x: hidden !important;
+
+    }
+
+
+    /* --------------------------------------------------------
+       MOBILE MENU BUTTON
+    -------------------------------------------------------- */
+
+    .mobile-menu-button {
+
+        position: fixed !important;
+
+        top: 14px !important;
+
+        left: 14px !important;
+
+        width: 48px !important;
+
+        height: 48px !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        justify-content: center !important;
+
+        padding: 0 !important;
+
+        margin: 0 !important;
+
+        border: 1px solid
+            rgba(198,166,107,.55) !important;
+
+        border-radius: 15px !important;
+
+        background:
+            rgba(14,16,20,.97) !important;
+
+        color:
+            #f5f5f3 !important;
+
+        font-size: 24px !important;
+
+        line-height: 1 !important;
+
+        cursor: pointer !important;
+
+        pointer-events: auto !important;
+
+        touch-action: manipulation !important;
+
+        z-index: 2147483647 !important;
+
+        box-shadow:
+            0 8px 25px
+            rgba(0,0,0,.30) !important;
+
+    }
+
+
+    /* --------------------------------------------------------
+       SIDEBAR CLOSED
+    -------------------------------------------------------- */
+
+    aside.sidebar {
+
+        position: fixed !important;
+
+        top: 0 !important;
+
+        left: 0 !important;
+
+        bottom: 0 !important;
+
+        width:
+            min(326px, 88vw) !important;
+
+        height: 100dvh !important;
+
+        max-height: 100dvh !important;
+
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        box-sizing: border-box !important;
+
+        margin: 0 !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                #14161b 0%,
+                #0b0d11 100%
+            ) !important;
+
+        transform:
+            translate3d(-105%,0,0) !important;
+
+        visibility:
+            hidden !important;
+
+        opacity: 1 !important;
+
+        pointer-events:
+            none !important;
+
+        overflow-x:
+            hidden !important;
+
+        overflow-y:
+            auto !important;
+
+        z-index:
+            2147483646 !important;
+
+        transition:
+            transform .28s
+            cubic-bezier(.22,.61,.36,1),
+            visibility 0s linear .28s !important;
+
+    }
+
+
+    /* --------------------------------------------------------
+       SIDEBAR OPEN
+    -------------------------------------------------------- */
+
+    aside.sidebar.ap-sidebar-open {
+
+        transform:
+            translate3d(0,0,0) !important;
+
+        visibility:
+            visible !important;
+
+        pointer-events:
+            auto !important;
+
+        opacity:
+            1 !important;
+
+        transition:
+            transform .28s
+            cubic-bezier(.22,.61,.36,1) !important;
+
+    }
+
+
+    /* --------------------------------------------------------
+       REMOVE OLD BLACK / BLUR OVERLAY COMPLETELY
+    -------------------------------------------------------- */
+
+    .mobile-sidebar-overlay {
+
+        display: none !important;
+
+    }
+
+
+    /* --------------------------------------------------------
+       BODY WHEN SIDEBAR OPEN
+    -------------------------------------------------------- */
+
+    body.ap-sidebar-locked {
+
+        overflow: hidden !important;
+
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — MASTER SIDEBAR SYSTEM
+   FINAL OVERRIDE
+   Desktop + Mobile
+   ONE SOURCE OF TRUTH
+   ========================================================= */
+
+/* =========================================================
+   GLOBAL APP LAYOUT
+   ========================================================= */
+
+.app {
+    display: flex !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 100dvh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+.app > .sidebar {
+    flex: 0 0 260px !important;
+    width: 260px !important;
+    min-width: 260px !important;
+    height: 100dvh !important;
+    box-sizing: border-box !important;
+    pointer-events: auto !important;
+}
+
+.app > .workspace {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    height: 100dvh !important;
+    margin: 0 !important;
+    transform: none !important;
+    overflow: hidden !important;
+}
+
+
+/* =========================================================
+   DESKTOP — 768px+
+   SIDEBAR ALWAYS VISIBLE
+   ========================================================= */
+
+@media (min-width: 768px) {
+
+    .app > .sidebar {
+        display: flex !important;
+
+        position: relative !important;
+
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+
+        transform: none !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        pointer-events: auto !important;
+
+        z-index: 1000 !important;
+    }
+
+    .app > .workspace {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .mobile-menu-button,
+    .mobile-sidebar-overlay {
+        display: none !important;
+    }
+}
+
+
+/* =========================================================
+   MOBILE — BELOW 768px
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+    html,
+    body {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        overflow-x: hidden !important;
+    }
+
+    body {
+        margin: 0 !important;
+    }
+
+
+    /* -----------------------------------------------------
+       APP
+       ----------------------------------------------------- */
+
+    .app {
+        display: block !important;
+
+        width: 100% !important;
+        max-width: 100vw !important;
+        min-width: 0 !important;
+
+        height: 100dvh !important;
+
+        overflow: hidden !important;
+    }
+
+
+    /* -----------------------------------------------------
+       WORKSPACE
+       IMPORTANT:
+       NEVER reserve desktop sidebar space on mobile.
+       ----------------------------------------------------- */
+
+    .app > .workspace {
+        display: flex !important;
+        flex-direction: column !important;
+
+        width: 100% !important;
+        max-width: 100vw !important;
+        min-width: 0 !important;
+
+        height: 100dvh !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        transform: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       HAMBURGER
+       ----------------------------------------------------- */
+
+    button.mobile-menu-button {
+
+        position: fixed !important;
+
+        top: max(
+            14px,
+            env(safe-area-inset-top)
+        ) !important;
+
+        left: 14px !important;
+
+        width: 48px !important;
+        height: 48px !important;
+
+        min-width: 48px !important;
+        min-height: 48px !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        box-sizing: border-box !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        pointer-events: auto !important;
+        touch-action: manipulation !important;
+
+        z-index: 2147483647 !important;
+
+        border:
+            1px solid
+            rgba(198,166,107,.55) !important;
+
+        border-radius: 14px !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(31,34,39,.98),
+                rgba(12,14,18,.98)
+            ) !important;
+
+        color: #f5f5f3 !important;
+
+        font-size: 24px !important;
+        line-height: 1 !important;
+
+        cursor: pointer !important;
+
+        box-shadow:
+            0 12px 35px rgba(0,0,0,.45),
+            inset 0 1px 0
+            rgba(255,255,255,.06) !important;
+
+        transform: none !important;
+    }
+
+    button.mobile-menu-button:active {
+        transform: scale(.94) !important;
+    }
+
+
+    /* -----------------------------------------------------
+       OVERLAY
+       BELOW SIDEBAR
+       ABOVE WORKSPACE
+       ----------------------------------------------------- */
+
+    .mobile-sidebar-overlay {
+
+        position: fixed !important;
+
+        inset: 0 !important;
+
+        width: 100vw !important;
+        height: 100dvh !important;
+
+        display: block !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        background:
+            rgba(0,0,0,.42) !important;
+
+        opacity: 0 !important;
+        visibility: hidden !important;
+
+        pointer-events: none !important;
+
+        z-index: 2147483640 !important;
+
+        transition:
+            opacity .22s ease,
+            visibility .22s ease !important;
+    }
+
+    .mobile-sidebar-overlay.ap-sidebar-visible {
+
+        opacity: 1 !important;
+
+        visibility: visible !important;
+
+        pointer-events: auto !important;
+    }
+
+
+    /* -----------------------------------------------------
+       SIDEBAR — CLOSED
+       ----------------------------------------------------- */
+
+    .app > aside.sidebar {
+
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        right: auto !important;
+        bottom: 0 !important;
+
+        width: min(326px, 88vw) !important;
+
+        min-width: 0 !important;
+
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        box-sizing: border-box !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        -webkit-overflow-scrolling: touch !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                #191b20 0%,
+                #111318 55%,
+                #0c0e12 100%
+            ) !important;
+
+        color: #f5f5f3 !important;
+
+        border-right:
+            1px solid
+            rgba(198,166,107,.24) !important;
+
+        box-shadow:
+            20px 0 70px
+            rgba(0,0,0,.58) !important;
+
+        opacity: 1 !important;
+
+        visibility: hidden !important;
+
+        pointer-events: none !important;
+
+        transform:
+            translate3d(-105%,0,0) !important;
+
+        z-index: 2147483646 !important;
+
+        transition:
+            transform .28s
+            cubic-bezier(.22,.61,.36,1),
+            visibility 0s linear .28s !important;
+    }
+
+
+    /* -----------------------------------------------------
+       SIDEBAR — OPEN
+       THIS MATCHES sidebar.js EXACTLY
+       ----------------------------------------------------- */
+
+    .app > aside.sidebar.ap-sidebar-open {
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+
+        pointer-events: auto !important;
+
+        transform:
+            translate3d(0,0,0) !important;
+
+        z-index: 2147483646 !important;
+
+        transition:
+            transform .28s
+            cubic-bezier(.22,.61,.36,1),
+            visibility 0s linear 0s !important;
+    }
+
+
+    /* -----------------------------------------------------
+       SIDEBAR CONTENT
+       ----------------------------------------------------- */
+
+    .app > aside.sidebar > * {
+
+        position: relative !important;
+
+        top: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        left: auto !important;
+
+        transform: none !important;
+
+        float: none !important;
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+
+        flex-shrink: 0 !important;
+    }
+
+
+    /* -----------------------------------------------------
+       SIDEBAR NAV
+       ----------------------------------------------------- */
+
+    .app > aside.sidebar nav {
+
+        position: relative !important;
+
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        height: auto !important;
+
+        overflow: visible !important;
+
+        pointer-events: auto !important;
+
+        z-index: 10 !important;
+    }
+
+
+    .app > aside.sidebar nav a {
+
+        position: relative !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        width: 100% !important;
+
+        min-width: 0 !important;
+
+        height: 48px !important;
+
+        min-height: 48px !important;
+
+        max-height: 48px !important;
+
+        box-sizing: border-box !important;
+
+        margin: 0 !important;
+
+        pointer-events: auto !important;
+
+        touch-action: manipulation !important;
+
+        transform: none !important;
+
+        z-index: 11 !important;
+    }
+
+
+    /* -----------------------------------------------------
+       KEEP SIDEBAR TEXT VISIBLE
+       ----------------------------------------------------- */
+
+    .app > aside.sidebar,
+    .app > aside.sidebar * {
+
+        text-shadow: none !important;
+    }
+
+    .app > aside.sidebar a,
+    .app > aside.sidebar button,
+    .app > aside.sidebar h2,
+    .app > aside.sidebar h4,
+    .app > aside.sidebar span,
+    .app > aside.sidebar div {
+
+        opacity: 1 !important;
+    }
+
+
+    /* -----------------------------------------------------
+       BODY LOCK ONLY WHEN OPEN
+       ----------------------------------------------------- */
+
+    body.ap-sidebar-locked {
+        overflow: hidden !important;
+    }
+}
+
+
+/* =========================================================
+   FINAL SAFETY
+   ========================================================= */
+
+body::before,
+.stars,
+.background,
+.app .background,
+.app .stars {
+    pointer-events: none !important;
+}
+
+/* ============================================================
+   AP SYNAPSE
+   MASTER SIDEBAR SYSTEM
+   CLEAN — ONE SOURCE OF TRUTH
+   ============================================================ */
+
+* {
+    box-sizing: border-box;
+}
+
+/* ============================================================
+   DESKTOP
+   ============================================================ */
+
+@media (min-width: 768px) {
+
+    .app {
+        display: flex !important;
+        width: 100% !important;
+        height: 100dvh !important;
+        min-width: 0 !important;
+        overflow: hidden !important;
+    }
+
+    .app > .sidebar {
+        display: flex !important;
+
+        position: relative !important;
+
+        flex: 0 0 260px !important;
+
+        width: 260px !important;
+        min-width: 260px !important;
+
+        height: 100dvh !important;
+
+        margin: 0 !important;
+
+        transform: none !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        pointer-events: auto !important;
+
+        z-index: 1000 !important;
+    }
+
+    .app > .workspace {
+        flex: 1 1 auto !important;
+
+        width: auto !important;
+        min-width: 0 !important;
+
+        height: 100dvh !important;
+
+        margin: 0 !important;
+
+        transform: none !important;
+
+        overflow: hidden !important;
+    }
+
+    .mobile-menu-button,
+    .mobile-sidebar-overlay {
+        display: none !important;
+    }
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 767px) {
+
+    html,
+    body {
+        width: 100% !important;
+        max-width: 100vw !important;
+        min-width: 0 !important;
+
+        overflow-x: hidden !important;
+    }
+
+    body {
+        margin: 0 !important;
+    }
+
+    .app {
+        display: block !important;
+
+        width: 100% !important;
+        max-width: 100vw !important;
+
+        height: 100dvh !important;
+
+        overflow: hidden !important;
+    }
+
+
+    /* ========================================================
+       MAIN WORKSPACE
+       ======================================================== */
+
+    .app > .workspace {
+        display: flex !important;
+        flex-direction: column !important;
+
+        width: 100% !important;
+        max-width: 100vw !important;
+
+        min-width: 0 !important;
+
+        height: 100dvh !important;
+
+        margin: 0 !important;
+
+        transform: none !important;
+
+        overflow: hidden !important;
+    }
+
+
+    /* ========================================================
+       HAMBURGER
+       ======================================================== */
+
+    button.mobile-menu-button {
+
+        position: fixed !important;
+
+        top: max(
+            14px,
+            env(safe-area-inset-top)
+        ) !important;
+
+        left: 14px !important;
+
+        width: 48px !important;
+        height: 48px !important;
+
+        min-width: 48px !important;
+        min-height: 48px !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        background: #17191e !important;
+
+        color: #f5f5f3 !important;
+
+        border:
+            1px solid
+            rgba(198,166,107,.55) !important;
+
+        border-radius: 14px !important;
+
+        font-size: 24px !important;
+        line-height: 1 !important;
+
+        opacity: 1 !important;
+        visibility: visible !important;
+
+        pointer-events: auto !important;
+        touch-action: manipulation !important;
+
+        cursor: pointer !important;
+
+        z-index: 10002 !important;
+
+        box-shadow:
+            0 10px 30px
+            rgba(0,0,0,.45) !important;
+
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+
+    /* ========================================================
+       OVERLAY
+       IMPORTANT:
+       BELOW SIDEBAR
+       ======================================================== */
+
+    .mobile-sidebar-overlay {
+
+        position: fixed !important;
+
+        inset: 0 !important;
+
+        width: 100vw !important;
+        height: 100dvh !important;
+
+        display: block !important;
+
+        background:
+            rgba(0,0,0,.32) !important;
+
+        opacity: 0 !important;
+        visibility: hidden !important;
+
+        pointer-events: none !important;
+
+        z-index: 9998 !important;
+
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+
+        transition:
+            opacity .22s ease,
+            visibility .22s ease !important;
+    }
+
+    .mobile-sidebar-overlay.ap-sidebar-visible {
+
+        opacity: 1 !important;
+
+        visibility: visible !important;
+
+        pointer-events: auto !important;
+    }
+
+
+    /* ========================================================
+       SIDEBAR — CLOSED
+       ======================================================== */
+
+    .app > aside.sidebar {
+
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        width: min(326px, 88vw) !important;
+
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        box-sizing: border-box !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                #1b1e24 0%,
+                #13161b 52%,
+                #0e1014 100%
+            ) !important;
+
+        color: #f5f5f3 !important;
+
+        border-right:
+            1px solid
+            rgba(198,166,107,.28) !important;
+
+        box-shadow:
+            18px 0 60px
+            rgba(0,0,0,.55) !important;
+
+        opacity: 1 !important;
+
+        visibility: hidden !important;
+
+        pointer-events: none !important;
+
+        transform:
+            translate3d(-105%,0,0) !important;
+
+        z-index: 10001 !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        -webkit-overflow-scrolling: touch !important;
+
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+
+        transition:
+            transform .28s
+            cubic-bezier(.22,.61,.36,1),
+            visibility 0s linear .28s !important;
+    }
+
+
+    /* ========================================================
+       SIDEBAR — OPEN
+       THIS MATCHES sidebar.js EXACTLY
+       ======================================================== */
+
+    .app > aside.sidebar.ap-sidebar-open {
+
+        transform:
+            translate3d(0,0,0) !important;
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+
+        pointer-events: auto !important;
+
+        z-index: 10001 !important;
+
+        transition:
+            transform .28s
+            cubic-bezier(.22,.61,.36,1),
+            visibility 0s linear 0s !important;
+    }
+
+
+    /* ========================================================
+       SIDEBAR CONTENT
+       ======================================================== */
+
+    .app > aside.sidebar > * {
+
+        position: relative !important;
+
+        top: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        left: auto !important;
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        transform: none !important;
+
+        float: none !important;
+
+        box-sizing: border-box !important;
+
+        flex-shrink: 0 !important;
+    }
+
+
+    /* ========================================================
+       NAVIGATION
+       ======================================================== */
+
+    .app > aside.sidebar nav {
+
+        position: relative !important;
+
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        width: 100% !important;
+
+        height: auto !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+        overflow: visible !important;
+
+        pointer-events: auto !important;
+
+        z-index: 20 !important;
+    }
+
+    .app > aside.sidebar nav a {
+
+        position: relative !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        width: 100% !important;
+
+        min-width: 0 !important;
+
+        height: 48px !important;
+        min-height: 48px !important;
+
+        margin: 0 !important;
+
+        padding: 0 18px !important;
+
+        box-sizing: border-box !important;
+
+        pointer-events: auto !important;
+
+        touch-action: manipulation !important;
+
+        cursor: pointer !important;
+
+        transform: none !important;
+
+        z-index: 21 !important;
+    }
+
+
+    /* ========================================================
+       SIDEBAR READABILITY
+       ======================================================== */
+
+    .app > aside.sidebar,
+    .app > aside.sidebar * {
+
+        filter: none !important;
+
+        opacity: 1 !important;
+
+        text-shadow: none !important;
+    }
+
+
+    /* ========================================================
+       BODY LOCK
+       ======================================================== */
+
+    body.ap-sidebar-locked {
+        overflow: hidden !important;
+    }
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL SIDEBAR SYSTEM
+   SINGLE AUTHORITATIVE OVERRIDE
+   Desktop + Mobile
+   ========================================================= */
+
+/* =========================
+   GLOBAL APP LAYOUT
+   ========================= */
+
+.app {
+    position: relative !important;
+
+    display: flex !important;
+
+    width: 100% !important;
+    max-width: 100vw !important;
+
+    height: 100vh !important;
+    min-height: 100vh !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    overflow: hidden !important;
+}
+
+
+/* =========================
+   DESKTOP
+   ========================= */
+
+@media (min-width: 768px) {
+
+    .app {
+        display: flex !important;
+        flex-direction: row !important;
+    }
+
+    .app > aside.sidebar {
+
+        position: relative !important;
+
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+
+        display: flex !important;
+
+        flex: 0 0 260px !important;
+
+        width: 260px !important;
+        min-width: 260px !important;
+        max-width: 260px !important;
+
+        height: 100vh !important;
+        min-height: 100vh !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        transform: none !important;
+
+        pointer-events: auto !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        z-index: 1000 !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                #17191e 0%,
+                #111318 50%,
+                #0c0e12 100%
+            ) !important;
+
+        border-right:
+            1px solid
+            rgba(198,166,107,.20) !important;
+    }
+
+    .app > main.workspace {
+
+        position: relative !important;
+
+        display: flex !important;
+
+        flex: 1 1 auto !important;
+
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: none !important;
+
+        height: 100vh !important;
+        min-height: 0 !important;
+
+        margin: 0 !important;
+
+        transform: none !important;
+
+        overflow: hidden !important;
+
+        z-index: 20 !important;
+    }
+
+    .mobile-menu-button,
+    .mobile-sidebar-overlay {
+        display: none !important;
+    }
+}
+
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 767px) {
+
+    html,
+    body {
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        overflow-x: hidden !important;
+    }
+
+
+    .app {
+
+        display: block !important;
+
+        width: 100% !important;
+        max-width: 100vw !important;
+
+        height: 100dvh !important;
+
+        overflow: hidden !important;
+    }
+
+
+    /* -------------------------
+       MAIN WORKSPACE
+       ------------------------- */
+
+    .app > main.workspace {
+
+        position: relative !important;
+
+        display: flex !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: 100dvh !important;
+
+        margin: 0 !important;
+
+        transform: none !important;
+
+        overflow: hidden !important;
+
+        z-index: 20 !important;
+    }
+
+
+    /* -------------------------
+       MENU BUTTON
+       ------------------------- */
+
+    button.mobile-menu-button {
+
+        position: fixed !important;
+
+        top:
+            calc(
+                14px +
+                env(safe-area-inset-top)
+            ) !important;
+
+        left: 14px !important;
+
+        width: 48px !important;
+        height: 48px !important;
+
+        min-width: 48px !important;
+        min-height: 48px !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        box-sizing: border-box !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        pointer-events: auto !important;
+
+        touch-action: manipulation !important;
+
+        z-index: 2147483647 !important;
+
+        border:
+            1px solid
+            rgba(198,166,107,.55) !important;
+
+        border-radius: 14px !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                #20242a,
+                #0e1014
+            ) !important;
+
+        color: #f5f5f3 !important;
+
+        font-size: 24px !important;
+        line-height: 1 !important;
+
+        cursor: pointer !important;
+
+        box-shadow:
+            0 12px 35px
+            rgba(0,0,0,.50) !important;
+    }
+
+
+    button.mobile-menu-button:active {
+
+        transform: scale(.94) !important;
+    }
+
+
+    /* -------------------------
+       OVERLAY
+       ------------------------- */
+
+    .mobile-sidebar-overlay {
+
+        position: fixed !important;
+
+        inset: 0 !important;
+
+        width: 100vw !important;
+        height: 100dvh !important;
+
+        display: block !important;
+
+        background:
+            rgba(0,0,0,.48) !important;
+
+        opacity: 0 !important;
+
+        visibility: hidden !important;
+
+        pointer-events: none !important;
+
+        z-index: 2147483645 !important;
+
+        transition:
+            opacity .22s ease,
+            visibility .22s ease !important;
+    }
+
+
+    .mobile-sidebar-overlay.ap-sidebar-visible {
+
+        opacity: 1 !important;
+
+        visibility: visible !important;
+
+        pointer-events: auto !important;
+    }
+
+
+    /* -------------------------
+       MOBILE SIDEBAR
+       ------------------------- */
+
+    .app > aside.sidebar {
+
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        width: min(320px, 86vw) !important;
+
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        box-sizing: border-box !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                #191c22 0%,
+                #111419 55%,
+                #0d0f13 100%
+            ) !important;
+
+        border-right:
+            1px solid
+            rgba(198,166,107,.28) !important;
+
+        box-shadow:
+            18px 0 70px
+            rgba(0,0,0,.65) !important;
+
+        visibility: hidden !important;
+
+        opacity: 1 !important;
+
+        pointer-events: none !important;
+
+        transform:
+            translate3d(-105%,0,0) !important;
+
+        z-index: 2147483646 !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        transition:
+            transform .28s
+            cubic-bezier(.22,.61,.36,1),
+            visibility 0s linear .28s !important;
+    }
+
+
+    /* THE ONLY MOBILE OPEN STATE */
+
+    .app > aside.sidebar.ap-sidebar-open {
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+
+        pointer-events: auto !important;
+
+        transform:
+            translate3d(0,0,0) !important;
+
+        transition:
+            transform .28s
+            cubic-bezier(.22,.61,.36,1),
+            visibility 0s linear 0s !important;
+    }
+
+
+    /* -------------------------
+       SIDEBAR CONTENT
+       ------------------------- */
+
+    .app > aside.sidebar > * {
+
+        position: relative !important;
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        box-sizing: border-box !important;
+
+        transform: none !important;
+
+        flex-shrink: 0 !important;
+    }
+
+
+    .app > aside.sidebar nav {
+
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        width: 100% !important;
+
+        padding: 0 !important;
+
+        margin: 0 !important;
+
+        gap: 3px !important;
+
+        pointer-events: auto !important;
+
+        z-index: 10 !important;
+    }
+
+
+    .app > aside.sidebar nav a {
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        width: 100% !important;
+
+        min-height: 48px !important;
+
+        height: 48px !important;
+
+        box-sizing: border-box !important;
+
+        padding: 0 18px !important;
+
+        margin: 0 !important;
+
+        color: #f5f5f3 !important;
+
+        text-decoration: none !important;
+
+        pointer-events: auto !important;
+
+        touch-action: manipulation !important;
+
+        cursor: pointer !important;
+
+        z-index: 20 !important;
+    }
+
+
+    .app > aside.sidebar nav a:hover {
+
+        background:
+            rgba(255,255,255,.055) !important;
+    }
+
+
+    .app > aside.sidebar nav a.active {
+
+        background:
+            rgba(198,166,107,.12) !important;
+
+        border-left:
+            2px solid
+            #c6a66b !important;
+    }
+
+
+    /* -------------------------
+       SIDEBAR TEXT
+       ------------------------- */
+
+    .app > aside.sidebar,
+    .app > aside.sidebar * {
+
+        text-shadow: none !important;
+    }
+
+
+    .app > aside.sidebar h2,
+    .app > aside.sidebar h4,
+    .app > aside.sidebar a,
+    .app > aside.sidebar button,
+    .app > aside.sidebar span {
+
+        opacity: 1 !important;
+    }
+
+
+    /* -------------------------
+       BODY LOCK
+       ------------------------- */
+
+    body.ap-sidebar-locked {
+
+        overflow: hidden !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE — FINAL SIDEBAR LAYER FIX
+   Permanent mobile overlay/sidebar stacking correction
+   ============================================================ */
+
+@media (max-width: 767px) {
+
+    /* The dark backdrop belongs BEHIND the sidebar */
+    .mobile-sidebar-overlay {
+        position: fixed !important;
+        inset: 0 !important;
+
+        width: 100vw !important;
+        height: 100dvh !important;
+
+        background: rgba(0, 0, 0, 0.45) !important;
+
+        z-index: 2147483640 !important;
+
+        pointer-events: none !important;
+
+        filter: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    /* Overlay can receive clicks only outside the sidebar */
+    .mobile-sidebar-overlay.ap-sidebar-visible {
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+    }
+
+    /* SIDEBAR MUST ALWAYS BE ABOVE OVERLAY */
+    aside.sidebar {
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        width: min(326px, 88vw) !important;
+        height: 100dvh !important;
+
+        z-index: 2147483647 !important;
+
+        filter: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+
+        opacity: 1 !important;
+    }
+
+    /* When open, sidebar is fully visible */
+    aside.sidebar.ap-sidebar-open {
+        visibility: visible !important;
+
+        opacity: 1 !important;
+
+        transform: translate3d(0, 0, 0) !important;
+
+        pointer-events: auto !important;
+
+        z-index: 2147483647 !important;
+    }
+
+    /* Sidebar contents must remain crisp */
+    aside.sidebar,
+    aside.sidebar *,
+    aside.sidebar nav,
+    aside.sidebar nav a,
+    aside.sidebar .history-list,
+    aside.sidebar .history-item {
+        filter: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+}
+
+/* ============================================================
+   AP SYNAPSE — FINAL SIDEBAR OVERRIDE
+   ============================================================ */
+
+@media (min-width: 768px) {
+
+    aside.sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        width: 260px !important;
+        height: 100vh !important;
+
+        display: flex !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        transform: none !important;
+
+        pointer-events: auto !important;
+
+        z-index: 1000 !important;
+    }
+
+    main.workspace {
+        margin-left: 260px !important;
+        width: calc(100% - 260px) !important;
+    }
+
+}
+
+
+@media (max-width: 767px) {
+
+    aside.sidebar {
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+
+        width: min(320px, 86vw) !important;
+        height: 100dvh !important;
+
+        visibility: hidden !important;
+        opacity: 1 !important;
+
+        transform:
+            translate3d(-105%, 0, 0) !important;
+
+        pointer-events: none !important;
+
+        z-index: 2147483646 !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                #17191e,
+                #0c0e12
+            ) !important;
+    }
+
+    aside.sidebar.ap-open {
+        visibility: visible !important;
+
+        opacity: 1 !important;
+
+        transform:
+            translate3d(0, 0, 0) !important;
+
+        pointer-events: auto !important;
+    }
+
+    .mobile-sidebar-overlay {
+        z-index: 2147483000 !important;
+    }
+
+    .mobile-menu-button {
+        z-index: 2147483647 !important;
+    }
+
+    main.workspace {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL MOBILE SIDEBAR
+   SINGLE AUTHORITATIVE SYSTEM
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+    /* ---------- OVERLAY ---------- */
+
+    .mobile-sidebar-overlay {
+        position: fixed !important;
+        inset: 0 !important;
+
+        width: 100vw !important;
+        height: 100dvh !important;
+
+        background: rgba(0, 0, 0, 0.34) !important;
+
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+
+        opacity: 0 !important;
+        visibility: hidden !important;
+
+        pointer-events: none !important;
+
+        z-index: 9000 !important;
+    }
+
+    .mobile-sidebar-overlay.ap-sidebar-visible {
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+    }
+
+
+    /* ---------- SIDEBAR ---------- */
+
+    aside.sidebar {
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        width: min(326px, 88vw) !important;
+        height: 100dvh !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        box-sizing: border-box !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                #17191e 0%,
+                #111318 50%,
+                #0c0e12 100%
+            ) !important;
+
+        color: #f5f5f3 !important;
+
+        opacity: 1 !important;
+        visibility: hidden !important;
+
+        transform: translate3d(
+            -105%,
+            0,
+            0
+        ) !important;
+
+        pointer-events: none !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        isolation: isolate !important;
+
+        filter: none !important;
+        -webkit-filter: none !important;
+
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+
+        z-index: 9001 !important;
+
+        transition:
+            transform 260ms
+            cubic-bezier(.2,.8,.2,1),
+            visibility 0s linear 260ms !important;
+    }
+
+
+    /* ---------- OPEN ---------- */
+
+    aside.sidebar.ap-sidebar-open {
+        visibility: visible !important;
+
+        opacity: 1 !important;
+
+        transform: translate3d(
+            0,
+            0,
+            0
+        ) !important;
+
+        pointer-events: auto !important;
+
+        z-index: 9001 !important;
+
+        transition:
+            transform 260ms
+            cubic-bezier(.2,.8,.2,1),
+            visibility 0s linear 0s !important;
+    }
+
+
+    /* ---------- NEVER BLUR SIDEBAR ---------- */
+
+    aside.sidebar,
+    aside.sidebar *,
+    aside.sidebar nav,
+    aside.sidebar nav a,
+    aside.sidebar button {
+        filter: none !important;
+        -webkit-filter: none !important;
+
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+
+    /* ---------- NAVIGATION MUST BE CLICKABLE ---------- */
+
+    aside.sidebar nav {
+        position: relative !important;
+
+        width: 100% !important;
+
+        pointer-events: auto !important;
+
+        z-index: 10 !important;
+    }
+
+    aside.sidebar nav a,
+    aside.sidebar .new-chat-btn,
+    aside.sidebar button {
+        pointer-events: auto !important;
+
+        touch-action: manipulation !important;
+
+        position: relative !important;
+
+        z-index: 11 !important;
+    }
+
+
+    /* ---------- BODY ---------- */
+
+    body.ap-sidebar-locked {
+        overflow: hidden !important;
+    }
+
+
+    /* ---------- MOBILE MENU BUTTON ---------- */
+
+    button.mobile-menu-button {
+        position: fixed !important;
+
+        top:
+            calc(
+                12px +
+                env(safe-area-inset-top)
+            ) !important;
+
+        left:
+            calc(
+                12px +
+                env(safe-area-inset-left)
+            ) !important;
+
+        width: 48px !important;
+        height: 48px !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        background:
+            rgba(14,16,20,.98) !important;
+
+        color: #f5f5f3 !important;
+
+        border:
+            1px solid
+            rgba(198,166,107,.55) !important;
+
+        border-radius: 14px !important;
+
+        font-size: 24px !important;
+        line-height: 1 !important;
+
+        opacity: 1 !important;
+        visibility: visible !important;
+
+        pointer-events: auto !important;
+
+        touch-action: manipulation !important;
+
+        z-index: 9002 !important;
+
+        filter: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+}
+
+/* =========================================
+   AP SYNAPSE MOBILE SIDEBAR FINAL FIX
+   ONLY MOBILE - NO DESKTOP IMPACT
+========================================= */
+
+@media (max-width: 768px) {
+
+    /* Dark overlay */
+    .sidebar-overlay,
+    .mobile-overlay,
+    .overlay {
+        position: fixed !important;
+        inset: 0 !important;
+        background: rgba(0,0,0,0.65) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+        z-index: 9000 !important;
+    }
+
+
+    /* Sidebar above overlay */
+    .sidebar,
+    .mobile-sidebar,
+    #sidebar,
+    .app-sidebar {
+
+        position: fixed !important;
+
+        top:0 !important;
+        left:0 !important;
+
+        height:100vh !important;
+
+        width:300px !important;
+
+        max-width:85vw !important;
+
+        background:#050505 !important;
+
+        z-index:10000 !important;
+
+        transform:translateX(-110%) !important;
+
+        transition:
+        transform .35s cubic-bezier(.4,0,.2,1)
+        !important;
+
+        display:flex !important;
+
+        visibility:hidden;
+
+        opacity:0;
+
+    }
+
+
+
+    /* OPEN STATE */
+
+    .sidebar.active,
+    .mobile-sidebar.active,
+    #sidebar.active,
+    .app-sidebar.active,
+    body.sidebar-open .sidebar,
+    body.sidebar-open .mobile-sidebar {
+
+        transform:translateX(0) !important;
+
+        visibility:visible !important;
+
+        opacity:1 !important;
+
+    }
+
+
+
+    /* Sidebar buttons clickable */
+
+    .sidebar button,
+    .mobile-sidebar button,
+    .sidebar a,
+    .mobile-sidebar a {
+
+        position:relative !important;
+
+        z-index:10002 !important;
+
+        pointer-events:auto !important;
+
+    }
+
+
+
+    /* Prevent page blur over sidebar */
+
+    body.sidebar-open {
+
+        overflow:hidden !important;
+
+    }
+
 }

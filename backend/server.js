@@ -75,9 +75,18 @@ app.post(
             const content =
                 await readDocument(uploadedFile);
 
+            const isImageContent =
+                content &&
+                typeof content === "object" &&
+                content.type === "image";
+
             if (
-                !content ||
-                !content.trim()
+               !content ||
+               (
+                   !isImageContent &&
+                   typeof content === "string" &&
+                   !content.trim()
+                )
             ) {
 
                 return res.status(422).json({
@@ -300,7 +309,7 @@ if (isUploadedImage) {
 
             brain,
 
-            memory,
+            memory: conversationMemory,
 
             reasoning,
 
@@ -352,7 +361,7 @@ if (isUploadedImage) {
 
             brain,
 
-            memory,
+            memory: conversationMemory,
 
             reasoning,
 

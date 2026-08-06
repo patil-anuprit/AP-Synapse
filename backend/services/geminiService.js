@@ -20,7 +20,7 @@ export async function createStream(messages) {
     console.log("🔵 Gemini request started.");
 
     const model = genAI.getGenerativeModel({
-        model: process.env.GEMINI_MODEL || "gemini-2.5-flash"
+        model: process.env.GEMINI_MODEL || "gemini-3.6-flash"
     });
 
     /*

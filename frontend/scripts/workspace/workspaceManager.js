@@ -1551,6 +1551,12 @@ if (documentsFileInput) {
                         "https://ap-synapse-backend.onrender.com/upload",
                         {
                             method: "POST",
+
+                            headers: {
+                               "x-session-id":
+                                   getSessionId()
+                            },
+
                             body: formData
                         }
                     );
@@ -1770,26 +1776,20 @@ async function askDocumentQuestion() {
                     body: JSON.stringify({
 
                         message:
-`Answer the user's question using the uploaded document as the primary source.
+                    `Answer the user's question using the uploaded document as the primary source.
 
-DOCUMENT:
-${window.currentDocument}
+                    USER QUESTION:
+                    ${question}
 
-USER QUESTION:
-${question}
+                    Rules:
+                    - Base the answer on the uploaded document.
+                    - If the document does not contain enough information, say so clearly.
+                    - Do not invent information.
+                    - Give a useful, well-structured answer.`,
 
-Rules:
-- Base the answer on the document.
-- If the document does not contain enough information, say so clearly.
-- Do not invent information.
-- Give a useful, well-structured answer.`,
+                       web: false,
 
-                        document:
-                            window.currentDocument,
-
-                        web: false,
-
-                        deep: true
+                       deep: true
 
                     })
 

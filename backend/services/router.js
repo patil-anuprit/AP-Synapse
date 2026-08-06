@@ -1,106 +1,194 @@
 import { createStream as groq } from "./groqService.js";
 import { createStream as gemini } from "./geminiService.js";
+import { createStream as openrouter } from "./openrouterService.js";
+
 
 export async function createAIStream(messages) {
 
+
     if (!Array.isArray(messages)) {
-        throw new Error("Messages must be an array.");
+
+        throw new Error(
+            "Messages must be an array."
+        );
+
     }
 
-    // ==========================================
-    // AP SYNAPSE — DETECT MULTIMODAL REQUEST
-    // ==========================================
 
-    const hasImage = messages.some(
-        message =>
-            Array.isArray(message?.content) &&
-            message.content.some(
-                item =>
-                    item?.type === "image_url" &&
-                    item?.image_url?.url
-            )
-    );
+    const hasImage =
+        messages.some(
+            message =>
+                Array.isArray(message?.content) &&
+                message.content.some(
+                    item =>
+                        item?.type === "image_url" &&
+                        item?.image_url?.url
+                )
+        );
 
-    // ==========================================
-    // IMAGE → GEMINI VISION
-    // ==========================================
+
+    // =================================
+    // IMAGE / VISION REQUEST
+    // =================================
 
     if (hasImage) {
 
+
         console.log(
-            "🖼️ Vision request detected — using Gemini."
+            "🖼️ Vision request detected."
         );
+
+
+        // PRIMARY: GEMINI VISION
 
         try {
 
+            console.log(
+                "🔵 Vision → Gemini"
+            );
+
             return await gemini(messages);
+
 
         }
 
-        catch (error) {
+        catch(error) {
 
             console.error(
-                "❌ Gemini Vision Failed:"
+                "⚠ Gemini Vision failed."
             );
 
             console.error(error);
 
-            throw error;
+        }
+
+
+
+        // FALLBACK: OPENROUTER
+
+        try {
+
+            console.log(
+                "🟣 Vision → OpenRouter fallback"
+            );
+
+            return await openrouter(messages);
+
 
         }
 
+        catch(error) {
+
+            console.error(
+                "⚠ OpenRouter Vision failed."
+            );
+
+            console.error(error);
+
+        }
+
+
+        throw new Error(
+            "All vision providers unavailable."
+        );
+
+
     }
 
-    // ==========================================
-    // NORMAL TEXT → GROQ
-    // ==========================================
+
+
+    // =================================
+    // TEXT REQUEST
+    // =================================
+
 
     try {
 
+
         console.log(
-            "🟢 Text request — using Groq."
+            "🟢 Text → Groq"
         );
+
 
         return await groq(messages);
 
+
+
     }
 
-    catch (error) {
+    catch(error) {
+
 
         console.error(
-            "⚠️ Groq Failed — switching to Gemini."
+            "⚠ Groq failed."
         );
 
         console.error(error);
 
+
     }
 
-    // ==========================================
-    // TEXT FALLBACK → GEMINI
-    // ==========================================
+
 
     try {
 
+
         console.log(
-            "🔵 Gemini text fallback."
+            "🔵 Text → Gemini fallback"
         );
+
 
         return await gemini(messages);
 
+
+
     }
 
-    catch (error) {
+    catch(error) {
+
 
         console.error(
-            "❌ Gemini Failed:"
+            "⚠ Gemini text failed."
         );
 
         console.error(error);
 
+
     }
+
+
+
+    try {
+
+
+        console.log(
+            "🟣 Text → OpenRouter fallback"
+        );
+
+
+        return await openrouter(messages);
+
+
+
+    }
+
+    catch(error) {
+
+
+        console.error(
+            "⚠ OpenRouter failed."
+        );
+
+        console.error(error);
+
+
+    }
+
+
 
     throw new Error(
         "All AI providers are unavailable."
     );
+
 
 }

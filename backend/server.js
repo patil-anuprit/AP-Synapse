@@ -51,42 +51,134 @@ app.post(
     upload.single("file"),
     async (req, res) => {
 
+        let uploadedFile = req.file;
+
         try {
 
             console.log("========== UPLOAD START ==========");
-            console.log(req.file);
 
-            if (!req.file) {
+            if (!uploadedFile) {
+
                 return res.status(400).json({
-                    error: "No file uploaded"
+                    success: false,
+                    error: "No file uploaded."
                 });
+
             }
 
-            const content = await readDocument(req.file);
+            console.log("File:", {
+                name: uploadedFile.originalname,
+                type: uploadedFile.mimetype,
+                size: uploadedFile.size
+            });
 
-            console.log("Document length:", content.length);
+            const content =
+                await readDocument(uploadedFile);
+
+            if (
+                !content ||
+                !content.trim()
+            ) {
+
+                return res.status(422).json({
+                    success: false,
+                    error: "The uploaded file contains no readable content."
+                });
+
+            }
+
+            console.log(
+                "Document length:",
+                content.length
+            );
 
             const sessionId =
                 req.headers["x-session-id"] ||
                 req.ip ||
                 "default";
 
-            remember(sessionId, "document", content);
-
-            res.json({
-                success: true,
-                original: req.file.originalname,
+            remember(
+                sessionId,
+                "document",
                 content
+            );
+
+            return res.json({
+
+                success: true,
+
+                original:
+                    uploadedFile.originalname,
+
+                mimeType:
+                    uploadedFile.mimetype,
+
+                size:
+                    uploadedFile.size,
+
+                content
+
             });
 
-        } catch (err) {
+        }
 
-            console.error("UPLOAD ERROR:");
-            console.error(err);
+        catch (error) {
 
-            res.status(500).json({
-                error: err.message
+            console.error(
+                "========== UPLOAD ERROR =========="
+            );
+
+            console.error(error);
+
+            return res.status(500).json({
+
+                success: false,
+
+                error:
+                    error.message ||
+                    "Unable to process uploaded file."
+
             });
+
+        }
+
+        finally {
+
+            /*
+             * IMPORTANT:
+             * Remove the temporary uploaded file
+             * after processing.
+             */
+
+            if (
+                uploadedFile?.path
+            ) {
+
+                try {
+
+                    const fs =
+                        await import("fs/promises");
+
+                    await fs.unlink(
+                        uploadedFile.path
+                    );
+
+                    console.log(
+                        "Temporary upload removed."
+                    );
+
+                }
+
+                catch (cleanupError) {
+
+                    console.warn(
+                        "Upload cleanup warning:",
+                        cleanupError.message
+                    );
+
+                }
+
+            }
 
         }
 

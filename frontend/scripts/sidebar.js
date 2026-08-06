@@ -8123,3 +8123,1903 @@ if (canvas) {
         "✅ AP SYNAPSE — FINAL MOBILE SIDEBAR FIX ACTIVE"
     );
 })();
+
+/* =========================================================
+   AP SYNAPSE — MOBILE MENU SINGLE-TAP FIX
+   ========================================================= */
+
+(() => {
+    "use strict";
+
+    if (window.__AP_SINGLE_TAP_MENU_FIX__) return;
+    window.__AP_SINGLE_TAP_MENU_FIX__ = true;
+
+    document.addEventListener("click", function (e) {
+        if (window.innerWidth > 767) return;
+
+        const menu = e.target.closest(".mobile-menu-button");
+        if (!menu) return;
+
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        const sidebar = document.querySelector("aside.sidebar");
+        if (!sidebar) return;
+
+        const isOpen =
+            sidebar.classList.contains("ap-sidebar-open") ||
+            sidebar.classList.contains("ap-sidebar-visible") ||
+            getComputedStyle(sidebar).transform ===
+                "matrix(1, 0, 0, 1, 0, 0)";
+
+        if (isOpen) {
+            if (typeof window.closeSidebar === "function") {
+                window.closeSidebar();
+            } else {
+                sidebar.classList.remove(
+                    "ap-sidebar-open",
+                    "ap-sidebar-visible"
+                );
+            }
+        } else {
+            if (typeof window.openSidebar === "function") {
+                window.openSidebar();
+            } else {
+                sidebar.classList.add(
+                    "ap-sidebar-open",
+                    "ap-sidebar-visible"
+                );
+
+                sidebar.style.setProperty(
+                    "visibility",
+                    "visible",
+                    "important"
+                );
+
+                sidebar.style.setProperty(
+                    "transform",
+                    "translate3d(0,0,0)",
+                    "important"
+                );
+
+                sidebar.style.setProperty(
+                    "pointer-events",
+                    "auto",
+                    "important"
+                );
+            }
+        }
+    }, true);
+
+})();
+
+/* =========================================================
+   AP SYNAPSE — FINAL SINGLE-TAP MOBILE MENU
+   Removes ALL previous menu-button listeners
+   and installs exactly ONE.
+   ========================================================= */
+
+(() => {
+    "use strict";
+
+    function installSingleTapMenu() {
+        if (window.innerWidth > 767) return;
+
+        const oldButton =
+            document.querySelector(".mobile-menu-button");
+
+        if (!oldButton) return;
+
+        /* Clone removes every previous event listener */
+        const button = oldButton.cloneNode(true);
+
+        oldButton.replaceWith(button);
+
+        button.addEventListener("click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const sidebar =
+                document.querySelector("aside.sidebar");
+
+            const overlay =
+                document.querySelector(
+                    ".mobile-sidebar-overlay"
+                );
+
+            if (!sidebar) return;
+
+            const opened =
+                sidebar.classList.contains(
+                    "ap-sidebar-open"
+                );
+
+            if (opened) {
+                sidebar.classList.remove(
+                    "ap-sidebar-open"
+                );
+
+                overlay?.classList.remove(
+                    "ap-sidebar-visible"
+                );
+
+                document.body.classList.remove(
+                    "ap-sidebar-locked"
+                );
+
+                button.textContent = "☰";
+                button.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+            } else {
+                sidebar.classList.add(
+                    "ap-sidebar-open"
+                );
+
+                overlay?.classList.add(
+                    "ap-sidebar-visible"
+                );
+
+                document.body.classList.add(
+                    "ap-sidebar-locked"
+                );
+
+                button.textContent = "×";
+                button.setAttribute(
+                    "aria-expanded",
+                    "true"
+                );
+            }
+        });
+
+        console.log(
+            "✅ AP SYNAPSE — SINGLE TAP MENU ACTIVE"
+        );
+    }
+
+    if (
+        document.readyState === "loading"
+    ) {
+        document.addEventListener(
+            "DOMContentLoaded",
+            installSingleTapMenu,
+            { once: true }
+        );
+    } else {
+        installSingleTapMenu();
+    }
+})();
+
+/* ============================================================
+   AP SYNAPSE — MOBILE SIDEBAR FINAL OVERRIDE
+   DOUBLE-TAP FIX
+   MOBILE ONLY — DESKTOP UNTOUCHED
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    /* Prevent this final override from being installed twice */
+    if (window.__AP_SYNapseMobileFinalOverride) return;
+    window.__AP_SYNapseMobileFinalOverride = true;
+
+    const BREAKPOINT = 767;
+
+    function getSidebar() {
+        return document.querySelector("aside.sidebar, .sidebar");
+    }
+
+    function getMenuButton() {
+        return document.querySelector(".mobile-menu-button");
+    }
+
+    function getOverlay() {
+        return document.querySelector(".mobile-sidebar-overlay");
+    }
+
+    function isMobile() {
+        return window.innerWidth <= BREAKPOINT;
+    }
+
+    /* ---------------------------------------------------------
+       FORCE THE CORRECT MOBILE LAYERS
+       --------------------------------------------------------- */
+
+    function prepareLayers() {
+
+        if (!isMobile()) return;
+
+        const sidebar = getSidebar();
+        const button = getMenuButton();
+        const overlay = getOverlay();
+
+        if (sidebar) {
+            sidebar.style.setProperty(
+                "z-index",
+                "2147483647",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "position",
+                "fixed",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "top",
+                "0",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "left",
+                "0",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "bottom",
+                "0",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "width",
+                "min(326px, 88vw)",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "height",
+                "100dvh",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "visibility",
+                "hidden",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "opacity",
+                "1",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "pointer-events",
+                "none",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "transform",
+                "translateX(-110%)",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "filter",
+                "none",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "backdrop-filter",
+                "none",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "-webkit-backdrop-filter",
+                "none",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "transition",
+                "transform 0.25s ease, visibility 0s linear 0.25s",
+                "important"
+            );
+        }
+
+        if (overlay) {
+
+            overlay.style.setProperty(
+                "position",
+                "fixed",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "inset",
+                "0",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "z-index",
+                "2147483640",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "background",
+                "rgba(0,0,0,0.45)",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "visibility",
+                "hidden",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "opacity",
+                "0",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "pointer-events",
+                "none",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "filter",
+                "none",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "backdrop-filter",
+                "none",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "-webkit-backdrop-filter",
+                "none",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "transition",
+                "opacity 0.25s ease, visibility 0s linear 0.25s",
+                "important"
+            );
+        }
+
+        if (button) {
+
+            button.style.setProperty(
+                "z-index",
+                "2147483647",
+                "important"
+            );
+
+            button.style.setProperty(
+                "pointer-events",
+                "auto",
+                "important"
+            );
+
+            button.style.setProperty(
+                "touch-action",
+                "manipulation",
+                "important"
+            );
+        }
+    }
+
+    /* ---------------------------------------------------------
+       OPEN
+       --------------------------------------------------------- */
+
+    function openSidebar() {
+
+        if (!isMobile()) return;
+
+        const sidebar = getSidebar();
+        const overlay = getOverlay();
+        const button = getMenuButton();
+
+        if (!sidebar) return;
+
+        sidebar.style.setProperty(
+            "visibility",
+            "visible",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "opacity",
+            "1",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "pointer-events",
+            "auto",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "transform",
+            "translateX(0)",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "z-index",
+            "2147483647",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "filter",
+            "none",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "backdrop-filter",
+            "none",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "-webkit-backdrop-filter",
+            "none",
+            "important"
+        );
+
+        if (overlay) {
+
+            overlay.style.setProperty(
+                "visibility",
+                "visible",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "opacity",
+                "1",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "pointer-events",
+                "auto",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "z-index",
+                "2147483640",
+                "important"
+            );
+        }
+
+        if (button) {
+            button.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+        }
+
+        document.body.classList.add(
+            "ap-sidebar-open"
+        );
+
+        document.documentElement.classList.add(
+            "ap-sidebar-open"
+        );
+    }
+
+    /* ---------------------------------------------------------
+       CLOSE
+       --------------------------------------------------------- */
+
+    function closeSidebar() {
+
+        const sidebar = getSidebar();
+        const overlay = getOverlay();
+        const button = getMenuButton();
+
+        if (sidebar) {
+
+            sidebar.style.setProperty(
+                "visibility",
+                "hidden",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "pointer-events",
+                "none",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "transform",
+                "translateX(-110%)",
+                "important"
+            );
+        }
+
+        if (overlay) {
+
+            overlay.style.setProperty(
+                "visibility",
+                "hidden",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "opacity",
+                "0",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "pointer-events",
+                "none",
+                "important"
+            );
+        }
+
+        if (button) {
+            button.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+        }
+
+        document.body.classList.remove(
+            "ap-sidebar-open"
+        );
+
+        document.documentElement.classList.remove(
+            "ap-sidebar-open"
+        );
+    }
+
+    /* ---------------------------------------------------------
+       SINGLE SOURCE OF TRUTH
+       IMPORTANT:
+       CAPTURE PHASE + stopImmediatePropagation()
+       BLOCKS THE OLD DUPLICATE HANDLERS.
+       --------------------------------------------------------- */
+
+    document.addEventListener(
+        "click",
+        event => {
+
+            if (!isMobile()) return;
+
+            const button =
+                event.target.closest(
+                    ".mobile-menu-button"
+                );
+
+            if (button) {
+
+                event.preventDefault();
+                event.stopPropagation();
+                event.stopImmediatePropagation();
+
+                const sidebar = getSidebar();
+
+                if (!sidebar) return;
+
+                const visible =
+                    getComputedStyle(sidebar).visibility ===
+                    "visible" &&
+                    getComputedStyle(sidebar).transform ===
+                    "matrix(1, 0, 0, 1, 0, 0)";
+
+                if (visible) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+
+                return;
+            }
+
+            const overlay =
+                event.target.closest(
+                    ".mobile-sidebar-overlay"
+                );
+
+            if (overlay) {
+
+                event.preventDefault();
+                event.stopPropagation();
+                event.stopImmediatePropagation();
+
+                closeSidebar();
+
+                return;
+            }
+
+            const sidebar =
+                event.target.closest(
+                    "aside.sidebar, .sidebar"
+                );
+
+            if (sidebar) {
+
+                const link =
+                    event.target.closest(
+                        "a, button"
+                    );
+
+                if (link) {
+
+                    const isNavigation =
+                        link.closest(
+                            "nav"
+                        ) ||
+                        link.classList.contains(
+                            "new-chat-btn"
+                        ) ||
+                        link.closest(
+                            ".sidebar-footer"
+                        );
+
+                    if (isNavigation) {
+
+                        setTimeout(
+                            () => {
+                                if (isMobile()) {
+                                    closeSidebar();
+                                }
+                            },
+                            0
+                        );
+                    }
+                }
+
+                return;
+            }
+
+        },
+        true
+    );
+
+    /* ---------------------------------------------------------
+       ESCAPE
+       --------------------------------------------------------- */
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                isMobile() &&
+                event.key === "Escape"
+            ) {
+                closeSidebar();
+            }
+
+        },
+        true
+    );
+
+    /* ---------------------------------------------------------
+       RESIZE
+       --------------------------------------------------------- */
+
+    window.addEventListener(
+        "resize",
+        () => {
+
+            if (!isMobile()) {
+                closeSidebar();
+                return;
+            }
+
+            prepareLayers();
+
+        },
+        {
+            passive: true
+        }
+    );
+
+    /* ---------------------------------------------------------
+       INITIALIZE
+       --------------------------------------------------------- */
+
+    function initialize() {
+
+        if (isMobile()) {
+            prepareLayers();
+            closeSidebar();
+        }
+    }
+
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            initialize,
+            {
+                once: true
+            }
+        );
+
+    } else {
+
+        initialize();
+
+    }
+
+    console.log(
+        "✅ AP SYNAPSE — MOBILE SIDEBAR DOUBLE-TAP OVERRIDE READY"
+    );
+
+})();
+
+/* ============================================================
+   AP SYNAPSE — ABSOLUTE FINAL MOBILE SIDEBAR FIX
+   FIXES DOUBLE-TAP CAUSED BY DUPLICATE EVENT LISTENERS
+   MOBILE ONLY — DESKTOP UNTOUCHED
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    const MOBILE_MAX = 767;
+
+    function runFinalMobileFix() {
+
+        if (window.innerWidth > MOBILE_MAX) return;
+
+        let oldButton =
+            document.querySelector(".mobile-menu-button");
+
+        let sidebar =
+            document.querySelector("aside.sidebar, .sidebar");
+
+        let oldOverlay =
+            document.querySelector(".mobile-sidebar-overlay");
+
+        if (!oldButton || !sidebar) {
+            console.warn(
+                "AP Synapse mobile sidebar elements not ready."
+            );
+            return;
+        }
+
+        /* ========================================================
+           1. DESTROY OLD MENU-BUTTON EVENT LISTENERS
+           ======================================================== */
+
+        const button =
+            oldButton.cloneNode(true);
+
+        oldButton.replaceWith(button);
+
+        /* ========================================================
+           2. DESTROY OLD OVERLAY EVENT LISTENERS
+           ======================================================== */
+
+        let overlay = oldOverlay;
+
+        if (oldOverlay) {
+            overlay =
+                oldOverlay.cloneNode(true);
+
+            oldOverlay.replaceWith(overlay);
+        }
+
+        /* ========================================================
+           3. FINAL MOBILE VISUAL STATE
+           ======================================================== */
+
+        sidebar.style.setProperty(
+            "position",
+            "fixed",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "top",
+            "0",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "left",
+            "0",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "bottom",
+            "0",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "width",
+            "min(326px, 88vw)",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "height",
+            "100dvh",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "z-index",
+            "2147483647",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "opacity",
+            "1",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "filter",
+            "none",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "backdrop-filter",
+            "none",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "-webkit-backdrop-filter",
+            "none",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "transition",
+            "transform .25s ease",
+            "important"
+        );
+
+        /* CLOSED initially */
+
+        sidebar.classList.remove(
+            "ap-sidebar-open",
+            "ap-open"
+        );
+
+        sidebar.style.setProperty(
+            "transform",
+            "translate3d(-105%,0,0)",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "visibility",
+            "hidden",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "pointer-events",
+            "none",
+            "important"
+        );
+
+        /* ========================================================
+           4. FINAL OVERLAY
+           ======================================================== */
+
+        if (overlay) {
+
+            overlay.style.setProperty(
+                "position",
+                "fixed",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "inset",
+                "0",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "z-index",
+                "2147483640",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "background",
+                "rgba(0,0,0,.45)",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "visibility",
+                "hidden",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "opacity",
+                "0",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "pointer-events",
+                "none",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "filter",
+                "none",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "backdrop-filter",
+                "none",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "-webkit-backdrop-filter",
+                "none",
+                "important"
+            );
+        }
+
+        /* ========================================================
+           5. OPEN
+           ======================================================== */
+
+        function openSidebar() {
+
+            sidebar.classList.add(
+                "ap-sidebar-open"
+            );
+
+            sidebar.classList.add(
+                "ap-open"
+            );
+
+            sidebar.style.setProperty(
+                "transform",
+                "translate3d(0,0,0)",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "visibility",
+                "visible",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "pointer-events",
+                "auto",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "opacity",
+                "1",
+                "important"
+            );
+
+            if (overlay) {
+
+                overlay.style.setProperty(
+                    "visibility",
+                    "visible",
+                    "important"
+                );
+
+                overlay.style.setProperty(
+                    "opacity",
+                    "1",
+                    "important"
+                );
+
+                overlay.style.setProperty(
+                    "pointer-events",
+                    "auto",
+                    "important"
+                );
+            }
+
+            document.body.classList.add(
+                "ap-sidebar-open"
+            );
+
+            document.body.classList.add(
+                "ap-mobile-sidebar-open"
+            );
+
+            document.documentElement.classList.add(
+                "ap-sidebar-open"
+            );
+
+            button.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+        }
+
+        /* ========================================================
+           6. CLOSE
+           ======================================================== */
+
+        function closeSidebar() {
+
+            sidebar.classList.remove(
+                "ap-sidebar-open",
+                "ap-open"
+            );
+
+            sidebar.style.setProperty(
+                "transform",
+                "translate3d(-105%,0,0)",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "visibility",
+                "hidden",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "pointer-events",
+                "none",
+                "important"
+            );
+
+            if (overlay) {
+
+                overlay.style.setProperty(
+                    "visibility",
+                    "hidden",
+                    "important"
+                );
+
+                overlay.style.setProperty(
+                    "opacity",
+                    "0",
+                    "important"
+                );
+
+                overlay.style.setProperty(
+                    "pointer-events",
+                    "none",
+                    "important"
+                );
+            }
+
+            document.body.classList.remove(
+                "ap-sidebar-open",
+                "ap-mobile-sidebar-open"
+            );
+
+            document.documentElement.classList.remove(
+                "ap-sidebar-open"
+            );
+
+            button.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+        }
+
+        /* ========================================================
+           7. ONE — ONLY ONE — MENU HANDLER
+           ======================================================== */
+
+        button.addEventListener(
+            "click",
+            event => {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                const isOpen =
+                    sidebar.classList.contains(
+                        "ap-sidebar-open"
+                    ) ||
+                    sidebar.classList.contains(
+                        "ap-open"
+                    );
+
+                if (isOpen) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+
+            },
+            {
+                capture: true,
+                passive: false
+            }
+        );
+
+        /* ========================================================
+           8. OVERLAY CLOSE
+           ======================================================== */
+
+        if (overlay) {
+
+            overlay.addEventListener(
+                "click",
+                event => {
+
+                    if (
+                        event.target === overlay
+                    ) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        closeSidebar();
+                    }
+
+                },
+                {
+                    capture: true
+                }
+            );
+        }
+
+        /* ========================================================
+           9. SIDEBAR NAVIGATION → CLOSE
+           ======================================================== */
+
+        sidebar.addEventListener(
+            "click",
+            event => {
+
+                const link =
+                    event.target.closest(
+                        "a, button"
+                    );
+
+                if (!link) return;
+
+                /*
+                 * Do not interfere with navigation.
+                 * Just close the mobile drawer.
+                 */
+
+                setTimeout(
+                    () => {
+                        if (
+                            window.innerWidth <=
+                            MOBILE_MAX
+                        ) {
+                            closeSidebar();
+                        }
+                    },
+                    50
+                );
+
+            },
+            {
+                capture: false
+            }
+        );
+
+        /* ========================================================
+           10. ESC
+           ======================================================== */
+
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Escape" &&
+                    window.innerWidth <= MOBILE_MAX
+                ) {
+                    closeSidebar();
+                }
+
+            },
+            {
+                capture: true
+            }
+        );
+
+        console.log(
+            "✅ AP SYNAPSE — TRUE SINGLE MOBILE SIDEBAR CONTROLLER ACTIVE"
+        );
+    }
+
+    /*
+     * IMPORTANT:
+     * Wait until all previous sidebar controllers have finished
+     * attaching their listeners, THEN replace the button.
+     */
+
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            () => {
+                setTimeout(
+                    runFinalMobileFix,
+                    50
+                );
+            },
+            {
+                once: true
+            }
+        );
+
+    } else {
+
+        setTimeout(
+            runFinalMobileFix,
+            50
+        );
+
+    }
+
+})();
+
+/* ============================================================
+   AP SYNAPSE — MOBILE SIDEBAR SINGLE-TAP FINAL OVERRIDE
+   MOBILE ONLY — DESKTOP UNTOUCHED
+   ============================================================ */
+(() => {
+    "use strict";
+
+    const BREAKPOINT = 767;
+
+    function install() {
+        if (window.innerWidth > BREAKPOINT) return;
+
+        const oldButton =
+            document.querySelector(".mobile-menu-button");
+
+        const sidebar =
+            document.querySelector("aside.sidebar, .sidebar");
+
+        const oldOverlay =
+            document.querySelector(".mobile-sidebar-overlay");
+
+        if (!oldButton || !sidebar) {
+            console.warn("AP MOBILE SIDEBAR: elements not ready");
+            return;
+        }
+
+        /* ----------------------------------------------------
+           CRITICAL:
+           Clone the button.
+           This removes EVERY old click/touch listener attached
+           by all previous sidebar controllers.
+           ---------------------------------------------------- */
+
+        const button = oldButton.cloneNode(true);
+
+        oldButton.replaceWith(button);
+
+        /* Remove old overlay listeners too */
+        let overlay = oldOverlay;
+
+        if (overlay) {
+            overlay = overlay.cloneNode(true);
+            oldOverlay.replaceWith(overlay);
+        }
+
+        function isOpen() {
+            return (
+                sidebar.classList.contains("ap-mobile-open") ||
+                sidebar.classList.contains("mobile-open")
+            );
+        }
+
+        function open() {
+            sidebar.classList.add(
+                "ap-mobile-open",
+                "mobile-open",
+                "ap-sidebar-open"
+            );
+
+            sidebar.style.setProperty(
+                "transform",
+                "translateX(0)",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "visibility",
+                "visible",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "opacity",
+                "1",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "pointer-events",
+                "auto",
+                "important"
+            );
+
+            if (overlay) {
+                overlay.classList.add(
+                    "active",
+                    "visible",
+                    "ap-mobile-open",
+                    "ap-sidebar-visible"
+                );
+
+                overlay.style.setProperty(
+                    "opacity",
+                    "1",
+                    "important"
+                );
+
+                overlay.style.setProperty(
+                    "visibility",
+                    "visible",
+                    "important"
+                );
+
+                overlay.style.setProperty(
+                    "pointer-events",
+                    "auto",
+                    "important"
+                );
+            }
+
+            document.body.classList.add(
+                "ap-mobile-nav-open",
+                "ap-mobile-sidebar-open"
+            );
+
+            button.textContent = "×";
+            button.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+        }
+
+        function close() {
+            sidebar.classList.remove(
+                "ap-mobile-open",
+                "mobile-open",
+                "ap-sidebar-open"
+            );
+
+            sidebar.style.setProperty(
+                "transform",
+                "translateX(-110%)",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "visibility",
+                "hidden",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "pointer-events",
+                "none",
+                "important"
+            );
+
+            if (overlay) {
+                overlay.classList.remove(
+                    "active",
+                    "visible",
+                    "ap-mobile-open",
+                    "ap-sidebar-visible"
+                );
+
+                overlay.style.setProperty(
+                    "opacity",
+                    "0",
+                    "important"
+                );
+
+                overlay.style.setProperty(
+                    "visibility",
+                    "hidden",
+                    "important"
+                );
+
+                overlay.style.setProperty(
+                    "pointer-events",
+                    "none",
+                    "important"
+                );
+            }
+
+            document.body.classList.remove(
+                "ap-mobile-nav-open",
+                "ap-mobile-sidebar-open"
+            );
+
+            button.textContent = "☰";
+            button.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+        }
+
+        /* ----------------------------------------------------
+           INITIAL STATE
+           ---------------------------------------------------- */
+
+        close();
+
+        /* ----------------------------------------------------
+           ONE — AND ONLY ONE — MOBILE BUTTON HANDLER
+           pointerdown prevents the double-tap problem.
+           ---------------------------------------------------- */
+
+        button.addEventListener(
+            "pointerdown",
+            event => {
+
+                if (window.innerWidth > BREAKPOINT) {
+                    return;
+                }
+
+                event.preventDefault();
+                event.stopPropagation();
+                event.stopImmediatePropagation();
+
+                if (isOpen()) {
+                    close();
+                } else {
+                    open();
+                }
+            },
+            {
+                capture: true,
+                passive: false
+            }
+        );
+
+        /* ----------------------------------------------------
+           OVERLAY CLOSE
+           ---------------------------------------------------- */
+
+        if (overlay) {
+            overlay.addEventListener(
+                "pointerdown",
+                event => {
+
+                    if (
+                        event.target !== overlay ||
+                        window.innerWidth > BREAKPOINT
+                    ) {
+                        return;
+                    }
+
+                    event.preventDefault();
+                    event.stopPropagation();
+                    event.stopImmediatePropagation();
+
+                    close();
+                },
+                {
+                    capture: true,
+                    passive: false
+                }
+            );
+        }
+
+        /* ----------------------------------------------------
+           SIDEBAR NAVIGATION:
+           close immediately when a sidebar item is selected.
+           ---------------------------------------------------- */
+
+        sidebar.addEventListener(
+            "click",
+            event => {
+
+                if (window.innerWidth > BREAKPOINT) {
+                    return;
+                }
+
+                const item =
+                    event.target.closest(
+                        "a, button"
+                    );
+
+                if (!item) return;
+
+                if (
+                    item.closest(
+                        ".mobile-menu-button"
+                    )
+                ) {
+                    return;
+                }
+
+                close();
+            },
+            true
+        );
+
+        /* ----------------------------------------------------
+           ESCAPE
+           ---------------------------------------------------- */
+
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Escape" &&
+                    window.innerWidth <= BREAKPOINT
+                ) {
+                    close();
+                }
+            },
+            true
+        );
+
+        console.log(
+            "✅ AP SYNAPSE MOBILE SIDEBAR — SINGLE TAP OVERRIDE ACTIVE"
+        );
+    }
+
+    if (
+        document.readyState === "loading"
+    ) {
+        document.addEventListener(
+            "DOMContentLoaded",
+            () => setTimeout(install, 100),
+            { once: true }
+        );
+    } else {
+        setTimeout(install, 100);
+    }
+
+})();
+
+/* ============================================================
+   AP SYNAPSE — MOBILE X CLOSE GUARANTEE
+   ============================================================ */
+setTimeout(() => {
+
+    if (window.innerWidth > 767) return;
+
+    const btn =
+        document.querySelector(".mobile-menu-button");
+
+    const sidebar =
+        document.querySelector("aside.sidebar, .sidebar");
+
+    if (!btn || !sidebar) return;
+
+    btn.addEventListener(
+        "click",
+        event => {
+
+            if (window.innerWidth > 767) return;
+
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+
+            const open =
+                sidebar.classList.contains("ap-mobile-open") ||
+                sidebar.classList.contains("mobile-open");
+
+            if (open) {
+                btn.dispatchEvent(
+                    new PointerEvent("pointerdown", {
+                        bubbles: true,
+                        cancelable: true,
+                        pointerType: "touch"
+                    })
+                );
+            }
+        },
+        true
+    );
+
+}, 300);
+
+/* ============================================================
+   AP SYNAPSE — FINAL MOBILE ☰ / × TOGGLE
+   SINGLE TAP • FORCE CLOSE • MOBILE ONLY
+   ============================================================ */
+(() => {
+    "use strict";
+
+    setTimeout(() => {
+
+        if (window.innerWidth > 767) return;
+
+        const oldButton =
+            document.querySelector(".mobile-menu-button");
+
+        const sidebar =
+            document.querySelector("aside.sidebar, .sidebar");
+
+        const overlay =
+            document.querySelector(".mobile-sidebar-overlay");
+
+        if (!oldButton || !sidebar) {
+            console.warn("AP MOBILE FINAL: elements missing");
+            return;
+        }
+
+        /* Remove ALL previous listeners from the menu button */
+        const button = oldButton.cloneNode(true);
+        oldButton.replaceWith(button);
+
+        function openSidebar() {
+
+            sidebar.classList.add(
+                "ap-open",
+                "ap-sidebar-open",
+                "ap-mobile-open",
+                "mobile-open"
+            );
+
+            sidebar.style.setProperty(
+                "transform",
+                "translate3d(0,0,0)",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "visibility",
+                "visible",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "opacity",
+                "1",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "pointer-events",
+                "auto",
+                "important"
+            );
+
+            if (overlay) {
+
+                overlay.classList.add(
+                    "active",
+                    "visible",
+                    "ap-visible",
+                    "ap-sidebar-visible",
+                    "ap-mobile-open"
+                );
+
+                overlay.style.setProperty(
+                    "opacity",
+                    "1",
+                    "important"
+                );
+
+                overlay.style.setProperty(
+                    "visibility",
+                    "visible",
+                    "important"
+                );
+
+                overlay.style.setProperty(
+                    "pointer-events",
+                    "auto",
+                    "important"
+                );
+            }
+
+            document.body.classList.add(
+                "ap-mobile-sidebar-open",
+                "ap-mobile-nav-open"
+            );
+
+            button.textContent = "×";
+
+            button.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+
+            button.setAttribute(
+                "aria-label",
+                "Close AP Synapse navigation"
+            );
+        }
+
+        function closeSidebar() {
+
+            sidebar.classList.remove(
+                "ap-open",
+                "ap-sidebar-open",
+                "ap-mobile-open",
+                "mobile-open"
+            );
+
+            sidebar.style.setProperty(
+                "transform",
+                "translate3d(-105%,0,0)",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "visibility",
+                "hidden",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "opacity",
+                "1",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "pointer-events",
+                "none",
+                "important"
+            );
+
+            if (overlay) {
+
+                overlay.classList.remove(
+                    "active",
+                    "visible",
+                    "ap-visible",
+                    "ap-sidebar-visible",
+                    "ap-mobile-open"
+                );
+
+                overlay.style.setProperty(
+                    "opacity",
+                    "0",
+                    "important"
+                );
+
+                overlay.style.setProperty(
+                    "visibility",
+                    "hidden",
+                    "important"
+                );
+
+                overlay.style.setProperty(
+                    "pointer-events",
+                    "none",
+                    "important"
+                );
+            }
+
+            document.body.classList.remove(
+                "ap-mobile-sidebar-open",
+                "ap-mobile-nav-open"
+            );
+
+            button.textContent = "☰";
+
+            button.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            button.setAttribute(
+                "aria-label",
+                "Open AP Synapse navigation"
+            );
+        }
+
+        function isOpen() {
+            return (
+                sidebar.classList.contains("ap-open") ||
+                sidebar.classList.contains("ap-sidebar-open") ||
+                sidebar.classList.contains("ap-mobile-open") ||
+                sidebar.classList.contains("mobile-open")
+            );
+        }
+
+        /* Clean starting state */
+        closeSidebar();
+
+        /* ONE SINGLE TAP HANDLER */
+        button.addEventListener(
+            "pointerdown",
+            event => {
+
+                if (window.innerWidth > 767) return;
+
+                event.preventDefault();
+                event.stopPropagation();
+                event.stopImmediatePropagation();
+
+                if (isOpen()) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            },
+            {
+                capture: true,
+                passive: false
+            }
+        );
+
+        /* Sidebar links close automatically */
+        sidebar.addEventListener(
+            "pointerdown",
+            event => {
+
+                if (window.innerWidth > 767) return;
+
+                const item =
+                    event.target.closest("a, button");
+
+                if (!item) return;
+
+                if (item === button) return;
+
+                setTimeout(closeSidebar, 50);
+            },
+            true
+        );
+
+        /* Overlay closes */
+        if (overlay) {
+            overlay.addEventListener(
+                "pointerdown",
+                event => {
+
+                    if (
+                        event.target === overlay &&
+                        window.innerWidth <= 767
+                    ) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        closeSidebar();
+                    }
+                },
+                true
+            );
+        }
+
+        console.log(
+            "✅ AP SYNAPSE — FINAL ☰ / × MOBILE TOGGLE READY"
+        );
+
+    }, 500);
+
+})();

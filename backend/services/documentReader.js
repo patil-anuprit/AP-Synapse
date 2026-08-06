@@ -1,3 +1,4 @@
+import sharp from "sharp";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 import fs from "fs/promises";
 import mammoth from "mammoth";
@@ -72,28 +73,32 @@ export async function readDocument(file) {
     // ==========================
 
     if (
-        extension === "png" ||
-        extension === "jpg" ||
-        extension === "jpeg" ||
-        extension === "webp"
-    ) {
+    extension === "png" ||
+    extension === "jpg" ||
+    extension === "jpeg" ||
+    extension === "webp"
+) {
 
-        const buffer =
-            await fs.readFile(file.path);
+    const optimizedBuffer = await sharp(file.path)
+        .resize({
+            width: 1600,
+            height: 1600,
+            fit: "inside",
+            withoutEnlargement: true
+        })
+        .jpeg({
+            quality: 80,
+            mozjpeg: true
+        })
+        .toBuffer();
 
-        const mimeType =
-            extension === "jpg" ||
-            extension === "jpeg"
-                ? "image/jpeg"
-                : `image/${extension}`;
-
-        return {
-            type: "image",
-            mimeType,
-            dataUrl:
-                `data:${mimeType};base64,${buffer.toString("base64")}`
-        };
-    }
+    return {
+        type: "image",
+        mimeType: "image/jpeg",
+        dataUrl:
+            `data:image/jpeg;base64,${optimizedBuffer.toString("base64")}`
+    };
+}
 
     throw new Error(
         `Unsupported document type: ${extension}`

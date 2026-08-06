@@ -272,25 +272,93 @@ if (explicitImageRequest) {
             );
 
             const documentMemory =
-memory.find(item => item.role === "document");
+    memory.find(item => item.role === "document");
 
 const uploadedDocument =
-documentMemory
-? documentMemory.content
-: "";
+    documentMemory
+        ? documentMemory.content
+        : "";
 
-const messages =
-buildMessages({
+const conversationMemory =
+    memory.filter(
+        item => item.role !== "document"
+    );
 
-    brain,
+let messages;
 
-    memory,
+const isUploadedImage =
+    uploadedDocument &&
+    typeof uploadedDocument === "object" &&
+    uploadedDocument.type === "image";
 
-    reasoning,
+if (isUploadedImage) {
 
-    message:
-uploadedDocument
-? `Uploaded Document:
+    console.log("🖼️ Uploaded image detected.");
+
+    messages =
+        buildMessages({
+
+            brain,
+
+            memory,
+
+            reasoning,
+
+            message
+
+        });
+
+    const lastUserMessage =
+        [...messages]
+            .reverse()
+            .find(
+                item => item.role === "user"
+            );
+
+    if (lastUserMessage) {
+
+        lastUserMessage.content = [
+
+            {
+                type: "text",
+
+                text: message
+
+            },
+
+            {
+                type: "image_url",
+
+                image_url: {
+
+                    url: uploadedDocument.dataUrl
+
+                }
+
+            }
+
+        ];
+
+        console.log(
+            "✅ Image attached to AP Synapse vision request."
+        );
+
+    }
+
+} else {
+
+    messages =
+        buildMessages({
+
+            brain,
+
+            memory,
+
+            reasoning,
+
+            message:
+                uploadedDocument
+                    ? `Uploaded Document:
 
 ${uploadedDocument}
 
@@ -299,10 +367,11 @@ ${uploadedDocument}
 User Question:
 
 ${message}`
-: message
+                    : message
 
+        });
 
-});
+}
 
 // ==========================================
 // AP SYNAPSE — UPLOADED IMAGE VISION INPUT

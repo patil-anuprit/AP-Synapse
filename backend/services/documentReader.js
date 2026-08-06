@@ -1,146 +1,70 @@
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 import fs from "fs/promises";
 import mammoth from "mammoth";
-import path from "path";
 
 export async function readDocument(file) {
 
     const extension =
-        path.extname(file.originalname)
+        file.originalname
+            .split(".")
+            .pop()
             .toLowerCase();
 
     // ==========================
     // PDF
     // ==========================
 
-    if (extension === ".pdf") {
+    if (extension === "pdf") {
 
-        const buffer =
-            await fs.readFile(file.path);
+        const buffer = await fs.readFile(file.path);
 
-        const pdf =
-            await pdfjsLib.getDocument({
-                data: new Uint8Array(buffer)
-            }).promise;
+        const pdf = await pdfjsLib.getDocument({
+            data: new Uint8Array(buffer)
+        }).promise;
 
         let text = "";
 
-        for (
-            let pageNumber = 1;
-            pageNumber <= pdf.numPages;
-            pageNumber++
-        ) {
+        for (let page = 1; page <= pdf.numPages; page++) {
 
-            const page =
-                await pdf.getPage(pageNumber);
+            const p = await pdf.getPage(page);
 
             const content =
-                await page.getTextContent();
+                await p.getTextContent();
 
-            const pageText =
-                content.items
-                    .map(item => item.str || "")
-                    .join(" ");
+            text += content.items
+                .map(item => item.str)
+                .join(" ");
 
-            text += pageText;
             text += "\n\n";
-
         }
 
-        return text.trim();
-
+        return text;
     }
 
     // ==========================
     // TXT
     // ==========================
 
-    if (extension === ".txt") {
+    if (extension === "txt") {
 
-        return (
-            await fs.readFile(
-                file.path,
-                "utf8"
-            )
-        ).trim();
-
+        return await fs.readFile(
+            file.path,
+            "utf8"
+        );
     }
 
     // ==========================
     // DOCX
     // ==========================
 
-    if (extension === ".docx") {
+    if (extension === "docx") {
 
         const result =
             await mammoth.extractRawText({
                 path: file.path
             });
 
-        return result.value.trim();
-
-    }
-
-    // ==========================
-    // CSV
-    // ==========================
-
-    if (extension === ".csv") {
-
-        return (
-            await fs.readFile(
-                file.path,
-                "utf8"
-            )
-        ).trim();
-
-    }
-
-    // ==========================
-    // XLS / XLSX
-    // ==========================
-
-    if (
-        extension === ".xls" ||
-        extension === ".xlsx"
-    ) {
-
-        try {
-
-            const XLSX =
-                await import("xlsx");
-
-            const workbook =
-                XLSX.readFile(file.path);
-
-            let output = "";
-
-            for (
-                const sheetName
-                of workbook.SheetNames
-            ) {
-
-                const sheet =
-                    workbook.Sheets[sheetName];
-
-                output +=
-                    `\n\n=== Sheet: ${sheetName} ===\n\n`;
-
-                output +=
-                    XLSX.utils.sheet_to_csv(sheet);
-
-            }
-
-            return output.trim();
-
-        } catch (error) {
-
-            throw new Error(
-                `Spreadsheet reading failed: ${error.message}`
-            );
-
-        }
-
+        return result.value;
     }
 
     // ==========================
@@ -148,22 +72,30 @@ export async function readDocument(file) {
     // ==========================
 
     if (
-        extension === ".png" ||
-        extension === ".jpg" ||
-        extension === ".jpeg" ||
-        extension === ".webp"
+        extension === "png" ||
+        extension === "jpg" ||
+        extension === "jpeg" ||
+        extension === "webp"
     ) {
 
-        return "[IMAGE_FILE]";
+        const buffer =
+            await fs.readFile(file.path);
 
+        const mimeType =
+            extension === "jpg" ||
+            extension === "jpeg"
+                ? "image/jpeg"
+                : `image/${extension}`;
+
+        return {
+            type: "image",
+            mimeType,
+            dataUrl:
+                `data:${mimeType};base64,${buffer.toString("base64")}`
+        };
     }
-
-    // ==========================
-    // Unsupported
-    // ==========================
 
     throw new Error(
         `Unsupported document type: ${extension}`
     );
-
 }

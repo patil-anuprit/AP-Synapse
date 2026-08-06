@@ -1,79 +1,51 @@
 import multer from "multer";
 import fs from "fs";
 import path from "path";
-import crypto from "crypto";
 
-const uploadDirectory = path.resolve("uploads");
+const uploadDir = path.resolve("uploads");
 
-if (!fs.existsSync(uploadDirectory)) {
-    fs.mkdirSync(uploadDirectory, { recursive: true });
+// Make sure uploads/ exists
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
 }
 
 const allowedMimeTypes = new Set([
     "application/pdf",
     "text/plain",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "text/csv",
-    "application/csv",
-    "application/vnd.ms-excel",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "image/png",
     "image/jpeg",
     "image/webp"
 ]);
 
-const allowedExtensions = new Set([
-    ".pdf",
-    ".txt",
-    ".docx",
-    ".csv",
-    ".xls",
-    ".xlsx",
-    ".png",
-    ".jpg",
-    ".jpeg",
-    ".webp"
-]);
-
 const storage = multer.diskStorage({
 
     destination: (req, file, cb) => {
-        cb(null, uploadDirectory);
+        cb(null, uploadDir);
     },
 
     filename: (req, file, cb) => {
 
-        const extension =
-            path.extname(file.originalname).toLowerCase();
-
         const safeName =
-            `${Date.now()}-${crypto.randomUUID()}${extension}`;
+            file.originalname
+                .replace(/[^a-zA-Z0-9._-]/g, "_");
 
-        cb(null, safeName);
+        cb(
+            null,
+            `${Date.now()}-${safeName}`
+        );
+
     }
 
 });
 
 const fileFilter = (req, file, cb) => {
 
-    const extension =
-        path.extname(file.originalname).toLowerCase();
-
-    if (!allowedExtensions.has(extension)) {
-
-        return cb(
-            new Error(
-                "Unsupported file type. Allowed: PDF, TXT, DOCX, CSV, XLS, XLSX, PNG, JPG, JPEG and WEBP."
-            )
-        );
-
-    }
-
     if (!allowedMimeTypes.has(file.mimetype)) {
 
         return cb(
             new Error(
-                "The uploaded file type is not allowed."
+                "Unsupported file type. Please upload PDF, DOCX, TXT, PNG, JPG, JPEG, or WEBP."
             )
         );
 

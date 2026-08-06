@@ -22,28 +22,36 @@ export function buildConversation(sessionId) {
 export function remember(sessionId, role, content) {
 
     if (!sessionId || !role || !content) {
+        return;
+    }
+
+    // Preserve image/document objects.
+    if (typeof content === "object") {
+
+        addConversationMessage(
+            sessionId,
+            role,
+            content
+        );
 
         return;
-
     }
 
     const cleaned =
         String(content).trim();
 
-    if (!shouldStore(cleaned)) {
-
+    if (!cleaned) {
         return;
+    }
 
+    if (!shouldStore(cleaned)) {
+        return;
     }
 
     addConversationMessage(
-
         sessionId,
-
         role,
-
         cleaned
-
     );
 
 }

@@ -983,26 +983,18 @@ try {
 window.currentDocumentImage = "";
 
 if (
-    file.type === "image/png" ||
-    file.type === "image/jpeg" ||
-    file.type === "image/webp"
+    data.content &&
+    typeof data.content === "object" &&
+    data.content.type === "image" &&
+    data.content.dataUrl
 ) {
 
-    const imageData = await new Promise((resolve, reject) => {
+    window.currentDocumentImage =
+        data.content.dataUrl;
 
-        const reader = new FileReader();
-
-        reader.onload = () => resolve(reader.result);
-
-        reader.onerror = reject;
-
-        reader.readAsDataURL(file);
-
-    });
-
-    window.currentDocumentImage = imageData;
-
-    console.log("🖼️ Image data stored.");
+    console.log(
+        "🖼️ Optimized image data stored from backend."
+    );
 
 }
 

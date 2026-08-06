@@ -6990,3 +6990,66 @@ body::before,
     }
 
 }
+
+/* =========================================================
+   AP SYNAPSE — MOBILE SIDEBAR FINAL OPEN/CLOSE FIX
+   MOBILE ONLY — DO NOT AFFECT DESKTOP
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+    /* CLOSED */
+    aside.sidebar {
+        transform: translateX(-110%) !important;
+        visibility: hidden !important;
+        opacity: 1 !important;
+        pointer-events: none !important;
+    }
+
+    /* OPEN — THIS WAS THE MISSING STATE */
+    aside.sidebar.ap-sidebar-open {
+        transform: translateX(0) !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+
+        z-index: 2147483646 !important;
+
+        filter: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    /* SIDEBAR CONTENT MUST STAY SHARP + CLICKABLE */
+    aside.sidebar.ap-sidebar-open *,
+    aside.sidebar.ap-sidebar-open nav,
+    aside.sidebar.ap-sidebar-open a,
+    aside.sidebar.ap-sidebar-open button {
+        filter: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    /* OVERLAY IS BELOW SIDEBAR */
+    .mobile-sidebar-overlay {
+        z-index: 2147483645 !important;
+    }
+
+    .mobile-sidebar-overlay.ap-sidebar-visible {
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        z-index: 2147483645 !important;
+    }
+
+    /* MENU BUTTON IS ABOVE EVERYTHING */
+    .mobile-menu-button {
+        z-index: 2147483647 !important;
+        pointer-events: auto !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        filter: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+}

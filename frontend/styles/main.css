@@ -15397,3 +15397,435 @@ body {
     }
 
 }
+
+/* =========================================================
+   AP SYNAPSE — FINAL MOBILE DRAWER
+   MOBILE ONLY
+   DESKTOP IS COMPLETELY UNTOUCHED
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+    /* =====================================================
+       SIDEBAR — CLOSED
+       ===================================================== */
+
+    aside.sidebar,
+    .sidebar {
+
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        width: min(326px, 88vw) !important;
+        height: 100dvh !important;
+
+        box-sizing: border-box !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                #17191e 0%,
+                #111318 48%,
+                #0c0e12 100%
+            ) !important;
+
+        color: #f5f5f3 !important;
+
+        opacity: 1 !important;
+        visibility: hidden !important;
+
+        pointer-events: none !important;
+
+        transform: translate3d(-105%, 0, 0) !important;
+
+        transition:
+            transform 260ms cubic-bezier(.2,.8,.2,1),
+            visibility 0s linear 260ms !important;
+
+        /*
+         * CRITICAL:
+         * Never allow an old rule to turn the drawer
+         * into position:relative.
+         */
+        z-index: 2147483646 !important;
+
+        isolation: isolate !important;
+
+        filter: none !important;
+        -webkit-filter: none !important;
+
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+
+    /* =====================================================
+       SIDEBAR — OPEN
+       ===================================================== */
+
+    aside.sidebar.ap-sidebar-open,
+    .sidebar.ap-sidebar-open {
+
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+
+        pointer-events: auto !important;
+
+        transform: translate3d(0, 0, 0) !important;
+
+        z-index: 2147483646 !important;
+
+        transition:
+            transform 260ms cubic-bezier(.2,.8,.2,1),
+            visibility 0s linear 0s !important;
+
+        filter: none !important;
+        -webkit-filter: none !important;
+
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+
+    /* =====================================================
+       CRITICAL OVERRIDE
+       OLD CSS MUST NEVER CHANGE THE DRAWER'S POSITION
+       ===================================================== */
+
+    aside.sidebar.ap-sidebar-open,
+    aside.sidebar.ap-sidebar-open * {
+
+        /*
+         * Children may use normal positioning.
+         * The sidebar itself remains fixed above.
+         */
+        filter: none !important;
+        -webkit-filter: none !important;
+
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+
+    /* =====================================================
+       OVERLAY — CLOSED
+       ===================================================== */
+
+    .mobile-sidebar-overlay {
+
+        position: fixed !important;
+
+        inset: 0 !important;
+
+        display: block !important;
+
+        background: rgba(0, 0, 0, .52) !important;
+
+        opacity: 0 !important;
+        visibility: hidden !important;
+
+        pointer-events: none !important;
+
+        z-index: 2147483645 !important;
+
+        filter: none !important;
+
+        backdrop-filter: blur(7px) !important;
+        -webkit-backdrop-filter: blur(7px) !important;
+
+        transition:
+            opacity 200ms ease,
+            visibility 0s linear 200ms !important;
+    }
+
+
+    /* =====================================================
+       OVERLAY — OPEN
+       ===================================================== */
+
+    .mobile-sidebar-overlay.ap-sidebar-visible {
+
+        opacity: 1 !important;
+
+        visibility: visible !important;
+
+        pointer-events: auto !important;
+
+        z-index: 2147483645 !important;
+
+        transition:
+            opacity 200ms ease,
+            visibility 0s linear 0s !important;
+    }
+
+
+    /* =====================================================
+       SIDEBAR CONTENT — CLICKABLE
+       ===================================================== */
+
+    aside.sidebar.ap-sidebar-open nav,
+    aside.sidebar.ap-sidebar-open nav a,
+    aside.sidebar.ap-sidebar-open button,
+    aside.sidebar.ap-sidebar-open .new-chat-btn,
+    aside.sidebar.ap-sidebar-open .history-item {
+
+        pointer-events: auto !important;
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+
+        filter: none !important;
+
+        -webkit-filter: none !important;
+
+        backdrop-filter: none !important;
+
+        -webkit-backdrop-filter: none !important;
+    }
+
+
+    /* =====================================================
+       MOBILE MENU BUTTON
+       ===================================================== */
+
+    .mobile-menu-button {
+
+        position: fixed !important;
+
+        top: 16px !important;
+        left: 16px !important;
+
+        width: 52px !important;
+        height: 52px !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        z-index: 2147483647 !important;
+
+        pointer-events: auto !important;
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+
+        filter: none !important;
+
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+
+    /* =====================================================
+       BODY LOCK
+       ===================================================== */
+
+    body.ap-sidebar-locked {
+
+        overflow: hidden !important;
+        overflow-x: hidden !important;
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL MOBILE SIDEBAR FIX
+   MOBILE ONLY — DO NOT AFFECT DESKTOP
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+    /* The mobile overlay */
+    .mobile-sidebar-overlay {
+        position: fixed !important;
+        inset: 0 !important;
+
+        width: 100vw !important;
+        height: 100vh !important;
+
+        background: rgba(0, 0, 0, 0.68) !important;
+
+        backdrop-filter: blur(7px) !important;
+        -webkit-backdrop-filter: blur(7px) !important;
+
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+
+        z-index: 9998 !important;
+
+        transition:
+            opacity 0.25s ease,
+            visibility 0.25s ease !important;
+    }
+
+    /* Overlay OPEN */
+    body.ap-sidebar-open .mobile-sidebar-overlay,
+    body.ap-sidebar-visible .mobile-sidebar-overlay,
+    body.ap-open .mobile-sidebar-overlay,
+    body.mobile-open .mobile-sidebar-overlay,
+    body.ap-mobile-open .mobile-sidebar-overlay {
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+    }
+
+
+    /* =====================================================
+       ACTUAL SIDEBAR DRAWER
+       ===================================================== */
+
+    .sidebar {
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        width: min(86vw, 340px) !important;
+        max-width: 340px !important;
+        height: 100dvh !important;
+
+        margin: 0 !important;
+
+        transform: translate3d(-105%, 0, 0) !important;
+
+        opacity: 1 !important;
+        visibility: visible !important;
+
+        pointer-events: none !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        z-index: 9999 !important;
+
+        transition:
+            transform 0.32s cubic-bezier(.22,.61,.36,1) !important;
+
+        isolation: isolate !important;
+
+        /* Important: prevent the old sidebar rules
+           from making the drawer behave like normal content */
+        right: auto !important;
+    }
+
+
+    /* =====================================================
+       SIDEBAR OPEN
+       ===================================================== */
+
+    body.ap-sidebar-open .sidebar,
+    body.ap-sidebar-visible .sidebar,
+    body.ap-open .sidebar,
+    body.mobile-open .sidebar,
+    body.ap-mobile-open .sidebar {
+
+        transform: translate3d(0, 0, 0) !important;
+
+        opacity: 1 !important;
+        visibility: visible !important;
+
+        pointer-events: auto !important;
+
+        z-index: 9999 !important;
+    }
+
+
+    /* =====================================================
+       KILL THE OLD BROKEN POSITIONING
+       ===================================================== */
+
+    .sidebar.ap-sidebar-open,
+    .sidebar.ap-sidebar-open *,
+    .sidebar.ap-sidebar-visible,
+    .sidebar.ap-sidebar-visible *,
+    .sidebar.ap-open,
+    .sidebar.ap-open *,
+    .sidebar.mobile-open,
+    .sidebar.mobile-open *,
+    .sidebar.ap-mobile-open,
+    .sidebar.ap-mobile-open * {
+
+        /* DO NOT allow old JS/CSS to turn the drawer
+           into a relative-positioned element */
+        position: revert !important;
+    }
+
+
+    /* Re-establish the drawer itself as fixed */
+    .sidebar.ap-sidebar-open,
+    .sidebar.ap-sidebar-visible,
+    .sidebar.ap-open,
+    .sidebar.mobile-open,
+    .sidebar.ap-mobile-open {
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        transform: translate3d(0, 0, 0) !important;
+
+        z-index: 9999 !important;
+    }
+
+
+    /* =====================================================
+       SIDEBAR CONTENT MUST BE CLICKABLE
+       ===================================================== */
+
+    .sidebar button,
+    .sidebar a,
+    .sidebar [role="button"],
+    .sidebar .nav-item,
+    .sidebar .menu-item {
+
+        pointer-events: auto !important;
+        position: relative !important;
+        z-index: 1 !important;
+    }
+
+
+    /* =====================================================
+       MOBILE MENU BUTTON
+       ===================================================== */
+
+    .mobile-menu-button {
+        position: relative !important;
+        z-index: 10001 !important;
+        pointer-events: auto !important;
+    }
+
+
+    /* =====================================================
+       PREVENT THE MAIN PAGE FROM INTERCEPTING CLICKS
+       ===================================================== */
+
+    body.ap-sidebar-open,
+    body.ap-sidebar-visible,
+    body.ap-open,
+    body.mobile-open,
+    body.ap-mobile-open {
+        overflow: hidden !important;
+    }
+}

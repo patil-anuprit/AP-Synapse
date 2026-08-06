@@ -4813,3 +4813,3313 @@ if (canvas) {
     }
 
 })();
+
+/* ============================================================
+   AP SYNAPSE — FINAL MOBILE DRAWER BEHAVIOR
+   MOBILE ONLY
+   DESKTOP NAVIGATION UNTOUCHED
+   ============================================================ */
+
+(() => {
+
+    "use strict";
+
+    const MOBILE_BREAKPOINT = 767;
+
+    function isMobile() {
+
+        return window.innerWidth <= MOBILE_BREAKPOINT;
+
+    }
+
+
+    function getSidebar() {
+
+        return document.querySelector(
+            ".sidebar"
+        );
+
+    }
+
+
+    function getMenuButton() {
+
+        return document.querySelector(
+            ".mobile-menu-button"
+        );
+
+    }
+
+
+    function getOverlay() {
+
+        return document.querySelector(
+            ".mobile-sidebar-overlay"
+        );
+
+    }
+
+
+    /* ========================================================
+       CLOSE
+       ======================================================== */
+
+    function closeMobileSidebar() {
+
+        if (!isMobile()) return;
+
+        const sidebar = getSidebar();
+        const button = getMenuButton();
+        const overlay = getOverlay();
+
+        if (sidebar) {
+
+            sidebar.classList.remove(
+                "ap-sidebar-open"
+            );
+
+        }
+
+        if (overlay) {
+
+            overlay.classList.remove(
+                "ap-sidebar-visible"
+            );
+
+        }
+
+        document.body.classList.remove(
+            "ap-sidebar-locked"
+        );
+
+
+        if (button) {
+
+            button.textContent = "☰";
+
+            button.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            button.setAttribute(
+                "aria-label",
+                "Open AP Synapse navigation"
+            );
+
+        }
+
+    }
+
+
+    /* ========================================================
+       OPEN
+       ======================================================== */
+
+    function openMobileSidebar() {
+
+        if (!isMobile()) return;
+
+        const sidebar = getSidebar();
+        const button = getMenuButton();
+        const overlay = getOverlay();
+
+        if (!sidebar) return;
+
+
+        sidebar.classList.add(
+            "ap-sidebar-open"
+        );
+
+
+        if (overlay) {
+
+            overlay.classList.add(
+                "ap-sidebar-visible"
+            );
+
+        }
+
+
+        document.body.classList.add(
+            "ap-sidebar-locked"
+        );
+
+
+        if (button) {
+
+            button.textContent = "×";
+
+            button.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+
+            button.setAttribute(
+                "aria-label",
+                "Close AP Synapse navigation"
+            );
+
+        }
+
+    }
+
+
+    /* ========================================================
+       TOGGLE
+       ======================================================== */
+
+    function toggleMobileSidebar(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        const sidebar = getSidebar();
+
+        if (!sidebar) return;
+
+        if (
+            sidebar.classList.contains(
+                "ap-sidebar-open"
+            )
+        ) {
+
+            closeMobileSidebar();
+
+        } else {
+
+            openMobileSidebar();
+
+        }
+
+    }
+
+
+    /* ========================================================
+       INITIALIZE
+       ======================================================== */
+
+    function initializeMobileDrawer() {
+
+        const sidebar = getSidebar();
+        const button = getMenuButton();
+        const overlay = getOverlay();
+
+        if (!sidebar || !button || !overlay) {
+
+            console.warn(
+                "AP Synapse mobile drawer elements not found."
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * Clone hamburger button.
+         *
+         * This removes old click handlers attached
+         * by previous sidebar controllers.
+         */
+
+        const cleanButton =
+            button.cloneNode(true);
+
+        button.replaceWith(
+            cleanButton
+        );
+
+
+        cleanButton.addEventListener(
+            "click",
+            toggleMobileSidebar,
+            {
+                passive: false
+            }
+        );
+
+
+        /*
+         * Overlay closes drawer.
+         */
+
+        overlay.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target === overlay
+                ) {
+
+                    closeMobileSidebar();
+
+                }
+
+            }
+        );
+
+
+        /*
+         * ANY sidebar navigation link/button
+         * closes the drawer on mobile.
+         *
+         * We do NOT prevent the original action.
+         */
+
+        sidebar.addEventListener(
+            "click",
+            event => {
+
+                if (!isMobile()) return;
+
+
+                const clickedControl =
+                    event.target.closest(
+                        "a, button"
+                    );
+
+
+                if (!clickedControl) return;
+
+
+                /*
+                 * Let the existing navigation/action
+                 * execute first.
+                 */
+
+                setTimeout(
+                    closeMobileSidebar,
+                    120
+                );
+
+            },
+            true
+        );
+
+
+        /*
+         * ESC closes drawer.
+         */
+
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Escape" &&
+                    isMobile()
+                ) {
+
+                    closeMobileSidebar();
+
+                }
+
+            }
+        );
+
+
+        /*
+         * If user changes from mobile to desktop,
+         * reset only the mobile drawer state.
+         */
+
+        window.addEventListener(
+            "resize",
+            () => {
+
+                if (
+                    window.innerWidth >
+                    MOBILE_BREAKPOINT
+                ) {
+
+                    sidebar.classList.remove(
+                        "ap-sidebar-open"
+                    );
+
+                    overlay.classList.remove(
+                        "ap-sidebar-visible"
+                    );
+
+                    document.body.classList.remove(
+                        "ap-sidebar-locked"
+                    );
+
+                    cleanButton.textContent = "☰";
+
+                    cleanButton.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
+
+                }
+
+            },
+            {
+                passive: true
+            }
+        );
+
+
+        /*
+         * Guaranteed initial mobile state.
+         */
+
+        if (isMobile()) {
+
+            closeMobileSidebar();
+
+        }
+
+        console.log(
+            "🚀 AP SYNAPSE — FINAL MOBILE DRAWER READY"
+        );
+
+    }
+
+
+    if (
+        document.readyState === "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            initializeMobileDrawer,
+            {
+                once: true
+            }
+        );
+
+    } else {
+
+        initializeMobileDrawer();
+
+    }
+
+})();
+
+/* =========================================================
+   AP SYNAPSE — FINAL MOBILE SIDEBAR CONTROLLER
+   MOBILE ONLY
+   ========================================================= */
+
+(() => {
+    "use strict";
+
+    const MOBILE_BREAKPOINT = 767;
+
+    function isMobile() {
+        return window.innerWidth <= MOBILE_BREAKPOINT;
+    }
+
+    function getSidebar() {
+        return document.querySelector(".sidebar");
+    }
+
+    function getMenuButton() {
+        return document.querySelector(".mobile-menu-button");
+    }
+
+    function getOverlay() {
+        return document.querySelector(".mobile-sidebar-overlay");
+    }
+
+    function openMobileSidebar() {
+
+        if (!isMobile()) return;
+
+        const sidebar = getSidebar();
+        const overlay = getOverlay();
+
+        if (!sidebar) {
+            console.warn("AP Synapse: mobile sidebar not found");
+            return;
+        }
+
+        /* Remove every old/competing state first */
+        document.body.classList.remove(
+            "ap-sidebar-visible",
+            "ap-open",
+            "mobile-open",
+            "ap-mobile-open"
+        );
+
+        sidebar.classList.remove(
+            "ap-sidebar-visible",
+            "ap-open",
+            "mobile-open",
+            "ap-mobile-open"
+        );
+
+        /* One clean state */
+        document.body.classList.add("ap-sidebar-open");
+        sidebar.classList.add("ap-sidebar-open");
+
+        if (overlay) {
+            overlay.classList.add("ap-sidebar-open");
+        }
+
+        document.body.style.overflow = "hidden";
+
+        console.log("AP SYNAPSE — MOBILE SIDEBAR OPEN");
+    }
+
+
+    function closeMobileSidebar() {
+
+        const sidebar = getSidebar();
+        const overlay = getOverlay();
+
+        document.body.classList.remove(
+            "ap-sidebar-open",
+            "ap-sidebar-visible",
+            "ap-open",
+            "mobile-open",
+            "ap-mobile-open"
+        );
+
+        if (sidebar) {
+            sidebar.classList.remove(
+                "ap-sidebar-open",
+                "ap-sidebar-visible",
+                "ap-open",
+                "mobile-open",
+                "ap-mobile-open"
+            );
+        }
+
+        if (overlay) {
+            overlay.classList.remove(
+                "ap-sidebar-open",
+                "ap-sidebar-visible",
+                "ap-open",
+                "mobile-open",
+                "ap-mobile-open"
+            );
+        }
+
+        document.body.style.overflow = "";
+
+        console.log("AP SYNAPSE — MOBILE SIDEBAR CLOSED");
+    }
+
+
+    function toggleMobileSidebar() {
+
+        if (!isMobile()) return;
+
+        const sidebar = getSidebar();
+
+        if (!sidebar) return;
+
+        const isOpen =
+            document.body.classList.contains("ap-sidebar-open") ||
+            sidebar.classList.contains("ap-sidebar-open");
+
+        if (isOpen) {
+            closeMobileSidebar();
+        } else {
+            openMobileSidebar();
+        }
+    }
+
+
+    /* =====================================================
+       HAMBURGER
+       ===================================================== */
+
+    document.addEventListener("click", function (event) {
+
+        if (!isMobile()) return;
+
+        const menuButton =
+            event.target.closest(".mobile-menu-button");
+
+        if (menuButton) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            toggleMobileSidebar();
+
+            return;
+        }
+
+
+        /* =================================================
+           OVERLAY CLICK = CLOSE
+           ================================================= */
+
+        const overlay =
+            event.target.closest(".mobile-sidebar-overlay");
+
+        if (overlay) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            closeMobileSidebar();
+
+            return;
+        }
+
+
+        /* =================================================
+           SIDEBAR NAVIGATION = CLOSE FIRST
+           ================================================= */
+
+        const sidebar =
+            event.target.closest(".sidebar");
+
+        if (sidebar) {
+
+            const navigationButton =
+                event.target.closest(
+                    "a, button, [role='button'], .nav-item, .menu-item"
+                );
+
+            if (navigationButton) {
+
+                /*
+                 * Close immediately before navigation.
+                 * Navigation can then continue normally.
+                 */
+                closeMobileSidebar();
+
+                console.log(
+                    "AP SYNAPSE — MOBILE NAVIGATION → SIDEBAR CLOSED"
+                );
+            }
+        }
+
+    }, true);
+
+
+    /* =====================================================
+       ESCAPE
+       ===================================================== */
+
+    document.addEventListener("keydown", function (event) {
+
+        if (event.key === "Escape" && isMobile()) {
+            closeMobileSidebar();
+        }
+
+    });
+
+
+    /* =====================================================
+       ROTATION / RESIZE SAFETY
+       ===================================================== */
+
+    window.addEventListener("resize", function () {
+
+        if (!isMobile()) {
+            closeMobileSidebar();
+        }
+
+    });
+
+
+    console.log(
+        "AP SYNAPSE — FINAL MOBILE SIDEBAR CONTROLLER READY"
+    );
+
+})();
+
+/* ============================================================
+   AP SYNAPSE — FINAL MOBILE SIDEBAR CONTROLLER
+   MOBILE ONLY — DOES NOT ALTER DESKTOP
+   ============================================================ */
+
+(function () {
+    'use strict';
+
+    function initMobileSidebarController() {
+
+        const menuButton = document.querySelector('.mobile-menu-button');
+        const sidebar = document.querySelector('aside.sidebar, .sidebar');
+        const overlay = document.querySelector('.mobile-sidebar-overlay');
+
+        if (!menuButton || !sidebar) {
+            console.warn('AP Synapse: Mobile sidebar elements not found.');
+            return;
+        }
+
+        /* ----------------------------------------------------
+           OPEN
+        ---------------------------------------------------- */
+        function openMobileSidebar() {
+
+            if (window.innerWidth > 768) return;
+
+            document.body.classList.add('ap-sidebar-open');
+            sidebar.classList.add('ap-sidebar-open');
+
+            if (overlay) {
+                overlay.classList.add('ap-sidebar-open');
+            }
+
+            menuButton.setAttribute('aria-expanded', 'true');
+
+            /* Force the mobile sidebar into the visible state */
+            sidebar.style.setProperty('visibility', 'visible', 'important');
+            sidebar.style.setProperty('opacity', '1', 'important');
+            sidebar.style.setProperty('transform', 'translateX(0)', 'important');
+
+            if (overlay) {
+                overlay.style.setProperty('visibility', 'visible', 'important');
+                overlay.style.setProperty('opacity', '1', 'important');
+                overlay.style.setProperty('z-index', '9998', 'important');
+            }
+
+            sidebar.style.setProperty('z-index', '9999', 'important');
+        }
+
+
+        /* ----------------------------------------------------
+           CLOSE
+        ---------------------------------------------------- */
+        function closeMobileSidebar() {
+
+            if (window.innerWidth > 768) return;
+
+            document.body.classList.remove('ap-sidebar-open');
+            sidebar.classList.remove('ap-sidebar-open');
+
+            if (overlay) {
+                overlay.classList.remove('ap-sidebar-open');
+            }
+
+            menuButton.setAttribute('aria-expanded', 'false');
+
+            /* Return to the closed mobile state */
+            sidebar.style.setProperty(
+                'transform',
+                'translateX(-100%)',
+                'important'
+            );
+
+            sidebar.style.setProperty(
+                'visibility',
+                'hidden',
+                'important'
+            );
+
+            sidebar.style.setProperty(
+                'opacity',
+                '0',
+                'important'
+            );
+
+            if (overlay) {
+                overlay.style.setProperty(
+                    'opacity',
+                    '0',
+                    'important'
+                );
+
+                overlay.style.setProperty(
+                    'visibility',
+                    'hidden',
+                    'important'
+                );
+            }
+        }
+
+
+        /* ----------------------------------------------------
+           3 BARS — TRUE TOGGLE
+        ---------------------------------------------------- */
+        menuButton.addEventListener('click', function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (window.innerWidth > 768) return;
+
+            const isOpen =
+                document.body.classList.contains('ap-sidebar-open');
+
+            if (isOpen) {
+                closeMobileSidebar();
+            } else {
+                openMobileSidebar();
+            }
+        });
+
+
+        /* ----------------------------------------------------
+           OVERLAY CLICK = CLOSE
+        ---------------------------------------------------- */
+        if (overlay) {
+
+            overlay.addEventListener('click', function (event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                closeMobileSidebar();
+            });
+        }
+
+
+        /* ----------------------------------------------------
+           SIDEBAR BUTTON / LINK CLICK = CLOSE
+           Navigation is NOT prevented.
+        ---------------------------------------------------- */
+        sidebar.addEventListener('click', function (event) {
+
+            if (window.innerWidth > 768) return;
+
+            const clickedItem = event.target.closest(
+                'a, button, [role="button"]'
+            );
+
+            if (!clickedItem) return;
+
+            /*
+             * Don't close when clicking the mobile menu button
+             * if it somehow exists inside the sidebar.
+             */
+            if (clickedItem === menuButton) return;
+
+            /*
+             * Close immediately, then allow the original
+             * navigation/action to continue normally.
+             */
+            closeMobileSidebar();
+        });
+
+
+        /* ----------------------------------------------------
+           ESCAPE = CLOSE
+        ---------------------------------------------------- */
+        document.addEventListener('keydown', function (event) {
+
+            if (event.key === 'Escape') {
+                closeMobileSidebar();
+            }
+        });
+
+
+        /* ----------------------------------------------------
+           SCREEN SIZE SAFETY
+           Desktop is returned to normal control.
+        ---------------------------------------------------- */
+        window.addEventListener('resize', function () {
+
+            if (window.innerWidth > 768) {
+
+                document.body.classList.remove('ap-sidebar-open');
+                sidebar.classList.remove('ap-sidebar-open');
+
+                if (overlay) {
+                    overlay.classList.remove('ap-sidebar-open');
+                }
+
+                menuButton.setAttribute('aria-expanded', 'false');
+
+                /*
+                 * Remove ONLY the inline mobile overrides.
+                 * Desktop CSS gets control again.
+                 */
+                sidebar.style.removeProperty('visibility');
+                sidebar.style.removeProperty('opacity');
+                sidebar.style.removeProperty('transform');
+                sidebar.style.removeProperty('z-index');
+
+                if (overlay) {
+                    overlay.style.removeProperty('visibility');
+                    overlay.style.removeProperty('opacity');
+                    overlay.style.removeProperty('z-index');
+                }
+            }
+        });
+
+
+        console.log(
+            'AP Synapse — Final Mobile Sidebar Controller Ready'
+        );
+    }
+
+
+    /* --------------------------------------------------------
+       WAIT UNTIL DOM IS READY
+       -------------------------------------------------------- */
+    if (document.readyState === 'loading') {
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            initMobileSidebarController
+        );
+
+    } else {
+
+        initMobileSidebarController();
+    }
+
+})();
+
+/* ============================================================
+   AP SYNAPSE — MOBILE SIDEBAR FINAL OVERRIDE
+   MOBILE ONLY
+   Desktop is completely untouched.
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    const MOBILE_MAX = 767;
+
+    function isMobile() {
+        return window.innerWidth <= MOBILE_MAX;
+    }
+
+    function getSidebar() {
+        return document.querySelector("aside.sidebar");
+    }
+
+    function getMenuButton() {
+        return document.querySelector(".mobile-menu-button");
+    }
+
+    function getOverlay() {
+        return document.querySelector(".mobile-sidebar-overlay");
+    }
+
+    function closeMobileSidebar() {
+
+        if (!isMobile()) return;
+
+        const sidebar = getSidebar();
+        const overlay = getOverlay();
+        const button = getMenuButton();
+
+        if (sidebar) {
+
+            sidebar.classList.remove(
+                "ap-sidebar-open",
+                "mobile-open",
+                "ap-mobile-open",
+                "ap-open"
+            );
+
+            sidebar.style.setProperty(
+                "transform",
+                "translate3d(-110%,0,0)",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "visibility",
+                "hidden",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "opacity",
+                "1",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "pointer-events",
+                "none",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "z-index",
+                "2147483646",
+                "important"
+            );
+        }
+
+        if (overlay) {
+
+            overlay.classList.remove(
+                "ap-sidebar-visible",
+                "active",
+                "visible",
+                "ap-mobile-open"
+            );
+
+            overlay.style.setProperty(
+                "opacity",
+                "0",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "visibility",
+                "hidden",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "pointer-events",
+                "none",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "z-index",
+                "2147483645",
+                "important"
+            );
+        }
+
+        if (button) {
+
+            button.textContent = "☰";
+
+            button.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            button.setAttribute(
+                "aria-label",
+                "Open AP Synapse navigation"
+            );
+
+            button.style.setProperty(
+                "z-index",
+                "2147483647",
+                "important"
+            );
+        }
+
+        document.body.classList.remove(
+            "ap-sidebar-open",
+            "ap-sidebar-locked"
+        );
+    }
+
+
+    function openMobileSidebar() {
+
+        if (!isMobile()) return;
+
+        const sidebar = getSidebar();
+        const overlay = getOverlay();
+        const button = getMenuButton();
+
+        if (!sidebar) {
+            console.error(
+                "AP Synapse: sidebar element not found."
+            );
+            return;
+        }
+
+        /* ----------------------------------------------------
+           CRITICAL:
+           Put the drawer directly under BODY.
+
+           This removes any parent stacking-context problem
+           that was causing the black overlay to appear above it.
+           ---------------------------------------------------- */
+
+        if (sidebar.parentElement !== document.body) {
+            document.body.appendChild(sidebar);
+        }
+
+        if (overlay && overlay.parentElement !== document.body) {
+            document.body.appendChild(overlay);
+        }
+
+        /* ----------------------------------------------------
+           SIDEBAR
+           ---------------------------------------------------- */
+
+        sidebar.classList.add(
+            "ap-sidebar-open"
+        );
+
+        sidebar.classList.remove(
+            "mobile-open",
+            "ap-mobile-open",
+            "ap-open"
+        );
+
+        sidebar.style.setProperty(
+            "position",
+            "fixed",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "top",
+            "0",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "left",
+            "0",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "bottom",
+            "0",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "width",
+            "min(326px,88vw)",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "height",
+            "100dvh",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "max-height",
+            "100dvh",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "display",
+            "flex",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "flex-direction",
+            "column",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "background",
+            "#111318",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "opacity",
+            "1",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "visibility",
+            "visible",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "pointer-events",
+            "auto",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "transform",
+            "translate3d(0,0,0)",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "filter",
+            "none",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "backdrop-filter",
+            "none",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "-webkit-backdrop-filter",
+            "none",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "z-index",
+            "2147483646",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "overflow-y",
+            "auto",
+            "important"
+        );
+
+        /* ----------------------------------------------------
+           OVERLAY
+           ---------------------------------------------------- */
+
+        if (overlay) {
+
+            overlay.style.setProperty(
+                "position",
+                "fixed",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "inset",
+                "0",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "background",
+                "rgba(0,0,0,.48)",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "filter",
+                "none",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "backdrop-filter",
+                "none",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "-webkit-backdrop-filter",
+                "none",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "opacity",
+                "1",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "visibility",
+                "visible",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "pointer-events",
+                "auto",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "z-index",
+                "2147483645",
+                "important"
+            );
+
+            overlay.classList.add(
+                "ap-sidebar-visible"
+            );
+        }
+
+        /* ----------------------------------------------------
+           HAMBURGER
+           ---------------------------------------------------- */
+
+        if (button) {
+
+            button.style.setProperty(
+                "position",
+                "fixed",
+                "important"
+            );
+
+            button.style.setProperty(
+                "z-index",
+                "2147483647",
+                "important"
+            );
+
+            button.style.setProperty(
+                "pointer-events",
+                "auto",
+                "important"
+            );
+
+            button.textContent = "×";
+
+            button.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+
+            button.setAttribute(
+                "aria-label",
+                "Close AP Synapse navigation"
+            );
+        }
+
+        document.body.classList.add(
+            "ap-sidebar-open"
+        );
+    }
+
+
+    function toggleMobileSidebar(event) {
+
+        if (!isMobile()) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+
+        const sidebar = getSidebar();
+
+        if (
+            sidebar &&
+            sidebar.classList.contains(
+                "ap-sidebar-open"
+            )
+        ) {
+
+            closeMobileSidebar();
+
+        } else {
+
+            openMobileSidebar();
+
+        }
+    }
+
+
+    function setupMobileSidebar() {
+
+        const button = getMenuButton();
+        const overlay = getOverlay();
+
+        if (!button) {
+            console.error(
+                "AP Synapse: mobile menu button not found."
+            );
+            return;
+        }
+
+        /* ----------------------------------------------------
+           IMPORTANT:
+           Clone button.
+
+           This removes all old click listeners attached by
+           previous sidebar controllers in sidebar.js.
+           ---------------------------------------------------- */
+
+        const cleanButton =
+            button.cloneNode(true);
+
+        button.replaceWith(cleanButton);
+
+
+        /* ----------------------------------------------------
+           MENU BUTTON
+           ---------------------------------------------------- */
+
+        cleanButton.addEventListener(
+            "click",
+            toggleMobileSidebar,
+            {
+                capture: true,
+                passive: false
+            }
+        );
+
+
+        /* ----------------------------------------------------
+           OVERLAY CLOSE
+           ---------------------------------------------------- */
+
+        if (overlay) {
+
+            overlay.addEventListener(
+                "click",
+                event => {
+
+                    if (
+                        event.target === overlay
+                    ) {
+
+                        closeMobileSidebar();
+
+                    }
+
+                },
+                true
+            );
+        }
+
+
+        /* ----------------------------------------------------
+           SIDEBAR NAVIGATION
+           Any sidebar link/button closes the drawer.
+           ---------------------------------------------------- */
+
+        const sidebar = getSidebar();
+
+        if (sidebar) {
+
+            sidebar.addEventListener(
+                "click",
+                event => {
+
+                    if (!isMobile()) return;
+
+                    const target =
+                        event.target.closest(
+                            "a, button"
+                        );
+
+                    if (!target) return;
+
+                    /*
+                       Don't close because of the hamburger.
+                       It is outside the sidebar anyway.
+                    */
+
+                    setTimeout(
+                        closeMobileSidebar,
+                        0
+                    );
+
+                },
+                true
+            );
+        }
+
+
+        /* ----------------------------------------------------
+           ESCAPE
+           ---------------------------------------------------- */
+
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Escape" &&
+                    isMobile()
+                ) {
+
+                    closeMobileSidebar();
+
+                }
+
+            }
+        );
+
+
+        /* ----------------------------------------------------
+           RESIZE
+           ---------------------------------------------------- */
+
+        window.addEventListener(
+            "resize",
+            () => {
+
+                if (!isMobile()) {
+
+                    /*
+                       Desktop is untouched.
+                       Just remove mobile state.
+                    */
+
+                    const sidebar = getSidebar();
+                    const overlay = getOverlay();
+
+                    sidebar?.classList.remove(
+                        "ap-sidebar-open"
+                    );
+
+                    overlay?.classList.remove(
+                        "ap-sidebar-visible"
+                    );
+
+                }
+
+            },
+            {
+                passive: true
+            }
+        );
+
+
+        /* ----------------------------------------------------
+           INITIAL STATE
+           ---------------------------------------------------- */
+
+        if (isMobile()) {
+            closeMobileSidebar();
+        }
+
+        console.log(
+            "✅ AP SYNAPSE MOBILE SIDEBAR — FINAL OVERRIDE READY"
+        );
+    }
+
+
+    if (
+        document.readyState === "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            setupMobileSidebar,
+            {
+                once: true
+            }
+        );
+
+    } else {
+
+        setupMobileSidebar();
+
+    }
+
+})();
+
+/* ============================================================
+   AP SYNAPSE — FINAL MOBILE SIDEBAR MASTER CONTROLLER
+   MOBILE ONLY
+   Desktop navigation/layout is untouched.
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    const MOBILE_MAX = 767;
+
+    function isMobile() {
+        return window.innerWidth <= MOBILE_MAX;
+    }
+
+    function getSidebar() {
+        return document.querySelector("aside.sidebar");
+    }
+
+    function getButton() {
+        return document.querySelector(".mobile-menu-button");
+    }
+
+    function getOverlay() {
+        return document.querySelector(".mobile-sidebar-overlay");
+    }
+
+    function removeDuplicateControls() {
+        const buttons = document.querySelectorAll(
+            ".mobile-menu-button"
+        );
+
+        buttons.forEach((button, index) => {
+            if (index > 0) {
+                button.remove();
+            }
+        });
+
+        const overlays = document.querySelectorAll(
+            ".mobile-sidebar-overlay"
+        );
+
+        overlays.forEach((overlay, index) => {
+            if (index > 0) {
+                overlay.remove();
+            }
+        });
+    }
+
+    function forceClosedStyles(sidebar, overlay, button) {
+
+        if (sidebar) {
+            sidebar.style.setProperty(
+                "visibility",
+                "hidden",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "opacity",
+                "1",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "transform",
+                "translate3d(-105%,0,0)",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "pointer-events",
+                "none",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "z-index",
+                "2147483646",
+                "important"
+            );
+        }
+
+        if (overlay) {
+            overlay.style.setProperty(
+                "visibility",
+                "hidden",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "opacity",
+                "0",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "pointer-events",
+                "none",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "backdrop-filter",
+                "none",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "-webkit-backdrop-filter",
+                "none",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "z-index",
+                "2147483640",
+                "important"
+            );
+        }
+
+        if (button) {
+            button.textContent = "☰";
+
+            button.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+        }
+
+        document.body.classList.remove(
+            "ap-sidebar-locked",
+            "ap-mobile-nav-open"
+        );
+    }
+
+    function forceOpenStyles(sidebar, overlay, button) {
+
+        if (sidebar) {
+
+            sidebar.style.setProperty(
+                "visibility",
+                "visible",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "opacity",
+                "1",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "transform",
+                "translate3d(0,0,0)",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "pointer-events",
+                "auto",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "z-index",
+                "2147483647",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "filter",
+                "none",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "backdrop-filter",
+                "none",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "-webkit-backdrop-filter",
+                "none",
+                "important"
+            );
+        }
+
+        if (overlay) {
+
+            overlay.style.setProperty(
+                "visibility",
+                "visible",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "opacity",
+                "1",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "pointer-events",
+                "auto",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "backdrop-filter",
+                "none",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "-webkit-backdrop-filter",
+                "none",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "z-index",
+                "2147483640",
+                "important"
+            );
+        }
+
+        if (button) {
+
+            button.textContent = "×";
+
+            button.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+        }
+
+        document.body.classList.add(
+            "ap-sidebar-locked"
+        );
+    }
+
+    function closeMobileSidebar() {
+
+        if (!isMobile()) return;
+
+        const sidebar = getSidebar();
+        const overlay = getOverlay();
+        const button = getButton();
+
+        if (!sidebar) return;
+
+        sidebar.classList.remove(
+            "ap-sidebar-open",
+            "ap-open",
+            "mobile-open",
+            "ap-mobile-open"
+        );
+
+        overlay?.classList.remove(
+            "ap-sidebar-visible",
+            "active",
+            "visible",
+            "ap-visible",
+            "ap-mobile-open"
+        );
+
+        forceClosedStyles(
+            sidebar,
+            overlay,
+            button
+        );
+
+        console.log(
+            "✅ AP SYNAPSE — MOBILE SIDEBAR CLOSED"
+        );
+    }
+
+    function openMobileSidebar() {
+
+        if (!isMobile()) return;
+
+        removeDuplicateControls();
+
+        const sidebar = getSidebar();
+        const overlay = getOverlay();
+        const button = getButton();
+
+        if (!sidebar) {
+            console.error(
+                "❌ AP SYNAPSE — SIDEBAR NOT FOUND"
+            );
+            return;
+        }
+
+        sidebar.classList.add(
+            "ap-sidebar-open"
+        );
+
+        overlay?.classList.add(
+            "ap-sidebar-visible"
+        );
+
+        forceOpenStyles(
+            sidebar,
+            overlay,
+            button
+        );
+
+        console.log(
+            "✅ AP SYNAPSE — MOBILE SIDEBAR OPENED"
+        );
+    }
+
+    function toggleMobileSidebar(event) {
+
+        if (!isMobile()) return;
+
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        const sidebar = getSidebar();
+
+        if (!sidebar) return;
+
+        const isOpen =
+            sidebar.classList.contains(
+                "ap-sidebar-open"
+            );
+
+        if (isOpen) {
+            closeMobileSidebar();
+        } else {
+            openMobileSidebar();
+        }
+    }
+
+    function setupMobileSidebar() {
+
+        removeDuplicateControls();
+
+        let button = getButton();
+        let overlay = getOverlay();
+
+        const sidebar = getSidebar();
+
+        if (!sidebar) {
+            console.error(
+                "❌ AP SYNAPSE — MOBILE SIDEBAR NOT FOUND"
+            );
+            return;
+        }
+
+        /* Create button only if missing */
+        if (!button) {
+
+            button =
+                document.createElement("button");
+
+            button.className =
+                "mobile-menu-button";
+
+            button.type = "button";
+
+            button.textContent = "☰";
+
+            button.setAttribute(
+                "aria-label",
+                "Open AP Synapse navigation"
+            );
+
+            button.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            document.body.appendChild(button);
+        }
+
+        /* Create overlay only if missing */
+        if (!overlay) {
+
+            overlay =
+                document.createElement("div");
+
+            overlay.className =
+                "mobile-sidebar-overlay";
+
+            document.body.appendChild(
+                overlay
+            );
+        }
+
+        /*
+         * CLONE BUTTON
+         * This removes all old click handlers
+         * from previous sidebar controllers.
+         */
+        const cleanButton =
+            button.cloneNode(true);
+
+        button.replaceWith(
+            cleanButton
+        );
+
+        button = cleanButton;
+
+        button.addEventListener(
+            "click",
+            toggleMobileSidebar,
+            {
+                passive: false
+            }
+        );
+
+        /*
+         * CLONE OVERLAY
+         * Removes old overlay handlers.
+         */
+        const cleanOverlay =
+            overlay.cloneNode(false);
+
+        overlay.replaceWith(
+            cleanOverlay
+        );
+
+        overlay = cleanOverlay;
+
+        overlay.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target ===
+                    overlay
+                ) {
+                    closeMobileSidebar();
+                }
+
+            },
+            {
+                passive: true
+            }
+        );
+
+        /*
+         * CLOSE WHEN ANY SIDEBAR
+         * CONTROL IS CLICKED.
+         *
+         * We do NOT prevent navigation.
+         */
+        sidebar.addEventListener(
+            "click",
+            event => {
+
+                if (!isMobile()) return;
+
+                const clicked =
+                    event.target.closest(
+                        "a, button, input"
+                    );
+
+                if (!clicked) return;
+
+                /*
+                 * Give the existing AP Synapse
+                 * navigation code time to run.
+                 */
+                setTimeout(
+                    () => {
+                        closeMobileSidebar();
+                    },
+                    50
+                );
+
+            },
+            false
+        );
+
+        /*
+         * ESC CLOSE
+         */
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Escape" &&
+                    isMobile()
+                ) {
+                    closeMobileSidebar();
+                }
+
+            },
+            false
+        );
+
+        /*
+         * RESIZE
+         *
+         * If desktop preview is entered,
+         * mobile state is completely removed.
+         */
+        window.addEventListener(
+            "resize",
+            () => {
+
+                if (
+                    window.innerWidth >
+                    MOBILE_MAX
+                ) {
+
+                    const currentSidebar =
+                        getSidebar();
+
+                    const currentOverlay =
+                        getOverlay();
+
+                    const currentButton =
+                        getButton();
+
+                    if (currentSidebar) {
+                        currentSidebar.classList.remove(
+                            "ap-sidebar-open",
+                            "ap-open",
+                            "mobile-open",
+                            "ap-mobile-open"
+                        );
+
+                        currentSidebar.style.removeProperty(
+                            "visibility"
+                        );
+
+                        currentSidebar.style.removeProperty(
+                            "transform"
+                        );
+
+                        currentSidebar.style.removeProperty(
+                            "pointer-events"
+                        );
+
+                        currentSidebar.style.removeProperty(
+                            "z-index"
+                        );
+                    }
+
+                    currentOverlay?.classList.remove(
+                        "ap-sidebar-visible",
+                        "active",
+                        "visible",
+                        "ap-visible",
+                        "ap-mobile-open"
+                    );
+
+                    currentOverlay?.style.removeProperty(
+                        "visibility"
+                    );
+
+                    currentOverlay?.style.removeProperty(
+                        "opacity"
+                    );
+
+                    currentOverlay?.style.removeProperty(
+                        "pointer-events"
+                    );
+
+                    currentOverlay?.style.removeProperty(
+                        "z-index"
+                    );
+
+                    currentButton?.style.removeProperty(
+                        "z-index"
+                    );
+
+                    document.body.classList.remove(
+                        "ap-sidebar-locked",
+                        "ap-mobile-nav-open"
+                    );
+                }
+
+            },
+            {
+                passive: true
+            }
+        );
+
+        /*
+         * INITIAL MOBILE STATE
+         */
+        if (isMobile()) {
+            closeMobileSidebar();
+        }
+
+        console.log(
+            "🚀 AP SYNAPSE — MOBILE SIDEBAR MASTER CONTROLLER READY"
+        );
+    }
+
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            setupMobileSidebar,
+            {
+                once: true
+            }
+        );
+
+    } else {
+
+        setupMobileSidebar();
+
+    }
+
+})();
+
+/* =========================================================
+   AP SYNAPSE — MOBILE SIDEBAR FINAL CONTROLLER
+   MOBILE ONLY
+   DESKTOP IS UNTOUCHED
+   ========================================================= */
+
+(() => {
+    "use strict";
+
+    const MOBILE_BREAKPOINT = 767;
+
+    function isMobile() {
+        return window.innerWidth <= MOBILE_BREAKPOINT;
+    }
+
+    function getSidebar() {
+        return document.querySelector("aside.sidebar");
+    }
+
+    function getMenuButton() {
+        return document.querySelector(".mobile-menu-button");
+    }
+
+    function getOverlay() {
+        return document.querySelector(".mobile-sidebar-overlay");
+    }
+
+    function closeMobileSidebar() {
+
+        if (!isMobile()) return;
+
+        const sidebar = getSidebar();
+        const button = getMenuButton();
+        const overlay = getOverlay();
+
+        if (!sidebar) return;
+
+        sidebar.classList.remove(
+            "ap-sidebar-open",
+            "mobile-open",
+            "ap-mobile-open"
+        );
+
+        overlay?.classList.remove(
+            "ap-sidebar-visible",
+            "active",
+            "visible",
+            "ap-mobile-open"
+        );
+
+        document.body.classList.remove(
+            "ap-sidebar-open",
+            "ap-sidebar-locked",
+            "ap-mobile-nav-open"
+        );
+
+        if (button) {
+            button.textContent = "☰";
+            button.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+            button.setAttribute(
+                "aria-label",
+                "Open AP Synapse navigation"
+            );
+        }
+    }
+
+    function openMobileSidebar() {
+
+        if (!isMobile()) return;
+
+        const sidebar = getSidebar();
+        const button = getMenuButton();
+        const overlay = getOverlay();
+
+        if (!sidebar) return;
+
+        sidebar.classList.add("ap-sidebar-open");
+
+        overlay?.classList.add(
+            "ap-sidebar-visible"
+        );
+
+        document.body.classList.add(
+            "ap-sidebar-open",
+            "ap-sidebar-locked"
+        );
+
+        if (button) {
+            button.textContent = "×";
+            button.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+            button.setAttribute(
+                "aria-label",
+                "Close AP Synapse navigation"
+            );
+        }
+    }
+
+    function toggleMobileSidebar(event) {
+
+        if (!isMobile()) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        const sidebar = getSidebar();
+
+        if (!sidebar) return;
+
+        if (
+            sidebar.classList.contains(
+                "ap-sidebar-open"
+            )
+        ) {
+            closeMobileSidebar();
+        } else {
+            openMobileSidebar();
+        }
+    }
+
+    function initializeMobileSidebar() {
+
+        const button = getMenuButton();
+        const overlay = getOverlay();
+        const sidebar = getSidebar();
+
+        if (!button || !sidebar) {
+            console.warn(
+                "AP Synapse mobile sidebar elements not found."
+            );
+            return;
+        }
+
+        /* Remove every old menu-button click listener */
+        const cleanButton =
+            button.cloneNode(true);
+
+        button.replaceWith(cleanButton);
+
+        cleanButton.addEventListener(
+            "click",
+            toggleMobileSidebar,
+            { passive: false }
+        );
+
+        /* Overlay click = close */
+        if (overlay) {
+
+            overlay.addEventListener(
+                "click",
+                event => {
+
+                    if (
+                        event.target === overlay
+                    ) {
+                        closeMobileSidebar();
+                    }
+
+                }
+            );
+
+        }
+
+        /* ANY SIDEBAR NAVIGATION/CONTROL = CLOSE */
+        sidebar.addEventListener(
+            "click",
+            event => {
+
+                if (!isMobile()) return;
+
+                const clicked =
+                    event.target.closest(
+                        "a, button"
+                    );
+
+                if (!clicked) return;
+
+                /* Never treat the mobile menu button as a sidebar item */
+                if (
+                    clicked.classList.contains(
+                        "mobile-menu-button"
+                    )
+                ) {
+                    return;
+                }
+
+                /* Let the existing action/navigation happen first */
+                setTimeout(
+                    closeMobileSidebar,
+                    50
+                );
+
+            },
+            true
+        );
+
+        /* ESC = close */
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Escape" &&
+                    isMobile()
+                ) {
+                    closeMobileSidebar();
+                }
+
+            }
+        );
+
+        /* If viewport becomes desktop, clean mobile state */
+        window.addEventListener(
+            "resize",
+            () => {
+
+                if (!isMobile()) {
+
+                    const sidebar =
+                        getSidebar();
+
+                    const overlay =
+                        getOverlay();
+
+                    sidebar?.classList.remove(
+                        "ap-sidebar-open",
+                        "mobile-open",
+                        "ap-mobile-open"
+                    );
+
+                    overlay?.classList.remove(
+                        "ap-sidebar-visible",
+                        "active",
+                        "visible",
+                        "ap-mobile-open"
+                    );
+
+                    document.body.classList.remove(
+                        "ap-sidebar-open",
+                        "ap-sidebar-locked",
+                        "ap-mobile-nav-open"
+                    );
+
+                }
+
+            },
+            { passive: true }
+        );
+
+        /* Start CLOSED */
+        closeMobileSidebar();
+
+        console.log(
+            "✅ AP SYNAPSE — MOBILE SIDEBAR FINAL FIX READY"
+        );
+    }
+
+    if (
+        document.readyState === "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            initializeMobileSidebar,
+            { once: true }
+        );
+
+    } else {
+
+        initializeMobileSidebar();
+
+    }
+
+})();
+
+/* ============================================================
+   AP SYNAPSE — MOBILE SIDEBAR
+   SINGLE CLEAN CONTROLLER
+   Desktop is untouched.
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    const MOBILE_MAX = 767;
+
+    function getSidebar() {
+        return document.querySelector("aside.sidebar");
+    }
+
+    function getMenuButton() {
+        return document.querySelector(".mobile-menu-button");
+    }
+
+    function getOverlay() {
+        return document.querySelector(".mobile-sidebar-overlay");
+    }
+
+    function isMobile() {
+        return window.innerWidth <= MOBILE_MAX;
+    }
+
+    function closeSidebar() {
+        const sidebar = getSidebar();
+        const button = getMenuButton();
+        const overlay = getOverlay();
+
+        if (sidebar) {
+            sidebar.classList.remove(
+                "ap-sidebar-open",
+                "ap-open"
+            );
+        }
+
+        if (overlay) {
+            overlay.classList.remove(
+                "ap-sidebar-visible",
+                "ap-visible",
+                "active",
+                "mobile-open",
+                "is-open"
+            );
+        }
+
+        document.body.classList.remove(
+            "ap-sidebar-locked",
+            "ap-mobile-sidebar-open",
+            "mobile-sidebar-open"
+        );
+
+        if (button) {
+            button.textContent = "☰";
+            button.setAttribute("aria-expanded", "false");
+            button.setAttribute(
+                "aria-label",
+                "Open AP Synapse navigation"
+            );
+        }
+    }
+
+    function openSidebar() {
+        if (!isMobile()) return;
+
+        const sidebar = getSidebar();
+        const button = getMenuButton();
+        const overlay = getOverlay();
+
+        if (!sidebar) {
+            console.error(
+                "❌ AP Synapse sidebar not found."
+            );
+            return;
+        }
+
+        /*
+         * Use BOTH existing state classes.
+         * This makes the controller compatible with
+         * the existing CSS without changing desktop.
+         */
+        sidebar.classList.add(
+            "ap-sidebar-open",
+            "ap-open"
+        );
+
+        if (overlay) {
+            overlay.classList.add(
+                "ap-sidebar-visible",
+                "ap-visible"
+            );
+        }
+
+        document.body.classList.add(
+            "ap-sidebar-locked",
+            "ap-mobile-sidebar-open"
+        );
+
+        if (button) {
+            button.textContent = "×";
+            button.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+            button.setAttribute(
+                "aria-label",
+                "Close AP Synapse navigation"
+            );
+        }
+    }
+
+    function toggleSidebar(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const sidebar = getSidebar();
+
+        if (!sidebar) return;
+
+        const open =
+            sidebar.classList.contains(
+                "ap-sidebar-open"
+            ) ||
+            sidebar.classList.contains(
+                "ap-open"
+            );
+
+        if (open) {
+            closeSidebar();
+        } else {
+            openSidebar();
+        }
+    }
+
+    function setup() {
+        const sidebar = getSidebar();
+        const button = getMenuButton();
+        const overlay = getOverlay();
+
+        if (!sidebar) {
+            console.error(
+                "❌ AP Synapse sidebar not found."
+            );
+            return;
+        }
+
+        /*
+         * Clean initial state.
+         */
+        closeSidebar();
+
+        /*
+         * MENU BUTTON
+         *
+         * cloneNode removes any old click listeners
+         * from the previous broken controllers.
+         */
+        if (button) {
+            const cleanButton =
+                button.cloneNode(true);
+
+            button.replaceWith(cleanButton);
+
+            cleanButton.addEventListener(
+                "click",
+                toggleSidebar,
+                {
+                    passive: false
+                }
+            );
+        }
+
+        /*
+         * OVERLAY
+         *
+         * Clicking outside the sidebar closes it.
+         */
+        if (overlay) {
+            const cleanOverlay =
+                overlay.cloneNode(true);
+
+            overlay.replaceWith(cleanOverlay);
+
+            cleanOverlay.addEventListener(
+                "click",
+                event => {
+                    if (
+                        event.target ===
+                        cleanOverlay
+                    ) {
+                        closeSidebar();
+                    }
+                }
+            );
+        }
+
+        /*
+         * SIDEBAR NAVIGATION
+         *
+         * Existing navigation code is NOT cancelled.
+         * We only close the mobile drawer.
+         */
+        sidebar.addEventListener(
+            "click",
+            event => {
+                const link =
+                    event.target.closest(
+                        "nav a"
+                    );
+
+                if (!link) return;
+
+                if (isMobile()) {
+                    setTimeout(
+                        closeSidebar,
+                        120
+                    );
+                }
+            },
+            true
+        );
+
+        /*
+         * NEW CHAT
+         */
+        sidebar.addEventListener(
+            "click",
+            event => {
+                const newChat =
+                    event.target.closest(
+                        ".new-chat-btn"
+                    );
+
+                if (!newChat) return;
+
+                if (isMobile()) {
+                    setTimeout(
+                        closeSidebar,
+                        120
+                    );
+                }
+            },
+            true
+        );
+
+        /*
+         * ESC
+         */
+        document.addEventListener(
+            "keydown",
+            event => {
+                if (
+                    event.key === "Escape"
+                ) {
+                    closeSidebar();
+                }
+            }
+        );
+
+        /*
+         * RESIZE
+         *
+         * If mobile -> desktop, drawer closes.
+         */
+        window.addEventListener(
+            "resize",
+            () => {
+                if (!isMobile()) {
+                    closeSidebar();
+                }
+            },
+            {
+                passive: true
+            }
+        );
+
+        console.log(
+            "✅ AP SYNAPSE — CLEAN MOBILE SIDEBAR READY"
+        );
+    }
+
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+        document.addEventListener(
+            "DOMContentLoaded",
+            setup,
+            {
+                once: true
+            }
+        );
+    } else {
+        setup();
+    }
+
+})();
+
+/* ============================================================
+   AP SYNAPSE — MOBILE SIDEBAR FINAL OVERRIDE
+   Mobile ONLY — Desktop untouched
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    const MOBILE = () => window.innerWidth <= 767;
+
+    const getSidebar = () =>
+        document.querySelector("aside.sidebar");
+
+    const getMenu = () =>
+        document.querySelector(".mobile-menu-button");
+
+    const getOverlay = () =>
+        document.querySelector(".mobile-sidebar-overlay");
+
+    function openMobileSidebar() {
+        if (!MOBILE()) return;
+
+        const sidebar = getSidebar();
+        const overlay = getOverlay();
+        const menu = getMenu();
+
+        if (!sidebar) return;
+
+        sidebar.classList.add("ap-sidebar-open");
+        overlay?.classList.add("ap-sidebar-visible");
+
+        sidebar.style.setProperty(
+            "transform",
+            "translate3d(0,0,0)",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "visibility",
+            "visible",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "opacity",
+            "1",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "pointer-events",
+            "auto",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "z-index",
+            "2147483647",
+            "important"
+        );
+
+        if (overlay) {
+            overlay.style.setProperty(
+                "visibility",
+                "visible",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "opacity",
+                "1",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "pointer-events",
+                "auto",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "z-index",
+                "2147483640",
+                "important"
+            );
+        }
+
+        document.body.classList.add("ap-sidebar-locked");
+
+        if (menu) {
+            menu.setAttribute("aria-expanded", "true");
+        }
+    }
+
+
+    function closeMobileSidebar() {
+
+        const sidebar = getSidebar();
+        const overlay = getOverlay();
+        const menu = getMenu();
+
+        if (!sidebar) return;
+
+        sidebar.classList.remove("ap-sidebar-open");
+        overlay?.classList.remove("ap-sidebar-visible");
+
+        sidebar.style.setProperty(
+            "transform",
+            "translate3d(-100%,0,0)",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "visibility",
+            "hidden",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "opacity",
+            "1",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "pointer-events",
+            "none",
+            "important"
+        );
+
+        if (overlay) {
+            overlay.style.setProperty(
+                "visibility",
+                "hidden",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "opacity",
+                "0",
+                "important"
+            );
+
+            overlay.style.setProperty(
+                "pointer-events",
+                "none",
+                "important"
+            );
+        }
+
+        document.body.classList.remove("ap-sidebar-locked");
+
+        if (menu) {
+            menu.setAttribute("aria-expanded", "false");
+        }
+    }
+
+
+    function toggleMobileSidebar(event) {
+
+        if (!MOBILE()) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+
+        const sidebar = getSidebar();
+
+        if (
+            sidebar &&
+            sidebar.classList.contains("ap-sidebar-open")
+        ) {
+            closeMobileSidebar();
+        } else {
+            openMobileSidebar();
+        }
+    }
+
+
+    /* ------------------------------------------------------------
+       MENU BUTTON
+       Capture phase prevents older sidebar controllers
+       from fighting this controller.
+       ------------------------------------------------------------ */
+
+    document.addEventListener(
+        "click",
+        event => {
+
+            const menu = event.target.closest(
+                ".mobile-menu-button"
+            );
+
+            if (!menu || !MOBILE()) return;
+
+            toggleMobileSidebar(event);
+
+        },
+        true
+    );
+
+
+    /* ------------------------------------------------------------
+       OVERLAY
+       ------------------------------------------------------------ */
+
+    document.addEventListener(
+        "click",
+        event => {
+
+            const overlay = event.target.closest(
+                ".mobile-sidebar-overlay"
+            );
+
+            if (
+                !overlay ||
+                !MOBILE()
+            ) {
+                return;
+            }
+
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+
+            closeMobileSidebar();
+
+        },
+        true
+    );
+
+
+    /* ------------------------------------------------------------
+       SIDEBAR NAVIGATION
+       Let the existing navigation execute,
+       then close the drawer automatically.
+       ------------------------------------------------------------ */
+
+    document.addEventListener(
+        "click",
+        event => {
+
+            if (!MOBILE()) return;
+
+            const sidebar = event.target.closest(
+                "aside.sidebar"
+            );
+
+            if (!sidebar) return;
+
+            const navigationItem =
+                event.target.closest(
+                    "a, button"
+                );
+
+            if (!navigationItem) return;
+
+            if (
+                navigationItem.closest(
+                    ".mobile-menu-button"
+                )
+            ) {
+                return;
+            }
+
+            setTimeout(() => {
+                closeMobileSidebar();
+            }, 80);
+
+        },
+        true
+    );
+
+
+    /* ------------------------------------------------------------
+       ESC
+       ------------------------------------------------------------ */
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Escape" &&
+                MOBILE()
+            ) {
+                closeMobileSidebar();
+            }
+
+        },
+        true
+    );
+
+
+    /* ------------------------------------------------------------
+       RESIZE
+       Never interfere with desktop.
+       ------------------------------------------------------------ */
+
+    window.addEventListener(
+        "resize",
+        () => {
+
+            if (!MOBILE()) {
+                closeMobileSidebar();
+            }
+
+        },
+        { passive: true }
+    );
+
+
+    /* ------------------------------------------------------------
+       INITIAL MOBILE STATE
+       ------------------------------------------------------------ */
+
+    function mobileSidebarBoot() {
+
+        if (MOBILE()) {
+            closeMobileSidebar();
+        }
+
+    }
+
+
+    if (
+        document.readyState === "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            mobileSidebarBoot,
+            { once: true }
+        );
+
+    } else {
+
+        mobileSidebarBoot();
+
+    }
+
+
+    console.log(
+        "✅ AP SYNAPSE — MOBILE SIDEBAR OVERRIDE ACTIVE"
+    );
+
+})();
+
+/* =========================================================
+   AP SYNAPSE — FINAL MOBILE SIDEBAR FIX
+   Fixes:
+   1. Sidebar visible above overlay
+   2. Sidebar fully clickable
+   3. Overlay behind sidebar
+   4. 3-bars toggles open/close
+   5. Sidebar links automatically close sidebar
+   6. Desktop untouched
+   ========================================================= */
+
+(() => {
+    "use strict";
+
+    if (window.__AP_FINAL_MOBILE_SIDEBAR__) return;
+    window.__AP_FINAL_MOBILE_SIDEBAR__ = true;
+
+    const isMobile = () => window.innerWidth <= 767;
+
+    const sidebar = () => document.querySelector("aside.sidebar");
+    const overlay = () => document.querySelector(".mobile-sidebar-overlay");
+    const menu = () => document.querySelector(".mobile-menu-button");
+
+    function setup() {
+        if (!isMobile()) return;
+
+        const s = sidebar();
+        const o = overlay();
+
+        if (!s || !o) return;
+
+        /*
+         * CRITICAL:
+         * Put overlay INSIDE .app so it shares the same
+         * stacking context as the sidebar.
+         */
+        const app = document.querySelector(".app");
+
+        if (app && o.parentElement !== app) {
+            app.insertBefore(o, app.firstChild);
+        }
+
+        /* Overlay */
+        Object.assign(o.style, {
+            position: "absolute",
+            inset: "0",
+            zIndex: "999998",
+            background: "rgba(0,0,0,.48)",
+            filter: "none",
+            backdropFilter: "none",
+            webkitBackdropFilter: "none",
+            pointerEvents: "none"
+        });
+
+        /* Sidebar */
+        Object.assign(s.style, {
+            position: "fixed",
+            top: "0",
+            left: "0",
+            bottom: "0",
+            width: "min(320px, 88vw)",
+            height: "100dvh",
+            zIndex: "999999",
+            background: "#111318",
+            filter: "none",
+            backdropFilter: "none",
+            webkitBackdropFilter: "none",
+            opacity: "1"
+        });
+
+        /* Keep sidebar children clickable */
+        s.style.pointerEvents = "auto";
+
+        s.querySelectorAll("*").forEach(el => {
+            el.style.pointerEvents = "auto";
+            el.style.filter = "none";
+            el.style.backdropFilter = "none";
+            el.style.webkitBackdropFilter = "none";
+        });
+    }
+
+    function openSidebar() {
+        if (!isMobile()) return;
+
+        setup();
+
+        const s = sidebar();
+        const o = overlay();
+
+        if (!s || !o) return;
+
+        s.classList.add("ap-sidebar-open");
+        s.classList.add("ap-sidebar-visible");
+
+        o.classList.add("ap-sidebar-open");
+        o.classList.add("ap-sidebar-visible");
+
+        s.style.setProperty("visibility", "visible", "important");
+        s.style.setProperty("opacity", "1", "important");
+        s.style.setProperty(
+            "transform",
+            "translate3d(0,0,0)",
+            "important"
+        );
+        s.style.setProperty(
+            "pointer-events",
+            "auto",
+            "important"
+        );
+        s.style.setProperty(
+            "z-index",
+            "999999",
+            "important"
+        );
+
+        o.style.setProperty(
+            "visibility",
+            "visible",
+            "important"
+        );
+        o.style.setProperty(
+            "opacity",
+            "1",
+            "important"
+        );
+        o.style.setProperty(
+            "pointer-events",
+            "auto",
+            "important"
+        );
+        o.style.setProperty(
+            "z-index",
+            "999998",
+            "important"
+        );
+
+        document.body.classList.add("ap-sidebar-open");
+    }
+
+    function closeSidebar() {
+        const s = sidebar();
+        const o = overlay();
+
+        if (!s || !o) return;
+
+        s.classList.remove(
+            "ap-sidebar-open",
+            "ap-sidebar-visible"
+        );
+
+        o.classList.remove(
+            "ap-sidebar-open",
+            "ap-sidebar-visible"
+        );
+
+        s.style.setProperty(
+            "transform",
+            "translate3d(-100%,0,0)",
+            "important"
+        );
+        s.style.setProperty(
+            "pointer-events",
+            "none",
+            "important"
+        );
+
+        o.style.setProperty(
+            "opacity",
+            "0",
+            "important"
+        );
+        o.style.setProperty(
+            "pointer-events",
+            "none",
+            "important"
+        );
+
+        document.body.classList.remove("ap-sidebar-open");
+    }
+
+    function toggleSidebar(e) {
+        if (!isMobile()) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const s = sidebar();
+
+        if (
+            s &&
+            (
+                s.classList.contains("ap-sidebar-open") ||
+                s.classList.contains("ap-sidebar-visible")
+            )
+        ) {
+            closeSidebar();
+        } else {
+            openSidebar();
+        }
+    }
+
+    /* 3-bars button */
+    document.addEventListener(
+        "click",
+        e => {
+            if (!isMobile()) return;
+
+            const m = e.target.closest(".mobile-menu-button");
+
+            if (m) {
+                toggleSidebar(e);
+            }
+        },
+        true
+    );
+
+    /* Overlay closes sidebar */
+    document.addEventListener(
+        "click",
+        e => {
+            if (!isMobile()) return;
+
+            const o = e.target.closest(".mobile-sidebar-overlay");
+
+            if (o) {
+                e.preventDefault();
+                e.stopPropagation();
+                closeSidebar();
+            }
+        },
+        true
+    );
+
+    /* Sidebar navigation closes automatically */
+    document.addEventListener(
+        "click",
+        e => {
+            if (!isMobile()) return;
+
+            const s = sidebar();
+
+            if (!s || !s.contains(e.target)) return;
+
+            const link = e.target.closest(
+                "a, button"
+            );
+
+            if (!link) return;
+
+            /* Don't close when clicking the sidebar's own close/menu control */
+            if (
+                link.classList.contains("mobile-menu-button") ||
+                link.closest(".mobile-menu-button")
+            ) {
+                return;
+            }
+
+            setTimeout(closeSidebar, 50);
+        },
+        true
+    );
+
+    /* Initial setup */
+    setup();
+
+    /* Re-apply when viewport changes */
+    window.addEventListener(
+        "resize",
+        () => {
+            if (isMobile()) {
+                setup();
+            } else {
+                closeSidebar();
+            }
+        },
+        { passive: true }
+    );
+
+    console.log(
+        "✅ AP SYNAPSE — FINAL MOBILE SIDEBAR FIX ACTIVE"
+    );
+})();

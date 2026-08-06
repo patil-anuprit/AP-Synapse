@@ -425,25 +425,82 @@ res.end();
 
 });
 
-app.get("/image", (req, res) => {
+app.get("/image", async (req, res) => {
 
-    const prompt = req.query.prompt;
+    try {
 
-    const encoded = encodeURIComponent(prompt);
+        const prompt = String(req.query.prompt || "").trim();
 
-    const url =
-`https://image.pollinations.ai/prompt/${encoded}?width=1024&height=1024&model=flux`;
+        if (!prompt) {
+            return res.status(400).json({
+                error: "Image prompt is required."
+            });
+        }
 
-    https.get(url, (imageRes) => {
+        const encodedPrompt =
+            encodeURIComponent(prompt);
+
+        const imageUrl =
+            `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=1024&model=flux`;
+
+        console.log("🖼️ Image generation:", prompt);
+
+        const imageResponse = await fetch(imageUrl);
+
+        if (!imageResponse.ok) {
+
+            console.error(
+                "Image provider error:",
+                imageResponse.status,
+                imageResponse.statusText
+            );
+
+            return res.status(502).json({
+                error: "Image generation service is temporarily unavailable."
+            });
+
+        }
+
+        const contentType =
+            imageResponse.headers.get("content-type") ||
+            "image/jpeg";
 
         res.setHeader(
             "Content-Type",
-            imageRes.headers["content-type"]
+            contentType
         );
 
-        imageRes.pipe(res);
+        res.setHeader(
+            "Cache-Control",
+            "public, max-age=3600"
+        );
 
-    });
+        const imageBuffer =
+            Buffer.from(
+                await imageResponse.arrayBuffer()
+            );
+
+        res.end(imageBuffer);
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "========== IMAGE ERROR =========="
+        );
+
+        console.error(error);
+
+        if (!res.headersSent) {
+
+            res.status(500).json({
+                error: "Image generation failed."
+            });
+
+        }
+
+    }
 
 });
 

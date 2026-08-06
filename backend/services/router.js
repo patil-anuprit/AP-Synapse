@@ -1,36 +1,106 @@
 import { createStream as groq } from "./groqService.js";
 import { createStream as gemini } from "./geminiService.js";
 
-export async function createAIStream(messages){
+export async function createAIStream(messages) {
 
-    try{
+    if (!Array.isArray(messages)) {
+        throw new Error("Messages must be an array.");
+    }
 
-        console.log("🟢 Using Groq");
+    // ==========================================
+    // AP SYNAPSE — DETECT MULTIMODAL REQUEST
+    // ==========================================
+
+    const hasImage = messages.some(
+        message =>
+            Array.isArray(message?.content) &&
+            message.content.some(
+                item =>
+                    item?.type === "image_url" &&
+                    item?.image_url?.url
+            )
+    );
+
+    // ==========================================
+    // IMAGE → GEMINI VISION
+    // ==========================================
+
+    if (hasImage) {
+
+        console.log(
+            "🖼️ Vision request detected — using Gemini."
+        );
+
+        try {
+
+            return await gemini(messages);
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "❌ Gemini Vision Failed:"
+            );
+
+            console.error(error);
+
+            throw error;
+
+        }
+
+    }
+
+    // ==========================================
+    // NORMAL TEXT → GROQ
+    // ==========================================
+
+    try {
+
+        console.log(
+            "🟢 Text request — using Groq."
+        );
 
         return await groq(messages);
 
     }
 
-    catch(error){
+    catch (error) {
 
-        console.log("⚠ Groq Failed");
+        console.error(
+            "⚠️ Groq Failed — switching to Gemini."
+        );
+
+        console.error(error);
 
     }
 
-    try{
+    // ==========================================
+    // TEXT FALLBACK → GEMINI
+    // ==========================================
 
-        console.log("🔵 Switching to Gemini");
+    try {
+
+        console.log(
+            "🔵 Gemini text fallback."
+        );
 
         return await gemini(messages);
 
     }
 
-    catch(error){
+    catch (error) {
 
-        console.log("⚠ Gemini Failed");
+        console.error(
+            "❌ Gemini Failed:"
+        );
+
+        console.error(error);
 
     }
 
-    throw new Error("All AI providers are unavailable.");
+    throw new Error(
+        "All AI providers are unavailable."
+    );
 
 }

@@ -367,7 +367,9 @@ if (chatWindow) {
                     message,
 
                     document:
-                        window.currentDocument || "",
+                        typeof window.currentDocument === "string"
+                            ? window.currentDocument
+                            : "",
 
                     web: window.webMode,
                     deep: window.deepThinking

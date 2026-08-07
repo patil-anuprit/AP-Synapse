@@ -3,10 +3,110 @@ import { createStream as gemini } from "./geminiService.js";
 import { createStream as openrouter } from "./openrouterService.js";
 import { createStream as deepseek } from "./deepseekService.js";
 
+
+function getErrorStatus(error) {
+
+    const message =
+        error?.message ||
+        String(error || "");
+
+    const match =
+        message.match(/\b(400|401|402|403|404|408|409|413|429|500|502|503|504)\b/);
+
+    return match
+        ? Number(match[1])
+        : null;
+
+}
+
+
+function describeProviderError(error) {
+
+    const status =
+        getErrorStatus(error);
+
+    if (status === 401) {
+        return "authentication failed";
+    }
+
+    if (status === 402) {
+        return "insufficient balance / payment required";
+    }
+
+    if (status === 403) {
+        return "access forbidden";
+    }
+
+    if (status === 404) {
+        return "model or endpoint unavailable";
+    }
+
+    if (status === 408) {
+        return "request timeout";
+    }
+
+    if (status === 413) {
+        return "request too large";
+    }
+
+    if (status === 429) {
+        return "rate limit reached";
+    }
+
+    if (status >= 500) {
+        return `provider server error (${status})`;
+    }
+
+    return error?.message || "unknown provider error";
+
+}
+
+
+async function tryProvider(
+    providerName,
+    providerFunction,
+    messages
+) {
+
+    try {
+
+        console.log(
+            `🔄 Trying ${providerName}...`
+        );
+
+        const stream =
+            await providerFunction(messages);
+
+        console.log(
+            `✅ ${providerName} accepted the request.`
+        );
+
+        return stream;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            `⚠️ ${providerName} unavailable:`,
+            describeProviderError(error)
+        );
+
+        return null;
+
+    }
+
+}
+
+
 export async function createAIStream(messages) {
 
     if (!Array.isArray(messages)) {
-        throw new Error("Messages must be an array.");
+
+        throw new Error(
+            "Messages must be an array."
+        );
+
     }
 
 
@@ -27,7 +127,8 @@ export async function createAIStream(messages) {
 
 
     // ==========================================
-    // IMAGE → GEMINI → OPENROUTER
+    // VISION ROUTING
+    // GEMINI → OPENROUTER
     // ==========================================
 
     if (hasImage) {
@@ -37,146 +138,97 @@ export async function createAIStream(messages) {
         );
 
 
-        try {
-
-            console.log(
-                "🔵 Vision → Gemini"
+        const geminiStream =
+            await tryProvider(
+                "Gemini Vision",
+                gemini,
+                messages
             );
 
-            return await gemini(messages);
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "⚠️ Gemini Vision failed."
-            );
-
-            console.error(error);
-
+        if (geminiStream) {
+            return geminiStream;
         }
 
 
-        try {
-
-            console.log(
-                "🟣 Vision → OpenRouter fallback"
+        const openrouterStream =
+            await tryProvider(
+                "OpenRouter Vision",
+                openrouter,
+                messages
             );
 
-            return await openrouter(messages);
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "⚠️ OpenRouter Vision failed."
-            );
-
-            console.error(error);
-
+        if (openrouterStream) {
+            return openrouterStream;
         }
 
 
         throw new Error(
-            "All vision providers are unavailable."
+            "All vision providers are currently unavailable."
         );
 
     }
 
 
     // ==========================================
-    // NORMAL TEXT
+    // TEXT ROUTING
     // GROQ → GEMINI → DEEPSEEK → OPENROUTER
     // ==========================================
 
-    try {
+    console.log(
+        "💬 Text request detected."
+    );
 
-        console.log(
-            "🟢 Text → Groq"
+
+    const groqStream =
+        await tryProvider(
+            "Groq",
+            groq,
+            messages
         );
 
-        return await groq(messages);
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "⚠️ Groq failed."
-        );
-
-        console.error(error);
-
+    if (groqStream) {
+        return groqStream;
     }
 
 
-    try {
-
-        console.log(
-            "🔵 Text → Gemini fallback"
+    const geminiStream =
+        await tryProvider(
+            "Gemini",
+            gemini,
+            messages
         );
 
-        return await gemini(messages);
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "⚠️ Gemini text failed."
-        );
-
-        console.error(error);
-
+    if (geminiStream) {
+        return geminiStream;
     }
 
 
-    try {
-
-        console.log(
-            "🟠 Text → DeepSeek fallback"
+    const deepseekStream =
+        await tryProvider(
+            "DeepSeek",
+            deepseek,
+            messages
         );
 
-        return await deepseek(messages);
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "⚠️ DeepSeek failed."
-        );
-
-        console.error(error);
-
+    if (deepseekStream) {
+        return deepseekStream;
     }
 
 
-    try {
-
-        console.log(
-            "🟣 Text → OpenRouter final fallback"
+    const openrouterStream =
+        await tryProvider(
+            "OpenRouter",
+            openrouter,
+            messages
         );
 
-        return await openrouter(messages);
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "⚠️ OpenRouter failed."
-        );
-
-        console.error(error);
-
+    if (openrouterStream) {
+        return openrouterStream;
     }
 
 
     throw new Error(
-        "All AI providers are unavailable."
+        "All AP Synapse AI providers are currently unavailable."
     );
 
 }

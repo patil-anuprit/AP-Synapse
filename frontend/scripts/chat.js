@@ -364,20 +364,14 @@ if (chatWindow) {
                 },
 
                 body: JSON.stringify({
+                    message,
 
-                   message,
+                    document:
+                        window.currentDocument || "",
 
-                   document:
-                       window.currentDocument || "",
-
-                   documentImage:
-                       window.currentDocumentImage || "",
-
-                   web: window.webMode,
-
-                   deep: window.deepThinking
-
-               }),
+                    web: window.webMode,
+                    deep: window.deepThinking
+                }),
 
                 signal: controller.signal
             }
@@ -628,6 +622,11 @@ if (chatWindow) {
     // =====================================
 
     catch (error) {
+
+        console.error("🔥 FULL AP SYNAPSE ERROR:", error);
+        console.error("🔥 ERROR NAME:", error?.name);
+        console.error("🔥 ERROR MESSAGE:", error?.message);
+        console.error("🔥 ERROR STACK:", error?.stack);
 
         console.error(
             "AP SYNAPSE ERROR:",

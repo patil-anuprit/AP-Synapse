@@ -3,21 +3,7 @@ import { createStream as gemini } from "./geminiService.js";
 import { createStream as openrouter } from "./openrouterService.js";
 import { createStream as deepseek } from "./deepseekService.js";
 
-const FORCE_PROVIDER = process.env.FORCE_PROVIDER || "";
-
-
 export async function createAIStream(messages) {
-
-        // TEMPORARY PROVIDER TEST
-    if (FORCE_PROVIDER === "deepseek") {
-
-        console.log(
-            "🧪 FORCE_PROVIDER → DeepSeek"
-        );
-
-        return await deepseek(messages);
-
-    }
 
     if (!Array.isArray(messages)) {
         throw new Error("Messages must be an array.");

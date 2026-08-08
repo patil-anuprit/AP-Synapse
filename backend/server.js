@@ -5,6 +5,7 @@ import { generateImage } from "./services/imageService.js";
 import https from "https";
 import upload from "./services/upload.js";
 import { readDocument } from "./services/documentReader.js";
+import { generateImage as generateGeminiImage } from "./services/geminiImageService.js";
 
 import brain from "./core/index.js";
 
@@ -222,21 +223,20 @@ app.post("/chat", async (req, res) => {
 // AP SYNAPSE — EXPLICIT IMAGE GENERATION
 // ==========================================
 
+const imageGenerationPattern =
+    /\b(create|generate|make|draw|design|render|produce|paint|illustrate|visualize|depict|show|imagine)\b[\s\S]{0,500}\b(image|picture|photo|artwork|illustration|portrait|wallpaper|logo|poster|scene|character|landscape|concept.?art)\b/i;
+
 const explicitImageRequest =
-    normalizedMessage.includes("create an image") ||
-    normalizedMessage.includes("create image") ||
-    normalizedMessage.includes("generate an image") ||
-    normalizedMessage.includes("generate image") ||
-    normalizedMessage.startsWith("draw ") ||
-    normalizedMessage.startsWith("paint ") ||
-    normalizedMessage.startsWith("illustrate ") ||
-    normalizedMessage.includes("make an image of");
+    imageGenerationPattern.test(message);
 
 if (explicitImageRequest) {
 
-    console.log("🖼️ Explicit image-generation request detected.");
+    console.log(
+        "🖼️ Explicit image-generation request detected."
+    );
 
-    const imageUrl = await generateImage(message);
+    const imageUrl =
+        `https://ap-synapse-backend.onrender.com/image?prompt=${encodeURIComponent(message)}`;
 
     return res.json({
         type: "image",
@@ -597,15 +597,97 @@ res.end();
 
 app.get("/image", async (req, res) => {
 
+    const prompt = String(req.query.prompt || "").trim();
+
+    if (!prompt) {
+        return res.status(400).json({
+            error: "Image prompt is required."
+        });
+    }
+
+    console.log("🎨 AP SYNAPSE IMAGE REQUEST");
+    console.log("Prompt:", prompt);
+
+    // ==========================================
+    // 🔒 PERSONAL IMAGE PROTECTION
+    // ==========================================
+
+    const protectedPatterns = [
+        /\banuprit\s+patil\b/i,
+        /\banuprit\b/i,
+        /\bpatil\b/i
+    ];
+
+    const isProtectedRequest =
+        protectedPatterns.some(
+            pattern => pattern.test(prompt)
+        );
+
+    if (isProtectedRequest) {
+
+        console.log(
+            "🔒 Protected personal-image request blocked."
+        );
+
+        return res.status(403).json({
+            error:
+                "I can't generate images depicting or reconstructing this protected person's private identity, home, vehicle, family, or personal belongings."
+        });
+
+    }
+
+    // ==========================================
+    // 🟢 PRIMARY — GEMINI IMAGE ENGINE
+    // ==========================================
+
     try {
 
-        const prompt = String(req.query.prompt || "").trim();
+        console.log(
+            "🟢 Image → Gemini"
+        );
 
-        if (!prompt) {
-            return res.status(400).json({
-                error: "Image prompt is required."
-            });
-        }
+        const result =
+            await generateGeminiImage(prompt);
+
+            console.log("✅ GEMINI IMAGE GENERATED");
+            console.log("Mime type:", result.mimeType);
+            console.log("Buffer size:", result.buffer?.length);
+
+        res.setHeader(
+            "Content-Type",
+            result.mimeType
+        );
+
+        res.setHeader(
+            "Cache-Control",
+            "no-store"
+        );
+
+        return res.end(result.buffer);
+
+    }
+
+    catch (geminiError) {
+
+        console.error(
+            "⚠️ Gemini Image failed."
+        );
+
+        console.error(geminiError);
+
+    }
+
+    // ==========================================
+    // 🟣 FALLBACK — POLLINATIONS
+    // ==========================================
+
+    try {
+
+        console.log("🟣 ENTERING POLLINATIONS FALLBACK");
+
+        console.log(
+            "🟣 Image → Pollinations fallback"
+        );
 
         const encodedPrompt =
             encodeURIComponent(prompt);
@@ -613,27 +695,26 @@ app.get("/image", async (req, res) => {
         const imageUrl =
             `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=1024&model=flux`;
 
-        console.log("🖼️ Image generation:", prompt);
-
-        const imageResponse = await fetch(imageUrl);
+        const imageResponse =
+            await fetch(imageUrl);
 
         if (!imageResponse.ok) {
 
-            console.error(
-                "Image provider error:",
-                imageResponse.status,
-                imageResponse.statusText
+            throw new Error(
+                `Pollinations returned ${imageResponse.status}`
             );
-
-            return res.status(502).json({
-                error: "Image generation service is temporarily unavailable."
-            });
 
         }
 
         const contentType =
-            imageResponse.headers.get("content-type") ||
-            "image/jpeg";
+            imageResponse.headers.get(
+                "content-type"
+            ) || "image/jpeg";
+
+        const imageBuffer =
+            Buffer.from(
+                await imageResponse.arrayBuffer()
+            );
 
         res.setHeader(
             "Content-Type",
@@ -642,35 +723,29 @@ app.get("/image", async (req, res) => {
 
         res.setHeader(
             "Cache-Control",
-            "public, max-age=3600"
+            "no-store"
         );
 
-        const imageBuffer =
-            Buffer.from(
-                await imageResponse.arrayBuffer()
-            );
-
-        res.end(imageBuffer);
+        return res.end(imageBuffer);
 
     }
 
-    catch (error) {
+    catch (pollinationsError) {
 
         console.error(
-            "========== IMAGE ERROR =========="
+            "⚠️ Pollinations Image failed."
         );
 
-        console.error(error);
-
-        if (!res.headersSent) {
-
-            res.status(500).json({
-                error: "Image generation failed."
-            });
-
-        }
+        console.error(
+            pollinationsError
+        );
 
     }
+
+    return res.status(502).json({
+        error:
+            "All AP Synapse image-generation providers are currently unavailable."
+    });
 
 });
 

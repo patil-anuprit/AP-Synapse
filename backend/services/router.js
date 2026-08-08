@@ -2,6 +2,7 @@ import { createStream as groq } from "./groqService.js";
 import { createStream as gemini } from "./geminiService.js";
 import { createStream as openrouter } from "./openrouterService.js";
 import { createStream as deepseek } from "./deepseekService.js";
+import { generateImage as generateGeminiImage } from "./geminiImageService.js";
 
 
 function getErrorStatus(error) {
@@ -168,6 +169,57 @@ export async function createAIStream(messages) {
 
     }
 
+    // ==========================================
+    // IMAGE GENERATION DETECTION
+    // ==========================================
+
+    const lastUserMessage =
+        [...messages]
+            .reverse()
+            .find(
+                message =>
+                    message?.role === "user" &&
+                    typeof message?.content === "string"
+            );
+
+    const userText =
+        lastUserMessage?.content?.trim() || "";
+
+    const imageGenerationPattern =
+        /\b(create|generate|make|draw|design|render|produce|visualize|paint|illustrate)\b.*\b(image|picture|photo|artwork|illustration|portrait|wallpaper|logo|poster|scene)\b/i;
+
+    const wantsImageGeneration =
+        imageGenerationPattern.test(userText);
+
+    if (wantsImageGeneration) {
+
+        console.log(
+            "🎨 Image-generation request detected."
+        );
+
+        try {
+            const imageResult =
+                await generateGeminiImage(userText);
+
+            return {
+                type: "image",
+                buffer: imageResult.buffer,
+                mimeType: imageResult.mimeType
+            };
+        }
+
+        catch (error) {
+            console.error(
+                "⚠️ Image generation unavailable:",
+                describeProviderError(error)
+            );
+
+            throw new Error(
+                "All AP Synapse image-generation providers are currently unavailable."
+            );
+        }
+
+    }
 
     // ==========================================
     // TEXT ROUTING

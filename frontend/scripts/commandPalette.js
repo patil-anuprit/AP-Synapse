@@ -205,3 +205,206 @@ function restoreAPSynapseSession() {
 document.addEventListener("DOMContentLoaded", () => {
     restoreAPSynapseSession();
 });
+
+/* =========================================================
+   AP SYNAPSE — WORKSPACE IDENTITY CONTROL
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const identityBtn =
+        document.getElementById("synapseIdentityBtn");
+
+    const identityPanel =
+        document.getElementById("synapseIdentityPanel");
+
+    const closeIdentity =
+        document.getElementById("closeSynapseIdentity");
+
+    if (!identityBtn || !identityPanel) {
+        console.warn(
+            "AP Synapse workspace identity controls not found."
+        );
+
+        return;
+    }
+
+
+    function openIdentityPanel() {
+
+        identityPanel.classList.add("is-open");
+
+        identityPanel.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+        identityBtn.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+    }
+
+
+    function closeIdentityPanel() {
+
+        identityPanel.classList.remove("is-open");
+
+        identityPanel.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        identityBtn.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+    }
+
+
+    identityBtn.addEventListener(
+        "click",
+        (event) => {
+
+            event.stopPropagation();
+
+            const isOpen =
+                identityPanel.classList.contains("is-open");
+
+            if (isOpen) {
+                closeIdentityPanel();
+            } else {
+                openIdentityPanel();
+            }
+
+        }
+    );
+
+
+    if (closeIdentity) {
+
+        closeIdentity.addEventListener(
+            "click",
+            (event) => {
+
+                event.stopPropagation();
+
+                closeIdentityPanel();
+
+            }
+        );
+
+    }
+
+
+    /* Close when clicking outside */
+
+    document.addEventListener(
+        "click",
+        (event) => {
+
+            if (
+                !identityPanel.contains(event.target) &&
+                !identityBtn.contains(event.target)
+            ) {
+
+                closeIdentityPanel();
+
+            }
+
+        }
+    );
+
+
+    /* Escape */
+
+    document.addEventListener(
+        "keydown",
+        (event) => {
+
+            if (event.key === "Escape") {
+                closeIdentityPanel();
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       QUICK WORKSPACE ACTIONS
+    ===================================================== */
+
+    identityPanel
+        .querySelectorAll("[data-synapse-action]")
+        .forEach((button) => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    const action =
+                        button.dataset.synapseAction;
+
+                    closeIdentityPanel();
+
+
+                    if (
+                        action === "assistant"
+                    ) {
+
+                        const assistantBtn =
+                            document.getElementById(
+                                "assistantBtn"
+                            );
+
+                        if (assistantBtn) {
+                            assistantBtn.click();
+                        }
+
+                    }
+
+
+                    if (
+                        action === "projects"
+                    ) {
+
+                        const projectsBtn =
+                            document.getElementById(
+                                "projectsBtn"
+                            );
+
+                        if (projectsBtn) {
+                            projectsBtn.click();
+                        }
+
+                    }
+
+
+                    if (
+                        action === "knowledge"
+                    ) {
+
+                        const knowledgeBtn =
+                            document.getElementById(
+                                "knowledgeBtn"
+                            );
+
+                        if (knowledgeBtn) {
+                            knowledgeBtn.click();
+                        }
+
+                    }
+
+                }
+            );
+
+        });
+
+
+    console.log(
+        "✦ AP Synapse Workspace Identity ready."
+    );
+
+});

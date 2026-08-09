@@ -3,8 +3,8 @@
 
 <head>
 
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="apple-touch-icon" href="/favicon.svg">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
 
 <meta name="google-site-verification" content="NH_3KI9BCG1Ns-rSjRYz6-Do4UoJc2RYvoJRBu4rPZE" />
 
@@ -187,22 +187,54 @@
 
         <div class="workspace-title">
 
-            <span class="workspace-badge">
-                AP SYNAPSE
-            </span>
+    <button
+    id="synapseIdentityBtn"
+    class="synapse-identity-btn"
+    type="button"
+    aria-label="Open AP Synapse workspace identity"
+    aria-expanded="false"
+>
+    <span class="synapse-identity-mark">AP</span>
 
-            <h1 id="greeting">
-                Welcome Back
-            </h1>
+    <span class="synapse-identity-copy">
+        <span class="synapse-identity-name">AP SYNAPSE</span>
+        <span class="synapse-identity-subtitle">Workspace</span>
+    </span>
 
-            <p>
-                Your Intelligent Workspace
-            </p>
+    <span class="synapse-identity-chevron">↗</span>
+</button>
 
-        </div>
+    <button
+        id="intelligenceFieldBtn"
+        class="intelligence-field-control"
+        type="button"
+        aria-label="Open Intelligence Field"
+        aria-expanded="false"
+    >
+        <span class="intelligence-field-status"></span>
+
+        <span class="intelligence-field-label">
+             SYNAPSE CORE
+        </span>
+
+        <span class="intelligence-field-divider">·</span>
+
+        <span class="intelligence-field-state">
+            ACTIVE
+        </span>
+
+        <span class="intelligence-field-chevron">
+            ↗
+        </span>
+    </button>
+
+    <p>
+        Your Intelligent Workspace
+    </p>
+
+</div>
 
     </div>
-
 
     <!-- CENTER -->
     <div class="topbar-center">
@@ -1212,6 +1244,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-
 <script type="module" src="scripts/sidebar.js"></script>
 <script type="module" src="scripts/settings.js"></script>
 <script type="module" src="scripts/topbar.js"></script>
+<script type="module" src="scripts/intelligenceField.js"></script>
 <script type="module" src="scripts/app.js"></script>
 <script type="module" src="scripts/workspace/assistant.js"></script>
 <script type="module" src="scripts/workspace/workspaceManager.js"></script>
@@ -1356,6 +1389,128 @@ href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-
 
 </div>
 
+<!-- =====================================================
+     AP SYNAPSE — WORKSPACE IDENTITY
+===================================================== -->
+
+<div
+    id="synapseIdentityPanel"
+    class="synapse-identity-panel"
+    aria-hidden="true"
+>
+
+    <div class="synapse-identity-panel-header">
+
+        <div class="synapse-identity-panel-brand">
+
+            <div class="synapse-identity-panel-mark">
+                AP
+            </div>
+
+            <div>
+                <span class="synapse-identity-panel-kicker">
+                    AP SYNAPSE
+                </span>
+
+                <h3>
+                    Intelligence Workspace
+                </h3>
+            </div>
+
+        </div>
+
+        <button
+            id="closeSynapseIdentity"
+            class="synapse-identity-close"
+            type="button"
+            aria-label="Close workspace identity"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <div class="synapse-identity-status">
+
+        <span class="synapse-status-orb"></span>
+
+        <div>
+            <strong>Synapse Core</strong>
+            <span>Intelligence system active</span>
+        </div>
+
+        <span class="synapse-live-label">
+            ACTIVE
+        </span>
+
+    </div>
+
+
+    <div class="synapse-identity-grid">
+
+        <div class="synapse-identity-stat">
+            <span>WORKSPACE</span>
+            <strong>AP Synapse</strong>
+        </div>
+
+        <div class="synapse-identity-stat">
+            <span>MODE</span>
+            <strong>Intelligent</strong>
+        </div>
+
+        <div class="synapse-identity-stat">
+            <span>ENGINE</span>
+            <strong>Ready</strong>
+        </div>
+
+        <div class="synapse-identity-stat">
+            <span>VERSION</span>
+            <strong>1.0</strong>
+        </div>
+
+    </div>
+
+
+    <div class="synapse-identity-actions">
+
+        <button
+            type="button"
+            data-synapse-action="assistant"
+        >
+            <span>✦</span>
+            Assistant
+            <b>→</b>
+        </button>
+
+        <button
+            type="button"
+            data-synapse-action="projects"
+        >
+            <span>◇</span>
+            Projects
+            <b>→</b>
+        </button>
+
+        <button
+            type="button"
+            data-synapse-action="knowledge"
+        >
+            <span>◈</span>
+            Knowledge
+            <b>→</b>
+        </button>
+
+    </div>
+
+
+    <div class="synapse-identity-footer">
+        <span>AP SYNAPSE</span>
+        <span>INTELLIGENCE WORKSPACE</span>
+    </div>
+
+</div>
+
 </div>
 
 <div id="commandPalette" class="command-palette">
@@ -1397,6 +1552,93 @@ autocomplete="off">
 </div>
 
 </div>
+
+</div>
+
+<!-- AP SYNAPSE — INTELLIGENCE FIELD PANEL -->
+
+<div
+    id="intelligenceFieldPanel"
+    class="intelligence-field-panel"
+    aria-hidden="true"
+>
+
+    <div class="intelligence-field-panel-inner">
+
+        <div class="intelligence-field-panel-header">
+
+            <div>
+                <span class="popup-kicker">
+                    AP SYNAPSE SYSTEM
+                </span>
+
+                <h2>
+                    Intelligence Field
+                </h2>
+            </div>
+
+            <button
+                id="closeIntelligenceField"
+                class="popup-close"
+                type="button"
+                aria-label="Close Intelligence Field"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <div class="intelligence-field-live">
+
+            <span class="intelligence-field-status"></span>
+
+            <div>
+                <strong>Intelligence Field Active</strong>
+                <span>AP Synapse is ready.</span>
+            </div>
+
+        </div>
+
+        <div class="intelligence-field-metrics">
+
+            <div>
+                <span>WORKSPACE</span>
+                <strong>READY</strong>
+            </div>
+
+            <div>
+                <span>INTELLIGENCE</span>
+                <strong>ADAPTIVE</strong>
+            </div>
+
+            <div>
+                <span>WEB</span>
+                <strong>AVAILABLE</strong>
+            </div>
+
+            <div>
+                <span>DOCUMENTS</span>
+                <strong>READY</strong>
+            </div>
+
+            <div>
+                <span>VOICE</span>
+                <strong>READY</strong>
+            </div>
+
+            <div>
+                <span>PROJECTS</span>
+                <strong>CONNECTED</strong>
+            </div>
+
+        </div>
+
+        <div class="intelligence-field-footer">
+            <span>AP SYNAPSE</span>
+            <span>INTELLIGENCE WORKSPACE</span>
+        </div>
+
+    </div>
 
 </div>
 

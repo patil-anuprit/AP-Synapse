@@ -17,7 +17,8 @@ export async function generateImage(prompt) {
         throw new Error("Image prompt is required.");
     }
 
-    console.log("🎨 AP SYNAPSE IMAGE ENGINE → Gemini 3.1 Flash Image");
+    console.log("🎨 AP SYNAPSE → GEMINI 3.1 FLASH IMAGE");
+    console.log("📝 Prompt:", prompt);
 
     const response = await ai.models.generateContent({
 
@@ -28,7 +29,20 @@ export async function generateImage(prompt) {
         contents: prompt,
 
         config: {
-            responseModalities: ["IMAGE"]
+
+            responseModalities: ["IMAGE"],
+
+            responseFormat: {
+                image: {
+                    aspectRatio: "16:9",
+                    imageSize: "2K"
+                }
+            },
+
+            thinkingConfig: {
+                thinkingLevel: "high"
+            }
+
         }
 
     });
@@ -43,8 +57,17 @@ export async function generateImage(prompt) {
         );
 
     if (!imagePart) {
+
+        console.error(
+            "❌ Gemini returned no image."
+        );
+
+        console.error(
+            JSON.stringify(response, null, 2)
+        );
+
         throw new Error(
-            "Gemini image generation returned no image."
+            "Gemini returned no image data."
         );
     }
 
@@ -57,6 +80,13 @@ export async function generateImage(prompt) {
             imagePart.inlineData.data,
             "base64"
         );
+
+    console.log("✅ GEMINI IMAGE GENERATED");
+    console.log("Mime type:", mimeType);
+    console.log(
+        "Buffer size:",
+        imageBuffer.length
+    );
 
     return {
         buffer: imageBuffer,

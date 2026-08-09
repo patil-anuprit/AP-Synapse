@@ -7,6 +7,7 @@ import upload from "./services/upload.js";
 import { readDocument } from "./services/documentReader.js";
 import { generateImage as generateGeminiImage } from "./services/geminiImageService.js";
 
+
 import brain from "./core/index.js";
 
 import {
@@ -229,6 +230,51 @@ const imageGenerationPattern =
 const explicitImageRequest =
     imageGenerationPattern.test(message);
 
+// ==========================================
+// BLOCK CREATOR / SELF-IDENTITY IMAGE REQUESTS
+// ==========================================
+
+const selfImageRequest =
+/\b(create|generate|make|draw|design|render|produce|paint|illustrate|visualize|depict|show|imagine)\b[\s\S]{0,500}\b(image|picture|photo|portrait|artwork|illustration)\b[\s\S]{0,500}\b(creator|your creator|yourself|you)\b/i.test(message);
+
+if (selfImageRequest) {
+
+    console.log("🔒 Self-image generation blocked.");
+
+    return res.json({
+        type: "text",
+        message:
+            "I cant generate an image of my creator or represent his person identity. It is against our privacy and policy."
+    });
+
+}
+
+// ==========================================
+// AP SYNAPSE — CREATOR IMAGE PROTECTION
+// ==========================================
+
+const creatorImageRequest =
+    /\b(your|the)\s+(creator|developer|maker|author)\b/i.test(message) ||
+    /\bcreator\s+of\s+(ap\s+synapse|this\s+ai|this\s+assistant)\b/i.test(message) ||
+    /\banuprit\s+patil\b.*\b(image|picture|photo|portrait)\b/i.test(message);
+
+if (creatorImageRequest && explicitImageRequest) {
+
+    console.log(
+        "🔒 Creator-image request blocked."
+    );
+
+    return res.status(403).json({
+        type: "blocked",
+        error:
+            "I can’t create an image of my creator."
+    });
+}
+
+// ==========================================
+// AP SYNAPSE — EXPLICIT IMAGE GENERATION
+// ==========================================
+
 if (explicitImageRequest) {
 
     console.log(
@@ -242,7 +288,6 @@ if (explicitImageRequest) {
         type: "image",
         url: imageUrl
     });
-
 }
 
 // ===============================
@@ -598,6 +643,7 @@ res.end();
 app.get("/image", async (req, res) => {
 
     const prompt = String(req.query.prompt || "").trim();
+    
 
     if (!prompt) {
         return res.status(400).json({
@@ -609,32 +655,93 @@ app.get("/image", async (req, res) => {
     console.log("Prompt:", prompt);
 
     // ==========================================
-    // 🔒 PERSONAL IMAGE PROTECTION
-    // ==========================================
+// 🔒 AP SYNAPSE — PROTECTED PERSON IMAGE GUARD
+// ==========================================
 
-    const protectedPatterns = [
-        /\banuprit\s+patil\b/i,
-        /\banuprit\b/i,
-        /\bpatil\b/i
-    ];
+const normalizedPrompt = String(prompt || "")
+    .toLowerCase()
+    .normalize("NFKC")
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 
-    const isProtectedRequest =
-        protectedPatterns.some(
-            pattern => pattern.test(prompt)
-        );
 
-    if (isProtectedRequest) {
+// ------------------------------------------
+// Identity targets
+// ------------------------------------------
 
-        console.log(
-            "🔒 Protected personal-image request blocked."
-        );
+const protectedPersonPatterns = [
 
-        return res.status(403).json({
-            error:
-                "I can't generate images depicting or reconstructing this protected person's private identity, home, vehicle, family, or personal belongings."
-        });
+    // AP Synapse creator / owner / developer
+    /\b(anuprit\s+patil)\b/,
 
-    }
+    /\b(your|the)\s+(creator|developer|owner|maker|founder)\b/,
+
+    /\b(creator|developer|owner|maker|founder)\s+of\s+(ap\s+synapse|ap\s+synapse\s+ai)\b/,
+
+    // Person who made / built / created the AI
+    /\b(the\s+)?(person|human|individual|one)\s+(who|that)\s+(made|created|built|developed|designed)\s+you\b/,
+
+    // Person behind the AI
+    /\b(the\s+)?(person|human|individual|one)\s+behind\s+(you|this\s+ai|this\s+assistant|ap\s+synapse)\b/,
+
+    // "who is your creator/developer"
+    /\bwho\s+(is|are)\s+(your|the)\s+(creator|developer|owner|maker|founder)\b/,
+
+    /\bwho\s+(made|created|built|developed|designed)\s+you\b/
+];
+
+
+// ------------------------------------------
+// Image-generation verbs
+// ------------------------------------------
+
+const imageGenerationWords =
+    /\b(create|generate|make|draw|design|render|produce|paint|illustrate|visualize|depict|show|imagine)\b/i;
+
+const imageObjectWords =
+    /\b(image|picture|photo|portrait|artwork|illustration|wallpaper|poster|scene|person|human|character)\b/i;
+
+
+// ------------------------------------------
+// Deterministic identity detection
+// ------------------------------------------
+
+const containsProtectedIdentity =
+    protectedPersonPatterns.some(
+        pattern => pattern.test(normalizedPrompt)
+    );
+
+
+// ------------------------------------------
+// Explicit image request
+// ------------------------------------------
+
+const isImageRequest =
+    imageGenerationWords.test(normalizedPrompt) &&
+    imageObjectWords.test(normalizedPrompt);
+
+
+// ------------------------------------------
+// HARD BLOCK
+// ------------------------------------------
+
+if (containsProtectedIdentity && isImageRequest) {
+
+    console.log(
+        "🔒 BLOCKED — Protected person identity image request."
+    );
+
+    return res.status(403).json({
+
+        type: "error",
+
+        code: "PROTECTED_IDENTITY",
+
+        error:
+            "I can't generate an image of my creator, developer, owner, or another protected person's identity."
+    });
+}
 
     // ==========================================
     // 🟢 PRIMARY — GEMINI IMAGE ENGINE

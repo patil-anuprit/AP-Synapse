@@ -9717,31 +9717,36 @@ body {
 
     @media (max-width: 430px) {
 
-        #speakBtn,
-        #webBtn,
-        #deepThinkBtn {
-            display: none !important;
-        }
+    /* AP SYNAPSE — FULL MOBILE INTELLIGENCE BAR */
 
-        #attachBtn,
-        #imageGenBtn,
-        #voiceBtn,
-        #sendBtn,
-        #stopBtn {
-            flex-basis: 34px !important;
-
-            width: 34px !important;
-
-            min-width: 34px !important;
-
-            height: 34px !important;
-        }
-
-        #userInput {
-            font-size: 12px !important;
-        }
-
+    #attachBtn,
+    #imageGenBtn,
+    #voiceBtn,
+    #speakBtn,
+    #webBtn,
+    #deepThinkBtn,
+    #stopBtn,
+    #sendBtn {
+        display: flex !important;
+        flex: 0 0 31px !important;
+        width: 31px !important;
+        min-width: 31px !important;
+        height: 34px !important;
+        padding: 0 !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 10px !important;
+        font-size: 13px !important;
+        flex-shrink: 0 !important;
     }
+
+    #userInput {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        font-size: 12px !important;
+    }
+
+}
 
 
     /* -----------------------------------------------------
@@ -15828,4 +15833,915 @@ body {
     body.ap-mobile-open {
         overflow: hidden !important;
     }
+}
+
+/* =========================================================
+   AP SYNAPSE — MOBILE TOPBAR ACTIONS
+   Final workspace polish
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    /* Keep the topbar as the positioning context */
+    .topbar {
+        position: relative !important;
+    }
+
+    /* Show the existing desktop action group on mobile */
+    .topbar-right {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 5px !important;
+
+        position: absolute !important;
+        right: 7px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+
+        z-index: 1000 !important;
+    }
+
+    /* Notification — visible on mobile */
+    .topbar-right #notificationBtn {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        width: 34px !important;
+        height: 34px !important;
+        min-width: 34px !important;
+        padding: 0 !important;
+
+        border-radius: 10px !important;
+    }
+
+    /* Profile — visible on mobile */
+    .topbar-right #profileBtn {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        width: 34px !important;
+        height: 34px !important;
+        min-width: 34px !important;
+        padding: 0 !important;
+
+        border-radius: 50% !important;
+    }
+
+    /* Settings stays hidden on mobile.
+       User requested only Notification + Profile. */
+    .topbar-right #settingsBtn {
+        display: none !important;
+    }
+
+    /* Prevent the title area from running underneath
+       the right-side actions */
+    .topbar-left {
+        padding-right: 82px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Make sure the actions remain clickable */
+    .topbar-right button {
+        position: relative !important;
+        z-index: 1001 !important;
+        pointer-events: auto !important;
+        cursor: pointer !important;
+    }
+}
+
+/* =========================================
+   AP SYNAPSE — INTELLIGENCE FIELD CONTROL
+========================================= */
+
+.intelligence-field-control {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    padding: 7px 10px;
+    margin: 8px 0 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    cursor: pointer;
+    color: inherit;
+    border-radius: 10px;
+    transition:
+        background .25s ease,
+        transform .25s ease;
+}
+
+.intelligence-field-control:hover {
+    background: rgba(255,255,255,.045);
+}
+
+.intelligence-field-control:active {
+    transform: scale(.985);
+}
+
+.intelligence-field-status {
+    width: 7px;
+    height: 7px;
+    min-width: 7px;
+    border-radius: 50%;
+    background: #d6b36a;
+    box-shadow:
+        0 0 0 3px rgba(214,179,106,.08),
+        0 0 14px rgba(214,179,106,.45);
+    animation: intelligencePulse 2.4s ease-in-out infinite;
+}
+
+.intelligence-field-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    color: rgba(255,255,255,.72);
+}
+
+.intelligence-field-divider {
+    color: rgba(255,255,255,.22);
+}
+
+.intelligence-field-state {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    color: #d6b36a;
+}
+
+.intelligence-field-chevron {
+    font-size: 13px;
+    color: rgba(255,255,255,.38);
+    transition: transform .25s ease;
+}
+
+.intelligence-field-control:hover .intelligence-field-chevron {
+    transform: translate(2px,-2px);
+}
+
+@keyframes intelligencePulse {
+
+    0%,100% {
+        opacity: .65;
+        transform: scale(.9);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.08);
+    }
+
+}
+
+
+/* =========================================
+   INTELLIGENCE FIELD PANEL
+========================================= */
+
+.intelligence-field-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 86px 24px 24px;
+    background: rgba(0,0,0,.18);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.intelligence-field-panel.open {
+    display: flex;
+}
+
+.intelligence-field-panel-inner {
+    width: min(430px, calc(100vw - 48px));
+    padding: 24px;
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 22px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(29,29,29,.97),
+            rgba(13,13,13,.97)
+        );
+    box-shadow:
+        0 30px 90px rgba(0,0,0,.48),
+        inset 0 1px 0 rgba(255,255,255,.035);
+    animation: intelligencePanelIn .25s ease-out;
+}
+
+@keyframes intelligencePanelIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(.985);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+.intelligence-field-panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.intelligence-field-panel-header h2 {
+    margin: 5px 0 0;
+    font-size: 22px;
+    letter-spacing: -.02em;
+}
+
+.intelligence-field-live {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid rgba(214,179,106,.12);
+    background: rgba(214,179,106,.045);
+}
+
+.intelligence-field-live strong,
+.intelligence-field-live span {
+    display: block;
+}
+
+.intelligence-field-live strong {
+    font-size: 13px;
+}
+
+.intelligence-field-live div span {
+    margin-top: 3px;
+    font-size: 11px;
+    color: rgba(255,255,255,.45);
+}
+
+.intelligence-field-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 9px;
+    margin-top: 14px;
+}
+
+.intelligence-field-metrics > div {
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,.065);
+    border-radius: 14px;
+    background: rgba(255,255,255,.025);
+}
+
+.intelligence-field-metrics span,
+.intelligence-field-metrics strong {
+    display: block;
+}
+
+.intelligence-field-metrics span {
+    font-size: 9px;
+    letter-spacing: .13em;
+    color: rgba(255,255,255,.35);
+}
+
+.intelligence-field-metrics strong {
+    margin-top: 6px;
+    font-size: 11px;
+    letter-spacing: .04em;
+    color: rgba(255,255,255,.78);
+}
+
+.intelligence-field-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 18px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,.06);
+    font-size: 9px;
+    letter-spacing: .12em;
+    color: rgba(255,255,255,.28);
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+    .intelligence-field-control {
+        margin-top: 5px;
+        padding: 6px 8px;
+        gap: 6px;
+    }
+
+    .intelligence-field-label {
+        font-size: 9px;
+    }
+
+    .intelligence-field-state {
+        font-size: 8px;
+    }
+
+    .intelligence-field-panel {
+        padding: 76px 14px 14px;
+    }
+
+    .intelligence-field-panel-inner {
+        width: calc(100vw - 28px);
+        padding: 20px;
+        border-radius: 19px;
+    }
+
+}
+
+/* AP SYNAPSE — KEEP ACTIVE ON ONE LINE */
+.intelligence-field-state {
+    white-space: nowrap !important;
+    display: inline-block !important;
+    width: max-content !important;
+    min-width: max-content !important;
+    flex-shrink: 0 !important;
+}
+
+/* AP SYNAPSE — TRUE CENTER INTELLIGENCE FIELD */
+@media (max-width: 768px) {
+
+    .topbar {
+        position: relative !important;
+    }
+
+    .topbar button[aria-label="Open Intelligence Field"] {
+        position: absolute !important;
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        width: max-content !important;
+        min-width: max-content !important;
+        white-space: nowrap !important;
+        flex-wrap: nowrap !important;
+        flex-shrink: 0 !important;
+    }
+}
+
+/* =========================================================
+   AP SYNAPSE — PREMIUM WORKSPACE IDENTITY
+   FINAL TOPBAR CONTROL
+========================================================= */
+
+.synapse-identity-btn {
+    appearance: none;
+    border: 1px solid rgba(212, 175, 92, 0.20);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,0.055),
+            rgba(255,255,255,0.018)
+        );
+
+    color: inherit;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    min-height: 38px;
+    padding: 5px 10px 5px 6px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    transition:
+        border-color .25s ease,
+        background .25s ease,
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+.synapse-identity-btn:hover {
+    border-color: rgba(212, 175, 92, 0.48);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(212,175,92,0.10),
+            rgba(255,255,255,0.035)
+        );
+
+    box-shadow:
+        0 8px 28px rgba(0,0,0,0.20),
+        inset 0 1px 0 rgba(255,255,255,0.06);
+
+    transform: translateY(-1px);
+}
+
+.synapse-identity-btn:active {
+    transform: translateY(0);
+}
+
+
+/* AP MONOGRAM */
+
+.synapse-identity-mark {
+    width: 27px;
+    height: 27px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    border: 1px solid rgba(212,175,92,0.38);
+
+    background:
+        radial-gradient(
+            circle at 30% 25%,
+            rgba(255,255,255,0.10),
+            transparent 55%
+        ),
+        rgba(212,175,92,0.055);
+
+    color: #d8b86a;
+
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: .14em;
+
+    box-shadow:
+        inset 0 0 14px rgba(212,175,92,0.045);
+}
+
+
+/* BRAND COPY */
+
+.synapse-identity-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    line-height: 1;
+}
+
+.synapse-identity-name {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .16em;
+    white-space: nowrap;
+}
+
+.synapse-identity-subtitle {
+    margin-top: 4px;
+
+    font-size: 7px;
+    font-weight: 500;
+
+    letter-spacing: .12em;
+
+    color: rgba(255,255,255,0.42);
+
+    white-space: nowrap;
+}
+
+.synapse-identity-chevron {
+    margin-left: 2px;
+
+    font-size: 12px;
+
+    color: rgba(212,175,92,0.75);
+
+    transition:
+        transform .25s ease,
+        color .25s ease;
+}
+
+.synapse-identity-btn:hover .synapse-identity-chevron {
+    transform: translate(2px,-2px);
+    color: #d8b86a;
+}
+
+
+/* =========================================================
+   IDENTITY PANEL
+========================================================= */
+
+.synapse-identity-panel {
+    position: fixed;
+
+    top: 76px;
+    left: 24px;
+
+    width: min(360px, calc(100vw - 32px));
+
+    z-index: 99999;
+
+    padding: 18px;
+
+    border-radius: 20px;
+
+    border: 1px solid rgba(212,175,92,0.20);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(24,24,24,0.98),
+            rgba(10,10,10,0.985)
+        );
+
+    box-shadow:
+        0 30px 90px rgba(0,0,0,0.58),
+        inset 0 1px 0 rgba(255,255,255,0.055);
+
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transform:
+        translateY(-8px)
+        scale(.97);
+
+    transform-origin: top left;
+
+    transition:
+        opacity .22s ease,
+        transform .22s ease,
+        visibility .22s ease;
+}
+
+.synapse-identity-panel.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+
+/* PANEL HEADER */
+
+.synapse-identity-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+.synapse-identity-panel-brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.synapse-identity-panel-mark {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    border: 1px solid rgba(212,175,92,0.32);
+
+    color: #d8b86a;
+
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .14em;
+
+    background: rgba(212,175,92,0.06);
+}
+
+.synapse-identity-panel-kicker {
+    display: block;
+
+    font-size: 7px;
+    font-weight: 800;
+    letter-spacing: .18em;
+
+    color: #d8b86a;
+}
+
+.synapse-identity-panel-header h3 {
+    margin: 5px 0 0;
+
+    font-size: 14px;
+    font-weight: 650;
+
+    color: rgba(255,255,255,0.92);
+}
+
+.synapse-identity-close {
+    width: 30px;
+    height: 30px;
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    border-radius: 9px;
+
+    background: rgba(255,255,255,0.035);
+
+    color: rgba(255,255,255,0.60);
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    transition:
+        background .2s ease,
+        color .2s ease;
+}
+
+.synapse-identity-close:hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+}
+
+
+/* STATUS */
+
+.synapse-identity-status {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px;
+
+    border-radius: 13px;
+
+    border: 1px solid rgba(255,255,255,0.065);
+
+    background: rgba(255,255,255,0.025);
+
+    margin-bottom: 12px;
+}
+
+.synapse-status-orb {
+    width: 8px;
+    height: 8px;
+
+    flex: 0 0 auto;
+
+    border-radius: 50%;
+
+    background: #d8b86a;
+
+    box-shadow:
+        0 0 0 4px rgba(212,175,92,0.08),
+        0 0 16px rgba(212,175,92,0.55);
+
+    animation: synapseStatusPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes synapseStatusPulse {
+
+    0%,100% {
+        opacity: .65;
+        transform: scale(.9);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+}
+
+.synapse-identity-status > div {
+    min-width: 0;
+    flex: 1;
+}
+
+.synapse-identity-status strong {
+    display: block;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    color: rgba(255,255,255,0.90);
+}
+
+.synapse-identity-status span {
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 8px;
+
+    color: rgba(255,255,255,0.42);
+}
+
+.synapse-live-label {
+    color: #d8b86a !important;
+
+    font-size: 7px !important;
+    font-weight: 800 !important;
+
+    letter-spacing: .15em;
+}
+
+
+/* STATS */
+
+.synapse-identity-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 7px;
+
+    margin-bottom: 12px;
+}
+
+.synapse-identity-stat {
+    padding: 11px;
+
+    border-radius: 12px;
+
+    border: 1px solid rgba(255,255,255,0.055);
+
+    background: rgba(255,255,255,0.018);
+}
+
+.synapse-identity-stat span {
+    display: block;
+
+    font-size: 6px;
+    font-weight: 800;
+
+    letter-spacing: .15em;
+
+    color: rgba(255,255,255,0.34);
+}
+
+.synapse-identity-stat strong {
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 10px;
+    font-weight: 650;
+
+    color: rgba(255,255,255,0.82);
+}
+
+
+/* QUICK ACTIONS */
+
+.synapse-identity-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.synapse-identity-actions button {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns: 24px 1fr auto;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 10px 11px;
+
+    border: 1px solid transparent;
+
+    border-radius: 11px;
+
+    background: transparent;
+
+    color: rgba(255,255,255,0.75);
+
+    text-align: left;
+
+    cursor: pointer;
+
+    font-size: 9px;
+    font-weight: 600;
+
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        color .2s ease;
+}
+
+.synapse-identity-actions button span {
+    color: #d8b86a;
+    text-align: center;
+}
+
+.synapse-identity-actions button b {
+    color: rgba(255,255,255,0.30);
+    font-size: 11px;
+}
+
+.synapse-identity-actions button:hover {
+    border-color: rgba(212,175,92,0.14);
+
+    background: rgba(212,175,92,0.055);
+
+    color: #fff;
+}
+
+.synapse-identity-actions button:hover b {
+    color: #d8b86a;
+}
+
+
+/* FOOTER */
+
+.synapse-identity-footer {
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: 14px;
+    padding-top: 12px;
+
+    border-top: 1px solid rgba(255,255,255,0.055);
+
+    font-size: 6px;
+    font-weight: 700;
+
+    letter-spacing: .15em;
+
+    color: rgba(255,255,255,0.25);
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .synapse-identity-btn {
+        min-height: 34px;
+        padding: 4px 7px 4px 5px;
+        gap: 6px;
+        border-radius: 10px;
+    }
+
+    .synapse-identity-mark {
+        width: 24px;
+        height: 24px;
+
+        border-radius: 7px;
+
+        font-size: 7px;
+    }
+
+    .synapse-identity-name {
+        font-size: 7px;
+        letter-spacing: .13em;
+    }
+
+    .synapse-identity-subtitle {
+        font-size: 5.5px;
+        margin-top: 3px;
+    }
+
+    .synapse-identity-chevron {
+        font-size: 9px;
+    }
+
+    .synapse-identity-panel {
+        top: 68px;
+        left: 12px;
+
+        width: calc(100vw - 24px);
+
+        padding: 15px;
+
+        border-radius: 18px;
+    }
+
 }

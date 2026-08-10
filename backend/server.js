@@ -963,20 +963,20 @@ app.post("/auth/google", async (req, res) => {
         };
 
         // ==========================================
-// AP SYNAPSE — WELCOME EMAIL
+// AP SYNAPSE — SIGN-IN SECURITY EMAIL
 // ==========================================
 
 try {
 
     if (user.email) {
 
-        await sendWelcomeEmail({
+        await sendSignInNotification({
             email: user.email,
             name: user.name || "AP Synapse User"
         });
 
         console.log(
-            "✉️ AP Synapse welcome email queued:",
+            "✉️ AP Synapse sign-in notification sent:",
             user.email
         );
 
@@ -984,9 +984,9 @@ try {
 
 } catch (emailError) {
 
-    // Email failure must NOT break Google Sign-In.
+    // Email failure must NEVER break Google Sign-In.
     console.error(
-        "⚠️ Welcome email failed:",
+        "⚠️ Sign-in notification failed:",
         emailError.message
     );
 

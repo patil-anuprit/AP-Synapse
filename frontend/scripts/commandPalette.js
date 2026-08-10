@@ -241,6 +241,33 @@ async function handleGoogleSignIn(response) {
 
         }
 
+        /* =========================================================
+   AP SYNAPSE — GOOGLE SIGN-IN NOTIFICATION
+========================================================= */
+
+if (
+    window.AP_Synapse_Notifications &&
+    typeof window.AP_Synapse_Notifications.add === "function"
+) {
+
+    window.AP_Synapse_Notifications.add({
+
+        title:
+            "Google Sign-In successful",
+
+        message:
+            `Welcome to AP Synapse, ${user.name}. Your Google account is securely connected to this workspace.`,
+
+        icon:
+            "✓",
+
+        type:
+            "authentication"
+
+    });
+
+}
+
         // ------------------------------------------
         // SUCCESS NOTIFICATION
         // ------------------------------------------
@@ -1036,3 +1063,749 @@ if (signOutBtn) {
     );
 
 });
+
+/* =========================================================
+   AP SYNAPSE — NOTIFICATION CENTER ENGINE
+========================================================= */
+
+(() => {
+
+    const STORAGE_KEY = "apSynapseNotifications";
+
+    const notificationBtn =
+        document.getElementById("notificationBtn");
+
+    const center =
+        document.getElementById(
+            "apSynapseNotificationCenter"
+        );
+
+    const closeBtn =
+        document.getElementById(
+            "closeAPNotificationCenter"
+        );
+
+    const list =
+        document.getElementById(
+            "apNotificationList"
+        );
+
+    const summary =
+        document.getElementById(
+            "apNotificationSummary"
+        );
+
+    const markAllBtn =
+        document.getElementById(
+            "markAllAPNotificationsRead"
+        );
+
+    const clearBtn =
+        document.getElementById(
+            "clearAPNotifications"
+        );
+
+    if (!notificationBtn || !center || !list) {
+
+        console.warn(
+            "⚠️ AP Synapse Notification Center elements not found."
+        );
+
+        return;
+    }
+
+
+    /* ---------------------------------------------------------
+       STORAGE
+    --------------------------------------------------------- */
+
+    function loadNotifications() {
+
+        try {
+
+            const saved =
+                localStorage.getItem(STORAGE_KEY);
+
+            if (!saved) return [];
+
+            const parsed =
+                JSON.parse(saved);
+
+            return Array.isArray(parsed)
+                ? parsed
+                : [];
+
+        } catch (error) {
+
+            console.error(
+                "❌ Could not load AP Synapse notifications:",
+                error
+            );
+
+            return [];
+        }
+    }
+
+
+    function saveNotifications(notifications) {
+
+        try {
+
+            localStorage.setItem(
+                STORAGE_KEY,
+                JSON.stringify(notifications)
+            );
+
+        } catch (error) {
+
+            console.error(
+                "❌ Could not save AP Synapse notifications:",
+                error
+            );
+        }
+    }
+
+
+    /* ---------------------------------------------------------
+       ID
+    --------------------------------------------------------- */
+
+    function createNotificationId() {
+
+        return (
+            "n_" +
+            Date.now() +
+            "_" +
+            Math.random()
+                .toString(36)
+                .slice(2, 9)
+        );
+    }
+
+
+    /* ---------------------------------------------------------
+       FORMAT TIME
+    --------------------------------------------------------- */
+
+    function formatNotificationTime(timestamp) {
+
+        const date =
+            new Date(timestamp);
+
+        if (Number.isNaN(date.getTime())) {
+            return "";
+        }
+
+        return date.toLocaleString(
+            undefined,
+            {
+                dateStyle: "medium",
+                timeStyle: "short"
+            }
+        );
+    }
+
+
+    /* ---------------------------------------------------------
+       BADGE
+    --------------------------------------------------------- */
+
+    function updateNotificationBadge() {
+
+        const notifications =
+            loadNotifications();
+
+        const unread =
+            notifications.filter(
+                notification =>
+                    notification.read !== true
+            ).length;
+
+
+        let badge =
+            notificationBtn.querySelector(
+                ".ap-notification-badge"
+            );
+
+
+        if (!badge) {
+
+            badge =
+                document.createElement("span");
+
+            badge.className =
+                "ap-notification-badge";
+
+            notificationBtn.appendChild(
+                badge
+            );
+        }
+
+
+        if (unread > 0) {
+
+            badge.textContent =
+                unread > 99
+                    ? "99+"
+                    : String(unread);
+
+            badge.style.display =
+                "flex";
+
+            notificationBtn.classList.add(
+                "has-notifications"
+            );
+
+        } else {
+
+            badge.textContent = "";
+
+            badge.style.display =
+                "none";
+
+            notificationBtn.classList.remove(
+                "has-notifications"
+            );
+        }
+    }
+
+
+    /* ---------------------------------------------------------
+       RENDER
+    --------------------------------------------------------- */
+
+    function renderNotifications() {
+
+        const notifications =
+            loadNotifications();
+
+
+        list.innerHTML = "";
+
+
+        if (!notifications.length) {
+
+            const empty =
+                document.createElement("div");
+
+            empty.className =
+                "ap-notification-empty";
+
+            empty.innerHTML = `
+                <div class="ap-notification-empty-icon">
+                    ✓
+                </div>
+
+                <strong>You're all caught up.</strong>
+
+                <span>
+                    Important AP Synapse activity
+                    will appear here.
+                </span>
+            `;
+
+            list.appendChild(empty);
+
+            if (summary) {
+
+                summary.textContent =
+                    "You're all caught up.";
+            }
+
+            updateNotificationBadge();
+
+            return;
+        }
+
+
+        const unread =
+            notifications.filter(
+                notification =>
+                    notification.read !== true
+            ).length;
+
+
+        if (summary) {
+
+            summary.textContent =
+                unread === 0
+                    ? "You're all caught up."
+                    : `${unread} unread notification${
+                        unread === 1
+                            ? ""
+                            : "s"
+                    }.`;
+        }
+
+
+        notifications.forEach(
+            notification => {
+
+                const item =
+                    document.createElement("article");
+
+                item.className =
+                    "ap-notification-item";
+
+
+                if (
+                    notification.read !== true
+                ) {
+
+                    item.classList.add(
+                        "unread"
+                    );
+                }
+
+
+                const icon =
+                    document.createElement("div");
+
+                icon.className =
+                    "ap-notification-item-icon";
+
+                icon.textContent =
+                    notification.icon ||
+                    "✦";
+
+
+                const content =
+                    document.createElement("div");
+
+                content.className =
+                    "ap-notification-item-content";
+
+
+                const title =
+                    document.createElement("strong");
+
+                title.textContent =
+                    notification.title ||
+                    "AP Synapse Notification";
+
+
+                const message =
+                    document.createElement("p");
+
+                message.textContent =
+                    notification.message ||
+                    "";
+
+
+                const time =
+                    document.createElement("time");
+
+                time.textContent =
+                    formatNotificationTime(
+                        notification.createdAt
+                    );
+
+
+                content.appendChild(title);
+                content.appendChild(message);
+                content.appendChild(time);
+
+
+                const actions =
+                    document.createElement("div");
+
+                actions.className =
+                    "ap-notification-item-actions";
+
+
+                if (
+                    notification.read !== true
+                ) {
+
+                    const readBtn =
+                        document.createElement("button");
+
+                    readBtn.type =
+                        "button";
+
+                    readBtn.textContent =
+                        "Mark read";
+
+                    readBtn.addEventListener(
+                        "click",
+                        event => {
+
+                            event.stopPropagation();
+
+                            markNotificationRead(
+                                notification.id
+                            );
+
+                        }
+                    );
+
+                    actions.appendChild(
+                        readBtn
+                    );
+                }
+
+
+                item.appendChild(icon);
+                item.appendChild(content);
+                item.appendChild(actions);
+
+                item.addEventListener(
+                    "click",
+                    () => {
+
+                        markNotificationRead(
+                            notification.id
+                        );
+
+                        if (
+                            notification.action
+                        ) {
+
+                            try {
+
+                                notification.action();
+
+                            } catch (error) {
+
+                                console.error(
+                                    "Notification action failed:",
+                                    error
+                                );
+                            }
+                        }
+                    }
+                );
+
+
+                list.appendChild(item);
+            }
+        );
+
+
+        updateNotificationBadge();
+    }
+
+
+    /* ---------------------------------------------------------
+       ADD
+    --------------------------------------------------------- */
+
+    function addNotification({
+
+        title =
+            "AP Synapse Notification",
+
+        message = "",
+
+        icon = "✦",
+
+        type = "system",
+
+        read = false
+
+    } = {}) {
+
+
+        const notifications =
+            loadNotifications();
+
+
+        notifications.unshift({
+
+            id:
+                createNotificationId(),
+
+            title,
+
+            message,
+
+            icon,
+
+            type,
+
+            read,
+
+            createdAt:
+                new Date().toISOString()
+
+        });
+
+
+        /*
+         * Keep the local notification history
+         * intentionally bounded.
+         */
+
+        const trimmed =
+            notifications.slice(0, 100);
+
+
+        saveNotifications(
+            trimmed
+        );
+
+
+        renderNotifications();
+    }
+
+
+    /* ---------------------------------------------------------
+       MARK READ
+    --------------------------------------------------------- */
+
+    function markNotificationRead(id) {
+
+        const notifications =
+            loadNotifications();
+
+
+        const target =
+            notifications.find(
+                notification =>
+                    notification.id === id
+            );
+
+
+        if (!target) return;
+
+
+        target.read = true;
+
+
+        saveNotifications(
+            notifications
+        );
+
+
+        renderNotifications();
+    }
+
+
+    /* ---------------------------------------------------------
+       MARK ALL READ
+    --------------------------------------------------------- */
+
+    function markAllRead() {
+
+        const notifications =
+            loadNotifications();
+
+
+        notifications.forEach(
+            notification => {
+
+                notification.read = true;
+
+            }
+        );
+
+
+        saveNotifications(
+            notifications
+        );
+
+
+        renderNotifications();
+    }
+
+
+    /* ---------------------------------------------------------
+       CLEAR
+    --------------------------------------------------------- */
+
+    function clearNotifications() {
+
+        saveNotifications([]);
+
+        renderNotifications();
+    }
+
+
+    /* ---------------------------------------------------------
+       OPEN
+    --------------------------------------------------------- */
+
+    function openCenter() {
+
+        renderNotifications();
+
+
+        center.classList.add(
+            "is-open"
+        );
+
+
+        center.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+
+        notificationBtn.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+    }
+
+
+    /* ---------------------------------------------------------
+       CLOSE
+    --------------------------------------------------------- */
+
+    function closeCenter() {
+
+        center.classList.remove(
+            "is-open"
+        );
+
+
+        center.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+
+        notificationBtn.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+    }
+
+
+    /* ---------------------------------------------------------
+       BUTTONS
+    --------------------------------------------------------- */
+
+    notificationBtn.addEventListener(
+        "click",
+        event => {
+
+            event.stopPropagation();
+
+            const isOpen =
+                center.classList.contains(
+                    "is-open"
+                );
+
+
+            if (isOpen) {
+
+                closeCenter();
+
+            } else {
+
+                openCenter();
+            }
+        }
+    );
+
+
+    if (closeBtn) {
+
+        closeBtn.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+                closeCenter();
+            }
+        );
+    }
+
+
+    if (markAllBtn) {
+
+        markAllBtn.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+                markAllRead();
+            }
+        );
+    }
+
+
+    if (clearBtn) {
+
+        clearBtn.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+                clearNotifications();
+            }
+        );
+    }
+
+
+    document.addEventListener(
+        "click",
+        event => {
+
+            if (
+                !center.contains(event.target) &&
+                !notificationBtn.contains(
+                    event.target
+                )
+            ) {
+
+                closeCenter();
+            }
+        }
+    );
+
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                closeCenter();
+            }
+        }
+    );
+
+
+    /* ---------------------------------------------------------
+       PUBLIC AP SYNAPSE API
+    --------------------------------------------------------- */
+
+    window.AP_Synapse_Notifications = {
+
+        add:
+            addNotification,
+
+        markRead:
+            markNotificationRead,
+
+        markAllRead:
+            markAllRead,
+
+        clear:
+            clearNotifications,
+
+        refresh:
+            renderNotifications
+
+    };
+
+
+    /* ---------------------------------------------------------
+       INITIALIZE
+    --------------------------------------------------------- */
+
+    renderNotifications();
+
+
+    console.log(
+        "🔔 AP Synapse Notification Center ready."
+    );
+
+})();

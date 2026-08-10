@@ -498,103 +498,6 @@ function updateAPSynapseProfile(user) {
 }
 
 // =========================================================
-// AP SYNAPSE — ACCOUNT SESSION CONTROLS
-// =========================================================
-
-function signOutAPSynapse() {
-
-    const savedUser =
-        localStorage.getItem("apSynapseUser");
-
-    let user = null;
-
-    try {
-        user = savedUser
-            ? JSON.parse(savedUser)
-            : null;
-    } catch (_) {}
-
-    // Clear AP Synapse authentication state
-    localStorage.removeItem("apSynapseUser");
-    localStorage.removeItem("apSynapseAuthenticated");
-
-    // Reset Google Identity Services
-    if (
-        window.google &&
-        google.accounts &&
-        google.accounts.id
-    ) {
-        google.accounts.id.disableAutoSelect();
-    }
-
-    // Reset profile button
-    const profileBtn =
-        document.getElementById("profileBtn");
-
-    if (profileBtn) {
-        profileBtn.innerHTML = "";
-        profileBtn.textContent = "A";
-        profileBtn.title = "Sign in to AP Synapse";
-        profileBtn.classList.remove("authenticated");
-    }
-
-    // Reset identity panel
-    const profileName =
-        document.getElementById("profileName");
-
-    const profileEmail =
-        document.getElementById("profileEmail");
-
-    const profileAvatar =
-        document.getElementById("profileAvatar");
-
-    const authenticatedStatus =
-        document.getElementById("authenticatedStatus");
-
-    const googleButton =
-        document.getElementById("googleSignInButton");
-
-    if (profileName) {
-        profileName.textContent =
-            "AP Synapse User";
-    }
-
-    if (profileEmail) {
-        profileEmail.textContent =
-            "Not signed in";
-    }
-
-    if (profileAvatar) {
-        profileAvatar.removeAttribute("src");
-        profileAvatar.style.display = "none";
-    }
-
-    if (authenticatedStatus) {
-        authenticatedStatus.textContent =
-            "Not authenticated";
-
-        authenticatedStatus.classList.remove(
-            "authenticated"
-        );
-    }
-
-    if (googleButton) {
-        googleButton.style.display = "";
-    }
-
-    showAPSynapseNotification(
-        "You have been signed out of AP Synapse.",
-        "info"
-    );
-
-    console.log(
-        "🔐 AP Synapse account signed out:",
-        user?.email || "unknown"
-    );
-}
-
-
-// =========================================================
 // AP SYNAPSE — SWITCH GOOGLE ACCOUNT
 // =========================================================
 
@@ -789,6 +692,14 @@ function signOutAPSynapse() {
     if (!confirmed) {
         return;
     }
+
+    if (
+    window.google &&
+    google.accounts &&
+    google.accounts.id
+) {
+    google.accounts.id.disableAutoSelect();
+}
 
     // Clear AP Synapse authentication state
     localStorage.removeItem("apSynapseUser");

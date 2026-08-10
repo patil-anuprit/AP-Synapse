@@ -16887,3 +16887,34 @@ body {
     background: rgba(216,180,106,.08);
     border-color: rgba(216,180,106,.35);
 }
+
+.synapse-account-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.synapse-account-action {
+    flex: 1;
+    min-height: 42px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.04);
+    color: #f5f5f5;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: .2s ease;
+}
+
+.synapse-account-action:hover {
+    background: rgba(255,255,255,.08);
+    border-color: rgba(212,175,55,.35);
+}
+
+#synapseSignOutBtn {
+    color: #e6cfcf;
+}

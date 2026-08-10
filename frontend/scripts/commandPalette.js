@@ -113,7 +113,12 @@ async function handleGoogleSignIn(response) {
     if (!response || !response.credential) {
 
         console.error(
-            "❌ Google sign-in failed: no credential received."
+            "❌ Google Sign-In failed: no credential received."
+        );
+
+        showAPSynapseNotification(
+            "Google Sign-In failed.",
+            "error"
         );
 
         return;
@@ -125,7 +130,7 @@ async function handleGoogleSignIn(response) {
             "🔄 Verifying Google account with AP Synapse..."
         );
 
-        const verificationResponse = await fetch(
+        const authResponse = await fetch(
             "https://ap-synapse-backend.onrender.com/auth/google",
             {
                 method: "POST",
@@ -141,62 +146,113 @@ async function handleGoogleSignIn(response) {
         );
 
         const result =
-            await verificationResponse.json();
+            await authResponse.json();
 
-        if (
-            !verificationResponse.ok ||
-            !result.success ||
-            !result.user
-        ) {
+        if (!authResponse.ok || !result.success) {
 
-            console.error(
-                "❌ AP Synapse Google verification failed:",
-                result
+            throw new Error(
+                result.error ||
+                "Google authentication failed."
             );
-
-            return;
         }
+
+        console.log(
+            "✅ Google account verified by AP Synapse."
+        );
+
+        const backendUser =
+            result.user;
 
         const user = {
 
             id:
-                result.user.googleId,
+                backendUser.googleId,
 
             name:
-                result.user.name ||
+                backendUser.name ||
                 "AP Synapse User",
 
             email:
-                result.user.email ||
+                backendUser.email ||
                 "",
 
             picture:
-                result.user.picture ||
+                backendUser.picture ||
                 "",
 
             emailVerified:
-                result.user.emailVerified === true,
+                backendUser.emailVerified === true,
 
             signedIn:
-                true
+                true,
+
+            provider:
+                "google",
+
+            signedInAt:
+                new Date().toISOString()
 
         };
+
+        // ------------------------------------------
+        // SAVE AUTHENTICATED AP SYNAPSE USER
+        // ------------------------------------------
 
         localStorage.setItem(
             "apSynapseUser",
             JSON.stringify(user)
         );
 
-        console.log(
-            "✅ Google account verified by AP Synapse."
+        localStorage.setItem(
+            "apSynapseAuthenticated",
+            "true"
         );
 
         console.log(
-            "AP Synapse profile:",
+            "👤 AP Synapse profile:",
             user
         );
 
+        // ------------------------------------------
+        // UPDATE TOP PROFILE BUTTON
+        // ------------------------------------------
+
         updateAPSynapseProfile(user);
+
+        // ------------------------------------------
+        // UPDATE FULL PROFILE PANEL
+        // ------------------------------------------
+
+        updateAPSynapseIdentityPanel(user);
+
+        // ------------------------------------------
+        // CLOSE GOOGLE SIGN-IN STATE
+        // ------------------------------------------
+
+        const googleButton =
+            document.getElementById(
+                "googleSignInButton"
+            );
+
+        if (googleButton) {
+
+            googleButton.style.display =
+                "none";
+
+        }
+
+        // ------------------------------------------
+        // SUCCESS NOTIFICATION
+        // ------------------------------------------
+
+        showAPSynapseNotification(
+            `Welcome to AP Synapse, ${user.name}.`,
+            "success"
+        );
+
+        console.log(
+            "🎉 AP Synapse authentication completed."
+        );
 
     }
 
@@ -207,7 +263,207 @@ async function handleGoogleSignIn(response) {
             error
         );
 
+        showAPSynapseNotification(
+            "Unable to complete Google Sign-In.",
+            "error"
+        );
+
     }
+
+}
+
+function updateAPSynapseIdentityPanel(user) {
+
+    if (!user) return;
+
+    const profileAvatar =
+        document.getElementById(
+            "profileAvatar"
+        );
+
+    const profileName =
+        document.getElementById(
+            "profileName"
+        );
+
+    const profileEmail =
+        document.getElementById(
+            "profileEmail"
+        );
+
+    const googleSignInButton =
+        document.getElementById(
+            "googleSignInButton"
+        );
+
+    if (profileName) {
+
+        profileName.textContent =
+            user.name ||
+            "AP Synapse User";
+
+    }
+
+    if (profileEmail) {
+
+        profileEmail.textContent =
+            user.email ||
+            "";
+
+    }
+
+    if (
+        profileAvatar &&
+        user.picture
+    ) {
+
+        profileAvatar.src =
+            user.picture;
+
+        profileAvatar.style.display =
+            "block";
+
+    }
+
+    if (googleSignInButton) {
+
+        googleSignInButton.style.display =
+            "none";
+
+    }
+
+    // Authenticated status
+
+    const authenticatedStatus =
+        document.getElementById(
+            "authenticatedStatus"
+        );
+
+    if (authenticatedStatus) {
+
+        authenticatedStatus.textContent =
+            user.emailVerified
+                ? "Google Verified"
+                : "Authenticated";
+
+        authenticatedStatus.classList.add(
+            "authenticated"
+        );
+
+    }
+
+}
+
+function showAPSynapseNotification(
+    message,
+    type = "info"
+) {
+
+    let container =
+        document.getElementById(
+            "apSynapseNotifications"
+        );
+
+    if (!container) {
+
+        container =
+            document.createElement("div");
+
+        container.id =
+            "apSynapseNotifications";
+
+        container.style.position =
+            "fixed";
+
+        container.style.top =
+            "24px";
+
+        container.style.right =
+            "24px";
+
+        container.style.zIndex =
+            "999999";
+
+        container.style.display =
+            "flex";
+
+        container.style.flexDirection =
+            "column";
+
+        container.style.gap =
+            "10px";
+
+        document.body.appendChild(
+            container
+        );
+
+    }
+
+    const notification =
+        document.createElement("div");
+
+    notification.textContent =
+        message;
+
+    notification.style.padding =
+        "14px 18px";
+
+    notification.style.borderRadius =
+        "12px";
+
+    notification.style.background =
+        "#171717";
+
+    notification.style.border =
+        "1px solid rgba(255,255,255,.12)";
+
+    notification.style.color =
+        "#fff";
+
+    notification.style.fontSize =
+        "14px";
+
+    notification.style.boxShadow =
+        "0 10px 40px rgba(0,0,0,.35)";
+
+    notification.style.opacity =
+        "0";
+
+    notification.style.transform =
+        "translateY(-8px)";
+
+    notification.style.transition =
+        "all .25s ease";
+
+    container.appendChild(
+        notification
+    );
+
+    requestAnimationFrame(() => {
+
+        notification.style.opacity =
+            "1";
+
+        notification.style.transform =
+            "translateY(0)";
+
+    });
+
+    setTimeout(() => {
+
+        notification.style.opacity =
+            "0";
+
+        notification.style.transform =
+            "translateY(-8px)";
+
+        setTimeout(() => {
+
+            notification.remove();
+
+        }, 300);
+
+    }, 4000);
 
 }
 
@@ -242,30 +498,81 @@ function updateAPSynapseProfile(user) {
 }
 
 function restoreAPSynapseSession() {
+
     try {
-        const savedUser = localStorage.getItem("apSynapseUser");
 
-        if (!savedUser) return;
+        const savedUser =
+            localStorage.getItem(
+                "apSynapseUser"
+            );
 
-        const user = JSON.parse(savedUser);
-
-        if (user && user.signedIn) {
-            updateAPSynapseProfile(user);
+        if (!savedUser) {
 
             console.log(
-                "AP Synapse session restored:",
-                user.name
+                "ℹ️ No AP Synapse session found."
             );
+
+            return;
+
         }
 
-    } catch (error) {
+        const user =
+            JSON.parse(savedUser);
+
+        if (
+            user &&
+            user.signedIn
+        ) {
+
+            console.log(
+                "🔄 Restoring AP Synapse authenticated session..."
+            );
+
+            updateAPSynapseProfile(
+                user
+            );
+
+            updateAPSynapseIdentityPanel(
+                user
+            );
+
+            const googleButton =
+                document.getElementById(
+                    "googleSignInButton"
+                );
+
+            if (googleButton) {
+
+                googleButton.style.display =
+                    "none";
+
+            }
+
+            console.log(
+                "✅ AP Synapse authenticated session restored."
+            );
+
+        }
+
+    }
+
+    catch (error) {
+
         console.error(
-            "Could not restore AP Synapse session:",
+            "❌ Could not restore AP Synapse session:",
             error
         );
 
-        localStorage.removeItem("apSynapseUser");
+        localStorage.removeItem(
+            "apSynapseUser"
+        );
+
+        localStorage.removeItem(
+            "apSynapseAuthenticated"
+        );
+
     }
+
 }
 
 document.addEventListener("DOMContentLoaded", () => {

@@ -844,6 +844,327 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* =========================================================
+   AP SYNAPSE — MOBILE SIDEBAR TOGGLE
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const mobileSidebarBtn =
+        document.getElementById("mobileSidebarBtn");
+
+    const sidebar =
+        document.querySelector(".sidebar");
+
+    if (!mobileSidebarBtn || !sidebar) {
+        console.warn(
+            "⚠️ Mobile sidebar controls not found."
+        );
+        return;
+    }
+
+
+    function openMobileSidebar() {
+
+        sidebar.classList.add("mobile-open");
+
+        mobileSidebarBtn.classList.add("is-open");
+
+        mobileSidebarBtn.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+        mobileSidebarBtn.setAttribute(
+            "aria-label",
+            "Close navigation"
+        );
+
+    }
+
+
+    function closeMobileSidebar() {
+
+        sidebar.classList.remove("mobile-open");
+
+        mobileSidebarBtn.classList.remove("is-open");
+
+        mobileSidebarBtn.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        mobileSidebarBtn.setAttribute(
+            "aria-label",
+            "Open navigation"
+        );
+
+    }
+
+
+    mobileSidebarBtn.addEventListener(
+        "click",
+        (event) => {
+
+            event.stopPropagation();
+
+            const isOpen =
+                sidebar.classList.contains(
+                    "mobile-open"
+                );
+
+            if (isOpen) {
+                closeMobileSidebar();
+            } else {
+                openMobileSidebar();
+            }
+
+        }
+    );
+
+
+    /* Close when tapping outside */
+
+    document.addEventListener(
+        "click",
+        (event) => {
+
+            if (
+                window.innerWidth <= 768 &&
+                sidebar.classList.contains("mobile-open") &&
+                !sidebar.contains(event.target) &&
+                !mobileSidebarBtn.contains(event.target)
+            ) {
+
+                closeMobileSidebar();
+
+            }
+
+        }
+    );
+
+
+    /* Escape closes */
+
+    document.addEventListener(
+        "keydown",
+        (event) => {
+
+            if (
+                event.key === "Escape" &&
+                window.innerWidth <= 768
+            ) {
+
+                closeMobileSidebar();
+
+            }
+
+        }
+    );
+
+
+    /* If resized back to desktop, reset mobile state */
+
+    window.addEventListener(
+        "resize",
+        () => {
+
+            if (window.innerWidth > 768) {
+                closeMobileSidebar();
+            }
+
+        }
+    );
+
+});
+
+/* =========================================================
+   AP SYNAPSE — PROFILE PANEL CONTROLLER
+   Opens ONLY from an explicit user action.
+   Never opens automatically on refresh.
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const profileBtn =
+        document.getElementById("profileBtn");
+
+    const profileCard =
+        document.getElementById("profileCard");
+
+    const closeProfile =
+        document.getElementById("closeProfile");
+
+    if (!profileBtn || !profileCard) {
+
+        console.warn(
+            "⚠️ AP Synapse Profile controls not found."
+        );
+
+        return;
+    }
+
+
+    /* -----------------------------------------
+       ALWAYS START CLOSED
+    ----------------------------------------- */
+
+    profileCard.classList.remove("active");
+
+    profileCard.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+    profileBtn.setAttribute(
+        "aria-expanded",
+        "false"
+    );
+
+
+    /* -----------------------------------------
+       OPEN
+    ----------------------------------------- */
+
+    function openProfile() {
+
+        profileCard.classList.add("active");
+
+        profileCard.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+        profileBtn.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       CLOSE
+    ----------------------------------------- */
+
+    function closeProfilePanel() {
+
+        profileCard.classList.remove("active");
+
+        profileCard.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        profileBtn.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       PROFILE BUTTON
+    ----------------------------------------- */
+
+    profileBtn.addEventListener(
+        "click",
+        (event) => {
+
+            event.stopPropagation();
+
+            const isOpen =
+                profileCard.classList.contains(
+                    "active"
+                );
+
+            if (isOpen) {
+
+                closeProfilePanel();
+
+            } else {
+
+                openProfile();
+
+            }
+
+        }
+    );
+
+
+    /* -----------------------------------------
+       CLOSE BUTTON
+    ----------------------------------------- */
+
+    if (closeProfile) {
+
+        closeProfile.addEventListener(
+            "click",
+            (event) => {
+
+                event.stopPropagation();
+
+                closeProfilePanel();
+
+            }
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       ESCAPE
+    ----------------------------------------- */
+
+    document.addEventListener(
+        "keydown",
+        (event) => {
+
+            if (event.key === "Escape") {
+
+                closeProfilePanel();
+
+            }
+
+        }
+    );
+
+
+    /* -----------------------------------------
+       CLICK OUTSIDE
+    ----------------------------------------- */
+
+    document.addEventListener(
+        "click",
+        (event) => {
+
+            if (
+                profileCard.classList.contains(
+                    "active"
+                ) &&
+                !profileCard.contains(
+                    event.target
+                ) &&
+                !profileBtn.contains(
+                    event.target
+                )
+            ) {
+
+                closeProfilePanel();
+
+            }
+
+        }
+    );
+
+
+    console.log(
+        "👤 AP Synapse Profile Controller ready."
+    );
+
+});
+
+/* =========================================================
    AP SYNAPSE — WORKSPACE IDENTITY CONTROL
 ========================================================= */
 

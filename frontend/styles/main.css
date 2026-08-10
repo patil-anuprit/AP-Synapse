@@ -16954,14 +16954,27 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — PREMIUM PROFILE ACCOUNT CONTROLS
+   AP SYNAPSE — PREMIUM PROFILE PANEL
+   Compact • Responsive • Account Controls Always Accessible
 ========================================================= */
 
 #profileCard {
-    max-height: min(760px, calc(100vh - 40px));
+    width: min(440px, calc(100vw - 32px));
+    max-height: min(760px, calc(100dvh - 32px));
+
     overflow-y: auto;
+    overflow-x: hidden;
+
     scrollbar-width: thin;
+    scrollbar-gutter: stable;
+
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+
+    box-sizing: border-box;
 }
+
+/* Keep profile content clean on narrow screens */
 
 #profileCard .profile-identity {
     min-width: 0;
@@ -16976,39 +16989,35 @@ body {
     word-break: break-word;
 }
 
-.authenticated-status {
-    display: inline-flex;
-    align-items: center;
-    width: fit-content;
-    padding: 4px 9px;
-    border-radius: 999px;
-    font-size: 11px;
-    letter-spacing: .02em;
-    color: rgba(255,255,255,.58);
-    background: rgba(255,255,255,.045);
-    border: 1px solid rgba(255,255,255,.08);
-}
+/* =========================================================
+   ACCOUNT SECTION
+   The controls remain visible while profile content scrolls.
+========================================================= */
 
-.authenticated-status.authenticated {
-    color: #d9c27b;
-    border-color: rgba(217,194,123,.25);
-    background: rgba(217,194,123,.07);
-}
+#profileCard .profile-account-section {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
 
-.profile-section-label {
-    margin: 18px 0 9px;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: .13em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,.38);
-}
-
-.profile-account-section {
     margin-top: 20px;
-    padding-top: 17px;
-    border-top: 1px solid rgba(255,255,255,.08);
+    padding-top: 15px;
+    padding-bottom: 14px;
+
+    border-top: 1px solid rgba(255,255,255,.09);
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(14,14,14,.78),
+            rgba(14,14,14,.97) 24%,
+            rgba(14,14,14,1)
+        );
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
 }
+
+/* Account buttons */
 
 .profile-account-actions {
     display: grid;
@@ -17017,7 +17026,7 @@ body {
 }
 
 .synapse-account-action {
-    min-height: 42px;
+    min-height: 44px;
     padding: 10px 14px;
 
     border-radius: 11px;
@@ -17035,7 +17044,8 @@ body {
     transition:
         background .2s ease,
         border-color .2s ease,
-        transform .2s ease;
+        transform .2s ease,
+        box-shadow .2s ease;
 }
 
 .synapse-account-action:hover {
@@ -17048,8 +17058,13 @@ body {
     transform: translateY(0);
 }
 
+.synapse-account-action:focus-visible {
+    outline: 2px solid rgba(217,194,123,.55);
+    outline-offset: 2px;
+}
+
 #synapseSignOutBtn {
-    color: rgba(255,255,255,.82);
+    color: rgba(255,255,255,.84);
 }
 
 #synapseSwitchAccountBtn {
@@ -17057,14 +17072,940 @@ body {
     border-color: rgba(217,194,123,.18);
 }
 
+/* =========================================================
+   MOBILE
+========================================================= */
+
 @media (max-width: 600px) {
 
     #profileCard {
-        max-height: calc(100vh - 24px);
+        width: calc(100vw - 20px);
+        max-width: 430px;
+
+        max-height: calc(100dvh - 20px);
+
+        border-radius: 22px;
+
+        scrollbar-width: none;
+    }
+
+    #profileCard::-webkit-scrollbar {
+        display: none;
+    }
+
+    #profileCard .profile-account-section {
+        margin-top: 14px;
+        padding-top: 13px;
+        padding-bottom: max(14px, env(safe-area-inset-bottom));
     }
 
     .profile-account-actions {
         grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .synapse-account-action {
+        min-height: 48px;
+        font-size: 13px;
+    }
+}
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 380px) {
+
+    #profileCard {
+        width: calc(100vw - 12px);
+        max-height: calc(100dvh - 12px);
+    }
+
+    #profileCard .profile-account-section {
+        padding-top: 11px;
+    }
+
+    .synapse-account-action {
+        min-height: 46px;
+    }
+}
+
+/* =========================================================
+   AP SYNAPSE — PROFILE PANEL
+   Premium responsive sizing
+========================================================= */
+
+#profileCard {
+    width: min(440px, calc(100vw - 32px));
+    max-height: min(760px, calc(100dvh - 32px));
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+/* Keep the profile header fixed */
+#profileCard > .popup-header {
+    flex-shrink: 0;
+}
+
+/* Profile information can scroll */
+#profileCard .profile-hero,
+#profileCard .profile-status,
+#profileCard .profile-details,
+#profileCard .profile-section-label,
+#profileCard .profile-capabilities,
+#profileCard .google-signin-section {
+    flex-shrink: 0;
+}
+
+/* Account area remains accessible */
+#profileCard .profile-account-section {
+    flex-shrink: 0;
+    margin-top: auto;
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    #profileCard {
+        width: calc(100vw - 20px);
+        max-height: calc(100dvh - 20px);
+        border-radius: 22px;
+    }
+
+    #profileCard .popup-header {
+        flex-shrink: 0;
+    }
+
+    #profileCard .profile-account-section {
+        margin-top: 14px;
+        padding-top: 14px;
+        padding-bottom: max(14px, env(safe-area-inset-bottom));
+    }
+
+    .profile-account-actions {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .synapse-account-action {
+        min-height: 46px;
+    }
+}
+
+/* =========================================================
+   AP SYNAPSE — MOBILE COMMAND DOCK
+   Unified • Connected • Premium • Touch Optimized
+========================================================= */
+
+@media (max-width: 600px) {
+
+    /* ONE unified command surface */
+    .command-bar {
+        width: calc(100% - 20px) !important;
+        max-width: 560px !important;
+
+        margin: 0 auto !important;
+        padding: 10px 10px 8px !important;
+
+        display: grid !important;
+
+        /* Input row + control rail */
+        grid-template-columns: 1fr auto !important;
+        grid-template-rows: auto auto !important;
+
+        gap: 7px 8px !important;
+
+        box-sizing: border-box !important;
+
+        border-radius: 20px !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(255,255,255,.055),
+                rgba(255,255,255,.025)
+            ) !important;
+
+        border: 1px solid rgba(255,255,255,.105) !important;
+
+        box-shadow:
+            0 14px 40px rgba(0,0,0,.28),
+            inset 0 1px 0 rgba(255,255,255,.045) !important;
+
+        backdrop-filter: blur(22px) saturate(120%) !important;
+        -webkit-backdrop-filter: blur(22px) saturate(120%) !important;
+
+        overflow: hidden !important;
+    }
+
+
+    /* =====================================================
+       INPUT
+    ===================================================== */
+
+    .command-bar #userInput {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+
+        width: 100% !important;
+        min-width: 0 !important;
+
+        height: 48px !important;
+        min-height: 48px !important;
+
+        margin: 0 !important;
+        padding: 0 13px !important;
+
+        box-sizing: border-box !important;
+
+        border: 0 !important;
+        outline: none !important;
+
+        background: transparent !important;
+
+        color: rgba(255,255,255,.94) !important;
+
+        font-size: 15px !important;
+        line-height: 1.4 !important;
+    }
+
+    .command-bar #userInput::placeholder {
+        color: rgba(255,255,255,.42) !important;
+        opacity: 1 !important;
+    }
+
+
+    /* =====================================================
+       SEND
+    ===================================================== */
+
+    .command-bar #sendBtn {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+
+        width: 48px !important;
+        height: 48px !important;
+        min-width: 48px !important;
+        min-height: 48px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        flex-shrink: 0 !important;
+
+        border-radius: 14px !important;
+
+        border: 1px solid rgba(217,194,123,.22) !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(217,194,123,.16),
+                rgba(217,194,123,.055)
+            ) !important;
+
+        color: #d9c27b !important;
+
+        font-size: 20px !important;
+
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,.07) !important;
+
+        transition:
+            transform .18s ease,
+            background .18s ease,
+            border-color .18s ease !important;
+    }
+
+    .command-bar #sendBtn:active {
+        transform: scale(.94) !important;
+    }
+
+
+    /* =====================================================
+       LOWER CONTROL RAIL
+       Attach • Image • Voice • Speak • Web • Think • Send
+       The controls remain INSIDE the same command surface.
+    ===================================================== */
+
+    .command-bar::after {
+        content: "" !important;
+
+        grid-column: 1 / -1 !important;
+        grid-row: 2 !important;
+
+        height: 1px !important;
+
+        width: 100% !important;
+
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,.075) 12%,
+                rgba(255,255,255,.075) 88%,
+                transparent
+            ) !important;
+
+        pointer-events: none !important;
+    }
+
+
+    /* Put the seven controls into a single connected rail */
+
+    .command-bar #attachBtn,
+    .command-bar #imageGenBtn,
+    .command-bar #voiceBtn,
+    .command-bar #speakBtn,
+    .command-bar #webBtn,
+    .command-bar #deepThinkBtn,
+    .command-bar #sendBtn {
+        box-sizing: border-box !important;
+    }
+
+
+    /* =====================================================
+       TOOL BUTTONS
+    ===================================================== */
+
+    .command-bar #attachBtn,
+    .command-bar #imageGenBtn,
+    .command-bar #voiceBtn,
+    .command-bar #speakBtn,
+    .command-bar #webBtn,
+    .command-bar #deepThinkBtn {
+
+        width: 38px !important;
+        height: 38px !important;
+        min-width: 38px !important;
+        min-height: 38px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        flex-shrink: 1 !important;
+
+        border-radius: 11px !important;
+
+        border: 1px solid transparent !important;
+
+        background: transparent !important;
+
+        color: rgba(255,255,255,.56) !important;
+
+        font-size: 16px !important;
+
+        transition:
+            color .18s ease,
+            background .18s ease,
+            border-color .18s ease,
+            transform .18s ease !important;
+    }
+
+
+    /* =====================================================
+       EVEN CONTROL DISTRIBUTION
+       Seven controls share the complete lower rail.
+    ===================================================== */
+
+    .command-bar {
+        --mobile-command-gap: 4px;
+    }
+
+    .command-bar #attachBtn {
+        margin-left: 2px !important;
+    }
+
+    .command-bar #deepThinkBtn {
+        margin-right: 2px !important;
+    }
+
+
+    /* =====================================================
+       HOVER / ACTIVE
+    ===================================================== */
+
+    .command-bar #attachBtn:hover,
+    .command-bar #imageGenBtn:hover,
+    .command-bar #voiceBtn:hover,
+    .command-bar #speakBtn:hover,
+    .command-bar #webBtn:hover,
+    .command-bar #deepThinkBtn:hover {
+
+        color: rgba(255,255,255,.92) !important;
+
+        background: rgba(255,255,255,.055) !important;
+
+        border-color: rgba(255,255,255,.075) !important;
+
+        transform: translateY(-1px) !important;
+    }
+
+    .command-bar #attachBtn:active,
+    .command-bar #imageGenBtn:active,
+    .command-bar #voiceBtn:active,
+    .command-bar #speakBtn:active,
+    .command-bar #webBtn:active,
+    .command-bar #deepThinkBtn:active {
+
+        transform: scale(.93) !important;
+    }
+
+
+    /* =====================================================
+       ACTIVE INTELLIGENCE STATES
+    ===================================================== */
+
+    .command-bar #webBtn.active,
+    .command-bar #deepThinkBtn.active,
+    .command-bar #voiceBtn.active,
+    .command-bar #speakBtn.active {
+
+        color: #d9c27b !important;
+
+        background: rgba(217,194,123,.075) !important;
+
+        border-color: rgba(217,194,123,.18) !important;
+    }
+
+
+    /* =====================================================
+       STOP
+    ===================================================== */
+
+    .command-bar #stopBtn {
+        width: 38px !important;
+        height: 38px !important;
+        min-width: 38px !important;
+        min-height: 38px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        border-radius: 11px !important;
+
+        background: rgba(255,255,255,.045) !important;
+
+        border: 1px solid rgba(255,255,255,.08) !important;
+
+        color: rgba(255,255,255,.72) !important;
+    }
+
+
+    /* =====================================================
+       ACCESSIBILITY
+    ===================================================== */
+
+    .command-bar button:focus-visible {
+        outline: 2px solid rgba(217,194,123,.5) !important;
+        outline-offset: 2px !important;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   Keep everything compact without breaking the dock.
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .command-bar {
+        width: calc(100% - 12px) !important;
+        padding: 8px 7px 7px !important;
+        border-radius: 18px !important;
+        gap: 6px !important;
+    }
+
+    .command-bar #userInput {
+        height: 46px !important;
+        min-height: 46px !important;
+        padding-left: 10px !important;
+        font-size: 14px !important;
+    }
+
+    .command-bar #sendBtn {
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+    }
+
+    .command-bar #attachBtn,
+    .command-bar #imageGenBtn,
+    .command-bar #voiceBtn,
+    .command-bar #speakBtn,
+    .command-bar #webBtn,
+    .command-bar #deepThinkBtn,
+    .command-bar #stopBtn {
+
+        width: 35px !important;
+        height: 35px !important;
+        min-width: 35px !important;
+        min-height: 35px !important;
+
+        font-size: 15px !important;
+    }
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL MOBILE COMMAND DOCK
+   ONE SURFACE • 2 ROWS • 7 CONTROL ICONS
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .command-bar {
+        width: calc(100% - 20px) !important;
+        max-width: 560px !important;
+
+        margin: 0 auto !important;
+        padding: 8px 9px 7px !important;
+
+        display: grid !important;
+
+        /* EXACTLY 7 equal control columns */
+        grid-template-columns:
+            repeat(7, minmax(0, 1fr)) !important;
+
+        grid-template-rows:
+            46px 1px 38px !important;
+
+        column-gap: 3px !important;
+        row-gap: 5px !important;
+
+        box-sizing: border-box !important;
+
+        border-radius: 19px !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(255,255,255,.055),
+                rgba(255,255,255,.025)
+            ) !important;
+
+        border: 1px solid rgba(255,255,255,.10) !important;
+
+        box-shadow:
+            0 12px 32px rgba(0,0,0,.28),
+            inset 0 1px 0 rgba(255,255,255,.045) !important;
+
+        backdrop-filter: blur(20px) saturate(120%) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(120%) !important;
+
+        overflow: hidden !important;
+    }
+
+
+    /* =====================================================
+       INPUT — TOP ROW
+    ===================================================== */
+
+    .command-bar #userInput {
+        grid-column: 1 / 7 !important;
+        grid-row: 1 !important;
+
+        width: 100% !important;
+        min-width: 0 !important;
+
+        height: 46px !important;
+        min-height: 46px !important;
+
+        margin: 0 !important;
+        padding: 0 10px !important;
+
+        border: 0 !important;
+        outline: none !important;
+
+        background: transparent !important;
+
+        color: rgba(255,255,255,.94) !important;
+
+        font-size: 14px !important;
+        line-height: 1.4 !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .command-bar #userInput::placeholder {
+        color: rgba(255,255,255,.40) !important;
+        opacity: 1 !important;
+    }
+
+
+    /* =====================================================
+       SEND — TOP RIGHT
+    ===================================================== */
+
+    .command-bar #sendBtn {
+        grid-column: 7 !important;
+        grid-row: 1 !important;
+
+        width: 46px !important;
+        height: 46px !important;
+        min-width: 46px !important;
+        min-height: 46px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        border-radius: 13px !important;
+
+        border: 1px solid rgba(217,194,123,.22) !important;
+
+        background:
+            rgba(217,194,123,.075) !important;
+
+        color: #d9c27b !important;
+
+        font-size: 19px !important;
+
+        box-sizing: border-box !important;
+
+        transition:
+            transform .16s ease,
+            background .16s ease !important;
+    }
+
+    .command-bar #sendBtn:active {
+        transform: scale(.93) !important;
+    }
+
+
+    /* =====================================================
+       SUBTLE INTERNAL DIVIDER
+    ===================================================== */
+
+    .command-bar::after {
+        content: "" !important;
+
+        grid-column: 1 / -1 !important;
+        grid-row: 2 !important;
+
+        width: 100% !important;
+        height: 1px !important;
+
+        background:
+            rgba(255,255,255,.065) !important;
+
+        pointer-events: none !important;
+    }
+
+
+    /* =====================================================
+       SEVEN CONTROL POSITIONS
+       
+       1 Attach
+       2 Image
+       3 Voice
+       4 Speak
+       5 Web
+       6 Think
+       7 Stop
+    ===================================================== */
+
+    .command-bar #attachBtn {
+        grid-column: 1 !important;
+        grid-row: 3 !important;
+    }
+
+    .command-bar #imageGenBtn {
+        grid-column: 2 !important;
+        grid-row: 3 !important;
+    }
+
+    .command-bar #voiceBtn {
+        grid-column: 3 !important;
+        grid-row: 3 !important;
+    }
+
+    .command-bar #speakBtn {
+        grid-column: 4 !important;
+        grid-row: 3 !important;
+    }
+
+    .command-bar #webBtn {
+        grid-column: 5 !important;
+        grid-row: 3 !important;
+    }
+
+    .command-bar #deepThinkBtn {
+        grid-column: 6 !important;
+        grid-row: 3 !important;
+    }
+
+    .command-bar #stopBtn {
+        grid-column: 7 !important;
+        grid-row: 3 !important;
+    }
+
+
+    /* =====================================================
+       ALL 7 CONTROL BUTTONS
+    ===================================================== */
+
+    .command-bar #attachBtn,
+    .command-bar #imageGenBtn,
+    .command-bar #voiceBtn,
+    .command-bar #speakBtn,
+    .command-bar #webBtn,
+    .command-bar #deepThinkBtn,
+    .command-bar #stopBtn {
+
+        width: 100% !important;
+        height: 38px !important;
+        min-width: 0 !important;
+        min-height: 38px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        box-sizing: border-box !important;
+
+        border-radius: 10px !important;
+
+        border: 1px solid transparent !important;
+
+        background: transparent !important;
+
+        color: rgba(255,255,255,.58) !important;
+
+        font-size: 15px !important;
+
+        overflow: hidden !important;
+
+        transition:
+            background .16s ease,
+            border-color .16s ease,
+            color .16s ease,
+            transform .16s ease !important;
+    }
+
+
+    /* =====================================================
+       CONTROL INTERACTION
+    ===================================================== */
+
+    .command-bar #attachBtn:hover,
+    .command-bar #imageGenBtn:hover,
+    .command-bar #voiceBtn:hover,
+    .command-bar #speakBtn:hover,
+    .command-bar #webBtn:hover,
+    .command-bar #deepThinkBtn:hover,
+    .command-bar #stopBtn:hover {
+
+        background: rgba(255,255,255,.055) !important;
+
+        border-color: rgba(255,255,255,.07) !important;
+
+        color: rgba(255,255,255,.92) !important;
+    }
+
+    .command-bar #attachBtn:active,
+    .command-bar #imageGenBtn:active,
+    .command-bar #voiceBtn:active,
+    .command-bar #speakBtn:active,
+    .command-bar #webBtn:active,
+    .command-bar #deepThinkBtn:active,
+    .command-bar #stopBtn:active {
+
+        transform: scale(.91) !important;
+    }
+
+
+    /* Active intelligence tools */
+
+    .command-bar #webBtn.active,
+    .command-bar #deepThinkBtn.active,
+    .command-bar #voiceBtn.active,
+    .command-bar #speakBtn.active {
+
+        color: #d9c27b !important;
+
+        background: rgba(217,194,123,.07) !important;
+
+        border-color: rgba(217,194,123,.16) !important;
+    }
+
+
+    /* Accessibility */
+
+    .command-bar button:focus-visible {
+        outline: 2px solid rgba(217,194,123,.50) !important;
+        outline-offset: 1px !important;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .command-bar {
+        width: calc(100% - 12px) !important;
+
+        padding: 7px 7px 6px !important;
+
+        grid-template-rows:
+            44px 1px 36px !important;
+
+        column-gap: 2px !important;
+        row-gap: 4px !important;
+
+        border-radius: 18px !important;
+    }
+
+    .command-bar #userInput {
+        height: 44px !important;
+        min-height: 44px !important;
+
+        padding-left: 8px !important;
+
+        font-size: 13.5px !important;
+    }
+
+    .command-bar #sendBtn {
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+    }
+
+    .command-bar #attachBtn,
+    .command-bar #imageGenBtn,
+    .command-bar #voiceBtn,
+    .command-bar #speakBtn,
+    .command-bar #webBtn,
+    .command-bar #deepThinkBtn,
+    .command-bar #stopBtn {
+
+        height: 36px !important;
+        min-height: 36px !important;
+
+        border-radius: 9px !important;
+
+        font-size: 14px !important;
+    }
+}
+
+/* =========================================================
+   AP SYNAPSE — PROFILE PANEL
+   SINGLE SOURCE OF TRUTH
+========================================================= */
+
+#profileCard {
+    display: none;
+}
+
+#profileCard.active {
+    display: block;
+}
+
+/* =========================================================
+   AP SYNAPSE — PREMIUM MOBILE SIDEBAR TOGGLE
+========================================================= */
+
+.mobile-sidebar-btn {
+    display: none;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 12px;
+    background: rgba(255,255,255,.035);
+    color: #fff;
+    cursor: pointer;
+
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.mobile-sidebar-btn:hover {
+    background: rgba(255,255,255,.07);
+    border-color: rgba(217,194,123,.28);
+}
+
+.mobile-sidebar-btn:active {
+    transform: scale(.96);
+}
+
+.mobile-sidebar-btn span {
+    display: block;
+    width: 18px;
+    height: 1.5px;
+    border-radius: 999px;
+    background: currentColor;
+
+    transition:
+        transform .22s ease,
+        opacity .18s ease,
+        width .22s ease;
+}
+
+
+/* OPEN STATE — turns ☰ into × */
+
+.mobile-sidebar-btn.is-open span:nth-child(1) {
+    transform: translateY(6.5px) rotate(45deg);
+}
+
+.mobile-sidebar-btn.is-open span:nth-child(2) {
+    opacity: 0;
+    width: 0;
+}
+
+.mobile-sidebar-btn.is-open span:nth-child(3) {
+    transform: translateY(-6.5px) rotate(-45deg);
+}
+
+
+/* MOBILE ONLY */
+
+@media (max-width: 768px) {
+
+    .mobile-sidebar-btn {
+        display: flex;
     }
 
 }

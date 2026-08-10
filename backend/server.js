@@ -7,7 +7,10 @@ import upload from "./services/upload.js";
 import { readDocument } from "./services/documentReader.js";
 import { generateImage as generateGeminiImage } from "./services/geminiImageService.js";
 import { OAuth2Client } from "google-auth-library";
-import { sendWelcomeEmail } from "./services/emailService.js";
+import {
+    sendWelcomeEmail,
+    sendSignInNotification
+} from "./services/emailService.js";
 
 
 import brain from "./core/index.js";

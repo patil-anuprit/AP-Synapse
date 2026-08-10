@@ -16952,3 +16952,119 @@ body {
 #synapseSwitchAccountBtn {
     color: #d8c38a;
 }
+
+/* =========================================================
+   AP SYNAPSE — PREMIUM PROFILE ACCOUNT CONTROLS
+========================================================= */
+
+#profileCard {
+    max-height: min(760px, calc(100vh - 40px));
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+#profileCard .profile-identity {
+    min-width: 0;
+}
+
+#profileCard #profileName {
+    margin-bottom: 4px;
+}
+
+#profileCard #profileEmail {
+    margin-bottom: 7px;
+    word-break: break-word;
+}
+
+.authenticated-status {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 4px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    letter-spacing: .02em;
+    color: rgba(255,255,255,.58);
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(255,255,255,.08);
+}
+
+.authenticated-status.authenticated {
+    color: #d9c27b;
+    border-color: rgba(217,194,123,.25);
+    background: rgba(217,194,123,.07);
+}
+
+.profile-section-label {
+    margin: 18px 0 9px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.38);
+}
+
+.profile-account-section {
+    margin-top: 20px;
+    padding-top: 17px;
+    border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.profile-account-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.synapse-account-action {
+    min-height: 42px;
+    padding: 10px 14px;
+
+    border-radius: 11px;
+    border: 1px solid rgba(255,255,255,.11);
+
+    background: rgba(255,255,255,.035);
+    color: rgba(255,255,255,.88);
+
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.synapse-account-action:hover {
+    background: rgba(255,255,255,.075);
+    border-color: rgba(217,194,123,.28);
+    transform: translateY(-1px);
+}
+
+.synapse-account-action:active {
+    transform: translateY(0);
+}
+
+#synapseSignOutBtn {
+    color: rgba(255,255,255,.82);
+}
+
+#synapseSwitchAccountBtn {
+    color: #d9c27b;
+    border-color: rgba(217,194,123,.18);
+}
+
+@media (max-width: 600px) {
+
+    #profileCard {
+        max-height: calc(100vh - 24px);
+    }
+
+    .profile-account-actions {
+        grid-template-columns: 1fr;
+    }
+
+}

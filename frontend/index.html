@@ -1285,55 +1285,69 @@ href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-
     <div class="popup-header">
 
         <div>
-
             <span class="popup-kicker">
                 AP SYNAPSE IDENTITY
             </span>
 
             <h2>Your Profile</h2>
-
         </div>
 
         <button
             id="closeProfile"
             class="popup-close"
             type="button"
-        >
+            aria-label="Close profile">
             ×
         </button>
 
     </div>
 
+
+    <!-- PROFILE HERO -->
+
     <div class="profile-hero">
 
         <div
             class="profile-avatar"
-            id="profileAvatar"
-        >
+            id="profileAvatar">
             AP
         </div>
 
-        <div>
+        <div class="profile-identity">
 
             <h3 id="profileName">
                 Anuprit Patil
             </h3>
 
             <p id="profileEmail">
-                AP Synapse User
+                Not signed in
             </p>
+
+            <div
+                id="authenticatedStatus"
+                class="authenticated-status">
+                Not authenticated
+            </div>
 
         </div>
 
     </div>
 
+
+    <!-- ONLINE STATUS -->
+
     <div class="profile-status">
 
         <span class="status-dot"></span>
 
-        AP Synapse Intelligence · Online
+        <span>
+            AP Synapse Intelligence · Online
+        </span>
 
     </div>
+
+
+    <!-- WORKSPACE DETAILS -->
 
     <div class="profile-details">
 
@@ -1365,6 +1379,13 @@ href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-
 
     </div>
 
+
+    <!-- CAPABILITIES -->
+
+    <div class="profile-section-label">
+        Intelligence capabilities
+    </div>
+
     <div class="profile-capabilities">
 
         <span>Conversation</span>
@@ -1378,12 +1399,51 @@ href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-
 
     </div>
 
+
+    <!-- GOOGLE AUTH -->
+
     <div class="google-signin-section">
 
         <div
             id="googleSignInButton"
-            class="google-signin-button"
-        ></div>
+            class="google-signin-button">
+        </div>
+
+    </div>
+
+
+    <!-- ACCOUNT CONTROLS -->
+
+    <div class="profile-account-section">
+
+        <div class="profile-section-label">
+            Account
+        </div>
+
+        <div class="profile-account-actions">
+
+            <button
+                type="button"
+                id="synapseSignOutBtn"
+                class="synapse-account-action"
+                data-account-action="signout">
+
+                Sign out
+
+            </button>
+
+
+            <button
+                type="button"
+                id="synapseSwitchAccountBtn"
+                class="synapse-account-action"
+                data-account-action="switch">
+
+                Switch account
+
+            </button>
+
+        </div>
 
     </div>
 

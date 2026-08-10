@@ -867,18 +867,22 @@ if (containsProtectedIdentity && isImageRequest) {
 
 app.post("/auth/google", async (req, res) => {
 
-    const ticket =
-    await googleClient.verifyIdToken({
-        idToken: credential,
-        audience: process.env.GOOGLE_CLIENT_ID
-    });
-
     try {
+
+        console.log("🔐 Google authentication request received.");
+
+        // ------------------------------------------
+        // 1. Receive Google credential
+        // ------------------------------------------
 
         const credential =
             req.body?.credential;
 
         if (!credential) {
+
+            console.warn(
+                "⚠️ Google credential missing."
+            );
 
             return res.status(400).json({
 
@@ -891,20 +895,37 @@ app.post("/auth/google", async (req, res) => {
 
         }
 
+        console.log(
+            "✅ Google credential received."
+        );
+
+        // ------------------------------------------
+        // 2. Verify credential with Google
+        // ------------------------------------------
+
         const ticket =
             await googleClient.verifyIdToken({
 
-                idToken: credential,
+                idToken:
+                    credential,
 
                 audience:
                     process.env.GOOGLE_CLIENT_ID
 
             });
 
+        // ------------------------------------------
+        // 3. Extract verified Google identity
+        // ------------------------------------------
+
         const payload =
             ticket.getPayload();
 
         if (!payload) {
+
+            console.warn(
+                "⚠️ Google returned no payload."
+            );
 
             return res.status(401).json({
 
@@ -917,13 +938,17 @@ app.post("/auth/google", async (req, res) => {
 
         }
 
+        // ------------------------------------------
+        // 4. Build AP Synapse user
+        // ------------------------------------------
+
         const user = {
 
             googleId:
-                payload.sub,
+                payload.sub || "",
 
             name:
-                payload.name || "",
+                payload.name || "AP Synapse User",
 
             email:
                 payload.email || "",
@@ -936,14 +961,30 @@ app.post("/auth/google", async (req, res) => {
 
         };
 
+        // ------------------------------------------
+        // 5. Successful authentication
+        // ------------------------------------------
+
         console.log(
-            "✅ Google Sign-In verified:",
+            "✅ Google Sign-In verified successfully."
+        );
+
+        console.log(
+            "👤 User:",
+            user.name
+        );
+
+        console.log(
+            "📧 Email:",
             user.email
         );
 
-        return res.json({
+        return res.status(200).json({
 
             success: true,
+
+            message:
+                "Google Sign-In successful.",
 
             user
 
@@ -954,10 +995,12 @@ app.post("/auth/google", async (req, res) => {
     catch (error) {
 
         console.error(
-            "❌ Google Sign-In verification failed:"
+            "❌ Google Sign-In verification failed."
         );
 
-        console.error(error);
+        console.error(
+            error
+        );
 
         return res.status(401).json({
 

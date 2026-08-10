@@ -867,6 +867,12 @@ if (containsProtectedIdentity && isImageRequest) {
 
 app.post("/auth/google", async (req, res) => {
 
+    const ticket =
+    await googleClient.verifyIdToken({
+        idToken: credential,
+        audience: process.env.GOOGLE_CLIENT_ID
+    });
+
     try {
 
         const credential =

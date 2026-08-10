@@ -126,7 +126,7 @@ async function handleGoogleSignIn(response) {
         );
 
         const verificationResponse = await fetch(
-            "http://localhost:5000/auth/google",
+            "https://ap-synapse-backend.onrender.com/auth/google",
             {
                 method: "POST",
 

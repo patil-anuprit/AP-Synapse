@@ -778,6 +778,129 @@ function restoreAPSynapseSession() {
 
 }
 
+function signOutAPSynapse() {
+
+    console.log("🔐 AP Synapse sign-out requested.");
+
+    const confirmed = window.confirm(
+        "Sign out of AP Synapse on this device?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    // Clear AP Synapse authentication state
+    localStorage.removeItem("apSynapseUser");
+    localStorage.removeItem("apSynapseAuthenticated");
+
+    // Optional session/history keys if you use them
+    sessionStorage.removeItem("apSynapseSession");
+
+    // Reset profile button
+    const profileBtn =
+        document.getElementById("profileBtn");
+
+    if (profileBtn) {
+
+        profileBtn.innerHTML = "AP";
+
+        profileBtn.classList.remove(
+            "authenticated"
+        );
+
+        profileBtn.removeAttribute("title");
+    }
+
+    // Restore Google Sign-In button
+    const googleButton =
+        document.getElementById(
+            "googleSignInButton"
+        );
+
+    if (googleButton) {
+        googleButton.style.display = "";
+    }
+
+    // Reset profile information
+    const profileName =
+        document.getElementById("profileName");
+
+    const profileEmail =
+        document.getElementById("profileEmail");
+
+    const profileAvatar =
+        document.getElementById("profileAvatar");
+
+    const authenticatedStatus =
+        document.getElementById(
+            "authenticatedStatus"
+        );
+
+    if (profileName) {
+        profileName.textContent =
+            "AP Synapse User";
+    }
+
+    if (profileEmail) {
+        profileEmail.textContent =
+            "Not signed in";
+    }
+
+    if (profileAvatar) {
+        profileAvatar.removeAttribute("src");
+        profileAvatar.style.display = "none";
+    }
+
+    if (authenticatedStatus) {
+
+        authenticatedStatus.textContent =
+            "Not authenticated";
+
+        authenticatedStatus.classList.remove(
+            "authenticated"
+        );
+    }
+
+    // Close identity panel
+    const identityPanel =
+        document.getElementById(
+            "synapseIdentityPanel"
+        );
+
+    const identityBtn =
+        document.getElementById(
+            "synapseIdentityBtn"
+        );
+
+    if (identityPanel) {
+        identityPanel.classList.remove(
+            "is-open"
+        );
+
+        identityPanel.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+    }
+
+    if (identityBtn) {
+        identityBtn.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+    }
+
+    showAPSynapseNotification(
+        "You have been signed out of AP Synapse.",
+        "success"
+    );
+
+    console.log(
+        "✅ AP Synapse signed out successfully."
+    );
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     restoreAPSynapseSession();
 });
@@ -787,7 +910,25 @@ document.addEventListener("DOMContentLoaded", () => {
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
+    const signOutBtn =
+    document.getElementById(
+        "synapseSignOutBtn"
+    );
 
+if (signOutBtn) {
+
+    signOutBtn.addEventListener(
+        "click",
+        (event) => {
+
+            event.stopPropagation();
+
+            signOutAPSynapse();
+
+        }
+    );
+
+}
     const identityBtn =
         document.getElementById("synapseIdentityBtn");
 

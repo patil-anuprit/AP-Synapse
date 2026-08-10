@@ -16838,3 +16838,52 @@ body {
     }
 
 }
+
+.synapse-account-actions {
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.synapse-account-action {
+    width: 100%;
+    min-height: 46px;
+    padding: 0 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 12px;
+
+    background: rgba(255,255,255,.035);
+    color: rgba(255,255,255,.88);
+
+    font: inherit;
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.synapse-account-action:hover {
+    background: rgba(255,255,255,.075);
+    border-color: rgba(255,255,255,.16);
+    transform: translateY(-1px);
+}
+
+.synapse-signout {
+    margin-top: 5px;
+
+    color: #d8b46a;
+    border-color: rgba(216,180,106,.20);
+}
+
+.synapse-signout:hover {
+    background: rgba(216,180,106,.08);
+    border-color: rgba(216,180,106,.35);
+}

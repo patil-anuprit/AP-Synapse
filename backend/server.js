@@ -6,6 +6,7 @@ import https from "https";
 import upload from "./services/upload.js";
 import { readDocument } from "./services/documentReader.js";
 import { generateImage as generateGeminiImage } from "./services/geminiImageService.js";
+import { OAuth2Client } from "google-auth-library";
 
 
 import brain from "./core/index.js";
@@ -25,6 +26,10 @@ import {
 import { createAIStream } from "./services/router.js";
 
 dotenv.config();
+
+const googleClient = new OAuth2Client(
+    process.env.GOOGLE_CLIENT_ID
+);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -853,6 +858,111 @@ if (containsProtectedIdentity && isImageRequest) {
         error:
             "All AP Synapse image-generation providers are currently unavailable."
     });
+
+});
+
+// ==========================================
+// AP SYNAPSE — GOOGLE SIGN-IN VERIFICATION
+// ==========================================
+
+app.post("/auth/google", async (req, res) => {
+
+    try {
+
+        const credential =
+            req.body?.credential;
+
+        if (!credential) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                error:
+                    "Google credential is required."
+
+            });
+
+        }
+
+        const ticket =
+            await googleClient.verifyIdToken({
+
+                idToken: credential,
+
+                audience:
+                    process.env.GOOGLE_CLIENT_ID
+
+            });
+
+        const payload =
+            ticket.getPayload();
+
+        if (!payload) {
+
+            return res.status(401).json({
+
+                success: false,
+
+                error:
+                    "Invalid Google credential."
+
+            });
+
+        }
+
+        const user = {
+
+            googleId:
+                payload.sub,
+
+            name:
+                payload.name || "",
+
+            email:
+                payload.email || "",
+
+            picture:
+                payload.picture || "",
+
+            emailVerified:
+                payload.email_verified === true
+
+        };
+
+        console.log(
+            "✅ Google Sign-In verified:",
+            user.email
+        );
+
+        return res.json({
+
+            success: true,
+
+            user
+
+        });
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "❌ Google Sign-In verification failed:"
+        );
+
+        console.error(error);
+
+        return res.status(401).json({
+
+            success: false,
+
+            error:
+                "Google authentication failed."
+
+        });
+
+    }
 
 });
 

@@ -106,29 +106,80 @@ window.onload = function () {
 
 };
 
-function handleGoogleSignIn(response) {
-    console.log("Google sign-in successful.");
+async function handleGoogleSignIn(response) {
+
+    console.log("🔐 Google credential received.");
 
     if (!response || !response.credential) {
-        console.error("Google sign-in failed: no credential received.");
+
+        console.error(
+            "❌ Google sign-in failed: no credential received."
+        );
+
         return;
     }
 
     try {
-        const payload = JSON.parse(
-            atob(
-                response.credential.split(".")[1]
-                    .replace(/-/g, "+")
-                    .replace(/_/g, "/")
-            )
+
+        console.log(
+            "🔄 Verifying Google account with AP Synapse..."
         );
 
+        const verificationResponse = await fetch(
+            "http://localhost:5000/auth/google",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    credential: response.credential
+                })
+            }
+        );
+
+        const result =
+            await verificationResponse.json();
+
+        if (
+            !verificationResponse.ok ||
+            !result.success ||
+            !result.user
+        ) {
+
+            console.error(
+                "❌ AP Synapse Google verification failed:",
+                result
+            );
+
+            return;
+        }
+
         const user = {
-            id: payload.sub,
-            name: payload.name || "AP Synapse User",
-            email: payload.email || "",
-            picture: payload.picture || "",
-            signedIn: true
+
+            id:
+                result.user.googleId,
+
+            name:
+                result.user.name ||
+                "AP Synapse User",
+
+            email:
+                result.user.email ||
+                "",
+
+            picture:
+                result.user.picture ||
+                "",
+
+            emailVerified:
+                result.user.emailVerified === true,
+
+            signedIn:
+                true
+
         };
 
         localStorage.setItem(
@@ -136,13 +187,28 @@ function handleGoogleSignIn(response) {
             JSON.stringify(user)
         );
 
-        console.log("AP Synapse profile:", user);
+        console.log(
+            "✅ Google account verified by AP Synapse."
+        );
+
+        console.log(
+            "AP Synapse profile:",
+            user
+        );
 
         updateAPSynapseProfile(user);
 
-    } catch (error) {
-        console.error("Could not process Google profile:", error);
     }
+
+    catch (error) {
+
+        console.error(
+            "❌ Google Sign-In connection error:",
+            error
+        );
+
+    }
+
 }
 
 function updateAPSynapseProfile(user) {

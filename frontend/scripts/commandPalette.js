@@ -497,6 +497,209 @@ function updateAPSynapseProfile(user) {
     profileBtn.classList.add("authenticated");
 }
 
+// =========================================================
+// AP SYNAPSE — ACCOUNT SESSION CONTROLS
+// =========================================================
+
+function signOutAPSynapse() {
+
+    const savedUser =
+        localStorage.getItem("apSynapseUser");
+
+    let user = null;
+
+    try {
+        user = savedUser
+            ? JSON.parse(savedUser)
+            : null;
+    } catch (_) {}
+
+    // Clear AP Synapse authentication state
+    localStorage.removeItem("apSynapseUser");
+    localStorage.removeItem("apSynapseAuthenticated");
+
+    // Reset Google Identity Services
+    if (
+        window.google &&
+        google.accounts &&
+        google.accounts.id
+    ) {
+        google.accounts.id.disableAutoSelect();
+    }
+
+    // Reset profile button
+    const profileBtn =
+        document.getElementById("profileBtn");
+
+    if (profileBtn) {
+        profileBtn.innerHTML = "";
+        profileBtn.textContent = "A";
+        profileBtn.title = "Sign in to AP Synapse";
+        profileBtn.classList.remove("authenticated");
+    }
+
+    // Reset identity panel
+    const profileName =
+        document.getElementById("profileName");
+
+    const profileEmail =
+        document.getElementById("profileEmail");
+
+    const profileAvatar =
+        document.getElementById("profileAvatar");
+
+    const authenticatedStatus =
+        document.getElementById("authenticatedStatus");
+
+    const googleButton =
+        document.getElementById("googleSignInButton");
+
+    if (profileName) {
+        profileName.textContent =
+            "AP Synapse User";
+    }
+
+    if (profileEmail) {
+        profileEmail.textContent =
+            "Not signed in";
+    }
+
+    if (profileAvatar) {
+        profileAvatar.removeAttribute("src");
+        profileAvatar.style.display = "none";
+    }
+
+    if (authenticatedStatus) {
+        authenticatedStatus.textContent =
+            "Not authenticated";
+
+        authenticatedStatus.classList.remove(
+            "authenticated"
+        );
+    }
+
+    if (googleButton) {
+        googleButton.style.display = "";
+    }
+
+    showAPSynapseNotification(
+        "You have been signed out of AP Synapse.",
+        "info"
+    );
+
+    console.log(
+        "🔐 AP Synapse account signed out:",
+        user?.email || "unknown"
+    );
+}
+
+
+// =========================================================
+// AP SYNAPSE — SWITCH GOOGLE ACCOUNT
+// =========================================================
+
+function switchAPSynapseAccount() {
+
+    signOutAPSynapse();
+
+    // Tell Google not to automatically reuse
+    // the previous account.
+    if (
+        window.google &&
+        google.accounts &&
+        google.accounts.id
+    ) {
+        google.accounts.id.disableAutoSelect();
+    }
+
+    setTimeout(() => {
+
+        const googleButton =
+            document.getElementById(
+                "googleSignInButton"
+            );
+
+        if (googleButton) {
+            googleButton.style.display = "";
+            googleButton.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+        }
+
+        showAPSynapseNotification(
+            "Choose a Google account to continue.",
+            "info"
+        );
+
+    }, 250);
+
+}
+
+
+// =========================================================
+// AP SYNAPSE — ACCOUNT STATUS
+// =========================================================
+
+function getAPSynapseUser() {
+
+    try {
+
+        const savedUser =
+            localStorage.getItem(
+                "apSynapseUser"
+            );
+
+        if (!savedUser) return null;
+
+        const user =
+            JSON.parse(savedUser);
+
+        return user?.signedIn
+            ? user
+            : null;
+
+    } catch (error) {
+
+        console.error(
+            "Could not read AP Synapse account:",
+            error
+        );
+
+        return null;
+    }
+}
+
+
+// =========================================================
+// AP SYNAPSE — GLOBAL ACCOUNT ACTION HANDLER
+// =========================================================
+
+document.addEventListener(
+    "click",
+    (event) => {
+
+        const actionButton =
+            event.target.closest(
+                "[data-account-action]"
+            );
+
+        if (!actionButton) return;
+
+        const action =
+            actionButton.dataset.accountAction;
+
+        if (action === "signout") {
+            signOutAPSynapse();
+        }
+
+        if (action === "switch") {
+            switchAPSynapseAccount();
+        }
+
+    }
+);
+
 function restoreAPSynapseSession() {
 
     try {

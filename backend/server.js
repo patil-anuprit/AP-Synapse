@@ -7,6 +7,7 @@ import upload from "./services/upload.js";
 import { readDocument } from "./services/documentReader.js";
 import { generateImage as generateGeminiImage } from "./services/geminiImageService.js";
 import { OAuth2Client } from "google-auth-library";
+import { sendWelcomeEmail } from "./services/emailService.js";
 
 
 import brain from "./core/index.js";
@@ -960,6 +961,36 @@ app.post("/auth/google", async (req, res) => {
                 payload.email_verified === true
 
         };
+
+        // ==========================================
+// AP SYNAPSE — WELCOME EMAIL
+// ==========================================
+
+try {
+
+    if (user.email) {
+
+        await sendWelcomeEmail({
+            email: user.email,
+            name: user.name || "AP Synapse User"
+        });
+
+        console.log(
+            "✉️ AP Synapse welcome email queued:",
+            user.email
+        );
+
+    }
+
+} catch (emailError) {
+
+    // Email failure must NOT break Google Sign-In.
+    console.error(
+        "⚠️ Welcome email failed:",
+        emailError.message
+    );
+
+}
 
         // ------------------------------------------
         // 5. Successful authentication

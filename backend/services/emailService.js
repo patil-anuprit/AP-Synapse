@@ -397,3 +397,42 @@ AP Synapse — The next generation of artificial intelligence.
 `
     });
 }
+
+export async function sendSignInNotification({
+    email,
+    name = "AP Synapse User"
+}) {
+    return sendAPSynapseEmail({
+        to: email,
+        name,
+        subject: "New sign-in to your AP Synapse account",
+        textContent:
+            `Hello ${name},\n\n` +
+            `Your AP Synapse account was just signed in to with Google.\n\n` +
+            `If this was you, no action is required.\n\n` +
+            `— AP Synapse`,
+        htmlContent: `
+            <div style="font-family:Arial,sans-serif;background:#111;color:#eee;padding:32px;border-radius:16px;">
+                <h1 style="font-weight:500;margin:0 0 16px;">
+                    AP Synapse sign-in
+                </h1>
+
+                <p style="color:#c7c7c7;line-height:1.7;">
+                    Hello ${escapeHtml(name)},
+                </p>
+
+                <p style="color:#c7c7c7;line-height:1.7;">
+                    Your AP Synapse account was just signed in to with Google.
+                </p>
+
+                <p style="color:#c7c7c7;line-height:1.7;">
+                    If this was you, no action is required.
+                </p>
+
+                <div style="margin-top:30px;padding-top:20px;border-top:1px solid #303030;color:#888;font-size:13px;">
+                    AP Synapse — The next generation of artificial intelligence.
+                </div>
+            </div>
+        `
+    });
+}

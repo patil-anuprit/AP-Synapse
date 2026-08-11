@@ -1,18 +1,12 @@
 import { BrevoClient } from "@getbrevo/brevo";
 
 // ============================================================
-// AP SYNAPSE — EMAIL SERVICE
-// Production transactional email gateway
+// AP SYNAPSE — PRODUCTION EMAIL SERVICE
 // ============================================================
 
 const brevo = new BrevoClient({
     apiKey: process.env.BREVO_API_KEY,
-
-    // Brevo currently supports automatic retries for
-    // retryable failures such as 408, 429 and 5xx.
     maxRetries: 3,
-
-    // Keep transactional authentication responsive.
     timeoutInSeconds: 30
 });
 
@@ -24,13 +18,16 @@ const sender = {
         "AP Synapse",
 
     email:
-        process.env.BREVO_SENDER_EMAIL || ""
+        process.env.BREVO_SENDER_EMAIL ||
+        ""
 };
 
 const replyTo =
     process.env.BREVO_REPLY_TO_EMAIL
         ? {
-            email: process.env.BREVO_REPLY_TO_EMAIL,
+            email:
+                process.env.BREVO_REPLY_TO_EMAIL,
+
             name:
                 process.env.BREVO_REPLY_TO_NAME ||
                 "AP Synapse"
@@ -76,8 +73,6 @@ function validateEmail(email) {
         );
     }
 
-    // Practical application-level validation.
-    // Brevo remains the final authority on deliverability.
     const valid =
         /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
@@ -118,18 +113,24 @@ function escapeHtml(value = "") {
 
 
 // ============================================================
-// EMAIL LAYOUT
+// PREMIUM EMAIL DOCUMENT
 // ============================================================
 
 function buildEmailDocument({
+
     title,
     preheader = "",
     body
+
 }) {
 
-    return `
-<!DOCTYPE html>
+    const safeTitle =
+        escapeHtml(title);
 
+    const safePreheader =
+        escapeHtml(preheader);
+
+    return `<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -146,57 +147,55 @@ function buildEmailDocument({
     content="dark light"
 >
 
-<title>${escapeHtml(title)}</title>
+<title>${safeTitle}</title>
 
 </head>
 
-<body style="
+<body
+style="
     margin:0;
     padding:0;
-    background:#0b0c0e;
+    background:#0b0c0d;
     color:#f5f5f5;
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-">
+    font-family:Arial,Helvetica,sans-serif;
+"
+>
 
-<div style="
+<div
+style="
     display:none;
     max-height:0;
     overflow:hidden;
     opacity:0;
-    color:transparent;
-">
-${escapeHtml(preheader)}
+"
+>
+${safePreheader}
 </div>
 
 <table
     width="100%"
     cellpadding="0"
     cellspacing="0"
-    role="presentation"
-    style="
-        width:100%;
-        background:#0b0c0e;
-        padding:40px 16px;
-    "
+    border="0"
+    style="background:#0b0c0d;"
 >
 
 <tr>
 
-<td align="center">
+<td
+    align="center"
+    style="padding:40px 16px;"
+>
 
 <table
     width="100%"
     cellpadding="0"
     cellspacing="0"
-    role="presentation"
+    border="0"
     style="
-        width:100%;
         max-width:620px;
-        background:#151719;
-        border:1px solid #292b2e;
+        background:#121416;
+        border:1px solid #292d31;
         border-radius:18px;
         overflow:hidden;
     "
@@ -204,18 +203,32 @@ ${escapeHtml(preheader)}
 
 <tr>
 
-<td style="
-    padding:28px 34px;
-    border-bottom:1px solid #292b2e;
-">
+<td
+style="
+    padding:28px 30px 20px;
+    border-bottom:1px solid #292d31;
+"
+>
 
-<div style="
-    font-size:13px;
-    letter-spacing:2px;
-    font-weight:600;
-    color:#c9a85c;
-">
-AP SYNAPSE
+<div
+style="
+    font-size:19px;
+    font-weight:700;
+    letter-spacing:.3px;
+"
+>
+AP Synapse
+</div>
+
+<div
+style="
+    margin-top:6px;
+    font-size:12px;
+    color:#9da3aa;
+    letter-spacing:.5px;
+"
+>
+THE NEXT GENERATION OF ARTIFICIAL INTELLIGENCE
 </div>
 
 </td>
@@ -224,9 +237,13 @@ AP SYNAPSE
 
 <tr>
 
-<td style="
-    padding:38px 34px;
-">
+<td
+style="
+    padding:32px 30px;
+    font-size:15px;
+    line-height:1.7;
+"
+>
 
 ${body}
 
@@ -236,22 +253,18 @@ ${body}
 
 <tr>
 
-<td style="
-    padding:22px 34px;
-    border-top:1px solid #292b2e;
-">
-
-<div style="
-    color:#777b80;
+<td
+style="
+    padding:20px 30px 26px;
+    border-top:1px solid #292d31;
+    color:#858b92;
     font-size:12px;
-    line-height:1.7;
-">
+    line-height:1.6;
+"
+>
 
 AP Synapse<br>
-
 The next generation of artificial intelligence.
-
-</div>
 
 </td>
 
@@ -267,8 +280,7 @@ The next generation of artificial intelligence.
 
 </body>
 
-</html>
-`;
+</html>`;
 
 }
 
@@ -280,17 +292,11 @@ The next generation of artificial intelligence.
 export async function sendAPSynapseEmail({
 
     to,
-
     name = "AP Synapse User",
-
     subject,
-
     htmlContent,
-
     textContent,
-
     tags = [],
-
     replyToOverride
 
 }) {
@@ -397,8 +403,10 @@ export async function sendAPSynapseEmail({
 // ============================================================
 
 export async function sendWelcomeEmail({
+
     email,
     name
+
 }) {
 
     const safeName =
@@ -447,59 +455,57 @@ Account: ${safeEmail}
 
                 body: `
 
-<h1 style="
-    margin:0 0 18px;
-    font-size:30px;
-    line-height:1.2;
-    font-weight:500;
-    color:#ffffff;
-">
-Welcome, ${safeName}.
+<h1
+style="
+    margin:0 0 14px;
+    font-size:26px;
+    line-height:1.25;
+"
+>
+Welcome to AP Synapse.
 </h1>
 
-<p style="
-    margin:0 0 18px;
-    color:#c7c9cc;
-    font-size:15px;
-    line-height:1.7;
-">
-Your Google account has been successfully connected
-to AP Synapse.
+<p>
+Hello ${safeName},
 </p>
 
-<p style="
-    margin:0 0 28px;
-    color:#c7c9cc;
-    font-size:15px;
-    line-height:1.7;
-">
+<p>
+Your Google account has been successfully connected to AP Synapse.
+</p>
+
+<p>
 Your intelligence workspace is ready.
 </p>
 
-<div style="
-    padding:18px 20px;
-    background:#101214;
-    border:1px solid #292b2e;
+<div
+style="
+    margin:24px 0;
+    padding:16px 18px;
+    background:#191c1f;
+    border:1px solid #30353a;
     border-radius:12px;
-">
+"
+>
 
-<div style="
-    color:#c9a85c;
+<div
+style="
+    color:#8f969e;
     font-size:12px;
-    letter-spacing:1.2px;
-    margin-bottom:7px;
-">
-ACCOUNT
+    margin-bottom:5px;
+"
+>
+CONNECTED ACCOUNT
 </div>
 
-<div style="
-    color:#eeeeee;
-    font-size:14px;
-">
+<div>
 ${safeEmail}
 </div>
 
 </div>
+
+<p>
+Welcome to AP Synapse.
+</p>
 
 `
 
@@ -517,7 +523,6 @@ ${safeEmail}
 export async function sendSignInNotification({
 
     email,
-
     name
 
 }) {
@@ -564,55 +569,51 @@ If you do not recognize this activity, please review your AP Synapse account sec
 
                 body: `
 
-<h1 style="
-    margin:0 0 18px;
-    font-size:28px;
-    line-height:1.2;
-    font-weight:500;
-">
-New sign-in detected
+<h1
+style="
+    margin:0 0 14px;
+    font-size:26px;
+    line-height:1.25;
+"
+>
+New sign-in detected.
 </h1>
 
-<p style="
-    color:#c7c9cc;
-    font-size:15px;
-    line-height:1.7;
-">
-Hello ${safeName}.
+<p>
+Hello ${safeName},
 </p>
 
-<p style="
-    color:#c7c9cc;
-    font-size:15px;
-    line-height:1.7;
-">
-Your AP Synapse account was just signed in to using
-Google.
+<p>
+Your AP Synapse account was just signed in to using Google.
 </p>
 
-<div style="
-    margin-top:25px;
-    padding:18px 20px;
-    background:#101214;
-    border:1px solid #292b2e;
+<div
+style="
+    margin:24px 0;
+    padding:16px 18px;
+    background:#191c1f;
+    border:1px solid #30353a;
     border-radius:12px;
-    color:#c7c9cc;
-    font-size:14px;
-    line-height:1.7;
-">
+"
+>
 
-If this was you, no action is required.
+<strong>
+If this was you
+</strong>
+
+<div
+style="
+    margin-top:6px;
+    color:#a7adb4;
+"
+>
+No action is required.
+</div>
 
 </div>
 
-<p style="
-    margin-top:25px;
-    color:#85888c;
-    font-size:12px;
-    line-height:1.7;
-">
-If you do not recognize this activity, please review
-your AP Synapse account security.
+<p>
+If you do not recognize this activity, please review your AP Synapse account security.
 </p>
 
 `
@@ -655,6 +656,9 @@ export async function sendSecurityNotification({
             "A security-related event occurred on your AP Synapse account."
         );
 
+    const safeTitle =
+        escapeHtml(title);
+
     return sendAPSynapseEmail({
 
         to: email,
@@ -677,37 +681,36 @@ ${message || "A security-related event occurred on your AP Synapse account."}
         htmlContent:
             buildEmailDocument({
 
-                title,
+                title: safeTitle,
 
                 preheader:
                     "Important security information from AP Synapse.",
 
                 body: `
 
-<h1 style="
-    margin:0 0 18px;
-    font-size:28px;
-    font-weight:500;
-">
-${escapeHtml(title)}
+<h1
+style="
+    margin:0 0 14px;
+    font-size:26px;
+    line-height:1.25;
+"
+>
+${safeTitle}
 </h1>
 
-<p style="
-    color:#c7c9cc;
-    line-height:1.7;
-">
-Hello ${safeName}.
+<p>
+Hello ${safeName},
 </p>
 
-<div style="
-    margin-top:24px;
-    padding:20px;
-    background:#101214;
-    border:1px solid #292b2e;
+<div
+style="
+    margin:22px 0;
+    padding:18px;
+    background:#191c1f;
+    border:1px solid #30353a;
     border-radius:12px;
-    color:#c7c9cc;
-    line-height:1.7;
-">
+"
+>
 ${safeMessage}
 </div>
 
@@ -781,29 +784,26 @@ ${message || ""}
         htmlContent:
             buildEmailDocument({
 
-                title: safeTitle,
+                title:
+                    safeTitle,
 
                 body: `
 
-<h1 style="
-    margin:0 0 18px;
-    font-size:28px;
-    font-weight:500;
-">
+<h1
+style="
+    margin:0 0 14px;
+    font-size:26px;
+    line-height:1.25;
+"
+>
 ${safeTitle}
 </h1>
 
-<p style="
-    color:#c7c9cc;
-    line-height:1.7;
-">
-Hello ${safeName}.
+<p>
+Hello ${safeName},
 </p>
 
-<p style="
-    color:#c7c9cc;
-    line-height:1.7;
-">
+<p>
 ${safeMessage}
 </p>
 
@@ -817,7 +817,7 @@ ${safeMessage}
 
 
 // ============================================================
-// SYSTEM / ADMIN NOTIFICATION
+// SYSTEM NOTIFICATION
 // ============================================================
 
 export async function sendSystemNotification({
@@ -855,7 +855,7 @@ export async function sendSystemNotification({
 
 
 // ============================================================
-// AI / WORKSPACE NOTIFICATION
+// WORKSPACE NOTIFICATION
 // ============================================================
 
 export async function sendWorkspaceNotification({
@@ -895,7 +895,7 @@ export async function sendWorkspaceNotification({
 
 
 // ============================================================
-// SERVICE HEALTH CHECK
+// EMAIL SERVICE STATUS
 // ============================================================
 
 export function isEmailServiceConfigured() {
@@ -933,7 +933,7 @@ export function getEmailServiceStatus() {
 
 
 // ============================================================
-// EXPORT SAFE HELPERS
+// SAFE HELPERS
 // ============================================================
 
 export {

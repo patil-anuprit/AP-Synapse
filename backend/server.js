@@ -1049,6 +1049,28 @@ try {
 
 });
 
+// ============================================================
+// AP SYNAPSE — EMAIL SERVICE TEST
+// TEMPORARY PRODUCTION-SAFE DIAGNOSTIC ENDPOINT
+// ============================================================
+
+app.get("/email/status", (req, res) => {
+
+    res.json({
+        service: "AP Synapse Email Service",
+        provider: "Brevo",
+        configured: Boolean(
+            process.env.BREVO_API_KEY &&
+            process.env.BREVO_SENDER_EMAIL
+        ),
+        senderConfigured:
+            Boolean(process.env.BREVO_SENDER_EMAIL),
+        replyToConfigured:
+            Boolean(process.env.BREVO_REPLY_TO_EMAIL)
+    });
+
+});
+
 app.listen(PORT, () => {
 
     console.log(

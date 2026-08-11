@@ -21,17 +21,28 @@ export async function createStream(messages) {
 
         console.log("📤 Sending request to Groq...");
 
+        const requestStart = performance.now();
+
         const stream = await groq.chat.completions.create({
 
-            model: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
+            model:
+                process.env.GROQ_MODEL ||
+                "llama-3.3-70b-versatile",
 
-            messages: messages,
+            messages,
 
             stream: true
 
         });
 
-        console.log("✅ Groq request accepted.");
+        const requestAccepted =
+            performance.now();
+
+        console.log(
+            `⚡ Groq stream accepted in ${
+                (requestAccepted - requestStart).toFixed(0)
+            } ms`
+        );
 
         return stream;
 

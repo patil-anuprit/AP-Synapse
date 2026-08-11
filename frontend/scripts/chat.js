@@ -546,59 +546,97 @@ if (contentType.includes("application/json")) {
 
 
         // =====================================
-        // READ STREAM
-        // =====================================
+// READ STREAM — OPTIMIZED
+// =====================================
 
-        while (true) {
+let rawText = "";
+let renderScheduled = false;
+let streamFinished = false;
 
-            const {
-                done,
-                value
-            } = await reader.read();
+const renderAIMessage = () => {
 
+    renderScheduled = false;
 
-            if (done) {
-                break;
-            }
+    aiMessage.innerHTML =
+        marked.parse(rawText) +
+        '<span class="typingCursor">▋</span>';
 
+    scrollChatToBottom();
 
-            const chunk =
-                decoder.decode(
-                    value,
-                    { stream: true }
-                );
+};
 
+const scheduleRender = () => {
 
-            aiMessage.dataset.raw +=
-                chunk;
+    if (renderScheduled) return;
 
+    renderScheduled = true;
 
-            lastAIResponse =
-                aiMessage.dataset.raw;
+    requestAnimationFrame(renderAIMessage);
 
+};
 
-            aiMessage.innerHTML =
-                marked.parse(
-                    aiMessage.dataset.raw
-                ) +
-                '<span class="typingCursor">▋</span>';
+while (true) {
 
+    const {
+        done,
+        value
+    } = await reader.read();
 
-            if (window.hljs) {
+    if (done) {
+        streamFinished = true;
+        break;
+    }
 
-                aiMessage
-                    .querySelectorAll("pre code")
-                    .forEach(block => {
+    const chunk =
+        decoder.decode(
+            value,
+            { stream: true }
+        );
 
-                        hljs.highlightElement(
-                            block
-                        );
+    if (!chunk) continue;
 
-                    });
+    rawText += chunk;
 
-            }
+    aiMessage.dataset.raw = rawText;
 
-        }
+    lastAIResponse = rawText;
+
+    scheduleRender();
+}
+
+// Flush any decoder remainder.
+const finalChunk =
+    decoder.decode();
+
+if (finalChunk) {
+
+    rawText += finalChunk;
+
+    aiMessage.dataset.raw =
+        rawText;
+
+    lastAIResponse =
+        rawText;
+}
+
+// Final clean render.
+aiMessage.innerHTML =
+    marked.parse(rawText);
+
+// Highlight code ONLY ONCE.
+if (window.hljs) {
+
+    aiMessage
+        .querySelectorAll("pre code")
+        .forEach(block => {
+
+            hljs.highlightElement(block);
+
+        });
+
+}
+
+scrollChatToBottom(true);
 
 
         // =====================================

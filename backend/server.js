@@ -591,33 +591,51 @@ Remain professional.
 // AP Synapse AI Router
 // ===============================
 
-        const stream = await createAIStream(messages);
+       const stream = await createAIStream(messages);
 
-        console.log("STEP 3 ✅");
+console.log("STEP 3 ✅");
 
-        let fullReply = "";
+const streamStart = performance.now();
 
-        for await (const chunk of stream) {
+let firstTokenTime = null;
+let fullReply = "";
 
-            const text =
-                chunk.choices[0]?.delta?.content || "";
+for await (const chunk of stream) {
 
-            if (!text) continue;
+    const text =
+        chunk.choices[0]?.delta?.content || "";
 
-            fullReply += text;
+    if (!text) continue;
 
-            res.write(text);
+    if (firstTokenTime === null) {
 
-        }
+        firstTokenTime =
+            performance.now();
 
-        remember(
+        console.log(
+            `⚡ FIRST TOKEN: ${
+                (firstTokenTime - streamStart).toFixed(0)
+            } ms`
+        );
 
+    }
+
+    fullReply += text;
+
+    res.write(text);
+
+}
+
+console.log(
+    `🏁 TOTAL GENERATION: ${
+        (performance.now() - streamStart).toFixed(0)
+    } ms`
+);
+
+remember(
     sessionId,
-
     "assistant",
-
     validateResponse(fullReply)
-
 );
 
 res.end();

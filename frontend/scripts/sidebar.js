@@ -10023,3 +10023,287 @@ setTimeout(() => {
     }, 500);
 
 })();
+
+/* =========================================================
+   AP SYNAPSE — FINAL MOBILE SIDEBAR SCROLL FIX
+   Scroll freely • No accidental close • Single-tap toggle
+   ========================================================= */
+
+(() => {
+
+    const MOBILE_BREAKPOINT = 768;
+
+    function setupMobileSidebarScrollFix() {
+
+        const sidebar =
+            document.querySelector(".sidebar");
+
+        const toggle =
+            document.getElementById("mobileSidebarBtn");
+
+        if (!sidebar || !toggle) {
+            console.warn(
+                "⚠️ Mobile sidebar scroll fix: controls not found."
+            );
+            return;
+        }
+
+        /* -------------------------------------------------
+           MOBILE SCROLL BEHAVIOR
+        ------------------------------------------------- */
+
+        function applyMobileScrollBehavior() {
+
+            if (window.innerWidth <= MOBILE_BREAKPOINT) {
+
+                sidebar.style.overflowY = "auto";
+                sidebar.style.overflowX = "hidden";
+
+                sidebar.style.touchAction = "pan-y";
+
+                sidebar.style.webkitOverflowScrolling =
+                    "touch";
+
+                sidebar.style.scrollBehavior =
+                    "smooth";
+
+            } else {
+
+                sidebar.style.removeProperty(
+                    "overflow-y"
+                );
+
+                sidebar.style.removeProperty(
+                    "overflow-x"
+                );
+
+                sidebar.style.removeProperty(
+                    "touch-action"
+                );
+
+                sidebar.style.removeProperty(
+                    "-webkit-overflow-scrolling"
+                );
+
+                sidebar.style.removeProperty(
+                    "scroll-behavior"
+                );
+
+            }
+
+        }
+
+
+        /* -------------------------------------------------
+           IMPORTANT:
+           DO NOT CLOSE SIDEBAR FROM TOUCH/SCROLL EVENTS
+        ------------------------------------------------- */
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        sidebar.addEventListener(
+            "touchstart",
+            (event) => {
+
+                if (window.innerWidth > MOBILE_BREAKPOINT) {
+                    return;
+                }
+
+                const touch =
+                    event.touches[0];
+
+                if (!touch) return;
+
+                touchStartX =
+                    touch.clientX;
+
+                touchStartY =
+                    touch.clientY;
+
+            },
+            {
+                passive: true
+            }
+        );
+
+
+        sidebar.addEventListener(
+            "touchmove",
+            (event) => {
+
+                if (window.innerWidth > MOBILE_BREAKPOINT) {
+                    return;
+                }
+
+                /*
+                 * Allow the browser to perform
+                 * native vertical scrolling.
+                 *
+                 * DO NOT preventDefault().
+                 */
+
+            },
+            {
+                passive: true
+            }
+        );
+
+
+        sidebar.addEventListener(
+            "touchend",
+            (event) => {
+
+                if (window.innerWidth > MOBILE_BREAKPOINT) {
+                    return;
+                }
+
+                const touch =
+                    event.changedTouches[0];
+
+                if (!touch) return;
+
+                const deltaX =
+                    Math.abs(
+                        touch.clientX -
+                        touchStartX
+                    );
+
+                const deltaY =
+                    Math.abs(
+                        touch.clientY -
+                        touchStartY
+                    );
+
+                /*
+                 * If the finger moved, this was a
+                 * scroll/swipe — NOT a click.
+                 *
+                 * Do nothing.
+                 */
+
+                if (deltaX > 8 || deltaY > 8) {
+                    event.stopPropagation();
+                }
+
+            },
+            {
+                passive: true
+            }
+        );
+
+
+        /* -------------------------------------------------
+           PREVENT SCROLL FROM BEING INTERPRETED
+           AS AN OUTSIDE CLICK
+        ------------------------------------------------- */
+
+        let scrolling = false;
+        let scrollTimer = null;
+
+        sidebar.addEventListener(
+            "scroll",
+            () => {
+
+                scrolling = true;
+
+                clearTimeout(
+                    scrollTimer
+                );
+
+                scrollTimer =
+                    setTimeout(() => {
+
+                        scrolling = false;
+
+                    }, 120);
+
+            },
+            {
+                passive: true
+            }
+        );
+
+
+        /*
+         * Expose this state so existing sidebar
+         * handlers can detect active scrolling.
+         */
+
+        sidebar.__apSynapseIsScrolling =
+            () => scrolling;
+
+
+        /* -------------------------------------------------
+           KEEP SIDEBAR OPEN WHILE SCROLLING
+        ------------------------------------------------- */
+
+        sidebar.addEventListener(
+            "click",
+            (event) => {
+
+                if (
+                    typeof sidebar.__apSynapseIsScrolling ===
+                    "function" &&
+                    sidebar.__apSynapseIsScrolling()
+                ) {
+
+                    /*
+                     * A click immediately after scrolling
+                     * should not close the sidebar.
+                     */
+
+                    event.stopPropagation();
+
+                }
+
+            },
+            true
+        );
+
+
+        /* -------------------------------------------------
+           RESIZE
+        ------------------------------------------------- */
+
+        window.addEventListener(
+            "resize",
+            applyMobileScrollBehavior,
+            {
+                passive: true
+            }
+        );
+
+
+        /* Initial setup */
+
+        applyMobileScrollBehavior();
+
+
+        console.log(
+            "✅ AP SYNAPSE — MOBILE SIDEBAR SCROLL FIX ACTIVE"
+        );
+
+    }
+
+
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            setupMobileSidebarScrollFix,
+            {
+                once: true
+            }
+        );
+
+    } else {
+
+        setupMobileSidebarScrollFix();
+
+    }
+
+})();

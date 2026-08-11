@@ -86,25 +86,85 @@ if (profileSidebarBtn) {
 }
 
 // AP Synapse — Google Sign-In
-window.onload = function () {
+// =========================================================
+// AP SYNAPSE — GOOGLE IDENTITY SERVICES
+// Production-safe initialization
+// =========================================================
 
-    google.accounts.id.initialize({
-        client_id: "94855354634-27opp9jpmco5lt5010b35rgdt9ll1dto.apps.googleusercontent.com",
-        callback: handleGoogleSignIn
-    });
+document.addEventListener("DOMContentLoaded", () => {
 
-    google.accounts.id.renderButton(
-    document.getElementById("googleSignInButton"),
-    {
-        theme: "outline",
-        size: "large",
-        text: "signin_with",
-        shape: "rectangular",
-        width: 280
+    const googleButton =
+        document.getElementById("googleSignInButton");
+
+    if (!googleButton) {
+        console.warn(
+            "⚠️ Google Sign-In container not found."
+        );
+        return;
     }
-);
 
-};
+    if (
+        !window.google ||
+        !google.accounts ||
+        !google.accounts.id
+    ) {
+        console.error(
+            "❌ Google Identity Services is unavailable."
+        );
+
+        showAPSynapseNotification(
+            "Google Sign-In is temporarily unavailable.",
+            "error"
+        );
+
+        return;
+    }
+
+    try {
+
+        google.accounts.id.initialize({
+
+            client_id:
+                "94855354634-27opp9jpmco5lt5010b35rgdt9ll1dto.apps.googleusercontent.com",
+
+            callback:
+                handleGoogleSignIn,
+
+            auto_select:
+                false,
+
+            cancel_on_tap_outside:
+                true
+
+        });
+
+        googleButton.innerHTML = "";
+
+        google.accounts.id.renderButton(
+            googleButton,
+            {
+                theme: "outline",
+                size: "large",
+                text: "signin_with",
+                shape: "rectangular",
+                width: 280
+            }
+        );
+
+        console.log(
+            "✅ AP Synapse Google Sign-In ready."
+        );
+
+    } catch (error) {
+
+        console.error(
+            "❌ Google Sign-In initialization failed:",
+            error
+        );
+
+    }
+
+});
 
 async function handleGoogleSignIn(response) {
 

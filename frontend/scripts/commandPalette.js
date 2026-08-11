@@ -314,6 +314,8 @@ async function handleGoogleSignIn(response) {
 
         updateAPSynapseIdentityPanel(user);
 
+        updateAPSynapseHomeGreeting(user);
+
         updateGoogleConnectionCenter();
 
         // ------------------------------------------
@@ -2230,4 +2232,36 @@ function updatePersonalGreeting(user) {
         firstVisitKey,
         "true"
     );
+}
+
+// =========================================================
+// AP SYNAPSE — PERSONAL HOME GREETING
+// =========================================================
+
+function updateAPSynapseHomeGreeting(user) {
+
+    const greeting =
+        document.getElementById("personalGreeting");
+
+    if (!greeting) return;
+
+    if (!user || !user.signedIn) {
+
+        greeting.textContent = "";
+        greeting.hidden = true;
+
+        return;
+    }
+
+    const name =
+        String(
+            user.name ||
+            "there"
+        ).trim();
+
+    greeting.textContent =
+        `Welcome back, ${name}.`;
+
+    greeting.hidden = false;
+
 }

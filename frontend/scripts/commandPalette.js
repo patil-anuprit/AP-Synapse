@@ -2146,3 +2146,59 @@ window.addEventListener(
 console.log(
     "🔗 AP Synapse Google Connection Center ready."
 );
+
+// =========================================================
+// AP SYNAPSE — PERSONALIZED HERO GREETING
+// =========================================================
+
+function updatePersonalGreeting(user) {
+
+    const greeting =
+        document.getElementById("personalGreeting");
+
+    const description =
+        document.getElementById("heroDescription");
+
+    if (!greeting || !description) return;
+
+    const name =
+        String(user?.name || "")
+            .trim()
+            .split(/\s+/)[0];
+
+    if (!name) {
+
+        greeting.hidden = true;
+        greeting.textContent = "";
+
+        description.textContent =
+            "One intelligent workspace for everything you build.";
+
+        return;
+    }
+
+    const firstVisitKey =
+        "ap_synapse_google_welcome_seen";
+
+    const hasVisited =
+        localStorage.getItem(firstVisitKey) === "true";
+
+    greeting.textContent =
+        hasVisited
+            ? `Welcome back, ${name}.`
+            : `Welcome, ${name}.`;
+
+    greeting.hidden = false;
+
+    requestAnimationFrame(() => {
+        greeting.classList.add("is-visible");
+    });
+
+    description.textContent =
+        "Your intelligent workspace is ready.";
+
+    localStorage.setItem(
+        firstVisitKey,
+        "true"
+    );
+}

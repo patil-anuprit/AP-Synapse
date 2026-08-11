@@ -762,6 +762,10 @@ function restoreAPSynapseSession() {
                 user
             );
 
+            updateAPSynapseHomeGreeting(
+                user
+            );
+
             const googleButton =
                 document.getElementById(
                     "googleSignInButton"

@@ -1,31 +1,53 @@
 export function buildMessages({
-
     brain,
     memory,
     reasoning,
     message
-
 }) {
 
     const messages = [];
 
-    // AP Synapse Brain
+    // ==========================================
+    // AP SYNAPSE BRAIN
+    // ==========================================
+
     messages.push({
-
         role: "system",
-
         content: brain
-
     });
 
-    // Conversation Memory
-    if (memory && memory.length > 0) {
+    // ==========================================
+    // CONVERSATION MEMORY
+    // ==========================================
 
-        messages.push(...memory);
+    if (Array.isArray(memory) && memory.length > 0) {
 
+        // The current user message is already stored
+        // by server.js before buildMessages() runs.
+        //
+        // Remove that final duplicate and add the
+        // current message exactly once below.
+
+        const lastMemoryMessage =
+            memory[memory.length - 1];
+
+        const lastIsCurrentUser =
+            lastMemoryMessage?.role === "user" &&
+            typeof lastMemoryMessage?.content === "string" &&
+            lastMemoryMessage.content === message;
+
+        const previousMemory =
+            lastIsCurrentUser
+                ? memory.slice(0, -1)
+                : memory;
+
+        messages.push(...previousMemory);
     }
 
-    // Internal Analysis
+    // ==========================================
+    // CURRENT ANALYSIS
+    // ==========================================
+
     messages.push({
 
         role: "system",
@@ -58,10 +80,12 @@ Instructions:
 • Never contradict your identity.
 • Be concise unless more detail is requested.
 `
-
     });
 
-    // User Message
+    // ==========================================
+    // CURRENT USER MESSAGE — EXACTLY ONCE
+    // ==========================================
+
     messages.push({
 
         role: "user",
@@ -71,5 +95,4 @@ Instructions:
     });
 
     return messages;
-
 }

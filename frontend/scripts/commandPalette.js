@@ -88,7 +88,7 @@ if (profileSidebarBtn) {
 // AP Synapse — Google Sign-In
 // =========================================================
 // AP SYNAPSE — GOOGLE IDENTITY SERVICES
-// Production-safe initialization
+// Reliable production initialization
 // =========================================================
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -103,66 +103,95 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    if (
-        !window.google ||
-        !google.accounts ||
-        !google.accounts.id
-    ) {
-        console.error(
-            "❌ Google Identity Services is unavailable."
-        );
+    let attempts = 0;
+    const MAX_ATTEMPTS = 40;
 
-        showAPSynapseNotification(
-            "Google Sign-In is temporarily unavailable.",
-            "error"
-        );
+    function initializeGoogleSignIn() {
 
-        return;
-    }
+        attempts++;
 
-    try {
+        /*
+         * Google Identity Services may load slightly
+         * after AP Synapse itself.
+         *
+         * Wait instead of declaring Google unavailable.
+         */
 
-        google.accounts.id.initialize({
+        if (
+            !window.google ||
+            !window.google.accounts ||
+            !window.google.accounts.id
+        ) {
 
-            client_id:
-                "934887208123-picat1v07egg4ndnme3ctlvp46pjl8j1.apps.googleusercontent.com",
+            if (attempts >= MAX_ATTEMPTS) {
 
-            callback:
-                handleGoogleSignIn,
+                console.error(
+                    "❌ Google Identity Services could not be loaded."
+                );
 
-            auto_select:
-                false,
+                showAPSynapseNotification(
+                    "Google Sign-In is temporarily unavailable.",
+                    "error"
+                );
 
-            cancel_on_tap_outside:
-                true
-
-        });
-
-        googleButton.innerHTML = "";
-
-        google.accounts.id.renderButton(
-            googleButton,
-            {
-                theme: "outline",
-                size: "large",
-                text: "signin_with",
-                shape: "rectangular",
-                width: 280
+                return;
             }
-        );
 
-        console.log(
-            "✅ AP Synapse Google Sign-In ready."
-        );
+            setTimeout(
+                initializeGoogleSignIn,
+                250
+            );
 
-    } catch (error) {
+            return;
+        }
 
-        console.error(
-            "❌ Google Sign-In initialization failed:",
-            error
-        );
+        try {
+
+            google.accounts.id.initialize({
+
+                client_id:
+                    "934887208123-picat1v07egg4ndnme3ctlvp46pjl8j1.apps.googleusercontent.com",
+
+                callback:
+                    handleGoogleSignIn,
+
+                auto_select:
+                    false,
+
+                cancel_on_tap_outside:
+                    true
+
+            });
+
+            googleButton.innerHTML = "";
+
+            google.accounts.id.renderButton(
+                googleButton,
+                {
+                    theme: "outline",
+                    size: "large",
+                    text: "signin_with",
+                    shape: "rectangular",
+                    width: 280
+                }
+            );
+
+            console.log(
+                "✅ AP Synapse Google Sign-In ready."
+            );
+
+        } catch (error) {
+
+            console.error(
+                "❌ Google Sign-In initialization failed:",
+                error
+            );
+
+        }
 
     }
+
+    initializeGoogleSignIn();
 
 });
 

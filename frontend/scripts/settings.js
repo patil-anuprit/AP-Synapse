@@ -61,30 +61,87 @@ function openSettingsPage() {
 
 
 // ============================================
-// SIDEBAR SETTINGS BUTTON
+// AP SYNAPSE — SIDEBAR SETTINGS BUTTON
+// Wait for dynamically rendered sidebar
 // ============================================
 
-const sidebarSettingsButton =
-    document.getElementById("sidebarSettingsBtn");
+function initializeSidebarSettingsButton() {
 
-if (sidebarSettingsButton) {
+    const sidebarSettingsButton =
+        document.getElementById(
+            "sidebarSettingsBtn"
+        );
+
+    if (!sidebarSettingsButton) {
+        return false;
+    }
+
+    /* Prevent duplicate listeners */
+    if (
+        sidebarSettingsButton.dataset
+            .apSynapseSettingsReady === "true"
+    ) {
+        return true;
+    }
+
+    sidebarSettingsButton.dataset
+        .apSynapseSettingsReady = "true";
 
     sidebarSettingsButton.addEventListener(
         "click",
         function (event) {
 
             event.preventDefault();
+            event.stopPropagation();
 
             openSettingsPage();
 
         }
     );
 
-} else {
-
-    console.error(
-        "❌ sidebarSettingsBtn not found"
+    console.log(
+        "⚙️ AP SYNAPSE — Sidebar Settings button ready"
     );
+
+    return true;
+}
+
+
+/* Try immediately */
+
+if (!initializeSidebarSettingsButton()) {
+
+    let attempts = 0;
+
+    const settingsButtonTimer =
+        setInterval(() => {
+
+            attempts++;
+
+            if (
+                initializeSidebarSettingsButton()
+            ) {
+
+                clearInterval(
+                    settingsButtonTimer
+                );
+
+                return;
+            }
+
+            if (attempts >= 40) {
+
+                clearInterval(
+                    settingsButtonTimer
+                );
+
+                console.info(
+                    "ℹ️ AP SYNAPSE — Sidebar Settings button is not present on this page."
+                );
+
+            }
+
+        }, 250);
 
 }
 

@@ -285,6 +285,8 @@ async function handleGoogleSignIn(response) {
 
         updateAPSynapseIdentityPanel(user);
 
+        updateGoogleConnectionCenter();
+
         // ------------------------------------------
         // CLOSE GOOGLE SIGN-IN STATE
         // ------------------------------------------
@@ -791,6 +793,8 @@ function signOutAPSynapse() {
     // Clear AP Synapse authentication state
     localStorage.removeItem("apSynapseUser");
     localStorage.removeItem("apSynapseAuthenticated");
+
+    updateGoogleConnectionCenter();
 
     // Optional session/history keys if you use them
     sessionStorage.removeItem("apSynapseSession");
@@ -2056,3 +2060,89 @@ if (signOutBtn) {
     );
 
 })();
+
+// =========================================================
+// AP SYNAPSE — GOOGLE CONNECTION CENTER
+// =========================================================
+
+function updateGoogleConnectionCenter() {
+
+    const status =
+        document.getElementById("googleConnectionStatus");
+
+    const indicator =
+        document.getElementById("googleConnectionIndicator");
+
+    const services =
+        document.querySelectorAll(
+            ".google-service-item"
+        );
+
+    if (!status || !indicator) return;
+
+    const user =
+        typeof getAPSynapseUser === "function"
+            ? getAPSynapseUser()
+            : null;
+
+    const connected =
+        user &&
+        user.signedIn &&
+        user.provider === "google";
+
+    if (connected) {
+
+        status.textContent =
+            user.email
+                ? `Connected · ${user.email}`
+                : "Connected";
+
+        indicator.textContent = "●";
+
+        indicator.classList.add("connected");
+
+        services.forEach(service => {
+            service.classList.add("available");
+        });
+
+    } else {
+
+        status.textContent =
+            "Not connected";
+
+        indicator.textContent = "●";
+
+        indicator.classList.remove("connected");
+
+        services.forEach(service => {
+            service.classList.remove("available");
+        });
+
+    }
+
+}
+
+// Update after page initialization
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        updateGoogleConnectionCenter();
+
+        setTimeout(
+            updateGoogleConnectionCenter,
+            500
+        );
+
+    }
+);
+
+// Update whenever profile/auth state changes
+window.addEventListener(
+    "storage",
+    updateGoogleConnectionCenter
+);
+
+console.log(
+    "🔗 AP Synapse Google Connection Center ready."
+);

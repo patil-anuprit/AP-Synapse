@@ -18129,3 +18129,475 @@ body {
     }
 
 }
+
+/* =========================================================
+   AP SYNAPSE — PREMIUM IDENTITY PANEL
+   ========================================================= */
+
+.ap-profile-panel {
+    width: min(420px, calc(100vw - 32px));
+    box-sizing: border-box;
+
+    padding: 30px;
+
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(27, 28, 31, 0.98),
+            rgba(13, 14, 16, 0.99)
+        );
+
+    border:
+        1px solid rgba(205, 170, 92, 0.22);
+
+    box-shadow:
+        0 30px 90px rgba(0, 0, 0, 0.62),
+        0 0 0 1px rgba(255,255,255,0.025) inset,
+        0 0 45px rgba(190, 150, 65, 0.055);
+
+    color: #f4f2ed;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+/* subtle premium light */
+
+.ap-profile-panel::before {
+    content: "";
+
+    position: absolute;
+
+    top: -100px;
+    right: -100px;
+
+    width: 220px;
+    height: 220px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(201, 163, 82, 0.10),
+            transparent 68%
+        );
+
+    pointer-events: none;
+}
+
+
+/* HEADER */
+
+.ap-profile-header {
+    position: relative;
+
+    padding-right: 32px;
+}
+
+
+.ap-profile-kicker {
+    font-size: 10px;
+
+    letter-spacing: 0.24em;
+
+    font-weight: 700;
+
+    color: #c7a45b;
+
+    margin-bottom: 7px;
+}
+
+
+.ap-profile-title {
+    margin: 0;
+
+    font-size: 27px;
+
+    line-height: 1.15;
+
+    font-weight: 650;
+
+    letter-spacing: -0.025em;
+
+    color: #f7f5f0;
+}
+
+
+/* CLOSE */
+
+.ap-profile-close {
+    position: absolute;
+
+    top: -4px;
+    right: 0;
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    background: rgba(255,255,255,0.035);
+
+    color: rgba(255,255,255,0.62);
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+    display: grid;
+    place-items: center;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+
+.ap-profile-close:hover {
+    background: rgba(201,163,82,0.10);
+
+    color: #d6b66d;
+
+    border-color:
+        rgba(201,163,82,0.28);
+
+    transform: rotate(4deg);
+}
+
+
+/* IDENTITY */
+
+.ap-profile-identity {
+    display: flex;
+
+    align-items: center;
+
+    gap: 17px;
+
+    margin-top: 28px;
+}
+
+
+.ap-profile-panel .profile-avatar {
+    flex: 0 0 auto;
+
+    width: 64px;
+    height: 64px;
+
+    border-radius: 18px;
+
+    display: grid;
+    place-items: center;
+
+    background:
+        linear-gradient(
+            145deg,
+            #292a2d,
+            #151619
+        );
+
+    border:
+        1px solid rgba(201,163,82,0.34);
+
+    color: #d5b46a;
+
+    font-size: 22px;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.35),
+        0 0 20px rgba(201,163,82,.05);
+
+    overflow: hidden;
+}
+
+
+.ap-profile-panel .profile-avatar img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+}
+
+
+.ap-profile-panel .profile-identity {
+    min-width: 0;
+}
+
+
+.ap-profile-panel #profileName {
+    margin: 0;
+
+    font-size: 18px;
+
+    line-height: 1.25;
+
+    font-weight: 650;
+
+    color: #f4f2ed;
+
+    overflow-wrap: anywhere;
+}
+
+
+.ap-profile-panel #profileEmail {
+    margin: 5px 0 0;
+
+    font-size: 13px;
+
+    color: rgba(255,255,255,.52);
+
+    overflow-wrap: anywhere;
+}
+
+
+/* VERIFIED */
+
+.ap-profile-panel
+.authenticated-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    margin-top: 9px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: .12em;
+
+    text-transform: uppercase;
+
+    color: rgba(255,255,255,.42);
+}
+
+
+.ap-profile-panel
+.authenticated-status.authenticated {
+    color: #c9a75d;
+}
+
+
+.ap-profile-panel
+.authenticated-status.authenticated::before {
+    content: "✓";
+
+    width: 16px;
+    height: 16px;
+
+    border-radius: 50%;
+
+    display: inline-grid;
+    place-items: center;
+
+    background:
+        rgba(201,163,82,.12);
+
+    border:
+        1px solid rgba(201,163,82,.25);
+
+    font-size: 9px;
+}
+
+
+/* DIVIDER */
+
+.ap-profile-divider {
+    height: 1px;
+
+    margin: 26px 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.09),
+            transparent
+        );
+}
+
+
+/* GOOGLE CONNECTION */
+
+.ap-account-status {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 14px 15px;
+
+    border-radius: 14px;
+
+    background:
+        rgba(255,255,255,.025);
+
+    border:
+        1px solid rgba(255,255,255,.065);
+}
+
+
+.google-connection-indicator {
+    font-size: 10px;
+
+    color: rgba(255,255,255,.22);
+}
+
+
+.google-connection-indicator.connected {
+    color: #c8a65b;
+
+    text-shadow:
+        0 0 12px rgba(200,166,91,.55);
+}
+
+
+.ap-status-label {
+    display: block;
+
+    font-size: 11px;
+
+    color: rgba(255,255,255,.40);
+
+    margin-bottom: 3px;
+}
+
+
+.ap-status-value {
+    display: block;
+
+    font-size: 12px;
+
+    color: rgba(255,255,255,.72);
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ACTIONS */
+
+.ap-profile-actions {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+
+    margin-top: 22px;
+}
+
+
+.ap-profile-action {
+    min-height: 48px;
+
+    border-radius: 13px;
+
+    padding: 0 16px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        background .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.ap-profile-action.secondary {
+    color: rgba(255,255,255,.68);
+
+    background:
+        rgba(255,255,255,.035);
+
+    border:
+        1px solid rgba(255,255,255,.08);
+}
+
+
+.ap-profile-action.primary {
+    color: #e6c77d;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(201,163,82,.12),
+            rgba(201,163,82,.055)
+        );
+
+    border:
+        1px solid rgba(201,163,82,.27);
+}
+
+
+.ap-profile-action:hover {
+    transform: translateY(-1px);
+}
+
+
+.ap-profile-action.secondary:hover {
+    background:
+        rgba(255,255,255,.065);
+
+    border-color:
+        rgba(255,255,255,.13);
+}
+
+
+.ap-profile-action.primary:hover {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(201,163,82,.18),
+            rgba(201,163,82,.08)
+        );
+
+    border-color:
+        rgba(201,163,82,.42);
+
+    box-shadow:
+        0 8px 28px rgba(201,163,82,.08);
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .ap-profile-panel {
+        width: calc(100vw - 22px);
+
+        padding: 23px;
+
+        border-radius: 21px;
+    }
+
+    .ap-profile-title {
+        font-size: 24px;
+    }
+
+    .ap-profile-actions {
+        grid-template-columns: 1fr;
+    }
+
+}

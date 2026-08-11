@@ -2240,28 +2240,33 @@ function updatePersonalGreeting(user) {
 
 function updateAPSynapseHomeGreeting(user) {
 
-    const greeting =
-        document.getElementById("personalGreeting");
+    const greeting = document.getElementById("personalGreeting");
 
-    if (!greeting) return;
-
-    if (!user || !user.signedIn) {
-
-        greeting.textContent = "";
-        greeting.hidden = true;
-
+    if (!greeting) {
+        console.warn("⚠️ personalGreeting element not found.");
         return;
     }
 
-    const name =
-        String(
-            user.name ||
-            "there"
-        ).trim();
+    if (!user || !user.signedIn) {
+        greeting.hidden = true;
+        greeting.textContent = "";
+        return;
+    }
 
-    greeting.textContent =
-        `Welcome back, ${name}.`;
+    const name = String(user.name || "").trim();
 
+    if (!name) {
+        console.warn("⚠️ Signed-in user has no name.");
+        return;
+    }
+
+    greeting.textContent = `Welcome back, ${name}.`;
     greeting.hidden = false;
 
+    // Force visibility
+    greeting.style.display = "block";
+    greeting.style.visibility = "visible";
+    greeting.style.opacity = "1";
+
+    console.log("✅ AP Synapse home greeting:", greeting.textContent);
 }

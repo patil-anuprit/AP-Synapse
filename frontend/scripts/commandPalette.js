@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
         google.accounts.id.initialize({
 
             client_id:
-                "94855354634-27opp9jpmco5lt5010b35rgdt9ll1dto.apps.googleusercontent.com",
+                "934887208123-picat1v07egg4ndnme3ctlvp46pjl8j1.apps.googleusercontent.com",
 
             callback:
                 handleGoogleSignIn,

@@ -18075,3 +18075,57 @@ body {
     }
 
 }
+
+/* =========================================================
+   AP SYNAPSE — SIDEBAR FIRST-LOAD STABILITY
+   Desktop: visible immediately.
+   Mobile: existing mobile controller remains in charge.
+   ========================================================= */
+
+@media (min-width: 769px) {
+
+    .sidebar {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — MOBILE SIDEBAR SMOOTH SCROLL FIX
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior-y: contain;
+
+        touch-action: pan-y !important;
+
+        scrollbar-width: thin;
+    }
+
+    .sidebar * {
+        touch-action: auto;
+    }
+
+}
+
+/* Keep the bottom of the mobile navigation reachable */
+@media (max-width: 768px) {
+
+    .sidebar {
+        padding-bottom: 80px !important;
+        box-sizing: border-box !important;
+    }
+
+}

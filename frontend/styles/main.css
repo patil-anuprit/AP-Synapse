@@ -18009,3 +18009,69 @@ body {
     }
 
 }
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+
+        touch-action: pan-y;
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — MOBILE SIDEBAR
+   Full-height scrolling navigation
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        height: 100dvh;
+        max-height: 100dvh;
+
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        touch-action: pan-y;
+
+        box-sizing: border-box;
+    }
+
+    .sidebar-header,
+    .sidebar-group,
+    .sidebar-footer {
+        flex-shrink: 0;
+    }
+
+    .sidebar-footer {
+        padding-bottom:
+            max(24px, env(safe-area-inset-bottom));
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sidebar-header,
+    .sidebar-group {
+        flex-shrink: 0;
+    }
+
+    .sidebar-footer {
+        flex-shrink: 0;
+    }
+
+}

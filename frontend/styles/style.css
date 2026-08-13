@@ -7054,3 +7054,931 @@ body::before,
     }
 }
 
+/* =========================================================
+   AP SYNAPSE — PREMIUM LIVE TALK SCREEN
+   ========================================================= */
+
+.live-talk-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(8, 9, 11, .88);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+
+    padding: 20px;
+}
+
+.live-talk-screen.is-open {
+    display: flex;
+}
+
+.live-talk-panel {
+    position: relative;
+
+    width: min(620px, 100%);
+    max-height: min(820px, 94vh);
+
+    overflow-y: auto;
+
+    padding: 32px;
+
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 28px;
+
+    background: rgba(22,23,26,.94);
+
+    box-shadow:
+        0 30px 100px rgba(0,0,0,.55);
+
+    color: inherit;
+}
+
+.live-talk-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+
+    width: 38px;
+    height: 38px;
+
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.05);
+    color: inherit;
+
+    font-size: 24px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.live-talk-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.live-talk-orb {
+    width: 54px;
+    height: 54px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(212,180,110,.45);
+    background: rgba(212,180,110,.08);
+
+    font-weight: 700;
+    letter-spacing: .08em;
+}
+
+.live-talk-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.live-talk-status {
+    margin-top: 4px;
+
+    font-size: 12px;
+    opacity: .65;
+}
+
+.live-talk-subtext {
+    margin-top: 8px;
+
+    font-size: 13px;
+    opacity: .55;
+}
+
+.live-talk-transcript {
+    min-height: 180px;
+    max-height: 300px;
+
+    margin-top: 24px;
+    padding: 16px;
+
+    overflow-y: auto;
+
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 18px;
+
+    background: rgba(0,0,0,.16);
+}
+
+.live-talk-message {
+    margin-bottom: 14px;
+    padding: 12px 14px;
+
+    border-radius: 14px;
+
+    background: rgba(255,255,255,.045);
+}
+
+.live-talk-message-label {
+    margin-bottom: 4px;
+
+    font-size: 11px;
+    opacity: .5;
+}
+
+.live-talk-voice-section {
+    margin-top: 22px;
+}
+
+.live-talk-section-title {
+    margin-bottom: 10px;
+
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+
+    opacity: .55;
+}
+
+.live-talk-voice-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.live-talk-voice-option {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    padding: 13px;
+
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 15px;
+
+    background: rgba(255,255,255,.035);
+    color: inherit;
+
+    cursor: pointer;
+    text-align: left;
+}
+
+.live-talk-voice-option.active {
+    border-color: rgba(212,180,110,.55);
+    background: rgba(212,180,110,.08);
+}
+
+.live-talk-voice-symbol {
+    width: 34px;
+    height: 34px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+    background: rgba(255,255,255,.07);
+}
+
+.live-talk-voice-option strong,
+.live-talk-voice-option small {
+    display: block;
+}
+
+.live-talk-voice-option strong {
+    font-size: 13px;
+}
+
+.live-talk-voice-option small {
+    margin-top: 2px;
+    font-size: 10px;
+    opacity: .5;
+}
+
+.live-talk-control-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.live-talk-control-btn {
+    flex: 1;
+
+    padding: 12px;
+
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 14px;
+
+    background: rgba(255,255,255,.04);
+    color: inherit;
+
+    cursor: pointer;
+}
+
+.live-talk-mic-control {
+    border-color: rgba(212,180,110,.30);
+}
+
+.live-talk-end-btn {
+    width: 100%;
+
+    margin-top: 12px;
+    padding: 12px;
+
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 14px;
+
+    background: rgba(255,255,255,.035);
+    color: inherit;
+
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+
+    .live-talk-panel {
+        padding: 22px;
+        border-radius: 22px;
+    }
+
+    .live-talk-voice-options {
+        grid-template-columns: 1fr;
+    }
+
+    .live-talk-control-row {
+        flex-direction: column;
+    }
+}
+
+/* =========================================================
+   AP SYNAPSE — PREMIUM COMMAND BAR
+========================================================= */
+
+.command-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 18px 28px 24px;
+    position: relative;
+    z-index: 50;
+}
+
+
+/* ---------------------------------------------------------
+   COMMAND BAR
+--------------------------------------------------------- */
+
+.command-bar {
+    width: min(960px, 100%);
+    min-height: 76px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 10px 10px 10px 22px;
+
+    gap: 10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(28, 29, 32, 0.96),
+            rgba(16, 17, 19, 0.98)
+        );
+
+    border: 1px solid rgba(255, 255, 255, 0.085);
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 18px 55px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.035);
+
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+
+    transition:
+        border-color 180ms ease,
+        box-shadow 180ms ease,
+        transform 180ms ease;
+}
+
+
+.command-bar:focus-within {
+    border-color: rgba(190, 150, 70, 0.30);
+
+    box-shadow:
+        0 18px 55px rgba(0, 0, 0, 0.40),
+        0 0 0 1px rgba(190, 150, 70, 0.07),
+        inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+
+/* ---------------------------------------------------------
+   INPUT
+--------------------------------------------------------- */
+
+.command-input-wrap {
+    flex: 1;
+    min-width: 120px;
+}
+
+
+#userInput {
+    width: 100%;
+
+    border: 0;
+    outline: 0;
+
+    background: transparent;
+
+    color: #f4f2ed;
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    font-size: 15px;
+    font-weight: 450;
+
+    letter-spacing: -0.01em;
+
+    padding: 14px 0;
+}
+
+
+#userInput::placeholder {
+    color: rgba(218, 216, 209, 0.43);
+    transition: color 160ms ease;
+}
+
+
+#userInput:focus::placeholder {
+    color: rgba(218, 216, 209, 0.28);
+}
+
+
+/* ---------------------------------------------------------
+   TOOL GROUP
+--------------------------------------------------------- */
+
+.command-tools {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    padding: 4px;
+
+    border-left: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+
+/* ---------------------------------------------------------
+   COMMON TOOL BUTTON
+--------------------------------------------------------- */
+
+.command-tool,
+.live-talk-btn,
+.command-send {
+    position: relative;
+
+    border: 0;
+    outline: none;
+
+    cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
+
+    transition:
+        background 160ms ease,
+        border-color 160ms ease,
+        color 160ms ease,
+        transform 160ms ease,
+        box-shadow 160ms ease;
+}
+
+
+/* ---------------------------------------------------------
+   TOOL BUTTONS
+--------------------------------------------------------- */
+
+.command-tool {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: transparent;
+
+    color: rgba(221, 219, 212, 0.62);
+
+    border: 1px solid transparent;
+}
+
+
+.command-tool svg {
+    width: 19px;
+    height: 19px;
+
+    fill: none;
+    stroke: currentColor;
+
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    transition:
+        transform 160ms ease,
+        color 160ms ease;
+}
+
+
+.command-tool:hover {
+    background: rgba(255, 255, 255, 0.055);
+
+    color: #eeeae1;
+
+    border-color: rgba(255, 255, 255, 0.065);
+}
+
+
+.command-tool:hover svg {
+    transform: scale(1.06);
+}
+
+
+.command-tool:active {
+    transform: scale(0.94);
+}
+
+
+.command-tool:focus-visible,
+.live-talk-btn:focus-visible,
+.command-send:focus-visible {
+    box-shadow:
+        0 0 0 2px rgba(190, 150, 70, 0.20),
+        0 0 0 4px rgba(190, 150, 70, 0.07);
+}
+
+
+/* ---------------------------------------------------------
+   LIVE TALK
+--------------------------------------------------------- */
+
+.live-talk-btn {
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    padding: 0 15px;
+
+    border-radius: 13px;
+
+    color: rgba(241, 238, 230, 0.82);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,0.055),
+            rgba(255,255,255,0.025)
+        );
+
+    border: 1px solid rgba(190, 150, 70, 0.18);
+}
+
+
+.live-talk-btn:hover {
+    color: #f4efe4;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(190, 150, 70, 0.13),
+            rgba(255,255,255,0.045)
+        );
+
+    border-color: rgba(190, 150, 70, 0.34);
+
+    box-shadow:
+        0 6px 22px rgba(0, 0, 0, 0.20);
+}
+
+
+.live-talk-btn:active {
+    transform: scale(0.96);
+}
+
+
+.live-talk-label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+}
+
+
+/* Live indicator */
+
+.live-talk-icon {
+    width: 15px;
+    height: 15px;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(214, 178, 101, 0.70);
+
+    border-radius: 50%;
+}
+
+
+.live-core {
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: #d8b36c;
+
+    box-shadow:
+        0 0 8px rgba(216, 179, 108, 0.65);
+}
+
+
+/* ---------------------------------------------------------
+   DEEP THINK ACTIVE STATE
+--------------------------------------------------------- */
+
+#deepThinkBtn.active {
+    color: #d8b36c;
+
+    background:
+        rgba(190, 150, 70, 0.10);
+
+    border-color:
+        rgba(190, 150, 70, 0.24);
+
+    box-shadow:
+        inset 0 0 18px rgba(190, 150, 70, 0.045);
+}
+
+
+/* ---------------------------------------------------------
+   WEB ACTIVE STATE
+--------------------------------------------------------- */
+
+#webBtn.active {
+    color: #d8b36c;
+
+    background:
+        rgba(190, 150, 70, 0.09);
+
+    border-color:
+        rgba(190, 150, 70, 0.20);
+}
+
+
+/* ---------------------------------------------------------
+   VOICE ACTIVE STATES
+--------------------------------------------------------- */
+
+#voiceBtn.active,
+#speakBtn.active {
+    color: #d8b36c;
+
+    background:
+        rgba(190, 150, 70, 0.085);
+
+    border-color:
+        rgba(190, 150, 70, 0.20);
+}
+
+
+/* ---------------------------------------------------------
+   STOP
+--------------------------------------------------------- */
+
+.command-stop {
+    color: rgba(230, 210, 180, 0.82);
+}
+
+
+.command-stop span {
+    width: 9px;
+    height: 9px;
+
+    border-radius: 2px;
+
+    background: currentColor;
+
+    box-shadow:
+        0 0 9px rgba(210, 175, 100, 0.25);
+}
+
+
+.command-stop:hover {
+    color: #f1dfbe;
+
+    background: rgba(190, 150, 70, 0.10);
+}
+
+
+/* ---------------------------------------------------------
+   SEND
+--------------------------------------------------------- */
+
+.command-send {
+    width: 48px;
+    height: 48px;
+
+    flex: 0 0 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    color: #171717;
+
+    background:
+        linear-gradient(
+            145deg,
+            #e1bf7b,
+            #c99f55
+        );
+
+    box-shadow:
+        0 7px 22px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+
+.command-send svg {
+    width: 20px;
+    height: 20px;
+
+    fill: none;
+    stroke: currentColor;
+
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    transition: transform 160ms ease;
+}
+
+
+.command-send:hover {
+    transform: translateY(-1px);
+
+    background:
+        linear-gradient(
+            145deg,
+            #e8c987,
+            #d4aa61
+        );
+
+    box-shadow:
+        0 9px 26px rgba(0, 0, 0, 0.34),
+        0 0 20px rgba(200, 160, 85, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.30);
+}
+
+
+.command-send:hover svg {
+    transform: translateX(2px);
+}
+
+
+.command-send:active {
+    transform: scale(0.94);
+}
+
+
+/* ---------------------------------------------------------
+   PREMIUM DELAYED TOOLTIP
+--------------------------------------------------------- */
+
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+
+    position: absolute;
+
+    left: 50%;
+    bottom: calc(100% + 11px);
+
+    transform:
+        translate(-50%, 4px)
+        scale(0.96);
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    white-space: nowrap;
+
+    padding: 7px 10px;
+
+    border-radius: 8px;
+
+    background:
+        rgba(20, 20, 21, 0.97);
+
+    color: rgba(245, 242, 235, 0.92);
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+
+    box-shadow:
+        0 10px 28px rgba(0, 0, 0, 0.38);
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    font-size: 11px;
+    font-weight: 550;
+
+    letter-spacing: 0.01em;
+
+    z-index: 1000;
+
+    transition:
+        opacity 150ms ease,
+        transform 150ms ease;
+
+    /* The delay happens before the tooltip becomes visible */
+    transition-delay: 650ms;
+}
+
+
+/* tiny tooltip pointer */
+
+[data-tooltip]::before {
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    bottom: calc(100% + 6px);
+
+    width: 7px;
+    height: 7px;
+
+    transform:
+        translateX(-50%)
+        rotate(45deg);
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    background: rgba(20, 20, 21, 0.97);
+
+    border-left: 1px solid rgba(255, 255, 255, 0.09);
+    border-top: 1px solid rgba(255, 255, 255, 0.09);
+
+    z-index: 999;
+
+    transition:
+        opacity 150ms ease;
+
+    transition-delay: 650ms;
+}
+
+
+[data-tooltip]:hover::after,
+[data-tooltip]:hover::before {
+    opacity: 1;
+}
+
+
+[data-tooltip]:hover::after {
+    transform:
+        translate(-50%, 0)
+        scale(1);
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE
+--------------------------------------------------------- */
+
+@media (max-width: 800px) {
+
+    .command-section {
+        padding:
+            12px 14px 16px;
+    }
+
+
+    .command-bar {
+        min-height: 68px;
+
+        padding:
+            8px 8px 8px 15px;
+
+        border-radius: 18px;
+
+        gap: 7px;
+    }
+
+
+    .live-talk-label {
+        display: none;
+    }
+
+
+    .live-talk-btn {
+        width: 42px;
+        height: 42px;
+
+        padding: 0;
+
+        justify-content: center;
+    }
+
+
+    .command-tools {
+        gap: 2px;
+    }
+
+
+    .command-tool {
+        width: 38px;
+        height: 38px;
+    }
+
+
+    .command-send {
+        width: 44px;
+        height: 44px;
+
+        flex-basis: 44px;
+    }
+
+}
+
+
+/* ---------------------------------------------------------
+   SMALL MOBILE
+--------------------------------------------------------- */
+
+@media (max-width: 560px) {
+
+    .command-bar {
+        width: 100%;
+    }
+
+
+    #speakBtn,
+    #webBtn {
+        display: none;
+    }
+
+
+    .command-tool {
+        width: 36px;
+        height: 36px;
+    }
+
+
+    .command-send {
+        width: 43px;
+        height: 43px;
+        flex-basis: 43px;
+    }
+
+}
+
+.ap-source-link {
+    color: #d6b56a;
+    text-decoration: none;
+    font-weight: 500;
+    word-break: break-all;
+    transition: opacity 0.2s ease;
+}
+
+.ap-source-link:hover {
+    text-decoration: underline;
+    opacity: 0.8;
+}

@@ -220,3 +220,63 @@ export function searchHistory(query) {
     );
 
 }
+
+// ======================================================
+// EDIT / TRUNCATE CONVERSATION
+// ======================================================
+
+export function truncateConversation(
+    conversationId,
+    messageIndex
+) {
+
+    const history = getHistory();
+
+    const conversation =
+        history.find(
+            item =>
+                item.id === conversationId
+        );
+
+    if (!conversation) {
+
+        console.warn(
+            "Conversation not found:",
+            conversationId
+        );
+
+        return null;
+
+    }
+
+    if (
+        !Array.isArray(conversation.messages) ||
+        messageIndex < 0
+    ) {
+
+        return null;
+
+    }
+
+    // Keep everything BEFORE the edited message.
+    conversation.messages =
+        conversation.messages.slice(
+            0,
+            messageIndex
+        );
+
+    conversation.updatedAt =
+        new Date().toISOString();
+
+    saveHistory(history);
+
+    console.log(
+        "✏️ Conversation truncated:",
+        conversationId,
+        "before message:",
+        messageIndex
+    );
+
+    return conversation;
+
+}

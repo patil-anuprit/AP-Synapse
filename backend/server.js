@@ -7,6 +7,7 @@ import upload from "./services/upload.js";
 import { readDocument } from "./services/documentReader.js";
 import { generateImage as generateGeminiImage } from "./services/geminiImageService.js";
 import { OAuth2Client } from "google-auth-library";
+import { searchWebSources } from "./services/webSources.js";
 import {
     sendWelcomeEmail,
     sendSignInNotification
@@ -54,6 +55,16 @@ app.get("/", (req, res) => {
     uptime: process.uptime()
 
 });
+
+});
+
+app.get("/health", (_req, res) => {
+
+    res.status(200).json({
+        status: "ok",
+        service: "AP Synapse",
+        uptime: Math.floor(process.uptime())
+    });
 
 });
 
@@ -116,6 +127,8 @@ app.post(
                 req.headers["x-session-id"] ||
                 req.ip ||
                 "default";
+
+                
 
             remember(
                 sessionId,
@@ -207,27 +220,71 @@ app.post(
 
 app.post("/chat", async (req, res) => {
 
+    const requestStart = performance.now();
+
     try {
 
         const message = req.body?.message?.trim();
-
-        const web = req.body?.web || false;
-
-        const documentImage =
-            req.body?.documentImage || "";
+        const web = true;
+        const documentImage = req.body?.documentImage || "";
 
         if (!message) {
-
             return res.status(400).json({
-
-               error: "Message is required."
-
-           });
-
+                error: "Message is required."
+            });
         }
 
-        const normalizedMessage =
-    message.toLowerCase();
+        const sessionId =
+            req.headers["x-session-id"] ||
+            req.ip ||
+            "default";
+
+        // Prepare streaming response immediately.
+        res.status(200);
+
+        res.setHeader(
+            "Content-Type",
+            "text/plain; charset=utf-8"
+        );
+
+        res.setHeader(
+            "Cache-Control",
+            "no-cache, no-transform"
+        );
+
+        res.setHeader(
+            "Connection",
+            "keep-alive"
+        );
+
+        res.setHeader(
+            "X-Accel-Buffering",
+            "no"
+        );
+
+        if (typeof res.flushHeaders === "function") {
+            res.flushHeaders();
+        }
+
+        console.log(
+            `⚡ CHAT START | ${message.slice(0, 80)}`
+        );
+
+        // ============================================================
+// AP SYNAPSE — PARALLEL WEB SOURCE SEARCH
+// Starts while AI generation is happening.
+// ============================================================
+
+const sourcesPromise = searchWebSources(message)
+    .catch(error => {
+
+        console.error(
+            "⚠️ Source search error:",
+            error.message
+        );
+
+        return [];
+    });
 
 // ==========================================
 // AP SYNAPSE — EXPLICIT IMAGE GENERATION
@@ -313,19 +370,34 @@ if (explicitImageRequest) {
             "chunked"
         );
 
-        const sessionId =
-    req.headers["x-session-id"] ||
-    req.ip ||
-    "default";
+        // reuse sessionId from above
+
+    // ============================================================
+// AP SYNAPSE — PARALLEL WEB SOURCE SEARCH
+// Starts immediately so it does not delay AI generation.
+// ============================================================
+
 
         const intent =
             detectIntent(message);
 
+        // Only spend extra computation on requests
+        // that actually need deeper reasoning.
+        const reasoningIntents = new Set([
+            "complex",
+            "reasoning",
+            "analysis",
+            "problem-solving",
+            "research"
+        ]);
+
+        const needsReasoning =
+            reasoningIntents.has(intent);
+
         const reasoning =
-            buildReasoning(
-                intent,
-                message
-            );
+            needsReasoning
+                ? buildReasoning(intent, message)
+                : null;
 
         remember(sessionId, "user", message);
 
@@ -583,7 +655,9 @@ Remain professional.
 
         console.log("STEP 1 ✅");
 
-        console.log(messages);
+        console.log(
+           `🧠 MESSAGE BUILD COMPLETE | ${messages.length} messages`
+        );
 
         console.log("STEP 2 ✅");
 
@@ -591,11 +665,15 @@ Remain professional.
 // AP Synapse AI Router
 // ===============================
 
-       const stream = await createAIStream(messages);
+       const aiStart = performance.now();
 
-console.log("STEP 3 ✅");
+const stream = await createAIStream(messages);
 
-const streamStart = performance.now();
+const streamReady = performance.now();
+
+console.log(
+    `⚡ AI STREAM READY: ${(streamReady - aiStart).toFixed(0)} ms`
+);
 
 let firstTokenTime = null;
 let fullReply = "";
@@ -603,65 +681,226 @@ let fullReply = "";
 for await (const chunk of stream) {
 
     const text =
-        chunk.choices[0]?.delta?.content || "";
+        chunk.choices?.[0]?.delta?.content || "";
 
     if (!text) continue;
 
     if (firstTokenTime === null) {
 
-        firstTokenTime =
-            performance.now();
+        firstTokenTime = performance.now();
 
         console.log(
             `⚡ FIRST TOKEN: ${
-                (firstTokenTime - streamStart).toFixed(0)
-            } ms`
+                (firstTokenTime - requestStart).toFixed(0)
+            } ms total`
         );
-
     }
 
     fullReply += text;
 
     res.write(text);
+}
+
+const totalTime =
+    performance.now() - requestStart;
+
+console.log(
+    `🏁 AP SYNAPSE TOTAL: ${totalTime.toFixed(0)} ms`
+);
+
+// ============================================================
+// AP SYNAPSE — FINALIZE RESPONSE + SOURCES
+// ============================================================
+
+try {
+
+    /*
+     * The AI answer has already streamed.
+     *
+     * Web sources were searched in parallel while
+     * the AI was generating the answer.
+     *
+     * A short timeout prevents a slow search provider
+     * from making AP Synapse feel slow.
+     */
+
+    // ============================================================
+// AP SYNAPSE — RELIABLE SOURCE FINALIZATION
+// ============================================================
+
+let sources = [];
+
+try {
+    sources = await Promise.race([
+        sourcesPromise,
+        new Promise(resolve => {
+            setTimeout(() => resolve([]), 7000);
+        })
+    ]);
+} catch (sourceError) {
+    console.error(
+        "⚠️ Source finalization failed:",
+        sourceError.message
+    );
+
+    sources = [];
+}
+
+    const validSources =
+        Array.isArray(sources)
+            ? sources
+                .filter(source =>
+                    source &&
+                    typeof source.url === "string" &&
+                    source.url.trim()
+                )
+                .slice(0, 5)
+            : [];
+
+            // ============================================================
+// AP SYNAPSE — SOURCE PAYLOAD FOR FRONTEND
+// Always send structured Tavily sources separately from AI text.
+// ============================================================
+
+if (validSources.length > 0) {
+
+    const sourcePayload = JSON.stringify(
+        validSources.map(source => ({
+            title: String(source.title || "Web source"),
+            url: String(source.url || ""),
+            snippet: String(source.snippet || source.content || ""),
+            domain: String(source.domain || "")
+        }))
+    );
+
+    res.write(
+        "\n\n__AP_SYNapse_SOURCES__" +
+        sourcePayload +
+        "__AP_SYNapse_SOURCES_END__\n"
+    );
 
 }
 
-console.log(
-    `🏁 TOTAL GENERATION: ${
-        (performance.now() - streamStart).toFixed(0)
-    } ms`
-);
+    // ========================================================
+    // AP SYNAPSE — SOURCES & FURTHER READING
+    // ========================================================
 
-remember(
-    sessionId,
-    "assistant",
-    validateResponse(fullReply)
-);
+    if (validSources.length > 0) {
 
-res.end();
+        res.write(
+            "\n\n\n" +
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+            "SOURCES & FURTHER READING\n" +
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+        );
+
+        validSources.forEach((source, index) => {
+
+            const title =
+                String(
+                    source.title ||
+                    "Source"
+                ).trim();
+
+            const url =
+                String(
+                    source.url
+                ).trim();
+
+            const snippet =
+                String(
+                    source.snippet ||
+                    ""
+                ).trim();
+
+            /*
+             * Markdown link format.
+             *
+             * If your frontend has Markdown rendering,
+             * this becomes a real clickable link.
+             */
+
+            res.write(
+                `${index + 1}. [${title}](${url})\n`
+            );
+
+            if (snippet) {
+
+                res.write(
+                    `${snippet}\n`
+                );
+
+            }
+
+            res.write("\n");
+        });
 
     }
 
-    catch (error) {
+    // ========================================================
+    // AP SYNAPSE — MEMORY
+    // ========================================================
 
-    console.error("========== CHAT ERROR ==========");
-    console.error(error);
-    console.error(error.stack);
+    const finalResponse =
+        fullReply +
+        (
+            validSources.length > 0
+                ? "\n\nSources & Further Reading:\n" +
+                  validSources
+                    .map(
+                        (source, index) =>
+                            `${index + 1}. ${
+                                source.title || "Source"
+                            } — ${source.url}`
+                    )
+                    .join("\n")
+                : ""
+        );
 
-    if (!res.headersSent) {
+    remember(
+        sessionId,
+        "assistant",
+        validateResponse(finalResponse)
+    );
 
-        res.status(500).json({
+    console.log(
+        `🔗 SOURCES ATTACHED: ${validSources.length}`
+    );
 
-            error: error.message,
-            stack: error.stack
-
-    });
-
-} else {
+    console.log(
+        `🏁 RESPONSE COMPLETE: ${
+            (performance.now() - requestStart).toFixed(0)
+        } ms`
+    );
 
     res.end();
 
 }
+
+catch (finalizationError) {
+
+    console.error(
+        "⚠️ Response finalization error:",
+        finalizationError
+    );
+
+    if (!res.writableEnded) {
+        res.end();
+    }
+
+}
+
+    } catch (chatError) {
+
+        console.error("⚠️ Chat handler error:", chatError);
+
+        try {
+            if (!res.writableEnded) {
+                res.status(500).json({ error: "Unable to process chat request." });
+            }
+        } catch (e) {
+            // ignore
+        }
 
     }
 
@@ -888,76 +1127,46 @@ if (containsProtectedIdentity && isImageRequest) {
 // ==========================================
 
 app.post("/auth/google", async (req, res) => {
-
     try {
-
         console.log("🔐 Google authentication request received.");
 
         // ------------------------------------------
         // 1. Receive Google credential
         // ------------------------------------------
 
-        const credential =
-            req.body?.credential;
+        const credential = req.body?.credential;
 
         if (!credential) {
-
-            console.warn(
-                "⚠️ Google credential missing."
-            );
-
+            console.warn("⚠️ Google credential missing.");
             return res.status(400).json({
-
                 success: false,
-
-                error:
-                    "Google credential is required."
-
+                error: "Google credential is required."
             });
-
         }
 
-        console.log(
-            "✅ Google credential received."
-        );
+        console.log("✅ Google credential received.");
 
         // ------------------------------------------
         // 2. Verify credential with Google
         // ------------------------------------------
 
-        const ticket =
-            await googleClient.verifyIdToken({
-
-                idToken:
-                    credential,
-
-                audience:
-                    process.env.GOOGLE_CLIENT_ID
-
-            });
+        const ticket = await googleClient.verifyIdToken({
+            idToken: credential,
+            audience: process.env.GOOGLE_CLIENT_ID
+        });
 
         // ------------------------------------------
         // 3. Extract verified Google identity
         // ------------------------------------------
 
-        const payload =
-            ticket.getPayload();
+        const payload = ticket.getPayload();
 
         if (!payload) {
-
-            console.warn(
-                "⚠️ Google returned no payload."
-            );
-
+            console.warn("⚠️ Google returned no payload.");
             return res.status(401).json({
-
                 success: false,
-
-                error:
-                    "Invalid Google credential."
-
+                error: "Invalid Google credential."
             });
-
         }
 
         // ------------------------------------------
@@ -965,106 +1174,52 @@ app.post("/auth/google", async (req, res) => {
         // ------------------------------------------
 
         const user = {
-
-            googleId:
-                payload.sub || "",
-
-            name:
-                payload.name || "AP Synapse User",
-
-            email:
-                payload.email || "",
-
-            picture:
-                payload.picture || "",
-
-            emailVerified:
-                payload.email_verified === true
-
+            googleId: payload.sub || "",
+            name: payload.name || "AP Synapse User",
+            email: payload.email || "",
+            picture: payload.picture || "",
+            emailVerified: payload.email_verified === true
         };
 
         // ==========================================
-// AP SYNAPSE — SIGN-IN SECURITY EMAIL
-// ==========================================
+        // AP SYNAPSE — SIGN-IN SECURITY EMAIL
+        // ==========================================
 
-try {
+        try {
+            if (user.email) {
+                await sendSignInNotification({
+                    email: user.email,
+                    name: user.name || "AP Synapse User"
+                });
 
-    if (user.email) {
-
-        await sendSignInNotification({
-            email: user.email,
-            name: user.name || "AP Synapse User"
-        });
-
-        console.log(
-            "✉️ AP Synapse sign-in notification sent:",
-            user.email
-        );
-
-    }
-
-} catch (emailError) {
-
-    // Email failure must NEVER break Google Sign-In.
-    console.error(
-        "⚠️ Sign-in notification failed:",
-        emailError.message
-    );
-
-}
+                console.log("✉️ AP Synapse sign-in notification sent:", user.email);
+            }
+        } catch (emailError) {
+            // Email failure must NEVER break Google Sign-In.
+            console.error("⚠️ Sign-in notification failed:", emailError.message);
+        }
 
         // ------------------------------------------
         // 5. Successful authentication
         // ------------------------------------------
 
-        console.log(
-            "✅ Google Sign-In verified successfully."
-        );
-
-        console.log(
-            "👤 User:",
-            user.name
-        );
-
-        console.log(
-            "📧 Email:",
-            user.email
-        );
+        console.log("✅ Google Sign-In verified successfully.");
+        console.log("👤 User:", user.name);
+        console.log("📧 Email:", user.email);
 
         return res.status(200).json({
-
             success: true,
-
-            message:
-                "Google Sign-In successful.",
-
+            message: "Google Sign-In successful.",
             user
-
         });
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "❌ Google Sign-In verification failed."
-        );
-
-        console.error(
-            error
-        );
-
+    } catch (error) {
+        console.error("❌ Google Sign-In verification failed.");
+        console.error(error);
         return res.status(401).json({
-
             success: false,
-
-            error:
-                "Google authentication failed."
-
+            error: "Google authentication failed."
         });
-
     }
-
 });
 
 // ============================================================
@@ -1090,12 +1245,5 @@ app.get("/email/status", (req, res) => {
 });
 
 app.listen(PORT, () => {
-
-    console.log(
-
-        `🚀 AP Synapse running at http://localhost:${PORT}`
-
-    );
-
+    console.log(`🚀 AP Synapse running at http://localhost:${PORT}`);
 });
-

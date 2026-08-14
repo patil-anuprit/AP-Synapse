@@ -239,7 +239,97 @@ app.post("/chat", async (req, res) => {
             req.ip ||
             "default";
 
-        // Prepare streaming response immediately.
+        console.log(
+            `⚡ CHAT START | ${message.slice(0, 80)}`
+        );
+
+        // ============================================================
+        // IMAGE REQUEST DETECTION
+        // ============================================================
+
+        const imageGenerationPattern =
+            /\b(create|generate|make|draw|design|render|produce|paint|illustrate|visualize|depict|show|imagine)\b[\s\S]{0,500}\b(image|picture|photo|artwork|illustration|portrait|wallpaper|logo|poster|scene|character|landscape|concept.?art)\b/i;
+
+        const explicitImageRequest =
+            imageGenerationPattern.test(message);
+
+
+        // ============================================================
+        // BLOCK SELF / CREATOR IMAGE REQUESTS
+        // ============================================================
+
+        const selfImageRequest =
+            /\b(create|generate|make|draw|design|render|produce|paint|illustrate|visualize|depict|show|imagine)\b[\s\S]{0,500}\b(image|picture|photo|portrait|artwork|illustration)\b[\s\S]{0,500}\b(creator|your creator|yourself|you)\b/i.test(message);
+
+
+        if (selfImageRequest) {
+
+            console.log(
+                "🔒 Self-image generation blocked."
+            );
+
+            return res.json({
+                type: "text",
+                message:
+                    "I can’t generate an image representing my creator or their identity."
+            });
+
+        }
+
+
+        // ============================================================
+        // CREATOR IMAGE PROTECTION
+        // ============================================================
+
+        const creatorImageRequest =
+            /\b(your|the)\s+(creator|developer|maker|author)\b/i.test(message) ||
+            /\bcreator\s+of\s+(ap\s+synapse|this\s+ai|this\s+assistant)\b/i.test(message) ||
+            /\banuprit\s+patil\b.*\b(image|picture|photo|portrait)\b/i.test(message);
+
+
+        if (
+            creatorImageRequest &&
+            explicitImageRequest
+        ) {
+
+            console.log(
+                "🔒 Creator-image request blocked."
+            );
+
+            return res.status(403).json({
+                type: "blocked",
+                error:
+                    "I can’t create an image of my creator."
+            });
+
+        }
+
+
+        // ============================================================
+        // IMAGE GENERATION
+        // ============================================================
+
+        if (explicitImageRequest) {
+
+            console.log(
+                "🖼️ Explicit image-generation request detected."
+            );
+
+            const imageUrl =
+                `https://ap-synapse-backend.onrender.com/image?prompt=${encodeURIComponent(message)}`;
+
+            return res.json({
+                type: "image",
+                url: imageUrl
+            });
+
+        }
+
+
+        // ============================================================
+        // NOW — AND ONLY NOW — START STREAMING
+        // ============================================================
+
         res.status(200);
 
         res.setHeader(
@@ -262,15 +352,13 @@ app.post("/chat", async (req, res) => {
             "no"
         );
 
-        if (typeof res.flushHeaders === "function") {
+        if (
+            typeof res.flushHeaders === "function"
+        ) {
             res.flushHeaders();
         }
 
-        console.log(
-            `⚡ CHAT START | ${message.slice(0, 80)}`
-        );
-
-        // ============================================================
+// ============================================================
 // AP SYNAPSE — PARALLEL WEB SOURCE SEARCH
 // Starts while AI generation is happening.
 // ============================================================
@@ -290,85 +378,9 @@ const sourcesPromise = searchWebSources(message)
 // AP SYNAPSE — EXPLICIT IMAGE GENERATION
 // ==========================================
 
-const imageGenerationPattern =
-    /\b(create|generate|make|draw|design|render|produce|paint|illustrate|visualize|depict|show|imagine)\b[\s\S]{0,500}\b(image|picture|photo|artwork|illustration|portrait|wallpaper|logo|poster|scene|character|landscape|concept.?art)\b/i;
-
-const explicitImageRequest =
-    imageGenerationPattern.test(message);
-
-// ==========================================
-// BLOCK CREATOR / SELF-IDENTITY IMAGE REQUESTS
-// ==========================================
-
-const selfImageRequest =
-/\b(create|generate|make|draw|design|render|produce|paint|illustrate|visualize|depict|show|imagine)\b[\s\S]{0,500}\b(image|picture|photo|portrait|artwork|illustration)\b[\s\S]{0,500}\b(creator|your creator|yourself|you)\b/i.test(message);
-
-if (selfImageRequest) {
-
-    console.log("🔒 Self-image generation blocked.");
-
-    return res.json({
-        type: "text",
-        message:
-            "I cant generate an image of my creator or represent his person identity. It is against our privacy and policy."
-    });
-
-}
-
-// ==========================================
-// AP SYNAPSE — CREATOR IMAGE PROTECTION
-// ==========================================
-
-const creatorImageRequest =
-    /\b(your|the)\s+(creator|developer|maker|author)\b/i.test(message) ||
-    /\bcreator\s+of\s+(ap\s+synapse|this\s+ai|this\s+assistant)\b/i.test(message) ||
-    /\banuprit\s+patil\b.*\b(image|picture|photo|portrait)\b/i.test(message);
-
-if (creatorImageRequest && explicitImageRequest) {
-
-    console.log(
-        "🔒 Creator-image request blocked."
-    );
-
-    return res.status(403).json({
-        type: "blocked",
-        error:
-            "I can’t create an image of my creator."
-    });
-}
-
-// ==========================================
-// AP SYNAPSE — EXPLICIT IMAGE GENERATION
-// ==========================================
-
-if (explicitImageRequest) {
-
-    console.log(
-        "🖼️ Explicit image-generation request detected."
-    );
-
-    const imageUrl =
-        `https://ap-synapse-backend.onrender.com/image?prompt=${encodeURIComponent(message)}`;
-
-    return res.json({
-        type: "image",
-        url: imageUrl
-    });
-}
-
 // ===============================
 // Detect Image Requests
 // ===============================
-
-        res.setHeader(
-            "Content-Type",
-            "text/plain; charset=utf-8"
-        );
-
-        res.setHeader(
-            "Transfer-Encoding",
-            "chunked"
-        );
 
         // reuse sessionId from above
 

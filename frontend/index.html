@@ -59,14 +59,7 @@
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-<style>
-@media (min-width: 769px) {
-    .sidebar {
-        visibility: visible;
-        opacity: 1;
-    }
-}
-</style>
+
 
 <style>
 /* =========================================================
@@ -538,6 +531,20 @@
     <!-- Sidebar -->
 
     <aside class="sidebar">
+        <!-- AP SYNAPSE — SIDEBAR CONTROL -->
+<div class="ap-sidebar-topbar">
+
+    <button
+        id="apSidebarCollapse"
+        class="ap-sidebar-icon-btn"
+        type="button"
+        aria-label="Collapse sidebar"
+        data-tooltip="Collapse sidebar"
+    >
+        ‹
+    </button>
+
+</div>
 
     <!-- Brand -->
 
@@ -568,6 +575,16 @@
 
             <span>New Conversation</span>
 
+        </button>
+
+        <button
+           id="apInstallBtn"
+           class="ap-install-btn"
+           type="button"
+           data-tooltip="Install AP Synapse"
+        >
+          <span class="ap-install-icon">↓</span>
+          <span>Install AP Synapse</span>
         </button>
 
         <div class="sidebar-search">
@@ -635,6 +652,82 @@
 </div>
 
 </aside>
+
+<div
+    class="mobile-sidebar-overlay"
+    id="apSidebarOverlay"
+    aria-hidden="true"
+></div>
+
+<button
+    id="apMobileMenu"
+    class="ap-mobile-menu"
+    type="button"
+    aria-label="Open AP Synapse navigation"
+    data-tooltip="Open navigation"
+>
+    ☰
+</button>
+
+<div
+    id="apCollapsedRail"
+    class="ap-collapsed-rail"
+    aria-label="AP Synapse quick navigation"
+>
+
+    <button
+        id="apRailOpen"
+        class="ap-rail-btn ap-rail-brand"
+        type="button"
+        data-tooltip="Open sidebar"
+        aria-label="Open sidebar"
+    >
+        AP
+    </button>
+
+    <button
+        id="apRailNewChat"
+        class="ap-rail-btn"
+        type="button"
+        data-tooltip="New conversation"
+        aria-label="New conversation"
+    >
+        +
+    </button>
+
+    <button
+        id="apRailRecent"
+        class="ap-rail-btn"
+        type="button"
+        data-tooltip="Recent conversations"
+        aria-label="Recent conversations"
+    >
+        ≡
+    </button>
+
+    <div class="ap-rail-spacer"></div>
+
+    <button
+        id="apRailSettings"
+        class="ap-rail-btn"
+        type="button"
+        data-tooltip="Settings"
+        aria-label="Settings"
+    >
+        ⚙
+    </button>
+
+    <button
+        id="apRailProfile"
+        class="ap-rail-btn"
+        type="button"
+        data-tooltip="Profile"
+        aria-label="Profile"
+    >
+        ◉
+    </button>
+
+</div>
 
     <!-- Main -->
 
@@ -2799,6 +2892,2164 @@ autocomplete="off">
     </div>
 
 </section>
+
+<!-- =========================================================
+     AP SYNAPSE — SIDEBAR / COLLAPSED RAIL CONTROLLER
+     FINAL UI CONTROL LAYER
+========================================================= -->
+
+<script>
+(function () {
+
+    function initAPSynapseSidebar() {
+
+        const sidebar = document.querySelector(".sidebar");
+        const collapseBtn = document.getElementById("apSidebarCollapse");
+        const rail = document.getElementById("apCollapsedRail");
+
+        const railOpen = document.getElementById("apRailOpen");
+        const railNewChat = document.getElementById("apRailNewChat");
+        const railRecent = document.getElementById("apRailRecent");
+        const railSettings = document.getElementById("apRailSettings");
+        const railProfile = document.getElementById("apRailProfile");
+
+        if (!sidebar || !collapseBtn || !rail) {
+            console.warn("AP Synapse sidebar elements not found.");
+            return;
+        }
+
+        /* =====================================================
+           STATE
+        ===================================================== */
+
+        function setCollapsed(collapsed) {
+
+            if (collapsed) {
+
+                sidebar.classList.add("ap-sidebar-collapsed");
+                rail.classList.add("ap-collapsed-rail-visible");
+
+                sidebar.setAttribute("aria-hidden", "true");
+                rail.setAttribute("aria-hidden", "false");
+
+                collapseBtn.setAttribute("aria-expanded", "false");
+
+                localStorage.setItem(
+                    "apSynapseSidebarCollapsed",
+                    "true"
+                );
+
+            } else {
+
+                sidebar.classList.remove("ap-sidebar-collapsed");
+                rail.classList.remove("ap-collapsed-rail-visible");
+
+                sidebar.setAttribute("aria-hidden", "false");
+                rail.setAttribute("aria-hidden", "true");
+
+                collapseBtn.setAttribute("aria-expanded", "true");
+
+                localStorage.setItem(
+                    "apSynapseSidebarCollapsed",
+                    "false"
+                );
+            }
+        }
+
+
+        /* =====================================================
+           COLLAPSE
+        ===================================================== */
+
+
+        /* =====================================================
+           OPEN AGAIN
+        ===================================================== */
+
+        if (railOpen) {
+
+            railOpen.addEventListener("click", function (event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                setCollapsed(false);
+
+            });
+
+        }
+
+
+        /* =====================================================
+           NEW CONVERSATION
+        ===================================================== */
+
+        if (railNewChat) {
+
+            railNewChat.addEventListener("click", function (event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                const newChat =
+                    document.querySelector(".new-chat-btn");
+
+                if (newChat) {
+                    newChat.click();
+                    return;
+                }
+
+                const userInput =
+                    document.getElementById("userInput");
+
+                if (userInput) {
+                    userInput.value = "";
+                    userInput.focus();
+                }
+
+            });
+
+        }
+
+
+        /* =====================================================
+           RECENT
+        ===================================================== */
+
+        if (railRecent) {
+
+            railRecent.addEventListener("click", function (event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                const recentGroup =
+                    document.querySelector(".recent-group");
+
+                if (recentGroup) {
+
+                    recentGroup.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
+
+                    return;
+                }
+
+                const history =
+                    document.querySelector(".history-list");
+
+                if (history) {
+
+                    history.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
+
+                }
+
+            });
+
+        }
+
+
+        /* =====================================================
+           SETTINGS
+        ===================================================== */
+
+        if (railSettings) {
+
+            railSettings.addEventListener("click", function (event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                const settings =
+                    document.getElementById("sidebarSettingsBtn");
+
+                if (settings) {
+                    settings.click();
+                    return;
+                }
+
+                const topSettings =
+                    document.getElementById("settingsBtn");
+
+                if (topSettings) {
+                    topSettings.click();
+                }
+
+            });
+
+        }
+
+
+        /* =====================================================
+           PROFILE
+        ===================================================== */
+
+        if (railProfile) {
+
+            railProfile.addEventListener("click", function (event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                const profile =
+                    document.getElementById("profileSidebarBtn");
+
+                if (profile) {
+                    profile.click();
+                    return;
+                }
+
+                const topProfile =
+                    document.getElementById("profileBtn");
+
+                if (topProfile) {
+                    topProfile.click();
+                }
+
+            });
+
+        }
+
+
+        /* =====================================================
+           RESTORE PREVIOUS STATE
+        ===================================================== */
+
+        const savedState =
+            localStorage.getItem(
+                "apSynapseSidebarCollapsed"
+            );
+
+        if (savedState === "true") {
+            setCollapsed(true);
+        } else {
+            setCollapsed(false);
+        }
+
+
+        console.log(
+            "AP Synapse sidebar controller initialized."
+        );
+
+    }
+
+
+    /* =========================================================
+       RUN AFTER EVERYTHING IS READY
+    ========================================================= */
+
+    if (document.readyState === "loading") {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            initAPSynapseSidebar
+        );
+
+    } else {
+
+        initAPSynapseSidebar();
+
+    }
+
+})();
+</script>
+
+
+<style>
+
+/* =========================================================
+   AP SYNAPSE — SIDEBAR COLLAPSE ENGINE
+========================================================= */
+
+.sidebar {
+    transition:
+        width .28s cubic-bezier(.2,.8,.2,1),
+        min-width .28s cubic-bezier(.2,.8,.2,1),
+        opacity .20s ease,
+        transform .28s cubic-bezier(.2,.8,.2,1);
+}
+
+
+/* MAIN SIDEBAR HIDDEN */
+
+.sidebar.ap-sidebar-collapsed {
+
+    width: 0 !important;
+    min-width: 0 !important;
+
+    max-width: 0 !important;
+
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+
+    border: 0 !important;
+
+    opacity: 0 !important;
+
+    transform: translateX(-24px);
+
+    overflow: hidden !important;
+
+    pointer-events: none !important;
+}
+
+
+/* EVERYTHING INSIDE THE COLLAPSED SIDEBAR */
+
+.sidebar.ap-sidebar-collapsed > * {
+
+    opacity: 0 !important;
+    pointer-events: none !important;
+
+}
+
+
+/* =========================================================
+   COLLAPSED RAIL
+========================================================= */
+
+#apCollapsedRail {
+
+    position: fixed;
+
+    top: 92px;
+    left: 14px;
+
+    width: 58px;
+
+    min-height: 310px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px 8px;
+
+    box-sizing: border-box;
+
+    z-index: 99950;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(20,20,21,.98),
+            rgba(12,12,13,.98)
+        );
+
+    border:
+        1px solid rgba(255,255,255,.09);
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 20px 55px rgba(0,0,0,.48),
+        inset 0 1px 0 rgba(255,255,255,.035);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    pointer-events: none;
+
+    transform:
+        translateX(-18px)
+        scale(.97);
+
+    transition:
+        opacity .22s ease,
+        transform .26s cubic-bezier(.2,.8,.2,1),
+        visibility .22s ease;
+
+}
+
+
+/* RAIL OPEN */
+
+#apCollapsedRail.ap-collapsed-rail-visible {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    pointer-events: auto;
+
+    transform:
+        translateX(0)
+        scale(1);
+
+}
+
+
+/* =========================================================
+   RAIL BUTTONS
+========================================================= */
+
+#apCollapsedRail .ap-rail-btn {
+
+    position: relative;
+
+    width: 42px;
+    height: 42px;
+
+    flex: 0 0 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.055),
+            rgba(255,255,255,.018)
+        );
+
+    color: #deddd8;
+
+    font-family: inherit;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    pointer-events: auto;
+
+    user-select: none;
+
+    transition:
+        background .18s ease,
+        border-color .18s ease,
+        color .18s ease,
+        transform .18s ease,
+        box-shadow .18s ease;
+
+}
+
+
+/* HOVER */
+
+#apCollapsedRail .ap-rail-btn:hover {
+
+    color: #f2e4bd;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(201,168,94,.15),
+            rgba(201,168,94,.055)
+        );
+
+    border-color:
+        rgba(201,168,94,.42);
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 7px 20px rgba(0,0,0,.25),
+        0 0 0 1px rgba(201,168,94,.06);
+
+}
+
+
+/* ACTIVE */
+
+#apCollapsedRail .ap-rail-btn:active {
+
+    transform:
+        scale(.94);
+
+}
+
+
+/* BRAND */
+
+#apCollapsedRail .ap-rail-brand {
+
+    color: #d5b56d;
+
+    border-color:
+        rgba(201,168,94,.25);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(201,168,94,.12),
+            rgba(201,168,94,.035)
+        );
+
+}
+
+
+/* SPACER */
+
+#apCollapsedRail .ap-rail-spacer {
+
+    flex: 1;
+
+    min-height: 40px;
+
+}
+
+
+/* =========================================================
+   TOOLTIP
+========================================================= */
+
+#apCollapsedRail .ap-rail-btn::after {
+
+    content: attr(data-tooltip);
+
+    position: absolute;
+
+    left: calc(100% + 12px);
+
+    top: 50%;
+
+    transform:
+        translateY(-50%)
+        translateX(-5px);
+
+    white-space: nowrap;
+
+    padding: 8px 11px;
+
+    border:
+        1px solid rgba(255,255,255,.09);
+
+    border-radius: 9px;
+
+    background:
+        rgba(18,18,19,.98);
+
+    color: #e5e4df;
+
+    font-size: 11px;
+    font-weight: 500;
+
+    box-shadow:
+        0 12px 30px rgba(0,0,0,.4);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    pointer-events: none;
+
+    transition:
+        opacity .16s ease,
+        transform .16s ease;
+
+    z-index: 99999;
+
+}
+
+
+#apCollapsedRail .ap-rail-btn:hover::after {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    transform:
+        translateY(-50%)
+        translateX(0);
+
+}
+
+
+/* =========================================================
+   IMPORTANT — DESKTOP
+========================================================= */
+
+@media (min-width: 769px) {
+
+    #apCollapsedRail {
+
+        display: flex;
+
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    #apCollapsedRail {
+
+        display: none !important;
+
+    }
+
+}
+
+</style>
+
+<!-- =========================================================
+     AP SYNAPSE — FINAL SIDEBAR CONTROL SYSTEM
+========================================================= -->
+
+<style>
+/* Desktop sidebar state */
+@media (min-width: 769px) {
+
+    .sidebar {
+        transition:
+            width .28s cubic-bezier(.2,.8,.2,1),
+            min-width .28s cubic-bezier(.2,.8,.2,1),
+            transform .28s cubic-bezier(.2,.8,.2,1),
+            opacity .2s ease,
+            visibility .2s ease;
+    }
+
+    .ap-collapsed-rail {
+        position: fixed;
+        left: 14px;
+        top: 94px;
+        bottom: 14px;
+        z-index: 100000;
+
+        display: none;
+
+        width: 58px;
+
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+
+        padding: 10px 8px;
+
+        box-sizing: border-box;
+
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 20px;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(25,25,27,.98),
+                rgba(12,12,14,.98)
+            );
+
+        box-shadow:
+            0 25px 70px rgba(0,0,0,.45),
+            inset 0 1px 0 rgba(255,255,255,.035);
+    }
+
+    .ap-collapsed-rail.is-visible {
+        display: flex !important;
+    }
+
+    .ap-rail-btn {
+        position: relative;
+
+        width: 42px;
+        height: 42px;
+
+        flex: 0 0 42px;
+
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+
+        padding: 0;
+
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 13px;
+
+        background: rgba(255,255,255,.035);
+
+        color: #d8d8d5;
+
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 600;
+
+        cursor: pointer;
+
+        pointer-events: auto !important;
+
+        user-select: none;
+
+        transition:
+            background .18s ease,
+            border-color .18s ease,
+            color .18s ease,
+            transform .18s ease;
+    }
+
+    .ap-rail-btn:hover {
+        background: rgba(205,170,90,.10);
+        border-color: rgba(205,170,90,.28);
+        color: #e1c27c;
+        transform: translateY(-1px);
+    }
+
+    .ap-rail-btn:active {
+        transform: scale(.95);
+    }
+
+    .ap-rail-brand {
+        color: #d8b66c;
+        border-color: rgba(205,170,90,.24);
+    }
+
+    .ap-rail-spacer {
+        flex: 1;
+        min-height: 20px;
+    }
+
+    /* IMPORTANT: when collapsed, original sidebar is genuinely hidden */
+    body.ap-sidebar-collapsed .sidebar {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+
+    body.ap-sidebar-collapsed .ap-collapsed-rail {
+        display: flex !important;
+    }
+
+    /* Workspace gets the space back */
+    body.ap-sidebar-collapsed .workspace {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    /* Rail must always be above workspace */
+    #apCollapsedRail,
+    #apCollapsedRail * {
+        pointer-events: auto;
+    }
+
+    /* Prevent invisible layers from catching clicks */
+    .mobile-sidebar-overlay {
+        pointer-events: none;
+    }
+
+    .mobile-sidebar-overlay.is-open {
+        pointer-events: auto;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+
+    .ap-collapsed-rail {
+        display: none !important;
+    }
+
+}
+</style>
+
+<script>
+(function () {
+
+    "use strict";
+
+    /* =====================================================
+       ELEMENTS
+    ===================================================== */
+
+    const body = document.body;
+
+    const sidebar =
+        document.querySelector(".sidebar");
+
+    const rail =
+        document.getElementById("apCollapsedRail");
+
+    const collapseBtn =
+        document.getElementById("apSidebarCollapse");
+
+    const railOpen =
+        document.getElementById("apRailOpen");
+
+    const railNewChat =
+        document.getElementById("apRailNewChat");
+
+    const railRecent =
+        document.getElementById("apRailRecent");
+
+    const railSettings =
+        document.getElementById("apRailSettings");
+
+    const railProfile =
+        document.getElementById("apRailProfile");
+
+    const mobileMenu =
+        document.getElementById("apMobileMenu");
+
+    const overlay =
+        document.getElementById("apSidebarOverlay");
+
+    if (!sidebar || !rail) {
+        console.error(
+            "AP Synapse Sidebar: required elements not found."
+        );
+        return;
+    }
+
+
+    /* =====================================================
+       STATE
+    ===================================================== */
+
+    function setCollapsed(collapsed) {
+
+        if (window.innerWidth < 769) {
+            return;
+        }
+
+        if (collapsed) {
+
+            body.classList.add("ap-sidebar-collapsed");
+
+            sidebar.style.display = "none";
+            sidebar.style.visibility = "hidden";
+            sidebar.style.opacity = "0";
+            sidebar.style.pointerEvents = "none";
+
+            rail.style.display = "flex";
+            rail.style.visibility = "visible";
+            rail.style.opacity = "1";
+            rail.style.pointerEvents = "auto";
+
+            if (collapseBtn) {
+                collapseBtn.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+            }
+
+        } else {
+
+            body.classList.remove("ap-sidebar-collapsed");
+
+            sidebar.style.display = "";
+            sidebar.style.visibility = "visible";
+            sidebar.style.opacity = "1";
+            sidebar.style.pointerEvents = "auto";
+
+            rail.style.display = "none";
+            rail.style.visibility = "hidden";
+            rail.style.opacity = "0";
+            rail.style.pointerEvents = "none";
+
+            if (collapseBtn) {
+                collapseBtn.setAttribute(
+                    "aria-expanded",
+                    "true"
+                );
+            }
+        }
+    }
+
+
+    /* =====================================================
+       OPEN ORIGINAL SIDEBAR
+       ===================================================== */
+
+    if (railOpen) {
+
+        railOpen.addEventListener("click", function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            setCollapsed(false);
+
+        });
+
+    }
+
+
+    /* =====================================================
+       COLLAPSE ORIGINAL SIDEBAR
+       ===================================================== */
+
+
+    /* =====================================================
+       RAIL — NEW CONVERSATION
+       ===================================================== */
+
+    if (railNewChat) {
+
+        railNewChat.addEventListener("click", function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            const newChat =
+                document.querySelector(".new-chat-btn");
+
+            if (newChat) {
+                newChat.click();
+                return;
+            }
+
+            const assistant =
+                document.getElementById("assistantBtn");
+
+            if (assistant) {
+                assistant.click();
+            }
+
+        });
+
+    }
+
+
+    /* =====================================================
+       RAIL — RECENT
+       ===================================================== */
+
+    if (railRecent) {
+
+        railRecent.addEventListener("click", function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            const recent =
+                document.querySelector(".recent-group");
+
+            if (recent) {
+
+                recent.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
+                return;
+            }
+
+            const history =
+                document.querySelector(".history-list");
+
+            if (history) {
+
+                history.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
+            }
+
+        });
+
+    }
+
+
+    /* =====================================================
+       RAIL — SETTINGS
+       ===================================================== */
+
+    if (railSettings) {
+
+        railSettings.addEventListener("click", function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            const settings =
+                document.getElementById(
+                    "sidebarSettingsBtn"
+                );
+
+            if (settings) {
+                settings.click();
+                return;
+            }
+
+            const topSettings =
+                document.getElementById("settingsBtn");
+
+            if (topSettings) {
+                topSettings.click();
+            }
+
+        });
+
+    }
+
+
+    /* =====================================================
+       RAIL — PROFILE
+       ===================================================== */
+
+    if (railProfile) {
+
+        railProfile.addEventListener("click", function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            const profile =
+                document.getElementById(
+                    "profileSidebarBtn"
+                );
+
+            if (profile) {
+                profile.click();
+                return;
+            }
+
+            const topProfile =
+                document.getElementById("profileBtn");
+
+            if (topProfile) {
+                topProfile.click();
+            }
+
+        });
+
+    }
+
+
+    /* =====================================================
+       MOBILE MENU
+       ===================================================== */
+
+    if (mobileMenu) {
+
+        mobileMenu.addEventListener("click", function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            sidebar.classList.add("is-open");
+
+            if (overlay) {
+                overlay.classList.add("is-open");
+                overlay.setAttribute(
+                    "aria-hidden",
+                    "false"
+                );
+            }
+
+        });
+
+    }
+
+
+    /* =====================================================
+       MOBILE OVERLAY
+       ===================================================== */
+
+    if (overlay) {
+
+        overlay.addEventListener("click", function () {
+
+            sidebar.classList.remove("is-open");
+
+            overlay.classList.remove("is-open");
+
+            overlay.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+        });
+
+    }
+
+
+    /* =====================================================
+       ESCAPE
+       ===================================================== */
+
+    document.addEventListener("keydown", function (event) {
+
+        if (event.key !== "Escape") {
+            return;
+        }
+
+        if (window.innerWidth >= 769) {
+
+            setCollapsed(false);
+
+        } else {
+
+            sidebar.classList.remove("is-open");
+
+            if (overlay) {
+
+                overlay.classList.remove("is-open");
+
+                overlay.setAttribute(
+                    "aria-hidden",
+                    "true"
+                );
+
+            }
+
+        }
+
+    });
+
+
+    /* =====================================================
+       RESIZE SAFETY
+       ===================================================== */
+
+    window.addEventListener("resize", function () {
+
+        if (window.innerWidth < 769) {
+
+            body.classList.remove(
+                "ap-sidebar-collapsed"
+            );
+
+            sidebar.style.display = "";
+            sidebar.style.visibility = "";
+            sidebar.style.opacity = "";
+            sidebar.style.pointerEvents = "";
+
+            rail.style.display = "none";
+
+        }
+
+    });
+
+
+    /* =====================================================
+       INITIAL STATE
+       ===================================================== */
+
+    setCollapsed(false);
+
+
+    console.log(
+        "AP Synapse — Sidebar Control System: ONLINE"
+    );
+
+})();
+</script>
+
+<!-- =========================================================
+     AP SYNAPSE — FINAL SIDEBAR SYSTEM
+     Single authoritative desktop + mobile controller
+========================================================= -->
+
+<style>
+/* =========================================================
+   SIDEBAR FOUNDATION
+========================================================= */
+
+:root {
+    --ap-sidebar-width: 300px;
+    --ap-rail-width: 72px;
+}
+
+/* BIG SIDEBAR — DESKTOP */
+
+@media (min-width: 769px) {
+
+    .sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        width: var(--ap-sidebar-width) !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        transform: translateX(0) !important;
+
+        pointer-events: auto !important;
+
+        z-index: 100000 !important;
+
+        transition:
+            transform .28s cubic-bezier(.2,.8,.2,1),
+            opacity .22s ease !important;
+    }
+
+    /* COLLAPSED */
+
+    body.ap-sidebar-collapsed .sidebar {
+        transform: translateX(-105%) !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+    }
+
+    /* MAIN WORKSPACE */
+
+    .workspace {
+        margin-left: var(--ap-sidebar-width) !important;
+
+        transition:
+            margin-left .28s cubic-bezier(.2,.8,.2,1) !important;
+    }
+
+    body.ap-sidebar-collapsed .workspace {
+        margin-left: 0 !important;
+    }
+
+    /* COLLAPSED RAIL */
+
+    #apCollapsedRail {
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        width: var(--ap-rail-width) !important;
+
+        display: none !important;
+        flex-direction: column !important;
+        align-items: center !important;
+
+        padding: 20px 0 !important;
+
+        z-index: 100001 !important;
+
+        pointer-events: none !important;
+    }
+
+    body.ap-sidebar-collapsed #apCollapsedRail {
+        display: flex !important;
+        pointer-events: auto !important;
+    }
+
+    .ap-rail-btn {
+        position: relative !important;
+
+        width: 46px !important;
+        height: 46px !important;
+
+        margin: 7px 0 !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        border-radius: 13px !important;
+
+        cursor: pointer !important;
+
+        pointer-events: auto !important;
+
+        z-index: 100002 !important;
+    }
+
+    .ap-rail-spacer {
+        flex: 1 !important;
+    }
+
+    /* MOBILE BUTTON IS DESKTOP-HIDDEN */
+
+    #apMobileMenu {
+        display: none !important;
+    }
+
+    #apSidebarOverlay {
+        display: none !important;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        width: min(320px, 86vw) !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        visibility: hidden !important;
+        opacity: 0 !important;
+
+        transform: translateX(-105%) !important;
+
+        pointer-events: none !important;
+
+        z-index: 100000 !important;
+
+        transition:
+            transform .30s cubic-bezier(.2,.8,.2,1),
+            opacity .22s ease,
+            visibility 0s linear .30s !important;
+    }
+
+    body.ap-mobile-sidebar-open .sidebar {
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        transform: translateX(0) !important;
+
+        pointer-events: auto !important;
+
+        transition:
+            transform .30s cubic-bezier(.2,.8,.2,1),
+            opacity .22s ease !important;
+    }
+
+    .workspace {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    /* MOBILE MENU */
+
+    #apMobileMenu {
+        position: fixed !important;
+
+        top: 16px !important;
+        left: 16px !important;
+
+        width: 46px !important;
+        height: 46px !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        border-radius: 13px !important;
+
+        cursor: pointer !important;
+
+        pointer-events: auto !important;
+
+        z-index: 100003 !important;
+    }
+
+    /* MOBILE OVERLAY */
+
+    #apSidebarOverlay {
+        position: fixed !important;
+
+        inset: 0 !important;
+
+        display: block !important;
+
+        background: rgba(0,0,0,.58) !important;
+
+        backdrop-filter: blur(5px) !important;
+        -webkit-backdrop-filter: blur(5px) !important;
+
+        opacity: 0 !important;
+
+        visibility: hidden !important;
+
+        pointer-events: none !important;
+
+        z-index: 99998 !important;
+
+        transition:
+            opacity .25s ease,
+            visibility 0s linear .25s !important;
+    }
+
+    body.ap-mobile-sidebar-open #apSidebarOverlay {
+        opacity: 1 !important;
+
+        visibility: visible !important;
+
+        pointer-events: auto !important;
+
+        transition:
+            opacity .25s ease !important;
+    }
+
+    /* NEVER SHOW DESKTOP RAIL ON MOBILE */
+
+    #apCollapsedRail {
+        display: none !important;
+
+        visibility: hidden !important;
+
+        pointer-events: none !important;
+    }
+
+    /* Sidebar controls must remain above everything */
+
+    .sidebar button,
+    .sidebar a,
+    .sidebar input,
+    .sidebar nav,
+    .sidebar-header,
+    .sidebar-footer {
+        pointer-events: auto !important;
+    }
+}
+
+
+/* =========================================================
+   ACCESSIBILITY / CLICK SAFETY
+========================================================= */
+
+#apSidebarCollapse,
+#apRailOpen,
+#apRailNewChat,
+#apRailRecent,
+#apRailSettings,
+#apRailProfile,
+#apMobileMenu {
+    cursor: pointer !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+}
+
+#apCollapsedRail * {
+    pointer-events: auto !important;
+}
+</style>
+
+
+<script>
+/* =========================================================
+   AP SYNAPSE — FINAL SIDEBAR CONTROLLER
+========================================================= */
+
+(function () {
+
+    "use strict";
+
+    const sidebar = document.querySelector(".sidebar");
+
+    const collapseBtn =
+        document.getElementById("apSidebarCollapse");
+
+    const rail =
+        document.getElementById("apCollapsedRail");
+
+    const railOpen =
+        document.getElementById("apRailOpen");
+
+    const railNewChat =
+        document.getElementById("apRailNewChat");
+
+    const railRecent =
+        document.getElementById("apRailRecent");
+
+    const railSettings =
+        document.getElementById("apRailSettings");
+
+    const railProfile =
+        document.getElementById("apRailProfile");
+
+    const mobileMenu =
+        document.getElementById("apMobileMenu");
+
+    const overlay =
+        document.getElementById("apSidebarOverlay");
+
+
+    if (!sidebar) {
+        console.error("AP Synapse: sidebar element not found.");
+        return;
+    }
+
+
+    /* =====================================================
+       DESKTOP COLLAPSE
+    ===================================================== */
+
+    function collapseDesktopSidebar() {
+
+        if (window.innerWidth <= 768) return;
+
+        document.body.classList.add("ap-sidebar-collapsed");
+
+        localStorage.setItem(
+            "apSynapseSidebarCollapsed",
+            "true"
+        );
+    }
+
+
+    function openDesktopSidebar() {
+
+        if (window.innerWidth <= 768) return;
+
+        document.body.classList.remove("ap-sidebar-collapsed");
+
+        localStorage.setItem(
+            "apSynapseSidebarCollapsed",
+            "false"
+        );
+    }
+
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    function openMobileSidebar() {
+
+        if (window.innerWidth > 768) return;
+
+        document.body.classList.add(
+            "ap-mobile-sidebar-open"
+        );
+
+        if (mobileMenu) {
+            mobileMenu.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+        }
+
+        if (overlay) {
+            overlay.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+        }
+    }
+
+
+    function closeMobileSidebar() {
+
+        document.body.classList.remove(
+            "ap-mobile-sidebar-open"
+        );
+
+        if (mobileMenu) {
+            mobileMenu.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+        }
+
+        if (overlay) {
+            overlay.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+        }
+    }
+
+
+    function toggleMobileSidebar() {
+
+        if (
+            document.body.classList.contains(
+                "ap-mobile-sidebar-open"
+            )
+        ) {
+            closeMobileSidebar();
+        } else {
+            openMobileSidebar();
+        }
+    }
+
+
+    /* =====================================================
+       RESPONSIVE STATE
+    ===================================================== */
+
+    function syncSidebarState() {
+
+        if (window.innerWidth > 768) {
+
+            closeMobileSidebar();
+
+            const saved =
+                localStorage.getItem(
+                    "apSynapseSidebarCollapsed"
+                );
+
+            if (saved === "true") {
+
+                document.body.classList.add(
+                    "ap-sidebar-collapsed"
+                );
+
+            } else {
+
+                document.body.classList.remove(
+                    "ap-sidebar-collapsed"
+                );
+
+            }
+
+        } else {
+
+            document.body.classList.remove(
+                "ap-sidebar-collapsed"
+            );
+
+            closeMobileSidebar();
+        }
+    }
+
+
+    /* =====================================================
+       BUTTONS
+    ===================================================== */
+
+    
+
+
+    if (railOpen) {
+
+        railOpen.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                openDesktopSidebar();
+            },
+            true
+        );
+    }
+
+
+    if (mobileMenu) {
+
+        mobileMenu.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                toggleMobileSidebar();
+            },
+            true
+        );
+    }
+
+
+    if (overlay) {
+
+        overlay.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+
+                closeMobileSidebar();
+            },
+            true
+        );
+    }
+
+
+    /* =====================================================
+       RAIL — NEW CONVERSATION
+    ===================================================== */
+
+    if (railNewChat) {
+
+        railNewChat.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                const original =
+                    document.querySelector(
+                        ".new-chat-btn"
+                    );
+
+                if (original) {
+                    original.click();
+                    return;
+                }
+
+                const userInput =
+                    document.getElementById(
+                        "userInput"
+                    );
+
+                if (userInput) {
+                    userInput.value = "";
+                    userInput.focus();
+                }
+            },
+            true
+        );
+    }
+
+
+    /* =====================================================
+       RAIL — RECENT
+    ===================================================== */
+
+    if (railRecent) {
+
+        railRecent.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                const recent =
+                    document.querySelector(
+                        ".recent-group"
+                    );
+
+                if (recent) {
+
+                    recent.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
+
+                }
+
+                if (window.innerWidth <= 768) {
+                    closeMobileSidebar();
+                }
+            },
+            true
+        );
+    }
+
+
+    /* =====================================================
+       RAIL — SETTINGS
+    ===================================================== */
+
+    if (railSettings) {
+
+        railSettings.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                const settings =
+                    document.getElementById(
+                        "sidebarSettingsBtn"
+                    );
+
+                if (settings) {
+                    settings.click();
+                }
+
+                if (window.innerWidth <= 768) {
+                    closeMobileSidebar();
+                }
+            },
+            true
+        );
+    }
+
+
+    /* =====================================================
+       RAIL — PROFILE
+    ===================================================== */
+
+    if (railProfile) {
+
+        railProfile.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                const profile =
+                    document.getElementById(
+                        "profileSidebarBtn"
+                    );
+
+                if (profile) {
+                    profile.click();
+                }
+
+                if (window.innerWidth <= 768) {
+                    closeMobileSidebar();
+                }
+            },
+            true
+        );
+    }
+
+
+    /* =====================================================
+       MOBILE SIDEBAR NAVIGATION
+    ===================================================== */
+
+    const navIds = [
+        "assistantBtn",
+        "projectsBtn",
+        "knowledgeBtn",
+        "documentsBtn",
+        "automationBtn",
+        "codeStudioBtn",
+        "canvasBtn",
+        "sidebarSettingsBtn",
+        "profileSidebarBtn"
+    ];
+
+
+    navIds.forEach(function (id) {
+
+        const button =
+            document.getElementById(id);
+
+        if (!button) return;
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                if (window.innerWidth <= 768) {
+                    closeMobileSidebar();
+                }
+
+            },
+            true
+        );
+    });
+
+
+    /* =====================================================
+       KEYBOARD
+    ===================================================== */
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (event.key === "Escape") {
+
+                if (window.innerWidth <= 768) {
+
+                    closeMobileSidebar();
+
+                } else {
+
+                    openDesktopSidebar();
+
+                }
+            }
+
+        },
+        true
+    );
+
+
+    /* =====================================================
+       RESIZE
+    ===================================================== */
+
+    window.addEventListener(
+        "resize",
+        syncSidebarState
+    );
+
+
+    /* =====================================================
+       INITIALIZE
+    ===================================================== */
+
+    syncSidebarState();
+
+
+    console.log(
+        "AP Synapse — Final Sidebar Controller Active"
+    );
+
+})();
+</script>
+
+/* =========================================================
+   AP SYNAPSE — SIDEBAR CONTROL ENGINE
+========================================================= */
+
+(() => {
+
+    const sidebar =
+        document.getElementById("apSidebarCollapse");
+
+    const rail =
+        document.getElementById("apCollapsedRail");
+
+    const railOpen =
+        document.getElementById("apRailOpen");
+
+    const railNewChat =
+        document.getElementById("apRailNewChat");
+
+    const railRecent =
+        document.getElementById("apRailRecent");
+
+    const railSettings =
+        document.getElementById("apRailSettings");
+
+    const railProfile =
+        document.getElementById("apRailProfile");
+
+    const mobileMenu =
+        document.getElementById("apMobileMenu");
+
+    const overlay =
+        document.getElementById("apSidebarOverlay");
+
+
+    /* -------------------------------------------------------
+       DESKTOP — COLLAPSE
+    ------------------------------------------------------- */
+
+    if (sidebar) {
+
+        sidebar.addEventListener("click", (event) => {
+
+            if (
+                event.target.closest("#apSidebarCollapse")
+            ) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                document.body.classList.add(
+                    "ap-sidebar-collapsed"
+                );
+
+            }
+
+        });
+
+    }
+
+
+    /* -------------------------------------------------------
+       DESKTOP — RESTORE
+    ------------------------------------------------------- */
+
+    if (railOpen) {
+
+        railOpen.addEventListener("click", (event) => {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            document.body.classList.remove(
+                "ap-sidebar-collapsed"
+            );
+
+        });
+
+    }
+
+
+    /* -------------------------------------------------------
+       RAIL — NEW CONVERSATION
+    ------------------------------------------------------- */
+
+    if (railNewChat) {
+
+        railNewChat.addEventListener("click", () => {
+
+            const newChat =
+                document.querySelector(".new-chat-btn");
+
+            if (newChat) {
+                newChat.click();
+                return;
+            }
+
+            const assistant =
+                document.getElementById("assistantBtn");
+
+            if (assistant) {
+                assistant.click();
+            }
+
+        });
+
+    }
+
+
+    /* -------------------------------------------------------
+       RAIL — RECENT
+    ------------------------------------------------------- */
+
+    if (railRecent) {
+
+        railRecent.addEventListener("click", () => {
+
+            const recent =
+                document.querySelector(".recent-group");
+
+            if (recent) {
+
+                recent.scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest"
+                });
+
+            }
+
+        });
+
+    }
+
+
+    /* -------------------------------------------------------
+       RAIL — SETTINGS
+    ------------------------------------------------------- */
+
+    if (railSettings) {
+
+        railSettings.addEventListener("click", () => {
+
+            const settings =
+                document.getElementById(
+                    "sidebarSettingsBtn"
+                );
+
+            if (settings) {
+                settings.click();
+            }
+
+        });
+
+    }
+
+
+    /* -------------------------------------------------------
+       RAIL — PROFILE
+    ------------------------------------------------------- */
+
+    if (railProfile) {
+
+        railProfile.addEventListener("click", () => {
+
+            const profile =
+                document.getElementById(
+                    "profileSidebarBtn"
+                );
+
+            if (profile) {
+                profile.click();
+            }
+
+        });
+
+    }
+
+
+    /* -------------------------------------------------------
+       MOBILE — OPEN
+    ------------------------------------------------------- */
+
+    if (mobileMenu) {
+
+        mobileMenu.addEventListener("click", (event) => {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            document.body.classList.add(
+                "ap-mobile-sidebar-open"
+            );
+
+        });
+
+    }
+
+
+    /* -------------------------------------------------------
+       MOBILE — CLOSE
+    ------------------------------------------------------- */
+
+    if (overlay) {
+
+        overlay.addEventListener("click", () => {
+
+            document.body.classList.remove(
+                "ap-mobile-sidebar-open"
+            );
+
+        });
+
+    }
+
+
+    /* -------------------------------------------------------
+       MOBILE — ESC
+    ------------------------------------------------------- */
+
+    document.addEventListener("keydown", (event) => {
+
+        if (event.key === "Escape") {
+
+            document.body.classList.remove(
+                "ap-mobile-sidebar-open"
+            );
+
+            document.body.classList.remove(
+                "ap-sidebar-collapsed"
+            );
+
+        }
+
+    });
+
+
+    /* -------------------------------------------------------
+       INITIAL STATE
+       ALWAYS RESTORE DESKTOP SIDEBAR
+    ------------------------------------------------------- */
+
+    if (window.innerWidth >= 769) {
+
+        document.body.classList.remove(
+            "ap-sidebar-collapsed"
+        );
+
+    }
+
+
+    console.log(
+        "AP Synapse Sidebar Stabilization: ACTIVE"
+    );
+
+})();
+</script>
 
 </body>
 </html>

@@ -203,3 +203,513 @@ input.addEventListener(
         }
     }
 );
+
+/* ============================================================
+   AP SYNAPSE — PREMIUM SIDEBAR CONTROLLER
+   Desktop + Mobile + PWA Install
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    const MOBILE_BREAKPOINT = 767;
+
+    const sidebar =
+        document.querySelector(".sidebar");
+
+    const collapseButton =
+        document.getElementById("apSidebarCollapse");
+
+    const mobileMenu =
+        document.getElementById("apMobileMenu");
+
+    const overlay =
+        document.getElementById("apSidebarOverlay");
+
+    const rail =
+        document.getElementById("apCollapsedRail");
+
+    const railOpen =
+        document.getElementById("apRailOpen");
+
+    const railNewChat =
+        document.getElementById("apRailNewChat");
+
+    const railRecent =
+        document.getElementById("apRailRecent");
+
+    const railSettings =
+        document.getElementById("apRailSettings");
+
+    const railProfile =
+        document.getElementById("apRailProfile");
+
+    const installButton =
+        document.getElementById("apInstallBtn");
+
+
+    if (!sidebar) {
+        console.warn(
+            "AP Synapse sidebar controller: sidebar not found."
+        );
+
+        return;
+    }
+
+
+    /* ============================================================
+       HELPERS
+       ============================================================ */
+
+    function isMobile() {
+
+        return (
+            window.innerWidth <=
+            MOBILE_BREAKPOINT
+        );
+
+    }
+
+
+    function openMobileSidebar() {
+
+        if (!isMobile()) return;
+
+        sidebar.classList.add(
+            "ap-sidebar-open"
+        );
+
+        overlay?.classList.add(
+            "ap-visible"
+        );
+
+        mobileMenu?.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+        document.body.classList.add(
+            "ap-mobile-sidebar-open"
+        );
+
+    }
+
+
+    function closeMobileSidebar() {
+
+        sidebar.classList.remove(
+            "ap-sidebar-open"
+        );
+
+        overlay?.classList.remove(
+            "ap-visible"
+        );
+
+        mobileMenu?.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        document.body.classList.remove(
+            "ap-mobile-sidebar-open"
+        );
+
+    }
+
+
+    function toggleMobileSidebar() {
+
+        if (!isMobile()) return;
+
+        if (
+            sidebar.classList.contains(
+                "ap-sidebar-open"
+            )
+        ) {
+
+            closeMobileSidebar();
+
+        } else {
+
+            openMobileSidebar();
+
+        }
+
+    }
+
+
+    function collapseDesktopSidebar() {
+
+        if (isMobile()) return;
+
+        document.body.classList.add(
+            "ap-sidebar-collapsed"
+        );
+
+    }
+
+
+    function expandDesktopSidebar() {
+
+        if (isMobile()) return;
+
+        document.body.classList.remove(
+            "ap-sidebar-collapsed"
+        );
+
+    }
+
+
+    /* ============================================================
+       DESKTOP COLLAPSE
+       ============================================================ */
+
+
+    railOpen?.addEventListener(
+        "click",
+        event => {
+
+            event.preventDefault();
+
+            expandDesktopSidebar();
+
+        }
+    );
+
+
+    /* ============================================================
+       MOBILE MENU
+       ============================================================ */
+
+    mobileMenu?.addEventListener(
+        "click",
+        event => {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            toggleMobileSidebar();
+
+        }
+    );
+
+
+    overlay?.addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target === overlay
+            ) {
+
+                closeMobileSidebar();
+
+            }
+
+        }
+    );
+
+
+    /* ============================================================
+       NEW CHAT
+       ============================================================ */
+
+    railNewChat?.addEventListener(
+        "click",
+        () => {
+
+            const newChat =
+                document.querySelector(
+                    ".new-chat-btn"
+                );
+
+            if (newChat) {
+
+                newChat.click();
+
+            } else {
+
+                window.location.reload();
+
+            }
+
+        }
+    );
+
+
+    /* ============================================================
+       RECENTS
+       ============================================================ */
+
+    railRecent?.addEventListener(
+        "click",
+        () => {
+
+            expandDesktopSidebar();
+
+            const recent =
+                document.querySelector(
+                    ".recent-group"
+                );
+
+            if (recent) {
+
+                recent.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
+            }
+
+        }
+    );
+
+
+    /* ============================================================
+       SETTINGS
+       ============================================================ */
+
+    railSettings?.addEventListener(
+        "click",
+        () => {
+
+            const settings =
+                document.getElementById(
+                    "sidebarSettingsBtn"
+                );
+
+            if (settings) {
+
+                settings.click();
+
+            }
+
+        }
+    );
+
+
+    /* ============================================================
+       PROFILE
+       ============================================================ */
+
+    railProfile?.addEventListener(
+        "click",
+        () => {
+
+            const profile =
+                document.getElementById(
+                    "profileSidebarBtn"
+                );
+
+            if (profile) {
+
+                profile.click();
+
+            }
+
+        }
+    );
+
+
+    /* ============================================================
+       SIDEBAR NAVIGATION
+       Mobile closes after selection.
+       Desktop stays open.
+       ============================================================ */
+
+    sidebar.addEventListener(
+        "click",
+        event => {
+
+            const item =
+                event.target.closest(
+                    "a, button"
+                );
+
+            if (!item) return;
+
+            if (
+                isMobile() &&
+                !item.closest(
+                    "#apMobileMenu"
+                )
+            ) {
+
+                setTimeout(
+                    closeMobileSidebar,
+                    100
+                );
+
+            }
+
+        },
+        true
+    );
+
+
+    /* ============================================================
+       ESCAPE
+       ============================================================ */
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Escape" &&
+                isMobile()
+            ) {
+
+                closeMobileSidebar();
+
+            }
+
+        }
+    );
+
+
+    /* ============================================================
+       RESPONSIVE STATE
+       ============================================================ */
+
+    window.addEventListener(
+        "resize",
+        () => {
+
+            if (isMobile()) {
+
+                document.body.classList.remove(
+                    "ap-sidebar-collapsed"
+                );
+
+            } else {
+
+                closeMobileSidebar();
+
+            }
+
+        },
+        {
+            passive: true
+        }
+    );
+
+
+    /* ============================================================
+       PWA INSTALL
+       ============================================================ */
+
+    let deferredInstallPrompt = null;
+
+
+    window.addEventListener(
+        "beforeinstallprompt",
+        event => {
+
+            event.preventDefault();
+
+            deferredInstallPrompt =
+                event;
+
+            if (installButton) {
+
+                installButton.style.display =
+                    "flex";
+
+            }
+
+        }
+    );
+
+
+    installButton?.addEventListener(
+        "click",
+        async () => {
+
+            if (
+                deferredInstallPrompt
+            ) {
+
+                deferredInstallPrompt.prompt();
+
+                const choice =
+                    await deferredInstallPrompt.userChoice;
+
+                console.log(
+                    "AP Synapse install result:",
+                    choice.outcome
+                );
+
+                deferredInstallPrompt =
+                    null;
+
+                return;
+
+            }
+
+
+            /*
+             * Browser does not currently expose
+             * the install prompt.
+             */
+
+            if (
+                window.matchMedia(
+                    "(display-mode: standalone)"
+                ).matches
+            ) {
+
+                alert(
+                    "AP Synapse is already installed."
+                );
+
+                return;
+
+            }
+
+
+            alert(
+                "To install AP Synapse, open your browser menu and choose “Install AP Synapse” or “Add to Home screen”."
+            );
+
+        }
+    );
+
+
+    window.addEventListener(
+        "appinstalled",
+        () => {
+
+            deferredInstallPrompt =
+                null;
+
+            console.log(
+                "✅ AP Synapse installed successfully."
+            );
+
+        }
+    );
+
+
+    /* ============================================================
+       INITIAL STATE
+       ============================================================ */
+
+    if (isMobile()) {
+
+        closeMobileSidebar();
+
+    } else {
+
+        document.body.classList.remove(
+            "ap-sidebar-collapsed"
+        );
+
+    }
+
+
+    console.log(
+        "✅ AP SYNAPSE PREMIUM SIDEBAR SYSTEM ACTIVE"
+    );
+
+})();

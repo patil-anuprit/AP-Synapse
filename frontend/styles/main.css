@@ -24283,3 +24283,483 @@ body {
         font-size: 10px;
     }
 }
+
+/* ============================================================
+   AP SYNAPSE — PREMIUM SIDEBAR SYSTEM
+   Desktop + Mobile
+   ============================================================ */
+
+:root {
+    --ap-sidebar-width: 292px;
+    --ap-sidebar-rail: 68px;
+    --ap-gold: #c9a85e;
+    --ap-gold-soft: rgba(201,168,94,.16);
+    --ap-panel: rgba(15,16,19,.96);
+    --ap-border: rgba(255,255,255,.075);
+}
+
+
+/* ============================================================
+   DESKTOP SIDEBAR TOP CONTROL
+   ============================================================ */
+
+.ap-sidebar-topbar {
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 8px 12px;
+    box-sizing: border-box;
+}
+
+.ap-sidebar-icon-btn {
+    width: 36px;
+    height: 36px;
+
+    border: 1px solid var(--ap-border);
+    border-radius: 11px;
+
+    background: rgba(255,255,255,.035);
+    color: #cfcfc9;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 24px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background .18s ease,
+        color .18s ease,
+        border-color .18s ease,
+        transform .18s ease;
+}
+
+.ap-sidebar-icon-btn:hover {
+    background: var(--ap-gold-soft);
+    color: var(--ap-gold);
+    border-color: rgba(201,168,94,.28);
+    transform: translateX(-1px);
+}
+
+
+/* ============================================================
+   INSTALL AP SYNAPSE
+   ============================================================ */
+
+.ap-install-btn {
+    width: 100%;
+    min-height: 48px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 0 15px;
+    margin-top: 10px;
+
+    border: 1px solid rgba(201,168,94,.18);
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(201,168,94,.09),
+            rgba(255,255,255,.025)
+        );
+
+    color: #e4dfd2;
+
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.ap-install-btn:hover {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(201,168,94,.16),
+            rgba(255,255,255,.04)
+        );
+
+    border-color: rgba(201,168,94,.34);
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,.18);
+
+    transform: translateY(-1px);
+}
+
+.ap-install-icon {
+    width: 27px;
+    height: 27px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: rgba(201,168,94,.12);
+    color: var(--ap-gold);
+
+    font-size: 16px;
+}
+
+
+/* ============================================================
+   COLLAPSED DESKTOP RAIL
+   ============================================================ */
+
+.ap-collapsed-rail {
+    position: fixed;
+
+    top: 12px;
+    left: 12px;
+    bottom: 12px;
+
+    width: var(--ap-sidebar-rail);
+
+    display: none;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 12px 9px;
+
+    box-sizing: border-box;
+
+    border:
+        1px solid rgba(255,255,255,.07);
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(20,21,25,.96),
+            rgba(10,11,14,.96)
+        );
+
+    backdrop-filter: blur(18px);
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.28);
+
+    z-index: 9990;
+}
+
+.ap-collapsed-rail.ap-visible {
+    display: flex;
+}
+
+.ap-rail-btn {
+    position: relative;
+
+    width: 44px;
+    height: 44px;
+
+    margin: 4px 0;
+
+    border:
+        1px solid rgba(255,255,255,.065);
+
+    border-radius: 12px;
+
+    background: rgba(255,255,255,.025);
+
+    color: #aaa9a4;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font: inherit;
+    font-size: 17px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background .18s ease,
+        color .18s ease,
+        border-color .18s ease,
+        transform .18s ease;
+}
+
+.ap-rail-btn:hover {
+    color: var(--ap-gold);
+
+    background:
+        rgba(201,168,94,.10);
+
+    border-color:
+        rgba(201,168,94,.24);
+
+    transform: translateY(-1px);
+}
+
+.ap-rail-brand {
+    color: var(--ap-gold);
+    font-size: 13px;
+    letter-spacing: .04em;
+}
+
+.ap-rail-spacer {
+    flex: 1;
+}
+
+
+/* ============================================================
+   PREMIUM TOOLTIP
+   ============================================================ */
+
+[data-tooltip] {
+    position: relative;
+}
+
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+
+    position: absolute;
+
+    left: calc(100% + 10px);
+    top: 50%;
+
+    transform:
+        translateY(-50%)
+        translateX(-4px);
+
+    padding: 7px 10px;
+
+    border:
+        1px solid rgba(255,255,255,.09);
+
+    border-radius: 8px;
+
+    background: rgba(12,13,16,.97);
+
+    color: #e9e8e4;
+
+    font-size: 11px;
+    font-weight: 500;
+
+    white-space: nowrap;
+
+    pointer-events: none;
+
+    opacity: 0;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.28);
+
+    transition:
+        opacity .15s ease,
+        transform .15s ease;
+
+    z-index: 10000;
+}
+
+[data-tooltip]:hover::after {
+    opacity: 1;
+
+    transform:
+        translateY(-50%)
+        translateX(0);
+}
+
+
+/* ============================================================
+   MOBILE MENU BUTTON
+   ============================================================ */
+
+.ap-mobile-menu {
+    position: fixed;
+
+    top: 14px;
+    left: 14px;
+
+    width: 46px;
+    height: 46px;
+
+    border:
+        1px solid rgba(255,255,255,.09);
+
+    border-radius: 14px;
+
+    background:
+        rgba(13,14,17,.88);
+
+    color: #e8e6df;
+
+    backdrop-filter: blur(18px);
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 21px;
+
+    cursor: pointer;
+
+    z-index: 10001;
+
+    box-shadow:
+        0 10px 35px rgba(0,0,0,.25);
+}
+
+
+/* ============================================================
+   MOBILE OVERLAY
+   ============================================================ */
+
+#apSidebarOverlay {
+    position: fixed;
+    inset: 0;
+
+    background:
+        rgba(0,0,0,.54);
+
+    backdrop-filter: blur(2px);
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition:
+        opacity .22s ease,
+        visibility .22s ease;
+
+    z-index: 9998;
+}
+
+#apSidebarOverlay.ap-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 767px) {
+
+    .ap-sidebar-topbar {
+        height: 58px;
+    }
+
+    .ap-sidebar-icon-btn {
+        width: 40px;
+        height: 40px;
+
+        font-size: 25px;
+    }
+
+    aside.sidebar {
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        width: min(340px, 88vw) !important;
+        height: 100dvh !important;
+
+        z-index: 9999 !important;
+
+        transform:
+            translate3d(-105%,0,0) !important;
+
+        visibility: hidden !important;
+        pointer-events: none !important;
+        opacity: 1 !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        transition:
+            transform .25s cubic-bezier(.22,.61,.36,1),
+            visibility .25s ease !important;
+
+        box-shadow:
+            18px 0 60px rgba(0,0,0,.35);
+    }
+
+    aside.sidebar.ap-sidebar-open {
+        transform:
+            translate3d(0,0,0) !important;
+
+        visibility: visible !important;
+        pointer-events: auto !important;
+    }
+
+    .ap-mobile-menu {
+        display: flex;
+    }
+
+    .ap-collapsed-rail {
+        display: none !important;
+    }
+
+    .sidebar nav a,
+    .new-chat-btn,
+    .ap-install-btn {
+        min-height: 50px;
+    }
+
+    .sidebar nav a {
+        display: flex;
+        align-items: center;
+        padding: 0 14px;
+        border-radius: 12px;
+    }
+
+    .ap-sidebar-topbar .ap-sidebar-icon-btn {
+        display: none;
+    }
+
+    [data-tooltip]::after {
+        display: none;
+    }
+}
+
+
+/* ============================================================
+   SIDEBAR COLLAPSED DESKTOP STATE
+   ============================================================ */
+
+@media (min-width: 768px) {
+
+    body.ap-sidebar-collapsed .sidebar {
+        transform:
+            translateX(
+                calc(-1 * var(--ap-sidebar-width) - 20px)
+            );
+
+        opacity: 0;
+        pointer-events: none;
+
+        transition:
+            transform .25s ease,
+            opacity .2s ease;
+    }
+
+    body.ap-sidebar-collapsed .ap-collapsed-rail {
+        display: flex;
+    }
+
+}

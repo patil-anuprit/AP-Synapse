@@ -10191,3 +10191,1586 @@ setTimeout(() => {
         }, 250);
 
 })();
+
+/* ============================================================
+   AP SYNAPSE — DESKTOP SIDEBAR COLLAPSE / RAIL
+   FINAL SAFE CONTROLLER
+   ------------------------------------------------------------
+   Uses the existing:
+      body.ap-sidebar-collapsed
+      .ap-collapsed-rail
+      .ap-rail-btn
+      .ap-sidebar-icon-btn
+
+   Desktop only.
+   Mobile is completely untouched.
+   No permanent localStorage state.
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    const AP_DESKTOP = 767;
+
+    const isDesktop = () =>
+        window.innerWidth > AP_DESKTOP;
+
+    function getSidebar() {
+        return document.querySelector(
+            ".app > aside.sidebar, aside.sidebar, .sidebar"
+        );
+    }
+
+    function getRail() {
+        return document.querySelector(
+            ".ap-collapsed-rail"
+        );
+    }
+
+    function getCollapseButton() {
+        const sidebar = getSidebar();
+
+        if (!sidebar) return null;
+
+        return sidebar.querySelector(
+            ".ap-sidebar-icon-btn"
+        );
+    }
+
+    /* ============================================================
+   AP SYNAPSE — SINGLE DESKTOP SIDEBAR CONTROLLER
+   ============================================================ */
+
+(() => {
+
+    "use strict";
+
+    const DESKTOP_BREAKPOINT = 768;
+    const SIDEBAR_WIDTH = "280px";
+    const RAIL_WIDTH = "64px";
+
+    function isDesktop() {
+        return window.innerWidth > DESKTOP_BREAKPOINT;
+    }
+
+    function getSidebar() {
+        return document.querySelector(".sidebar");
+    }
+
+    function getRail() {
+        return document.querySelector("#apCollapsedRail");
+    }
+
+    function getCollapseButton() {
+        return document.querySelector("#apSidebarCollapse");
+    }
+
+    /* ========================================================
+       FORCE FULL SIDEBAR
+       ======================================================== */
+
+    function showFullSidebar() {
+
+        if (!isDesktop()) return;
+
+        const sidebar = getSidebar();
+        const rail = getRail();
+
+        document.body.classList.remove(
+            "ap-sidebar-collapsed"
+        );
+
+        if (sidebar) {
+
+            sidebar.classList.remove(
+                "ap-sidebar-collapsed"
+            );
+
+            sidebar.style.setProperty(
+                "display",
+                "flex",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "width",
+                SIDEBAR_WIDTH,
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "opacity",
+                "1",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "visibility",
+                "visible",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "pointer-events",
+                "auto",
+                "important"
+            );
+
+            sidebar.style.setProperty(
+                "z-index",
+                "2147483000",
+                "important"
+            );
+        }
+
+        if (rail) {
+
+            rail.classList.remove("ap-visible");
+
+            rail.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+            rail.style.setProperty(
+                "display",
+                "none",
+                "important"
+            );
+
+            rail.style.setProperty(
+                "pointer-events",
+                "none",
+                "important"
+            );
+        }
+
+        const collapseButton =
+            getCollapseButton();
+
+        if (collapseButton) {
+
+            collapseButton.setAttribute(
+                "aria-label",
+                "Collapse sidebar"
+            );
+
+            collapseButton.setAttribute(
+                "data-tooltip",
+                "Collapse sidebar"
+            );
+
+            collapseButton.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+        }
+    }
+
+
+    /* ========================================================
+       COLLAPSE TO 64px RAIL
+       ======================================================== */
+
+    function collapseToRail() {
+
+        if (!isDesktop()) return;
+
+        const sidebar = getSidebar();
+        const rail = getRail();
+
+        if (!sidebar || !rail) {
+            console.error(
+                "❌ AP Synapse sidebar/rail missing."
+            );
+            return;
+        }
+
+        /*
+         * Collapse the main sidebar.
+         */
+
+        document.body.classList.add(
+            "ap-sidebar-collapsed"
+        );
+
+        sidebar.classList.add(
+            "ap-sidebar-collapsed"
+        );
+
+        sidebar.style.setProperty(
+            "width",
+            "0px",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "min-width",
+            "0px",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "opacity",
+            "0",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "visibility",
+            "hidden",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "pointer-events",
+            "none",
+            "important"
+        );
+
+
+        /*
+         * Show the EXISTING AP Collapsed Rail.
+         */
+
+        rail.classList.add(
+            "ap-visible"
+        );
+
+        rail.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+        rail.style.setProperty(
+            "display",
+            "flex",
+            "important"
+        );
+
+        rail.style.setProperty(
+            "visibility",
+            "visible",
+            "important"
+        );
+
+        rail.style.setProperty(
+            "opacity",
+            "1",
+            "important"
+        );
+
+        rail.style.setProperty(
+            "width",
+            RAIL_WIDTH,
+            "important"
+        );
+
+        rail.style.setProperty(
+            "height",
+            "100vh",
+            "important"
+        );
+
+        rail.style.setProperty(
+            "position",
+            "fixed",
+            "important"
+        );
+
+        rail.style.setProperty(
+            "left",
+            "0",
+            "important"
+        );
+
+        rail.style.setProperty(
+            "top",
+            "0",
+            "important"
+        );
+
+        rail.style.setProperty(
+            "z-index",
+            "2147483000",
+            "important"
+        );
+
+        rail.style.setProperty(
+            "pointer-events",
+            "auto",
+            "important"
+        );
+
+
+        /*
+         * Update collapse button state.
+         */
+
+        const collapseButton =
+            getCollapseButton();
+
+        if (collapseButton) {
+
+            collapseButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            collapseButton.setAttribute(
+                "aria-label",
+                "Sidebar collapsed"
+            );
+        }
+
+        console.log(
+            "✅ AP SYNAPSE — SIDEBAR → 64px RAIL"
+        );
+    }
+
+
+    /* ========================================================
+       RAIL → FULL SIDEBAR
+       ======================================================== */
+
+    function expandFromRail() {
+
+        if (!isDesktop()) return;
+
+        showFullSidebar();
+
+        localStorage.setItem(
+            "apSynapseSidebarCollapsed",
+            "false"
+        );
+
+        console.log(
+            "✅ AP SYNAPSE — RAIL → FULL SIDEBAR"
+        );
+    }
+
+
+    /* ========================================================
+       COLLAPSE BUTTON
+       ======================================================== */
+
+    function bindCollapseButton() {
+
+        const oldButton =
+            getCollapseButton();
+
+        if (!oldButton) return;
+
+        /*
+         * Replace the button with a clone.
+         *
+         * This removes all the old conflicting
+         * click listeners from previous controllers.
+         */
+
+        if (
+            oldButton.dataset.apCleanSidebarButton ===
+            "true"
+        ) {
+            return;
+        }
+
+        const button =
+            oldButton.cloneNode(true);
+
+        button.dataset.apCleanSidebarButton =
+            "true";
+
+        oldButton.replaceWith(button);
+
+        button.addEventListener(
+            "click",
+            event => {
+
+                if (!isDesktop()) return;
+
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                event.stopPropagation();
+
+                collapseToRail();
+
+                localStorage.setItem(
+                    "apSynapseSidebarCollapsed",
+                    "true"
+                );
+
+            },
+            true
+        );
+
+        console.log(
+            "✅ AP Synapse — collapse button bound once"
+        );
+    }
+
+
+    /* ========================================================
+       RAIL BUTTON HELPERS
+       ======================================================== */
+
+    function clickExisting(id) {
+
+        const target =
+            document.getElementById(id);
+
+        if (!target) {
+
+            console.warn(
+                "⚠️ Sidebar target not found:",
+                id
+            );
+
+            return false;
+        }
+
+        target.click();
+
+        return true;
+    }
+
+
+    /* ========================================================
+       RAIL NAVIGATION
+       ======================================================== */
+
+    function bindRail() {
+
+        const rail = getRail();
+
+        if (!rail) {
+
+            console.warn(
+                "⚠️ #apCollapsedRail not found."
+            );
+
+            return;
+        }
+
+        /*
+         * Replace the entire rail once.
+         *
+         * This removes old rail listeners.
+         */
+
+        if (
+            rail.dataset.apCleanRail ===
+            "true"
+        ) {
+            return;
+        }
+
+        const cleanRail =
+            rail.cloneNode(true);
+
+        cleanRail.dataset.apCleanRail =
+            "true";
+
+        rail.replaceWith(cleanRail);
+
+
+        cleanRail.style.setProperty(
+            "pointer-events",
+            "auto",
+            "important"
+        );
+
+        cleanRail
+            .querySelectorAll(".ap-rail-btn")
+            .forEach(button => {
+
+                button.style.setProperty(
+                    "pointer-events",
+                    "auto",
+                    "important"
+                );
+
+                button.style.setProperty(
+                    "cursor",
+                    "pointer",
+                    "important"
+                );
+            });
+
+
+        cleanRail.addEventListener(
+            "click",
+            event => {
+
+                if (!isDesktop()) return;
+
+                const button =
+                    event.target.closest(
+                        ".ap-rail-btn"
+                    );
+
+                if (!button) return;
+
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                event.stopPropagation();
+
+
+                /*
+                 * OPEN SIDEBAR
+                 */
+
+                if (
+                    button.id === "apRailOpen" ||
+                    button.classList.contains(
+                        "ap-rail-expand"
+                    )
+                ) {
+
+                    expandFromRail();
+
+                    return;
+                }
+
+
+                /*
+                 * NEW CHAT
+                 */
+
+                if (
+                    button.id === "apRailNewChat"
+                ) {
+
+                    expandFromRail();
+
+                    setTimeout(
+                        () => {
+
+                            clickExisting(
+                                "newChatBtn"
+                            ) ||
+                            document
+                                .querySelector(
+                                    ".new-chat-btn"
+                                )
+                                ?.click();
+
+                        },
+                        80
+                    );
+
+                    return;
+                }
+
+
+                /*
+                 * RECENT
+                 */
+
+                if (
+                    button.id === "apRailRecent"
+                ) {
+
+                    expandFromRail();
+
+                    setTimeout(
+                        () => {
+
+                            const history =
+                                document.querySelector(
+                                    ".history"
+                                );
+
+                            if (history) {
+
+                                history.scrollIntoView({
+                                    behavior:
+                                        "smooth",
+                                    block:
+                                        "start"
+                                });
+
+                                return;
+                            }
+
+                            const firstHistory =
+                                document.querySelector(
+                                    ".history-item"
+                                );
+
+                            firstHistory?.click();
+
+                        },
+                        80
+                    );
+
+                    return;
+                }
+
+
+                /*
+                 * SETTINGS
+                 */
+
+                if (
+                    button.id === "apRailSettings"
+                ) {
+
+                    expandFromRail();
+
+                    setTimeout(
+                        () => {
+
+                            clickExisting(
+                                "sidebarSettingsBtn"
+                            );
+
+                        },
+                        80
+                    );
+
+                    return;
+                }
+
+
+                /*
+                 * PROFILE
+                 */
+
+                if (
+                    button.id === "apRailProfile"
+                ) {
+
+                    expandFromRail();
+
+                    setTimeout(
+                        () => {
+
+                            clickExisting(
+                                "profileSidebarBtn"
+                            );
+
+                        },
+                        80
+                    );
+
+                    return;
+                }
+
+            },
+            true
+        );
+
+        console.log(
+            "✅ AP Synapse — rail navigation bound once"
+        );
+    }
+
+
+    /* ========================================================
+       DESKTOP / MOBILE SAFETY
+       ======================================================== */
+
+    function syncResponsiveState() {
+
+        const sidebar = getSidebar();
+        const rail = getRail();
+
+        if (!sidebar) return;
+
+
+        /*
+         * MOBILE
+         */
+
+        if (!isDesktop()) {
+
+            document.body.classList.remove(
+                "ap-sidebar-collapsed"
+            );
+
+            sidebar.classList.remove(
+                "ap-sidebar-collapsed"
+            );
+
+            sidebar.style.removeProperty(
+                "width"
+            );
+
+            sidebar.style.removeProperty(
+                "opacity"
+            );
+
+            sidebar.style.removeProperty(
+                "visibility"
+            );
+
+            sidebar.style.removeProperty(
+                "pointer-events"
+            );
+
+            if (rail) {
+
+                rail.classList.remove(
+                    "ap-visible"
+                );
+
+                rail.setAttribute(
+                    "aria-hidden",
+                    "true"
+                );
+
+                rail.style.setProperty(
+                    "display",
+                    "none",
+                    "important"
+                );
+            }
+
+            return;
+        }
+
+
+        /*
+         * DESKTOP
+         */
+
+        const saved =
+            localStorage.getItem(
+                "apSynapseSidebarCollapsed"
+            );
+
+        if (saved === "true") {
+
+            collapseToRail();
+
+        } else {
+
+            showFullSidebar();
+
+        }
+    }
+
+
+    /* ========================================================
+       INITIALIZE
+       ======================================================== */
+
+    function initializeSidebarController() {
+
+        if (!isDesktop()) {
+
+            syncResponsiveState();
+
+            return;
+        }
+
+        bindCollapseButton();
+        bindRail();
+
+        /*
+         * Default to the user's saved state.
+         *
+         * If there is no saved state, full sidebar.
+         */
+
+        const saved =
+            localStorage.getItem(
+                "apSynapseSidebarCollapsed"
+            );
+
+        if (saved === "true") {
+
+            collapseToRail();
+
+        } else {
+
+            localStorage.setItem(
+                "apSynapseSidebarCollapsed",
+                "false"
+            );
+
+            showFullSidebar();
+
+        }
+
+        console.log(
+            "✅ AP SYNAPSE — SINGLE SIDEBAR CONTROLLER ACTIVE"
+        );
+    }
+
+
+    /* ========================================================
+       RESIZE
+       ======================================================== */
+
+    let resizeTimer = null;
+
+    window.addEventListener(
+        "resize",
+        () => {
+
+            clearTimeout(resizeTimer);
+
+            resizeTimer = setTimeout(
+                () => {
+
+                    syncResponsiveState();
+
+                },
+                100
+            );
+
+        },
+        {
+            passive: true
+        }
+    );
+
+
+    /* ========================================================
+       START
+       ======================================================== */
+
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            initializeSidebarController,
+            {
+                once: true
+            }
+        );
+
+    } else {
+
+        initializeSidebarController();
+
+    }
+
+})();
+
+    /* ---------------------------------------------------------
+       RESIZE
+       --------------------------------------------------------- */
+
+    window.addEventListener(
+        "resize",
+        () => {
+
+            desktopSafety();
+
+            if (isDesktop()) {
+
+                ensureRail();
+                bindCollapseButton();
+                bindRail();
+
+            }
+
+        },
+        {
+            passive: true
+        }
+    );
+
+    /* ---------------------------------------------------------
+       DYNAMIC DOM SAFETY
+       --------------------------------------------------------- */
+
+   
+
+    /* ---------------------------------------------------------
+       START
+       --------------------------------------------------------- */
+
+   
+
+/* ============================================================
+   AP SYNAPSE — STABLE DESKTOP SIDEBAR CONTROLLER
+   FINAL SINGLE CONTROLLER
+   ============================================================ */
+
+(() => {
+
+    "use strict";
+
+    console.log(
+        "🚀 AP SYNAPSE — STABLE SIDEBAR CONTROLLER STARTING"
+    );
+
+    const SIDEBAR_SELECTOR = ".sidebar";
+    const COLLAPSED_CLASS = "ap-sidebar-collapsed";
+
+    const sidebar =
+        document.querySelector(SIDEBAR_SELECTOR);
+
+    const collapseButton =
+        document.querySelector("#apSidebarCollapse");
+
+    const rail =
+        document.querySelector("#apCollapsedRail");
+
+    if (!sidebar) {
+        console.error(
+            "❌ AP SYNAPSE — Sidebar element not found"
+        );
+        return;
+    }
+
+    if (!collapseButton) {
+        console.error(
+            "❌ AP SYNAPSE — Collapse button not found"
+        );
+        return;
+    }
+
+    if (!rail) {
+        console.error(
+            "❌ AP SYNAPSE — Collapsed rail not found"
+        );
+        return;
+    }
+
+
+    /* ========================================================
+       DESKTOP CHECK
+       ======================================================== */
+
+    function isDesktop() {
+        return window.innerWidth > 768;
+    }
+
+
+    /* ========================================================
+       FORCE RAIL VISIBILITY
+       ======================================================== */
+
+    function showRail() {
+
+        rail.classList.add("ap-visible");
+
+        rail.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+        rail.style.setProperty(
+            "display",
+            "flex",
+            "important"
+        );
+
+        rail.style.setProperty(
+            "visibility",
+            "visible",
+            "important"
+        );
+
+        rail.style.setProperty(
+            "opacity",
+            "1",
+            "important"
+        );
+
+        rail.style.setProperty(
+            "pointer-events",
+            "auto",
+            "important"
+        );
+
+        rail.style.setProperty(
+            "position",
+            "fixed",
+            "important"
+        );
+
+        rail.style.setProperty(
+            "left",
+            "0",
+            "important"
+        );
+
+        rail.style.setProperty(
+            "top",
+            "0",
+            "important"
+        );
+
+        rail.style.setProperty(
+            "width",
+            "64px",
+            "important"
+        );
+
+        rail.style.setProperty(
+            "height",
+            "100vh",
+            "important"
+        );
+
+        rail.style.setProperty(
+            "z-index",
+            "2147483000",
+            "important"
+        );
+    }
+
+
+    /* ========================================================
+       HIDE RAIL
+       ======================================================== */
+
+    function hideRail() {
+
+        rail.classList.remove("ap-visible");
+
+        rail.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        rail.style.removeProperty("display");
+        rail.style.removeProperty("visibility");
+        rail.style.removeProperty("opacity");
+        rail.style.removeProperty("pointer-events");
+    }
+
+
+    /* ========================================================
+       OPEN FULL SIDEBAR
+       ======================================================== */
+
+    function openSidebar() {
+
+        if (!isDesktop()) return;
+
+        document.body.classList.remove(
+            COLLAPSED_CLASS
+        );
+
+        sidebar.classList.remove(
+            COLLAPSED_CLASS
+        );
+
+        sidebar.style.setProperty(
+            "display",
+            "flex",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "visibility",
+            "visible",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "opacity",
+            "1",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "width",
+            "280px",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "pointer-events",
+            "auto",
+            "important"
+        );
+
+        hideRail();
+
+        collapseButton.setAttribute(
+            "aria-label",
+            "Collapse sidebar"
+        );
+
+        collapseButton.setAttribute(
+            "data-tooltip",
+            "Collapse sidebar"
+        );
+
+        collapseButton.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+        localStorage.setItem(
+            "apSynapseSidebarCollapsed",
+            "false"
+        );
+
+        console.log(
+            "✅ AP SYNAPSE — FULL SIDEBAR OPEN"
+        );
+    }
+
+
+    /* ========================================================
+       COLLAPSE TO RAIL
+       ======================================================== */
+
+    function collapseSidebar() {
+
+        if (!isDesktop()) return;
+
+        document.body.classList.add(
+            COLLAPSED_CLASS
+        );
+
+        sidebar.classList.add(
+            COLLAPSED_CLASS
+        );
+
+        sidebar.style.setProperty(
+            "width",
+            "0px",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "opacity",
+            "0",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "pointer-events",
+            "none",
+            "important"
+        );
+
+        showRail();
+
+        collapseButton.setAttribute(
+            "aria-label",
+            "Expand sidebar"
+        );
+
+        collapseButton.setAttribute(
+            "data-tooltip",
+            "Expand sidebar"
+        );
+
+        collapseButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        localStorage.setItem(
+            "apSynapseSidebarCollapsed",
+            "true"
+        );
+
+        console.log(
+            "✅ AP SYNAPSE — SIDEBAR COLLAPSED TO RAIL"
+        );
+    }
+
+
+    /* ========================================================
+       REMOVE OLD BUTTON LISTENERS
+       ======================================================== */
+
+    const cleanCollapseButton =
+        collapseButton.cloneNode(true);
+
+    collapseButton.replaceWith(
+        cleanCollapseButton
+    );
+
+
+    /* ========================================================
+       COLLAPSE BUTTON
+       ======================================================== */
+
+    cleanCollapseButton.addEventListener(
+        "click",
+        event => {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (!isDesktop()) return;
+
+            collapseSidebar();
+
+        },
+        true
+    );
+
+
+    /* ========================================================
+       RAIL BUTTONS
+       ======================================================== */
+
+    const railButtons =
+        rail.querySelectorAll(
+            "button"
+        );
+
+
+    railButtons.forEach(button => {
+
+        button.style.setProperty(
+            "pointer-events",
+            "auto",
+            "important"
+        );
+
+        button.style.setProperty(
+            "cursor",
+            "pointer",
+            "important"
+        );
+
+    });
+
+
+    /* ========================================================
+       OPEN BUTTON
+       ======================================================== */
+
+    const openButton =
+        rail.querySelector(
+            "#apRailOpen"
+        );
+
+
+    if (openButton) {
+
+        const cleanOpenButton =
+            openButton.cloneNode(true);
+
+        openButton.replaceWith(
+            cleanOpenButton
+        );
+
+
+        cleanOpenButton.addEventListener(
+            "click",
+            event => {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                openSidebar();
+
+            },
+            true
+        );
+
+    } else {
+
+        console.error(
+            "❌ AP SYNAPSE — #apRailOpen not found"
+        );
+
+    }
+
+
+    /* ========================================================
+       NEW CHAT
+       ======================================================== */
+
+    const newChatButton =
+        rail.querySelector(
+            "#apRailNewChat"
+        );
+
+
+    if (newChatButton) {
+
+        const cleanNewChat =
+            newChatButton.cloneNode(true);
+
+        newChatButton.replaceWith(
+            cleanNewChat
+        );
+
+
+        cleanNewChat.addEventListener(
+            "click",
+            event => {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                openSidebar();
+
+                setTimeout(() => {
+
+                    const newChat =
+                        document.querySelector(
+                            ".new-chat-btn"
+                        );
+
+                    if (newChat) {
+                        newChat.click();
+                    }
+
+                }, 100);
+
+            },
+            true
+        );
+
+    }
+
+
+    /* ========================================================
+       RECENT
+       ======================================================== */
+
+    const recentButton =
+        rail.querySelector(
+            "#apRailRecent"
+        );
+
+
+    if (recentButton) {
+
+        const cleanRecent =
+            recentButton.cloneNode(true);
+
+        recentButton.replaceWith(
+            cleanRecent
+        );
+
+
+        cleanRecent.addEventListener(
+            "click",
+            event => {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                openSidebar();
+
+                setTimeout(() => {
+
+                    const target =
+                        document.querySelector(
+                            "#historyPanel, .history-section, .history-list"
+                        );
+
+                    if (target) {
+
+                        target.scrollIntoView({
+                            behavior: "smooth",
+                            block: "nearest"
+                        });
+
+                    }
+
+                }, 100);
+
+            },
+            true
+        );
+
+    }
+
+
+    /* ========================================================
+       SETTINGS
+       ======================================================== */
+
+    const settingsButton =
+        rail.querySelector(
+            "#apRailSettings"
+        );
+
+
+    if (settingsButton) {
+
+        const cleanSettings =
+            settingsButton.cloneNode(true);
+
+        settingsButton.replaceWith(
+            cleanSettings
+        );
+
+
+        cleanSettings.addEventListener(
+            "click",
+            event => {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                openSidebar();
+
+                setTimeout(() => {
+
+                    const settings =
+                        document.querySelector(
+                            "#sidebarSettingsBtn"
+                        );
+
+                    if (settings) {
+                        settings.click();
+                    }
+
+                }, 100);
+
+            },
+            true
+        );
+
+    }
+
+
+    /* ========================================================
+       PROFILE
+       ======================================================== */
+
+    const profileButton =
+        rail.querySelector(
+            "#apRailProfile"
+        );
+
+
+    if (profileButton) {
+
+        const cleanProfile =
+            profileButton.cloneNode(true);
+
+        profileButton.replaceWith(
+            cleanProfile
+        );
+
+
+        cleanProfile.addEventListener(
+            "click",
+            event => {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                openSidebar();
+
+                setTimeout(() => {
+
+                    const profile =
+                        document.querySelector(
+                            "#profileSidebarBtn"
+                        );
+
+                    if (profile) {
+                        profile.click();
+                    }
+
+                }, 100);
+
+            },
+            true
+        );
+
+    }
+
+
+    /* ========================================================
+       INITIAL STATE
+       ======================================================== */
+
+    function restoreState() {
+
+        if (!isDesktop()) {
+
+            document.body.classList.remove(
+                COLLAPSED_CLASS
+            );
+
+            sidebar.classList.remove(
+                COLLAPSED_CLASS
+            );
+
+            hideRail();
+
+            return;
+        }
+
+
+        /*
+         * IMPORTANT:
+         * Start OPEN.
+         *
+         * This prevents the sidebar from disappearing
+         * after a hard refresh.
+         */
+
+        openSidebar();
+    }
+
+
+    /* ========================================================
+       RESIZE
+       ======================================================== */
+
+    window.addEventListener(
+        "resize",
+        () => {
+
+            if (!isDesktop()) {
+
+                document.body.classList.remove(
+                    COLLAPSED_CLASS
+                );
+
+                sidebar.classList.remove(
+                    COLLAPSED_CLASS
+                );
+
+                hideRail();
+
+                return;
+            }
+
+            /*
+             * Do not randomly change state
+             * during desktop resize.
+             */
+
+            if (
+                document.body.classList.contains(
+                    COLLAPSED_CLASS
+                )
+            ) {
+
+                showRail();
+
+            } else {
+
+                openSidebar();
+
+            }
+
+        },
+        {
+            passive: true
+        }
+    );
+
+
+    /* ========================================================
+       START
+       ======================================================== */
+
+    restoreState();
+
+    console.log(
+        "🚀 AP SYNAPSE — STABLE SIDEBAR CONTROLLER READY"
+    );
+
+})();
+
+})();

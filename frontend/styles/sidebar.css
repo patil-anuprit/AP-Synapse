@@ -1567,3 +1567,131 @@ color:#666;
         display: flex !important;
     }
 }
+
+/* ============================================================
+   AP SYNAPSE — PREMIUM MOBILE SIDEBAR SCROLL
+   Native-feeling • fast • smooth • touch-first
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    /* --------------------------------------------------------
+       SIDEBAR — PRIMARY TOUCH SCROLL SURFACE
+       -------------------------------------------------------- */
+
+    .sidebar {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        /*
+         * Native momentum scrolling on supported mobile engines.
+         */
+        -webkit-overflow-scrolling: touch;
+
+        /*
+         * Keep vertical scrolling dominant.
+         */
+        touch-action: pan-y;
+
+        /*
+         * Prevent the browser from unnecessarily
+         * chaining this scroll into the page.
+         */
+        overscroll-behavior-y: contain;
+
+        /*
+         * Avoid accidental text selection while dragging.
+         */
+        -webkit-user-select: none;
+        user-select: none;
+
+        /*
+         * Smooth native scrollbar behavior.
+         */
+        scrollbar-width: thin;
+    }
+
+
+    /* --------------------------------------------------------
+       HISTORY — INDEPENDENT FAST SCROLL
+       -------------------------------------------------------- */
+
+    .sidebar .history-list {
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        -webkit-overflow-scrolling: touch;
+
+        touch-action: pan-y;
+
+        overscroll-behavior-y: contain;
+
+        scrollbar-width: thin;
+    }
+
+
+    /* --------------------------------------------------------
+       BUTTONS REMAIN EASY TO TAP
+       -------------------------------------------------------- */
+
+    .sidebar button,
+    .sidebar a,
+    .sidebar [role="button"] {
+
+        touch-action: manipulation;
+
+        -webkit-tap-highlight-color: transparent;
+    }
+
+
+    /* --------------------------------------------------------
+       HISTORY ITEMS — DON'T FIGHT THE FINGER
+       -------------------------------------------------------- */
+
+    .sidebar .history-item {
+
+        touch-action: pan-y;
+
+        -webkit-user-select: none;
+        user-select: none;
+    }
+
+
+    /* --------------------------------------------------------
+       REMOVE MOBILE SCROLLBAR VISUAL CLUTTER
+       -------------------------------------------------------- */
+
+    .sidebar::-webkit-scrollbar,
+    .sidebar .history-list::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar-track,
+    .sidebar .history-list::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb,
+    .sidebar .history-list::-webkit-scrollbar-thumb {
+        border-radius: 999px;
+    }
+}
+
+
+/* ============================================================
+   VERY SMALL PHONES
+   ============================================================ */
+
+@media (max-width: 420px) {
+
+    .sidebar {
+        touch-action: pan-y;
+        overscroll-behavior-y: contain;
+    }
+
+    .sidebar .history-list {
+        touch-action: pan-y;
+        overscroll-behavior-y: contain;
+    }
+}

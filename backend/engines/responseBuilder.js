@@ -5,6 +5,8 @@ export function buildMessages({
     message
 }) {
 
+    reasoning = reasoning || {};
+
     const messages = [];
 
     // ==========================================
@@ -56,19 +58,19 @@ export function buildMessages({
 CURRENT ANALYSIS
 
 Intent:
-${reasoning.intent}
+${reasoning?.intent || "general"}
 
 Response Style:
-${reasoning.responseStyle || "balanced"}
+${reasoning?.responseStyle || "balanced"}
 
 Teaching Mode:
-${reasoning.useTeaching || false}
+${reasoning?.useTeaching || false}
 
 Research Mode:
-${reasoning.useResearch || false}
+${reasoning?.useResearch || false}
 
 Code Formatting:
-${reasoning.useCodeFormatting || false}
+${reasoning?.useCodeFormatting || false}
 
 Instructions:
 

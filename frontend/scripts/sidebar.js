@@ -11053,42 +11053,6 @@ setTimeout(() => {
 
 })();
 
-    /* ---------------------------------------------------------
-       RESIZE
-       --------------------------------------------------------- */
-
-    window.addEventListener(
-        "resize",
-        () => {
-
-            desktopSafety();
-
-            if (isDesktop()) {
-
-                ensureRail();
-                bindCollapseButton();
-                bindRail();
-
-            }
-
-        },
-        {
-            passive: true
-        }
-    );
-
-    /* ---------------------------------------------------------
-       DYNAMIC DOM SAFETY
-       --------------------------------------------------------- */
-
-   
-
-    /* ---------------------------------------------------------
-       START
-       --------------------------------------------------------- */
-
-   
-
 /* ============================================================
    AP SYNAPSE — STABLE DESKTOP SIDEBAR CONTROLLER
    FINAL SINGLE CONTROLLER
@@ -11772,5 +11736,211 @@ setTimeout(() => {
     );
 
 })();
+
+})();
+
+/* ============================================================
+   AP SYNAPSE — FINAL SIDEBAR HISTORY GUARD
+   Keeps existing sidebar/navigation intact.
+   History remains below all navigation controls.
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    function protectSidebarHistory() {
+
+        if (window.innerWidth <= 768) return;
+
+        const sidebar =
+            document.querySelector(".sidebar");
+
+        const recentGroup =
+            document.querySelector(
+                ".sidebar .recent-group"
+            );
+
+        const historyList =
+            document.querySelector(
+                ".sidebar .history-list"
+            );
+
+        if (!sidebar || !recentGroup || !historyList) {
+            return;
+        }
+
+        /* Sidebar remains scrollable as one workspace */
+        sidebar.style.setProperty(
+            "height",
+            "100vh",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "overflow-y",
+            "auto",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "overflow-x",
+            "hidden",
+            "important"
+        );
+
+        /* History section gets real space */
+        recentGroup.style.setProperty(
+            "display",
+            "flex",
+            "important"
+        );
+
+        recentGroup.style.setProperty(
+            "flex-direction",
+            "column",
+            "important"
+        );
+
+        recentGroup.style.setProperty(
+            "flex",
+            "0 0 360px",
+            "important"
+        );
+
+        recentGroup.style.setProperty(
+            "height",
+            "360px",
+            "important"
+        );
+
+        recentGroup.style.setProperty(
+            "min-height",
+            "360px",
+            "important"
+        );
+
+        recentGroup.style.setProperty(
+            "max-height",
+            "360px",
+            "important"
+        );
+
+        recentGroup.style.setProperty(
+            "overflow",
+            "hidden",
+            "important"
+        );
+
+        /* History list scrolls internally */
+        historyList.style.setProperty(
+            "display",
+            "flex",
+            "important"
+        );
+
+        historyList.style.setProperty(
+            "flex-direction",
+            "column",
+            "important"
+        );
+
+        historyList.style.setProperty(
+            "flex",
+            "1 1 auto",
+            "important"
+        );
+
+        historyList.style.setProperty(
+            "height",
+            "auto",
+            "important"
+        );
+
+        historyList.style.setProperty(
+            "min-height",
+            "0",
+            "important"
+        );
+
+        historyList.style.setProperty(
+            "max-height",
+            "none",
+            "important"
+        );
+
+        historyList.style.setProperty(
+            "overflow-y",
+            "auto",
+            "important"
+        );
+
+        historyList.style.setProperty(
+            "overflow-x",
+            "hidden",
+            "important"
+        );
+    }
+
+
+    function startHistoryGuard() {
+
+        protectSidebarHistory();
+
+        /* Re-apply if an existing controller modifies the layout */
+        const sidebar =
+            document.querySelector(".sidebar");
+
+        const recentGroup =
+            document.querySelector(
+                ".sidebar .recent-group"
+            );
+
+        if (recentGroup) {
+
+            const observer =
+                new MutationObserver(() => {
+
+                    if (
+                        window.innerWidth > 768 &&
+                        recentGroup.getBoundingClientRect().height === 0
+                    ) {
+                        protectSidebarHistory();
+                    }
+
+                });
+
+            observer.observe(
+                recentGroup,
+                {
+                    attributes: true,
+                    attributeFilter: ["style"]
+                }
+            );
+
+            window.addEventListener(
+                "resize",
+                protectSidebarHistory,
+                { passive: true }
+            );
+        }
+    }
+
+
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            startHistoryGuard,
+            { once: true }
+        );
+
+    } else {
+
+        startHistoryGuard();
+
+    }
 
 })();

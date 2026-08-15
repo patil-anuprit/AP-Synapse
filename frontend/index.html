@@ -5051,5 +5051,729 @@ autocomplete="off">
 })();
 </script>
 
+<!-- ============================================================
+     AP SYNAPSE — SAFE FINAL SIDEBAR ORDER + PWA INSTALL
+     ISOLATED PATCH
+     
+     IMPORTANT:
+     - Does NOT replace sidebar.js
+     - Does NOT touch collapse/expand logic
+     - Does NOT add sidebar click handlers
+     - Only reorders existing DOM blocks
+     - Only controls the Install AP Synapse button
+     ============================================================ -->
+
+<script>
+(() => {
+    "use strict";
+
+    console.log(
+        "🚀 AP SYNAPSE — SAFE SIDEBAR ORDER + INSTALL PATCH"
+    );
+
+    /* ============================================================
+       1. SIDEBAR ORDER
+       
+       Desired:
+
+       WORKSPACE
+         Assistant
+         Projects
+         Knowledge
+         Documents
+         Automation
+         Code Studio
+         Canvas
+
+       SETTINGS
+       PROFILE
+
+       RECENT
+       ------------------------------------------------------------
+       We MOVE the existing elements.
+       We DO NOT recreate them.
+       Therefore existing listeners remain attached.
+       ============================================================ */
+
+    function arrangeSidebarSafely() {
+
+        const sidebar =
+            document.querySelector(".sidebar");
+
+        if (!sidebar) {
+            console.warn(
+                "⚠️ AP Synapse — sidebar not found"
+            );
+            return;
+        }
+
+        const workspace =
+            sidebar.querySelector(
+                ".sidebar-group:not(.recent-group)"
+            );
+
+        const recent =
+            sidebar.querySelector(
+                ".recent-group"
+            );
+
+        const footer =
+            sidebar.querySelector(
+                ".sidebar-footer"
+            );
+
+        if (!workspace || !recent || !footer) {
+            console.warn(
+                "⚠️ AP Synapse — sidebar structure incomplete"
+            );
+            return;
+        }
+
+        /*
+         * IMPORTANT:
+         * appendChild() MOVES the existing nodes.
+         * It does not clone or recreate them.
+         */
+
+        sidebar.appendChild(workspace);
+
+        sidebar.appendChild(footer);
+
+        sidebar.appendChild(recent);
+
+        /*
+         * Give the recent section its own clean scroll region.
+         * Only visual/layout properties are touched.
+         */
+
+        recent.style.setProperty(
+            "flex",
+            "1 1 auto",
+            "important"
+        );
+
+        recent.style.setProperty(
+            "min-height",
+            "0",
+            "important"
+        );
+
+        recent.style.setProperty(
+            "overflow",
+            "hidden",
+            "important"
+        );
+
+        const history =
+            recent.querySelector(
+                ".history-list"
+            );
+
+        if (history) {
+
+            history.style.setProperty(
+                "overflow-y",
+                "auto",
+                "important"
+            );
+
+            history.style.setProperty(
+                "min-height",
+                "0",
+                "important"
+            );
+
+            history.style.setProperty(
+                "max-height",
+                "100%",
+                "important"
+            );
+        }
+
+        console.log(
+            "✅ AP SYNAPSE — SIDEBAR ORDER:",
+            "WORKSPACE → SETTINGS → PROFILE → RECENT HISTORY"
+        );
+    }
+
+
+    /* ============================================================
+       2. REAL PWA INSTALL SYSTEM
+       ============================================================ */
+
+    let deferredInstallPrompt = null;
+
+    const installButton =
+        document.getElementById(
+            "apInstallBtn"
+        );
+
+
+    /* ============================================================
+       INSTALL BUTTON STATE
+       ============================================================ */
+
+    function setInstallButton(
+        text,
+        disabled = false
+    ) {
+
+        if (!installButton) return;
+
+        const label =
+            installButton.querySelector(
+                "span:last-child"
+            );
+
+        if (label) {
+            label.textContent = text;
+        }
+
+        installButton.disabled =
+            disabled;
+
+        installButton.setAttribute(
+            "aria-disabled",
+            String(disabled)
+        );
+    }
+
+
+    /* ============================================================
+       CHECK IF ALREADY INSTALLED
+       ============================================================ */
+
+    function isAlreadyInstalled() {
+
+        /*
+         * Chromium / Android / desktop PWA
+         */
+
+        if (
+            window.matchMedia(
+                "(display-mode: standalone)"
+            ).matches
+        ) {
+            return true;
+        }
+
+        /*
+         * iOS / Safari
+         */
+
+        if (
+            window.navigator.standalone === true
+        ) {
+            return true;
+        }
+
+        /*
+         * Some Chromium environments
+         */
+
+        if (
+            document.referrer &&
+            document.referrer.startsWith(
+                "android-app://"
+            )
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /* ============================================================
+       INITIAL INSTALL STATE
+       ============================================================ */
+
+    function updateInstallState() {
+
+        if (!installButton) return;
+
+        if (isAlreadyInstalled()) {
+
+            setInstallButton(
+                "AP Synapse Installed",
+                true
+            );
+
+            installButton.classList.add(
+                "ap-install-complete"
+            );
+
+            return;
+        }
+
+        /*
+         * Do NOT disable it yet.
+         *
+         * beforeinstallprompt may arrive slightly later.
+         */
+
+        setInstallButton(
+            "Install AP Synapse",
+            false
+        );
+    }
+
+
+    /* ============================================================
+       REAL BROWSER INSTALL PROMPT
+       ============================================================ */
+
+    window.addEventListener(
+        "beforeinstallprompt",
+        event => {
+
+            console.log(
+                "✅ AP SYNAPSE — PWA INSTALL PROMPT AVAILABLE"
+            );
+
+            /*
+             * Prevent Chrome from automatically
+             * showing the prompt.
+             */
+
+            event.preventDefault();
+
+            deferredInstallPrompt =
+                event;
+
+            if (!isAlreadyInstalled()) {
+
+                setInstallButton(
+                    "Install AP Synapse",
+                    false
+                );
+
+            }
+        }
+    );
+
+
+    /* ============================================================
+       INSTALL BUTTON CLICK
+       ============================================================ */
+
+    if (installButton) {
+
+        /*
+         * Prevent duplicate listeners.
+         */
+
+        if (
+            installButton.dataset
+                .apInstallControllerBound !==
+            "true"
+        ) {
+
+            installButton.dataset
+                .apInstallControllerBound =
+                "true";
+
+
+            installButton.addEventListener(
+                "click",
+                async event => {
+
+                    event.preventDefault();
+                    event.stopPropagation();
+
+
+                    /* --------------------------------------------
+                       ALREADY INSTALLED
+                       -------------------------------------------- */
+
+                    if (
+                        isAlreadyInstalled()
+                    ) {
+
+                        setInstallButton(
+                            "AP Synapse Installed",
+                            true
+                        );
+
+                        return;
+                    }
+
+
+                    /* --------------------------------------------
+                       REAL PWA PROMPT
+                       -------------------------------------------- */
+
+                    if (
+                        deferredInstallPrompt
+                    ) {
+
+                        const promptEvent =
+                            deferredInstallPrompt;
+
+                        /*
+                         * Consume the prompt.
+                         */
+
+                        deferredInstallPrompt =
+                            null;
+
+                        setInstallButton(
+                            "Installing…",
+                            true
+                        );
+
+                        try {
+
+                            await promptEvent.prompt();
+
+                            const result =
+                                await promptEvent.userChoice;
+
+                            console.log(
+                                "AP Synapse install result:",
+                                result.outcome
+                            );
+
+                            if (
+                                result.outcome ===
+                                "accepted"
+                            ) {
+
+                                setInstallButton(
+                                    "AP Synapse Installed",
+                                    true
+                                );
+
+                            } else {
+
+                                setInstallButton(
+                                    "Install AP Synapse",
+                                    false
+                                );
+                            }
+
+                        } catch (error) {
+
+                            console.error(
+                                "❌ AP Synapse install failed:",
+                                error
+                            );
+
+                            setInstallButton(
+                                "Install AP Synapse",
+                                false
+                            );
+                        }
+
+                        return;
+                    }
+
+
+                    /* --------------------------------------------
+                       NO NATIVE PROMPT AVAILABLE
+                       -------------------------------------------- */
+
+                    console.log(
+                        "ℹ️ AP Synapse — browser has not provided a PWA install prompt yet."
+                    );
+
+                    /*
+                     * Do NOT fake an installation.
+                     *
+                     * Tell the user why the button cannot
+                     * produce a native prompt in this browser
+                     * state.
+                     */
+
+                    setInstallButton(
+                        "Install unavailable here",
+                        false
+                    );
+
+                    setTimeout(
+                        () => {
+
+                            if (
+                                !isAlreadyInstalled()
+                            ) {
+
+                                setInstallButton(
+                                    "Install AP Synapse",
+                                    false
+                                );
+
+                            }
+
+                        },
+                        2500
+                    );
+
+                },
+                true
+            );
+        }
+
+    }
+
+
+    /* ============================================================
+       3. INSTALLED EVENT
+       ============================================================ */
+
+    window.addEventListener(
+        "appinstalled",
+        () => {
+
+            console.log(
+                "🎉 AP SYNAPSE — PWA INSTALLED SUCCESSFULLY"
+            );
+
+            deferredInstallPrompt =
+                null;
+
+            setInstallButton(
+                "AP Synapse Installed",
+                true
+            );
+
+            if (installButton) {
+
+                installButton.classList.add(
+                    "ap-install-complete"
+                );
+            }
+        }
+    );
+
+
+    /* ============================================================
+       4. SAFE SERVICE WORKER REGISTRATION
+       
+       Only register if the browser supports it.
+       If another part of AP Synapse already registered it,
+       this simply resolves to the existing registration.
+       ============================================================ */
+
+    async function registerServiceWorker() {
+
+        if (
+            !("serviceWorker" in navigator)
+        ) {
+            console.warn(
+                "⚠️ AP Synapse — Service Worker unsupported"
+            );
+            return;
+        }
+
+        try {
+
+            const registration =
+                await navigator.serviceWorker.register(
+                    "./service-worker.js",
+                    {
+                        scope: "./"
+                    }
+                );
+
+            console.log(
+                "✅ AP SYNAPSE — SERVICE WORKER READY:",
+                registration.scope
+            );
+
+        } catch (error) {
+
+            console.error(
+                "❌ AP SYNAPSE — SERVICE WORKER REGISTRATION FAILED:",
+                error
+            );
+        }
+    }
+
+
+    /* ============================================================
+       5. BOOT
+       ============================================================ */
+
+    function bootSafePatch() {
+
+        arrangeSidebarSafely();
+
+        updateInstallState();
+
+        registerServiceWorker();
+
+        console.log(
+            "✅ AP SYNAPSE — SAFE FINAL SIDEBAR + PWA PATCH READY"
+        );
+    }
+
+
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            bootSafePatch,
+            {
+                once: true
+            }
+        );
+
+    } else {
+
+        bootSafePatch();
+
+    }
+
+})();
+</script>
+
+<script>
+/* ============================================================
+   AP SYNAPSE — FINAL PWA INSTALL CONTROLLER
+   ============================================================ */
+
+(() => {
+
+    "use strict";
+
+    let deferredInstallPrompt = null;
+
+    const installButton =
+        document.querySelector("#installAppBtn");
+
+    /* Browser detected an installable PWA */
+    window.addEventListener(
+        "beforeinstallprompt",
+        event => {
+
+            event.preventDefault();
+
+            deferredInstallPrompt = event;
+
+            if (installButton) {
+
+                installButton.style.display = "";
+                installButton.removeAttribute("hidden");
+                installButton.disabled = false;
+
+                installButton.setAttribute(
+                    "aria-label",
+                    "Install AP Synapse"
+                );
+
+                installButton.setAttribute(
+                    "data-install-ready",
+                    "true"
+                );
+            }
+
+            console.log(
+                "✅ AP SYNAPSE — PWA INSTALL READY"
+            );
+        }
+    );
+
+
+    /* Install button */
+    if (installButton) {
+
+        installButton.addEventListener(
+            "click",
+            async event => {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                /* Browser does not currently offer installation */
+                if (!deferredInstallPrompt) {
+
+                    console.log(
+                        "ℹ️ AP SYNAPSE — PWA INSTALL PROMPT NOT AVAILABLE"
+                    );
+
+                    return;
+                }
+
+                const promptEvent =
+                    deferredInstallPrompt;
+
+                deferredInstallPrompt = null;
+
+                try {
+
+                    await promptEvent.prompt();
+
+                    const result =
+                        await promptEvent.userChoice;
+
+                    console.log(
+                        "AP SYNAPSE INSTALL RESULT:",
+                        result.outcome
+                    );
+
+                    if (result.outcome === "accepted") {
+
+                        installButton.setAttribute(
+                            "data-installed",
+                            "true"
+                        );
+
+                        installButton.disabled = true;
+
+                        console.log(
+                            "✅ AP SYNAPSE — INSTALL ACCEPTED"
+                        );
+
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "❌ AP SYNAPSE — INSTALL ERROR:",
+                        error
+                    );
+
+                }
+            },
+            true
+        );
+    }
+
+
+    /* Already installed */
+    window.addEventListener(
+        "appinstalled",
+        () => {
+
+            deferredInstallPrompt = null;
+
+            if (installButton) {
+
+                installButton.disabled = true;
+
+                installButton.setAttribute(
+                    "data-installed",
+                    "true"
+                );
+
+                installButton.setAttribute(
+                    "aria-label",
+                    "AP Synapse installed"
+                );
+            }
+
+            console.log(
+                "✅ AP SYNAPSE — APP INSTALLED"
+            );
+        }
+    );
+
+
+})();
+</script>
+
 </body>
 </html>

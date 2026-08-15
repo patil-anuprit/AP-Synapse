@@ -24763,3 +24763,144 @@ body {
     }
 
 }
+
+/* ============================================================
+   AP SYNAPSE — HISTORY CONTAINER FINAL VISIBILITY OVERRIDE
+   ============================================================ */
+
+@media (min-width: 769px) {
+
+    .sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100vh !important;
+        min-height: 100vh !important;
+        overflow: hidden !important;
+    }
+
+    /* Navigation occupies only its natural height */
+    .sidebar-header {
+        flex: 0 0 auto !important;
+    }
+
+    /* Every top navigation group remains above history */
+    .sidebar > .sidebar-group:not(.recent-group) {
+        flex: 0 0 auto !important;
+        height: auto !important;
+        min-height: auto !important;
+        max-height: none !important;
+    }
+
+    /* ========================================================
+       RECENT SECTION — FORCE IT TO EXIST
+       ======================================================== */
+
+    .sidebar > .sidebar-group.recent-group {
+        display: flex !important;
+        flex-direction: column !important;
+
+        flex: 1 1 0% !important;
+
+        height: auto !important;
+        min-height: 1px !important;
+        max-height: none !important;
+
+        overflow: hidden !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        position: relative !important;
+        box-sizing: border-box !important;
+    }
+
+    /* ========================================================
+       HISTORY — TAKE ALL REMAINING SPACE
+       ======================================================== */
+
+    .sidebar > .sidebar-group.recent-group > .history-list {
+        display: flex !important;
+        flex-direction: column !important;
+
+        flex: 1 1 auto !important;
+
+        height: auto !important;
+        min-height: 1px !important;
+        max-height: none !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        position: relative !important;
+        box-sizing: border-box !important;
+
+        pointer-events: auto !important;
+    }
+
+    /* History entries */
+    .sidebar .history-list > .history-item {
+        display: flex !important;
+        flex: 0 0 auto !important;
+
+        min-height: 58px !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        pointer-events: auto !important;
+    }
+
+    /* Don't let a hidden/collapsed parent kill the history */
+    .sidebar .recent-group,
+    .sidebar .recent-group .history-list {
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
+
+/* ============================================================
+   AP SYNAPSE — SIDEBAR HISTORY VISIBILITY FIX
+   Keeps existing sidebar structure and behavior intact.
+   ============================================================ */
+
+@media (min-width: 769px) {
+
+    .sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+    }
+
+    .sidebar .recent-group {
+        display: flex !important;
+        flex-direction: column !important;
+
+        /* Do NOT allow the history container to collapse to 0 */
+        flex: 1 1 auto !important;
+        min-height: 120px !important;
+        height: auto !important;
+
+        overflow: hidden !important;
+    }
+
+    .sidebar .history-list {
+        display: flex !important;
+        flex-direction: column !important;
+
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        height: auto !important;
+        max-height: none !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    .sidebar .history-item {
+        flex: 0 0 auto !important;
+        display: flex !important;
+    }
+}

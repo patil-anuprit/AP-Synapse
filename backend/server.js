@@ -1233,6 +1233,9 @@ app.post("/auth/google", async (req, res) => {
                     name:
                        user.name || "AP Synapse User",
 
+                    sessionId:
+                       sessionId,
+
                     payload: {
 
                        title:

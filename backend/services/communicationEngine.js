@@ -3,6 +3,10 @@
 // ============================================================
 
 import {
+    getProfile
+} from "../memory/profileStore.js";
+
+import {
     sendSecurityNotification,
     sendTaskCompleteNotification,
     sendResearchCompleteNotification,
@@ -101,49 +105,76 @@ export async function dispatchCommunication({
 
     name,
 
-    preferences =
-        DEFAULT_COMMUNICATION_PREFERENCES,
+    sessionId,
+
+    preferences,
 
     payload = {}
 
 }) {
 
     if (!email) {
-
         throw new Error(
             "Communication recipient email is required."
         );
+    }
+
+    // --------------------------------------------------------
+    // LOAD PERSISTENT PREFERENCES
+    // --------------------------------------------------------
+
+    let effectivePreferences =
+        preferences;
+
+    if (!effectivePreferences && sessionId) {
+
+        const profile =
+            await getProfile(sessionId);
+
+        effectivePreferences =
+            profile.preferences;
 
     }
+
+    effectivePreferences =
+        effectivePreferences ||
+        DEFAULT_COMMUNICATION_PREFERENCES;
+
 
     // --------------------------------------------------------
     // SECURITY COMMUNICATIONS CANNOT BE DISABLED
     // --------------------------------------------------------
 
     if (
-        type !==
-        COMMUNICATION_TYPES.SECURITY &&
-        !isEnabled(preferences, type)
+        type !== COMMUNICATION_TYPES.SECURITY &&
+        !isEnabled(
+            effectivePreferences,
+            type
+        )
     ) {
 
         console.log(
-            `ℹ️ AP Synapse communication skipped: ${type}`
+            `AP Synapse communication skipped: ${type}`
         );
 
         return {
+
             sent: false,
+
             skipped: true,
+
             reason: "disabled"
+
         };
 
     }
 
 
-    switch (type) {
+    // --------------------------------------------------------
+    // DISPATCH
+    // --------------------------------------------------------
 
-        // ====================================================
-        // SECURITY
-        // ====================================================
+    switch (type) {
 
         case COMMUNICATION_TYPES.SECURITY:
 
@@ -167,10 +198,6 @@ export async function dispatchCommunication({
             break;
 
 
-        // ====================================================
-        // TASK COMPLETE
-        // ====================================================
-
         case COMMUNICATION_TYPES.TASK_COMPLETE:
 
             await sendTaskCompleteNotification({
@@ -190,10 +217,6 @@ export async function dispatchCommunication({
             break;
 
 
-        // ====================================================
-        // RESEARCH COMPLETE
-        // ====================================================
-
         case COMMUNICATION_TYPES.RESEARCH_COMPLETE:
 
             await sendResearchCompleteNotification({
@@ -212,10 +235,6 @@ export async function dispatchCommunication({
 
             break;
 
-
-        // ====================================================
-        // LEARNING
-        // ====================================================
 
         case COMMUNICATION_TYPES.LEARNING:
 
@@ -239,10 +258,6 @@ export async function dispatchCommunication({
             break;
 
 
-        // ====================================================
-        // DAILY BRIEF
-        // ====================================================
-
         case COMMUNICATION_TYPES.DAILY_BRIEF:
 
             await sendDailyIntelligenceBrief({
@@ -261,10 +276,6 @@ export async function dispatchCommunication({
 
             break;
 
-
-        // ====================================================
-        // WEEKLY DIGEST
-        // ====================================================
 
         case COMMUNICATION_TYPES.WEEKLY_DIGEST:
 
@@ -291,10 +302,6 @@ export async function dispatchCommunication({
             break;
 
 
-        // ====================================================
-        // PRODUCT UPDATE
-        // ====================================================
-
         case COMMUNICATION_TYPES.PRODUCT_UPDATE:
 
             await sendProductUpdate({
@@ -317,10 +324,6 @@ export async function dispatchCommunication({
             break;
 
 
-        // ====================================================
-        // UNKNOWN TYPE
-        // ====================================================
-
         default:
 
             throw new Error(
@@ -331,7 +334,7 @@ export async function dispatchCommunication({
 
 
     console.log(
-        `📨 AP Synapse communication dispatched: ${type}`
+        `AP Synapse communication dispatched: ${type}`
     );
 
 

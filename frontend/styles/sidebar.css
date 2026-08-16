@@ -1958,3 +1958,13 @@ color:#666;
         flex: 0 0 auto !important;
     }
 }
+
+@media (max-width: 767px) {
+    aside.sidebar {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        touch-action: pan-y !important;
+        overscroll-behavior-y: contain !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+}

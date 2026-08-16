@@ -9978,25 +9978,6 @@ setTimeout(() => {
             }
         );
 
-        /* Sidebar links close automatically */
-        sidebar.addEventListener(
-            "pointerdown",
-            event => {
-
-                if (window.innerWidth > 767) return;
-
-                const item =
-                    event.target.closest("a, button");
-
-                if (!item) return;
-
-                if (item === button) return;
-
-                setTimeout(closeSidebar, 50);
-            },
-            true
-        );
-
         /* Overlay closes */
         if (overlay) {
             overlay.addEventListener(

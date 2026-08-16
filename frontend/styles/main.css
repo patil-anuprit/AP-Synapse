@@ -24992,3 +24992,125 @@ body {
         flex: 0 0 auto !important;
     }
 }
+
+/* =========================================================
+   AP SYNAPSE — MOBILE SIDEBAR FINAL STABLE LAYOUT
+   History after navigation • native sidebar scrolling
+   No fixed-height history • no flex squeezing
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+    /* The sidebar itself is the ONE mobile scroll container */
+    aside.sidebar,
+    .sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+        min-height: 0 !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior-y: contain !important;
+        overscroll-behavior-x: none !important;
+
+        touch-action: pan-y !important;
+        scroll-behavior: auto !important;
+    }
+
+    /* Never allow flexbox to squeeze the sections */
+    aside.sidebar > .ap-sidebar-topbar,
+    aside.sidebar > .sidebar-header,
+    aside.sidebar > .sidebar-group,
+    aside.sidebar > .sidebar-footer {
+        flex: 0 0 auto !important;
+        min-height: 0 !important;
+        height: auto !important;
+        max-height: none !important;
+    }
+
+    /* Correct visual order:
+       topbar → header → navigation → history → footer */
+    aside.sidebar > .ap-sidebar-topbar {
+        order: 0 !important;
+    }
+
+    aside.sidebar > .sidebar-header {
+        order: 1 !important;
+    }
+
+    aside.sidebar > .sidebar-group:not(.recent-group) {
+        order: 2 !important;
+    }
+
+    aside.sidebar > .recent-group {
+        order: 3 !important;
+
+        display: block !important;
+
+        width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+        min-height: 0 !important;
+
+        flex: 0 0 auto !important;
+
+        overflow: visible !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    aside.sidebar > .sidebar-footer {
+        order: 4 !important;
+        flex: 0 0 auto !important;
+    }
+
+    /* History must grow naturally */
+    aside.sidebar .history-list {
+        display: flex !important;
+        flex-direction: column !important;
+
+        width: 100% !important;
+
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+
+        overflow: visible !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        flex: 0 0 auto !important;
+    }
+
+    aside.sidebar .history-item {
+        flex: 0 0 auto !important;
+
+        width: 100% !important;
+        height: auto !important;
+        min-height: 54px !important;
+    }
+
+    /* Do NOT let individual navigation items hijack scrolling */
+    aside.sidebar nav,
+    aside.sidebar nav a,
+    aside.sidebar button {
+        touch-action: manipulation;
+    }
+
+    /* But the sidebar itself remains a vertical pan surface */
+    aside.sidebar {
+        touch-action: pan-y !important;
+    }
+
+    /* No accidental horizontal movement */
+    aside.sidebar * {
+        max-width: 100%;
+    }
+}

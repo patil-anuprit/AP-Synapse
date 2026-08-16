@@ -11977,3 +11977,120 @@ setTimeout(() => {
         }
     }, true);
 })();
+
+/* =========================================================
+   AP SYNAPSE — MOBILE SIDEBAR GESTURE GUARD
+   Swipe = scroll
+   Tap = click
+   Never turn a swipe into a navigation click
+   ========================================================= */
+
+(() => {
+    "use strict";
+
+    const BREAKPOINT = 767;
+    const MOVE_THRESHOLD = 10;
+
+    let startX = 0;
+    let startY = 0;
+    let moved = false;
+    let active = false;
+    let suppressClick = false;
+
+    function isMobile() {
+        return window.innerWidth <= BREAKPOINT;
+    }
+
+    function insideSidebar(target) {
+        return target?.closest?.(".sidebar");
+    }
+
+    document.addEventListener(
+        "pointerdown",
+        event => {
+            if (!isMobile()) return;
+            if (!insideSidebar(event.target)) return;
+
+            active = true;
+            moved = false;
+            suppressClick = false;
+
+            startX = event.clientX;
+            startY = event.clientY;
+        },
+        true
+    );
+
+    document.addEventListener(
+        "pointermove",
+        event => {
+            if (!isMobile() || !active) return;
+
+            const dx = Math.abs(event.clientX - startX);
+            const dy = Math.abs(event.clientY - startY);
+
+            if (dx > MOVE_THRESHOLD || dy > MOVE_THRESHOLD) {
+                moved = true;
+                suppressClick = true;
+            }
+        },
+        true
+    );
+
+    document.addEventListener(
+        "pointerup",
+        () => {
+            if (!isMobile()) return;
+
+            if (moved) {
+                suppressClick = true;
+
+                window.setTimeout(() => {
+                    suppressClick = false;
+                }, 350);
+            }
+
+            active = false;
+        },
+        true
+    );
+
+    document.addEventListener(
+        "pointercancel",
+        () => {
+            active = false;
+            moved = true;
+            suppressClick = true;
+
+            window.setTimeout(() => {
+                suppressClick = false;
+            }, 350);
+        },
+        true
+    );
+
+    /*
+     * CRITICAL:
+     * This runs BEFORE the existing sidebar click handlers.
+     * A swipe therefore cannot become a button/navigation click.
+     */
+    document.addEventListener(
+        "click",
+        event => {
+            if (!isMobile()) return;
+            if (!suppressClick) return;
+            if (!insideSidebar(event.target)) return;
+
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+
+            suppressClick = false;
+        },
+        true
+    );
+
+    console.log(
+        "✅ AP SYNAPSE — MOBILE SIDEBAR GESTURE GUARD ACTIVE"
+    );
+})();

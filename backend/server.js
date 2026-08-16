@@ -28,6 +28,10 @@ import {
     testDatabaseConnection
 } from "./database/db.js";
 
+import {
+    initializeDatabase
+} from "./database/initialize.js";
+
 
 import brain from "./core/index.js";
 
@@ -1426,6 +1430,25 @@ app.get("/database/status", async (req, res) => {
 
 });
 
-app.listen(PORT, () => {
-    console.log(`🚀 AP Synapse running at http://localhost:${PORT}`);
-});
+initializeDatabase()
+    .then(() => {
+
+        app.listen(PORT, () => {
+
+            console.log(
+                `AP Synapse backend running on port ${PORT}`
+            );
+
+        });
+
+    })
+    .catch((error) => {
+
+        console.error(
+            "AP Synapse database initialization failed:",
+            error
+        );
+
+        process.exit(1);
+
+    });

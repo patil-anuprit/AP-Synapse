@@ -1301,6 +1301,38 @@ app.get("/email/status", (req, res) => {
 
 });
 
+app.post("/email/test-welcome", async (req, res) => {
+    try {
+        const { email, name } = req.body;
+
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                error: "email is required."
+            });
+        }
+
+        const result = await sendWelcomeEmail({
+            email,
+            name: name || "AP Synapse User"
+        });
+
+        return res.json({
+            success: true,
+            message: "Welcome email sent successfully.",
+            messageId: result?.messageId || null
+        });
+
+    } catch (error) {
+        console.error("AP Synapse test email error:", error);
+
+        return res.status(500).json({
+            success: false,
+            error: error.message || "Email sending failed."
+        });
+    }
+});
+
 // ============================================================
 // AP SYNAPSE — COMMUNICATION PREFERENCES
 // ============================================================

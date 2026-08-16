@@ -297,7 +297,8 @@ export async function sendAPSynapseEmail({
     htmlContent,
     textContent,
     tags = [],
-    replyToOverride
+    replyToOverride,
+    communicationType = "transactional"
 
 }) {
 
@@ -340,7 +341,7 @@ export async function sendAPSynapseEmail({
 
         tags: [
             "ap-synapse",
-            "transactional",
+            communicationType,
             ...tags
         ]
 
@@ -936,6 +937,634 @@ export function getEmailServiceStatus() {
 // SAFE HELPERS
 // ============================================================
 
+// ============================================================
+// AP SYNAPSE — COMMUNICATION ENGINE
+// ============================================================
+
+const COMMUNICATION_TYPES = Object.freeze({
+
+    SECURITY:
+        "security",
+
+    IMPORTANT_ACTIVITY:
+        "important_activity",
+
+    TASK_COMPLETE:
+        "task_complete",
+
+    RESEARCH_COMPLETE:
+        "research_complete",
+
+    LEARNING:
+        "learning",
+
+    DAILY_BRIEF:
+        "daily_brief",
+
+    WEEKLY_DIGEST:
+        "weekly_digest",
+
+    PRODUCT_UPDATE:
+        "product_update"
+
+});
+
+
+// ============================================================
+// GENERIC COMMUNICATION
+// ============================================================
+
+export async function sendCommunication({
+
+    type =
+        COMMUNICATION_TYPES.IMPORTANT_ACTIVITY,
+
+    email,
+
+    name,
+
+    subject,
+
+    title,
+
+    message,
+
+    preheader,
+
+    tags = [],
+
+    communicationType =
+        "transactional"
+
+}) {
+
+    const safeName =
+        escapeHtml(
+            normalizeName(name)
+        );
+
+    const safeTitle =
+        escapeHtml(
+            title ||
+            "AP Synapse notification"
+        );
+
+    const safeMessage =
+        escapeHtml(
+            message ||
+            ""
+        );
+
+    return sendAPSynapseEmail({
+
+        to: email,
+
+        name,
+
+        subject:
+            subject ||
+            "AP Synapse notification",
+
+        communicationType,
+
+        tags: [
+            type,
+            ...tags
+        ],
+
+        textContent:
+`Hello ${normalizeName(name)}.
+
+${message || ""}
+
+— AP Synapse`,
+
+        htmlContent:
+            buildEmailDocument({
+
+                title:
+                    safeTitle,
+
+                preheader:
+                    preheader ||
+                    "An AP Synapse update is ready.",
+
+                body: `
+
+<h1
+style="
+    margin:0 0 14px;
+    font-size:26px;
+    line-height:1.25;
+"
+>
+${safeTitle}
+</h1>
+
+<p>
+Hello ${safeName},
+</p>
+
+<div
+style="
+    margin:22px 0;
+    padding:18px;
+    background:#191c1f;
+    border:1px solid #30353a;
+    border-radius:12px;
+"
+>
+${safeMessage}
+</div>
+
+`
+
+            })
+
+    });
+
+}
+
+
+// ============================================================
+// TASK COMPLETION
+// ============================================================
+
+export async function sendTaskCompleteNotification({
+
+    email,
+
+    name,
+
+    taskName =
+        "Your AP Synapse task",
+
+    message =
+        "Your requested task has been completed."
+
+}) {
+
+    return sendCommunication({
+
+        type:
+            COMMUNICATION_TYPES.TASK_COMPLETE,
+
+        email,
+
+        name,
+
+        subject:
+            `${taskName} is complete — AP Synapse`,
+
+        title:
+            "Task completed.",
+
+        preheader:
+            "Your AP Synapse task is ready.",
+
+        message,
+
+        communicationType:
+            "transactional"
+
+    });
+
+}
+
+
+// ============================================================
+// RESEARCH COMPLETION
+// ============================================================
+
+export async function sendResearchCompleteNotification({
+
+    email,
+
+    name,
+
+    researchTitle =
+        "Your research",
+
+    message =
+        "Your AP Synapse research is ready to review."
+
+}) {
+
+    return sendCommunication({
+
+        type:
+            COMMUNICATION_TYPES.RESEARCH_COMPLETE,
+
+        email,
+
+        name,
+
+        subject:
+            `${researchTitle} is ready — AP Synapse`,
+
+        title:
+            "Research completed.",
+
+        preheader:
+            "Your AP Synapse research is ready.",
+
+        message,
+
+        communicationType:
+            "transactional"
+
+    });
+
+}
+
+
+// ============================================================
+// LEARNING NOTIFICATION
+// ============================================================
+
+export async function sendLearningNotification({
+
+    email,
+
+    name,
+
+    subject =
+        "Your AP Synapse learning update",
+
+    title =
+        "Your learning update",
+
+    message
+
+}) {
+
+    return sendCommunication({
+
+        type:
+            COMMUNICATION_TYPES.LEARNING,
+
+        email,
+
+        name,
+
+        subject,
+
+        title,
+
+        preheader:
+            "A new learning update from AP Synapse.",
+
+        message,
+
+        communicationType:
+            "marketing"
+
+    });
+
+}
+
+
+// ============================================================
+// DAILY INTELLIGENCE BRIEF
+// ============================================================
+
+export async function sendDailyIntelligenceBrief({
+
+    email,
+
+    name,
+
+    highlights = [],
+
+    nextActions = []
+
+}) {
+
+    const safeHighlights =
+        highlights
+            .slice(0, 10)
+            .map(
+                item =>
+                    `<li>${escapeHtml(item)}</li>`
+            )
+            .join("");
+
+    const safeNextActions =
+        nextActions
+            .slice(0, 10)
+            .map(
+                item =>
+                    `<li>${escapeHtml(item)}</li>`
+            )
+            .join("");
+
+    const textHighlights =
+        highlights
+            .slice(0, 10)
+            .map(
+                item =>
+                    `• ${item}`
+            )
+            .join("\n");
+
+    const textActions =
+        nextActions
+            .slice(0, 10)
+            .map(
+                item =>
+                    `• ${item}`
+            )
+            .join("\n");
+
+    return sendAPSynapseEmail({
+
+        to: email,
+
+        name,
+
+        subject:
+            "Your AP Synapse Intelligence Brief",
+
+        communicationType:
+            "marketing",
+
+        tags: [
+            COMMUNICATION_TYPES.DAILY_BRIEF,
+            "digest"
+        ],
+
+        textContent:
+`Hello ${normalizeName(name)}.
+
+Your AP Synapse Intelligence Brief
+
+Highlights:
+${textHighlights || "No major highlights today."}
+
+Suggested next actions:
+${textActions || "No suggested actions today."}
+
+— AP Synapse`,
+
+        htmlContent:
+            buildEmailDocument({
+
+                title:
+                    "AP Synapse Intelligence Brief",
+
+                preheader:
+                    "Your personalized AP Synapse intelligence brief.",
+
+                body: `
+
+<h1
+style="
+    margin:0 0 10px;
+    font-size:28px;
+"
+>
+Your Intelligence Brief
+</h1>
+
+<p>
+Hello ${escapeHtml(normalizeName(name))},
+</p>
+
+<p>
+Here is your concise AP Synapse overview.
+</p>
+
+<h2
+style="
+    margin-top:28px;
+    font-size:17px;
+"
+>
+Highlights
+</h2>
+
+<ul
+style="
+    padding-left:20px;
+    line-height:1.8;
+"
+>
+${
+    safeHighlights ||
+    "<li>No major highlights today.</li>"
+}
+</ul>
+
+<h2
+style="
+    margin-top:28px;
+    font-size:17px;
+"
+>
+Suggested next actions
+</h2>
+
+<ul
+style="
+    padding-left:20px;
+    line-height:1.8;
+"
+>
+${
+    safeNextActions ||
+    "<li>No suggested actions today.</li>"
+}
+</ul>
+
+`
+
+            })
+
+    });
+
+}
+
+
+// ============================================================
+// WEEKLY INTELLIGENCE DIGEST
+// ============================================================
+
+export async function sendWeeklyIntelligenceDigest({
+
+    email,
+
+    name,
+
+    summary = "",
+
+    achievements = [],
+
+    unfinished = [],
+
+    recommendations = []
+
+}) {
+
+    const list =
+        items =>
+            items
+                .slice(0, 10)
+                .map(
+                    item =>
+                        `<li>${escapeHtml(item)}</li>`
+                )
+                .join("");
+
+    return sendAPSynapseEmail({
+
+        to: email,
+
+        name,
+
+        subject:
+            "Your AP Synapse Weekly Intelligence Digest",
+
+        communicationType:
+            "marketing",
+
+        tags: [
+            COMMUNICATION_TYPES.WEEKLY_DIGEST,
+            "digest"
+        ],
+
+        textContent:
+`Hello ${normalizeName(name)}.
+
+Your AP Synapse Weekly Intelligence Digest
+
+${summary}
+
+Achievements:
+${achievements.map(item => `• ${item}`).join("\n")}
+
+Unfinished:
+${unfinished.map(item => `• ${item}`).join("\n")}
+
+Recommendations:
+${recommendations.map(item => `• ${item}`).join("\n")}
+
+— AP Synapse`,
+
+        htmlContent:
+            buildEmailDocument({
+
+                title:
+                    "AP Synapse Weekly Intelligence Digest",
+
+                preheader:
+                    "Your weekly AP Synapse overview.",
+
+                body: `
+
+<h1
+style="
+    margin:0 0 10px;
+    font-size:28px;
+"
+>
+Your Weekly Intelligence Digest
+</h1>
+
+<p>
+Hello ${escapeHtml(normalizeName(name))},
+</p>
+
+<p>
+${escapeHtml(summary)}
+</p>
+
+<h2>Achievements</h2>
+
+<ul>
+${
+    list(achievements) ||
+    "<li>No major achievements recorded.</li>"
+}
+</ul>
+
+<h2>Unfinished</h2>
+
+<ul>
+${
+    list(unfinished) ||
+    "<li>No unfinished items.</li>"
+}
+</ul>
+
+<h2>Recommendations</h2>
+
+<ul>
+${
+    list(recommendations) ||
+    "<li>No recommendations this week.</li>"
+}
+</ul>
+
+`
+
+            })
+
+    });
+
+}
+
+
+// ============================================================
+// PRODUCT UPDATE
+// ============================================================
+
+export async function sendProductUpdate({
+
+    email,
+
+    name,
+
+    subject =
+        "A new AP Synapse update",
+
+    title =
+        "AP Synapse has evolved.",
+
+    message
+
+}) {
+
+    return sendCommunication({
+
+        type:
+            COMMUNICATION_TYPES.PRODUCT_UPDATE,
+
+        email,
+
+        name,
+
+        subject,
+
+        title,
+
+        preheader:
+            "Discover what's new in AP Synapse.",
+
+        message,
+
+        communicationType:
+            "marketing"
+
+    });
+
+}
+
+
+// ============================================================
+// FINAL EXPORTS
+// ============================================================
+
 export {
-    escapeHtml
+    escapeHtml,
+    COMMUNICATION_TYPES
 };

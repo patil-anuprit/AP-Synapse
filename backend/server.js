@@ -1256,6 +1256,79 @@ app.get("/email/status", (req, res) => {
 
 });
 
+// ============================================================
+// AP SYNAPSE — COMMUNICATION ENGINE TEST
+// TEMPORARY — REMOVE AFTER VERIFICATION
+// ============================================================
+
+app.post("/email/test-communication", async (req, res) => {
+
+    try {
+
+        const {
+            email,
+            name = "AP Synapse User"
+        } = req.body || {};
+
+        if (!email) {
+
+            return res.status(400).json({
+                success: false,
+                error: "email is required."
+            });
+
+        }
+
+        const {
+            sendResearchCompleteNotification
+        } = await import("./services/emailService.js");
+
+        await sendResearchCompleteNotification({
+
+            email,
+
+            name,
+
+            researchTitle:
+                "AP Synapse Communication Engine Test",
+
+            message:
+                "Your AP Synapse Communication Engine is connected successfully. This is a controlled test notification."
+
+        });
+
+        return res.json({
+
+            success: true,
+
+            message:
+                "AP Synapse communication test email sent."
+
+        });
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "❌ Communication test failed:",
+            error
+        );
+
+        return res.status(500).json({
+
+            success: false,
+
+            error:
+                error.message ||
+                "Communication test failed."
+
+        });
+
+    }
+
+});
+
 app.listen(PORT, () => {
     console.log(`🚀 AP Synapse running at http://localhost:${PORT}`);
 });

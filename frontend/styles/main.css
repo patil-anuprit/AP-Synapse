@@ -25217,3 +25217,70 @@ body {
         position: relative !important;
     }
 }
+
+/* =========================================================
+   AP SYNAPSE — FINAL MOBILE SIDEBAR HISTORY
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    /* Main navigation */
+    aside.sidebar > .sidebar-group:not(.recent-group) {
+        order: 2 !important;
+        flex: 0 0 auto !important;
+    }
+
+    /* Recent / History section */
+    aside.sidebar > .recent-group {
+        order: 3 !important;
+
+        flex: 0 0 260px !important;
+        width: 100% !important;
+
+        height: 260px !important;
+        min-height: 260px !important;
+        max-height: 260px !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    /* History becomes the ONLY scrolling area */
+    aside.sidebar > .recent-group > .history-list {
+        flex: 1 1 auto !important;
+
+        width: 100% !important;
+        height: auto !important;
+
+        min-height: 0 !important;
+        max-height: none !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior: contain !important;
+        touch-action: pan-y !important;
+
+        box-sizing: border-box !important;
+    }
+
+    /* History items */
+    aside.sidebar > .recent-group .history-item {
+        flex: 0 0 auto !important;
+        min-height: 54px !important;
+        width: 100% !important;
+    }
+
+    /* Footer remains after history */
+    aside.sidebar > .sidebar-footer {
+        order: 99 !important;
+        flex: 0 0 auto !important;
+    }
+}

@@ -12094,3 +12094,114 @@ setTimeout(() => {
         "✅ AP SYNAPSE — MOBILE SIDEBAR GESTURE GUARD ACTIVE"
     );
 })();
+
+/* ============================================================
+   AP SYNAPSE — MOBILE SIDEBAR SCROLL GUARD
+   FINAL SAFE PATCH
+   Swipe = scroll
+   Tap = click
+   Mobile only
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    const MOBILE = 767;
+    const MOVE = 12;
+
+    let startX = 0;
+    let startY = 0;
+    let dragging = false;
+    let suppressNextClick = false;
+
+    const getSidebar = () =>
+        document.querySelector("aside.sidebar, .sidebar");
+
+    document.addEventListener(
+        "pointerdown",
+        (e) => {
+            if (window.innerWidth > MOBILE) return;
+
+            const sidebar = getSidebar();
+            if (!sidebar || !sidebar.contains(e.target)) return;
+
+            startX = e.clientX;
+            startY = e.clientY;
+            dragging = false;
+        },
+        true
+    );
+
+    document.addEventListener(
+        "pointermove",
+        (e) => {
+            if (window.innerWidth > MOBILE) return;
+            if (!getSidebar()?.contains(e.target)) return;
+
+            const dx = Math.abs(e.clientX - startX);
+            const dy = Math.abs(e.clientY - startY);
+
+            if (dx > MOVE || dy > MOVE) {
+                dragging = true;
+                suppressNextClick = true;
+            }
+        },
+        true
+    );
+
+    document.addEventListener(
+        "pointerup",
+        () => {
+            if (window.innerWidth > MOBILE) return;
+
+            if (dragging) {
+                suppressNextClick = true;
+
+                setTimeout(() => {
+                    suppressNextClick = false;
+                }, 300);
+            }
+
+            dragging = false;
+        },
+        true
+    );
+
+    document.addEventListener(
+        "pointercancel",
+        () => {
+            dragging = true;
+            suppressNextClick = true;
+
+            setTimeout(() => {
+                suppressNextClick = false;
+            }, 300);
+        },
+        true
+    );
+
+    /*
+     * A real swipe must NEVER become a sidebar click.
+     */
+    document.addEventListener(
+        "click",
+        (e) => {
+            if (window.innerWidth > MOBILE) return;
+            if (!suppressNextClick) return;
+
+            const sidebar = getSidebar();
+            if (!sidebar || !sidebar.contains(e.target)) return;
+
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+
+            suppressNextClick = false;
+        },
+        true
+    );
+
+    console.log(
+        "✅ AP SYNAPSE — MOBILE SIDEBAR SCROLL GUARD ACTIVE"
+    );
+})();

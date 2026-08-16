@@ -1887,3 +1887,74 @@ color:#666;
     order: 99 !important;
     flex: 0 0 auto !important;
 }
+
+ /* AP SYNAPSE — MOBILE SIDEBAR TOUCH SCROLL */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        touch-action: pan-y !important;
+        overscroll-behavior: contain !important;
+    }
+
+    /* Keep navigation buttons above history */
+    .sidebar > .sidebar-group:not(.recent-group) {
+        flex: 0 0 auto !important;
+        order: 3 !important;
+    }
+
+    /* Dedicated history viewport */
+    .sidebar > .recent-group {
+        order: 4 !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        flex: 1 1 auto !important;
+        min-height: 120px !important;
+        height: auto !important;
+
+        overflow: hidden !important;
+
+        touch-action: pan-y !important;
+        overscroll-behavior: contain !important;
+    }
+
+    .sidebar > .recent-group .history-list {
+        display: flex !important;
+        flex-direction: column !important;
+
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        height: auto !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior-y: contain !important;
+
+        /* Critical mobile touch behavior */
+        touch-action: pan-y !important;
+
+        /* Prevent browser gesture interference */
+        scrollbar-width: thin;
+    }
+
+    /* History rows should scroll, not trigger accidental gestures */
+    .sidebar > .recent-group .history-item {
+        touch-action: pan-y !important;
+        user-select: none !important;
+        -webkit-user-select: none !important;
+    }
+
+    /* Keep actual controls clickable */
+    .sidebar > .recent-group button {
+        touch-action: manipulation !important;
+    }
+
+    .sidebar > .sidebar-footer {
+        order: 99 !important;
+        flex: 0 0 auto !important;
+    }
+}

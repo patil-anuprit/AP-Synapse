@@ -11945,3 +11945,35 @@ setTimeout(() => {
 
 })();
 
+(() => {
+    const history = document.querySelector(".sidebar .history-list");
+    if (!history) return;
+
+    let moved = false;
+    let startY = 0;
+
+    history.addEventListener("touchstart", (e) => {
+        if (e.touches.length !== 1) return;
+
+        moved = false;
+        startY = e.touches[0].clientY;
+    }, { passive: true });
+
+    history.addEventListener("touchmove", (e) => {
+        if (e.touches.length !== 1) return;
+
+        const dy = Math.abs(e.touches[0].clientY - startY);
+
+        if (dy > 8) {
+            moved = true;
+        }
+    }, { passive: true });
+
+    history.addEventListener("click", (e) => {
+        if (moved) {
+            e.preventDefault();
+            e.stopPropagation();
+            moved = false;
+        }
+    }, true);
+})();

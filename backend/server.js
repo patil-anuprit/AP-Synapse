@@ -15,7 +15,8 @@ import {
 
 import {
     dispatchCommunication,
-    COMMUNICATION_TYPES
+    COMMUNICATION_TYPES,
+    notifyResearchComplete
 } from "./services/communicationEngine.js";
 
 

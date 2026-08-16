@@ -344,3 +344,42 @@ export async function dispatchCommunication({
     };
 
 }
+
+// ============================================================
+// AP SYNAPSE — RESEARCH COMPLETION EVENT
+// ============================================================
+
+export async function notifyResearchComplete({
+
+    email,
+
+    name,
+
+    researchTitle,
+
+    summary
+
+}) {
+
+    return dispatchCommunication({
+
+        type:
+            COMMUNICATION_TYPES.RESEARCH_COMPLETE,
+
+        email,
+
+        name,
+
+        payload: {
+
+            researchTitle,
+
+            message:
+                summary ||
+                "Your AP Synapse research is ready to review."
+
+        }
+
+    });
+
+}

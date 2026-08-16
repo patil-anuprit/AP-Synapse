@@ -43,7 +43,10 @@ import {
 
 import {
     buildConversation,
-    remember
+    remember,
+    getProfile,
+    savePreference,
+    forgetPreference
 } from "./memory/index.js";
 
 import { createAIStream } from "./services/router.js";
@@ -1341,44 +1344,31 @@ app.post("/email/test-welcome", async (req, res) => {
 });
 
 // ============================================================
-// AP SYNAPSE — COMMUNICATION PREFERENCES
+// AP SYNAPSE — PERSISTENT COMMUNICATION PREFERENCES
 // ============================================================
 
-app.get("/communication/preferences", (req, res) => {
-
-    // Temporary session-level defaults.
-    // Persistent storage will be connected to the authenticated
-    // user profile/database later.
-
-    return res.json({
-        success: true,
-        persistent: false,
-        preferences:
-            DEFAULT_COMMUNICATION_PREFERENCES
-    });
-
-});
-
-
-app.post("/communication/preferences", (req, res) => {
+app.get("/communication/preferences", async (req, res) => {
 
     try {
 
-        const preferences =
-            normalizeCommunicationPreferences(
-                req.body?.preferences || {}
-            );
+        const sessionId =
+            req.headers["x-session-id"] ||
+            req.ip ||
+            "default";
+
+        const profile =
+            await getProfile(sessionId);
 
         return res.json({
 
             success: true,
 
-            persistent: false,
+            persistent: true,
 
-            message:
-                "Communication preferences validated. Persistent storage is not connected yet.",
+            sessionId,
 
-            preferences
+            preferences:
+                profile.preferences
 
         });
 
@@ -1387,17 +1377,91 @@ app.post("/communication/preferences", (req, res) => {
     catch (error) {
 
         console.error(
-            "⚠️ Communication preference error:",
-            error.message
+            "AP Synapse communication preference GET error:",
+            error
+        );
+
+        return res.status(500).json({
+
+            success: false,
+
+            persistent: true,
+
+            error:
+                error.message ||
+                "Unable to load communication preferences."
+
+        });
+
+    }
+
+});
+
+
+app.post("/communication/preferences", async (req, res) => {
+
+    try {
+
+        const sessionId =
+            req.headers["x-session-id"] ||
+            req.ip ||
+            "default";
+
+        const requestedPreferences =
+            req.body?.preferences || {};
+
+        const normalized =
+            normalizeCommunicationPreferences(
+                requestedPreferences
+            );
+
+        for (const [key, value] of Object.entries(normalized)) {
+
+            await savePreference(
+                sessionId,
+                key,
+                value
+            );
+
+        }
+
+        const profile =
+            await getProfile(sessionId);
+
+        return res.json({
+
+            success: true,
+
+            persistent: true,
+
+            sessionId,
+
+            message:
+                "Communication preferences saved successfully.",
+
+            preferences:
+                profile.preferences
+
+        });
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "AP Synapse communication preference POST error:",
+            error
         );
 
         return res.status(400).json({
 
             success: false,
 
+            persistent: true,
+
             error:
                 error.message ||
-                "Unable to process communication preferences."
+                "Unable to save communication preferences."
 
         });
 

@@ -26,6 +26,22 @@ export async function initializeDatabase() {
 
             updated_at TIMESTAMPTZ DEFAULT NOW()
         );
+
+                CREATE TABLE IF NOT EXISTS communication_deliveries (
+            id BIGSERIAL PRIMARY KEY,
+
+            session_id TEXT NOT NULL
+                REFERENCES profiles(session_id)
+                ON DELETE CASCADE,
+
+            communication_type TEXT NOT NULL,
+
+            delivery_key TEXT NOT NULL,
+
+            sent_at TIMESTAMPTZ DEFAULT NOW(),
+
+            UNIQUE(session_id, communication_type, delivery_key)
+        );
     `);
 
     console.log("? AP Synapse PostgreSQL tables initialized.");

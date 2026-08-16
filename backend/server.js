@@ -32,6 +32,10 @@ import {
     initializeDatabase
 } from "./database/initialize.js";
 
+import {
+    startCommunicationScheduler
+} from "./services/communicationScheduler.js";
+
 import brain from "./core/index.js";
 
 import {
@@ -1587,6 +1591,8 @@ app.get("/database/status", async (req, res) => {
 
 initializeDatabase()
     .then(() => {
+
+        startCommunicationScheduler();
 
         app.listen(PORT, () => {
 

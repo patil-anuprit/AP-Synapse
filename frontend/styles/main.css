@@ -24904,3 +24904,91 @@ body {
         display: flex !important;
     }
 }
+
+/* =========================================================
+   AP SYNAPSE — MOBILE SIDEBAR HISTORY
+   FINAL LAYOUT FIX
+   Buttons → History → Footer
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    /* Sidebar itself becomes the page-level scroll container */
+    .sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        min-height: 100dvh !important;
+        max-height: 100dvh !important;
+        height: 100dvh !important;
+
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain;
+        touch-action: pan-y;
+    }
+
+    /* Keep the existing top/header/buttons ABOVE history */
+    .sidebar > .ap-sidebar-topbar {
+        order: 0 !important;
+        flex: 0 0 auto !important;
+    }
+
+    .sidebar > .sidebar-header {
+        order: 1 !important;
+        flex: 0 0 auto !important;
+    }
+
+    /* MAIN BUTTONS */
+    .sidebar > .sidebar-group:not(.recent-group) {
+        order: 3 !important;
+        flex: 0 0 auto !important;
+    }
+
+    /* HISTORY — ALWAYS AFTER BUTTONS */
+    .sidebar > .recent-group {
+        order: 4 !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        flex: 0 0 360px !important;
+        height: 360px !important;
+        min-height: 360px !important;
+        max-height: 360px !important;
+
+        width: 100% !important;
+        overflow: hidden !important;
+
+        position: relative !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    /* Actual history list */
+    .sidebar > .recent-group .history-list {
+        display: flex !important;
+        flex-direction: column !important;
+
+        flex: 1 1 auto !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain;
+        touch-action: pan-y;
+    }
+
+    /* Footer ALWAYS LAST */
+    .sidebar > .sidebar-footer {
+        order: 99 !important;
+        flex: 0 0 auto !important;
+    }
+}

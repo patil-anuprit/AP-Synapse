@@ -1,7 +1,6 @@
 import { pool } from "./db.js";
 
 export async function initializeDatabase() {
-
     await pool.query(`
         CREATE TABLE IF NOT EXISTS profiles (
             session_id TEXT PRIMARY KEY,
@@ -29,7 +28,5 @@ export async function initializeDatabase() {
         );
     `);
 
-    console.log(
-        "? AP Synapse PostgreSQL tables initialized."
-    );
+    console.log("? AP Synapse PostgreSQL tables initialized.");
 }

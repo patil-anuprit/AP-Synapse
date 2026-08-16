@@ -1165,13 +1165,13 @@ if (canvas) {
 
     /* Recent/history */
     aside.sidebar > .recent-group {
-        order: 2 !important;
+        order: 3 !important;
         z-index: 10 !important;
     }
 
     /* Main navigation */
     aside.sidebar > .sidebar-group:not(.recent-group) {
-        order: 3 !important;
+        order: 2 !important;
         z-index: 30 !important;
     }
 
@@ -1580,7 +1580,7 @@ if (canvas) {
 
             aside.sidebar > .recent-group {
 
-                order: 2 !important;
+                order: 3 !important;
 
                 height: auto !important;
 

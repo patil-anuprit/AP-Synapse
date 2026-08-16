@@ -13,6 +13,11 @@ import {
     sendSignInNotification
 } from "./services/emailService.js";
 
+import {
+    dispatchCommunication,
+    COMMUNICATION_TYPES
+} from "./services/communicationEngine.js";
+
 
 import brain from "./core/index.js";
 
@@ -1198,17 +1203,51 @@ app.post("/auth/google", async (req, res) => {
         // ==========================================
 
         try {
+
             if (user.email) {
-                await sendSignInNotification({
-                    email: user.email,
-                    name: user.name || "AP Synapse User"
+
+                await dispatchCommunication({
+
+                    type:
+                       COMMUNICATION_TYPES.SECURITY,
+
+                    email:
+                       user.email,
+
+                    name:
+                       user.name || "AP Synapse User",
+
+                    payload: {
+
+                       title:
+                           "New sign-in detected.",
+
+                       subject:
+                           "New sign-in to your AP Synapse account",
+
+                       message:
+                           "Your AP Synapse account was just signed in to using Google. If this was you, no action is required."
+
+                    }
+
                 });
 
-                console.log("✉️ AP Synapse sign-in notification sent:", user.email);
+                console.log(
+                    "✉️ AP Synapse security communication dispatched:",
+                    user.email
+                );
+
             }
+
         } catch (emailError) {
+
             // Email failure must NEVER break Google Sign-In.
-            console.error("⚠️ Sign-in notification failed:", emailError.message);
+
+            console.error(
+                "⚠️ Sign-in security communication failed:",
+                emailError.message
+            );
+
         }
 
         // ------------------------------------------
@@ -1253,79 +1292,6 @@ app.get("/email/status", (req, res) => {
         replyToConfigured:
             Boolean(process.env.BREVO_REPLY_TO_EMAIL)
     });
-
-});
-
-// ============================================================
-// AP SYNAPSE — COMMUNICATION ENGINE TEST
-// TEMPORARY — REMOVE AFTER VERIFICATION
-// ============================================================
-
-app.post("/email/test-communication", async (req, res) => {
-
-    try {
-
-        const {
-            email,
-            name = "AP Synapse User"
-        } = req.body || {};
-
-        if (!email) {
-
-            return res.status(400).json({
-                success: false,
-                error: "email is required."
-            });
-
-        }
-
-        const {
-            sendResearchCompleteNotification
-        } = await import("./services/emailService.js");
-
-        await sendResearchCompleteNotification({
-
-            email,
-
-            name,
-
-            researchTitle:
-                "AP Synapse Communication Engine Test",
-
-            message:
-                "Your AP Synapse Communication Engine is connected successfully. This is a controlled test notification."
-
-        });
-
-        return res.json({
-
-            success: true,
-
-            message:
-                "AP Synapse communication test email sent."
-
-        });
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "❌ Communication test failed:",
-            error
-        );
-
-        return res.status(500).json({
-
-            success: false,
-
-            error:
-                error.message ||
-                "Communication test failed."
-
-        });
-
-    }
 
 });
 

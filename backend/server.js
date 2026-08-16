@@ -24,6 +24,10 @@ import {
     normalizeCommunicationPreferences
 } from "./services/communicationPreferences.js";
 
+import {
+    testDatabaseConnection
+} from "./database/db.js";
+
 
 import brain from "./core/index.js";
 
@@ -1392,6 +1396,30 @@ app.post("/communication/preferences", (req, res) => {
                 error.message ||
                 "Unable to process communication preferences."
 
+        });
+
+    }
+
+});
+
+app.get("/database/status", async (req, res) => {
+
+    try {
+
+        const status =
+            await testDatabaseConnection();
+
+        res.json({
+            service: "AP Synapse Database",
+            provider: "PostgreSQL",
+            ...status
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            service: "AP Synapse Database",
+            connected: false
         });
 
     }

@@ -19,6 +19,11 @@ import {
     notifyResearchComplete
 } from "./services/communicationEngine.js";
 
+import {
+    DEFAULT_COMMUNICATION_PREFERENCES,
+    normalizeCommunicationPreferences
+} from "./services/communicationPreferences.js";
+
 
 import brain from "./core/index.js";
 
@@ -1293,6 +1298,71 @@ app.get("/email/status", (req, res) => {
         replyToConfigured:
             Boolean(process.env.BREVO_REPLY_TO_EMAIL)
     });
+
+});
+
+// ============================================================
+// AP SYNAPSE — COMMUNICATION PREFERENCES
+// ============================================================
+
+app.get("/communication/preferences", (req, res) => {
+
+    // Temporary session-level defaults.
+    // Persistent storage will be connected to the authenticated
+    // user profile/database later.
+
+    return res.json({
+        success: true,
+        persistent: false,
+        preferences:
+            DEFAULT_COMMUNICATION_PREFERENCES
+    });
+
+});
+
+
+app.post("/communication/preferences", (req, res) => {
+
+    try {
+
+        const preferences =
+            normalizeCommunicationPreferences(
+                req.body?.preferences || {}
+            );
+
+        return res.json({
+
+            success: true,
+
+            persistent: false,
+
+            message:
+                "Communication preferences validated. Persistent storage is not connected yet.",
+
+            preferences
+
+        });
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "⚠️ Communication preference error:",
+            error.message
+        );
+
+        return res.status(400).json({
+
+            success: false,
+
+            error:
+                error.message ||
+                "Unable to process communication preferences."
+
+        });
+
+    }
 
 });
 

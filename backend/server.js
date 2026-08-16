@@ -1472,6 +1472,95 @@ app.post("/communication/preferences", async (req, res) => {
 
 });
 
+// ============================================================
+// AP SYNAPSE — COMMUNICATION EVENT DISPATCH
+// ============================================================
+
+app.post("/communication/send", async (req, res) => {
+
+    try {
+
+        const sessionId =
+            req.headers["x-session-id"] ||
+            req.ip ||
+            "default";
+
+        const {
+            type,
+            email,
+            name,
+            payload = {}
+        } = req.body || {};
+
+        if (!type) {
+            return res.status(400).json({
+                success: false,
+                error: "Communication type is required."
+            });
+        }
+
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                error: "Recipient email is required."
+            });
+        }
+
+        const profile =
+            await getProfile(sessionId);
+
+        const result =
+            await dispatchCommunication({
+
+                type,
+
+                email,
+
+                name:
+                    name ||
+                    profile.name ||
+                    "AP Synapse User",
+
+                sessionId,
+
+                preferences:
+                    profile.preferences,
+
+                payload
+
+            });
+
+        return res.json({
+
+            success: true,
+
+            ...result
+
+        });
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "AP Synapse communication dispatch error:",
+            error
+        );
+
+        return res.status(500).json({
+
+            success: false,
+
+            error:
+                error.message ||
+                "Communication failed."
+
+        });
+
+    }
+
+});
+
 app.get("/database/status", async (req, res) => {
 
     try {

@@ -25284,3 +25284,3245 @@ body {
         flex: 0 0 auto !important;
     }
 }
+
+/* =========================================================
+   AP SYNAPSE — PURE OBSIDIAN BLACK
+   Clean • Rich • Polished • Premium
+   Background only — no neuron changes
+   ========================================================= */
+
+html,
+body {
+  background: #000101 !important;
+  background-image:
+    radial-gradient(
+      85% 70% at 50% 0%,
+      rgba(255, 255, 255, 0.018),
+      transparent 62%
+    ),
+    linear-gradient(
+      180deg,
+      #010203 0%,
+      #000101 48%,
+      #000000 100%
+    ) !important;
+
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+}
+
+/* Let the premium obsidian surface continue through the app */
+#root,
+#app {
+  background: transparent !important;
+}
+
+/* Existing neuron field remains completely untouched */
+canvas {
+  background: transparent !important;
+}
+
+/* ============================================================
+   AP SYNAPSE — PROFESSIONAL LIGHT / TITANIUM MODE
+   FINAL OVERRIDE
+   Purpose:
+   • No blinding white
+   • Proper readable contrast
+   • Premium neutral titanium surface
+   • Sidebar belongs to the same visual system
+   • Cards / controls remain visible
+   • Profile panel follows light mode
+   • Intelligence Field remains visible
+   • Does NOT alter dark mode
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   1. LIGHT MODE ROOT
+   ------------------------------------------------------------ */
+
+html:has(body.light-mode),
+html:has(body.light),
+html[data-theme="light"],
+body.light-mode,
+body.light,
+body[data-theme="light"] {
+
+  background: #e7e9e8 !important;
+  color: #202326 !important;
+
+  --ap-light-bg: #e7e9e8;
+  --ap-light-surface: #eef0ef;
+  --ap-light-surface-2: #e3e6e5;
+  --ap-light-card: rgba(248, 249, 248, 0.82);
+  --ap-light-border: rgba(35, 39, 42, 0.13);
+  --ap-light-border-strong: rgba(35, 39, 42, 0.20);
+  --ap-light-text: #202326;
+  --ap-light-text-soft: #60666b;
+  --ap-light-text-muted: #7a8084;
+  --ap-light-gold: #a47a32;
+}
+
+
+/* ------------------------------------------------------------
+   2. MAIN APPLICATION SURFACE
+   ------------------------------------------------------------ */
+
+body.light-mode,
+body.light,
+body[data-theme="light"] {
+
+  background:
+    radial-gradient(
+      90% 70% at 50% -10%,
+      rgba(255,255,255,0.55),
+      transparent 58%
+    ),
+    linear-gradient(
+      145deg,
+      #e3e6e5 0%,
+      #edf0ef 42%,
+      #e5e8e7 72%,
+      #dde1df 100%
+    ) !important;
+
+  color: var(--ap-light-text) !important;
+}
+
+
+/* ------------------------------------------------------------
+   3. STOP THE "PURE WHITE" LOOK
+   ------------------------------------------------------------ */
+
+body.light-mode::before,
+body.light::before,
+body[data-theme="light"]::before {
+
+  background:
+    radial-gradient(
+      60% 50% at 50% 0%,
+      rgba(255,255,255,0.22),
+      transparent 70%
+    ) !important;
+
+  opacity: 1 !important;
+}
+
+
+/* ------------------------------------------------------------
+   4. APPLICATION CONTAINERS
+   ------------------------------------------------------------ */
+
+body.light-mode #root,
+body.light-mode #app,
+body.light-mode .app,
+body.light-mode .app-container,
+body.light-mode .main-container,
+
+body.light #root,
+body.light #app,
+body.light .app,
+body.light .app-container,
+body.light .main-container,
+
+body[data-theme="light"] #root,
+body[data-theme="light"] #app,
+body[data-theme="light"] .app,
+body[data-theme="light"] .app-container,
+body[data-theme="light"] .main-container {
+
+  background: transparent !important;
+  color: var(--ap-light-text) !important;
+}
+
+
+/* ------------------------------------------------------------
+   5. SIDEBAR — SAME MATERIAL AS THE WHOLE APP
+   ------------------------------------------------------------ */
+
+body.light-mode aside,
+body.light-mode .sidebar,
+body.light-mode [class*="sidebar"],
+body.light-mode nav,
+
+body.light aside,
+body.light .sidebar,
+body.light [class*="sidebar"],
+body.light nav,
+
+body[data-theme="light"] aside,
+body[data-theme="light"] .sidebar,
+body[data-theme="light"] [class*="sidebar"],
+body[data-theme="light"] nav {
+
+  background:
+    linear-gradient(
+      160deg,
+      rgba(244,246,245,0.94),
+      rgba(226,230,228,0.94)
+    ) !important;
+
+  color: var(--ap-light-text) !important;
+
+  border-right: 1px solid
+    rgba(35,39,42,0.12) !important;
+
+  box-shadow:
+    8px 0 28px rgba(30,34,36,0.045) !important;
+}
+
+
+/* ------------------------------------------------------------
+   6. SIDEBAR TEXT
+   ------------------------------------------------------------ */
+
+body.light-mode aside *,
+body.light-mode .sidebar *,
+body.light-mode nav *,
+
+body.light aside *,
+body.light .sidebar *,
+body.light nav *,
+
+body[data-theme="light"] aside *,
+body[data-theme="light"] .sidebar *,
+body[data-theme="light"] nav * {
+
+  color: inherit;
+}
+
+
+/* Main sidebar labels */
+
+body.light-mode aside a,
+body.light-mode aside button,
+body.light-mode .sidebar a,
+body.light-mode .sidebar button,
+body.light-mode nav a,
+body.light-mode nav button {
+
+  color: #454b50 !important;
+}
+
+
+/* Secondary sidebar text */
+
+body.light-mode aside small,
+body.light-mode aside span,
+body.light-mode .sidebar small,
+body.light-mode .sidebar span {
+
+  color: #6d7378 !important;
+}
+
+
+/* ------------------------------------------------------------
+   7. SIDEBAR BUTTONS
+   ------------------------------------------------------------ */
+
+body.light-mode aside button,
+body.light-mode .sidebar button,
+body.light-mode nav button {
+
+  background:
+    rgba(255,255,255,0.38) !important;
+
+  border: 1px solid
+    rgba(35,39,42,0.11) !important;
+
+  border-radius: 14px !important;
+
+  box-shadow:
+    0 2px 8px rgba(30,34,36,0.035) !important;
+
+  transition:
+    background .18s ease,
+    border-color .18s ease,
+    transform .18s ease,
+    box-shadow .18s ease !important;
+}
+
+
+body.light-mode aside button:hover,
+body.light-mode .sidebar button:hover,
+body.light-mode nav button:hover {
+
+  background:
+    rgba(255,255,255,0.72) !important;
+
+  border-color:
+    rgba(164,122,50,0.25) !important;
+
+  box-shadow:
+    0 5px 18px rgba(30,34,36,0.07) !important;
+}
+
+
+/* ------------------------------------------------------------
+   8. SEARCH FIELD
+   ------------------------------------------------------------ */
+
+body.light-mode input,
+body.light-mode textarea,
+body.light-mode [contenteditable="true"] {
+
+  background:
+    rgba(248,249,248,0.72) !important;
+
+  color:
+    #25292c !important;
+
+  border-color:
+    rgba(35,39,42,0.12) !important;
+
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.55),
+    0 2px 10px rgba(30,34,36,0.035) !important;
+}
+
+
+body.light-mode input::placeholder,
+body.light-mode textarea::placeholder {
+
+  color:
+    #7c8286 !important;
+}
+
+
+/* ------------------------------------------------------------
+   9. HEADER / TOP CONTROLS
+   ------------------------------------------------------------ */
+
+body.light-mode header,
+body.light-mode .header,
+body.light-mode [class*="header"] {
+
+  color:
+    #25292c !important;
+
+  border-color:
+    rgba(35,39,42,0.10) !important;
+}
+
+
+/* ------------------------------------------------------------
+   10. UNIVERSAL BUTTON / CONTROL FIX
+   ------------------------------------------------------------ */
+
+body.light-mode button {
+
+  color:
+    #303539 !important;
+
+  border-color:
+    rgba(35,39,42,0.13) !important;
+}
+
+
+body.light-mode button:hover {
+
+  color:
+    #202326 !important;
+
+  border-color:
+    rgba(164,122,50,0.30) !important;
+}
+
+
+/* ------------------------------------------------------------
+   11. HERO TEXT — IMPORTANT
+   ------------------------------------------------------------ */
+
+body.light-mode h1,
+body.light-mode h2,
+body.light-mode h3,
+body.light-mode h4 {
+
+  color:
+    #202326 !important;
+
+  text-shadow:
+    none !important;
+}
+
+
+/* ------------------------------------------------------------
+   12. NORMAL TEXT
+   ------------------------------------------------------------ */
+
+body.light-mode p,
+body.light-mode label,
+body.light-mode span {
+
+  text-shadow:
+    none !important;
+}
+
+
+/* ------------------------------------------------------------
+   13. GOLD AP SYNAPSE ACCENT
+   ------------------------------------------------------------ */
+
+body.light-mode .gold,
+body.light-mode .accent,
+body.light-mode [class*="gold"] {
+
+  color:
+    #9a702c !important;
+}
+
+
+/* ------------------------------------------------------------
+   14. CARDS
+   ------------------------------------------------------------ */
+
+body.light-mode .card,
+body.light-mode [class*="card"],
+body.light-mode [class*="panel"] {
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(250,251,250,0.72),
+      rgba(235,238,237,0.72)
+    ) !important;
+
+  border:
+    1px solid rgba(35,39,42,0.12) !important;
+
+  box-shadow:
+    0 10px 32px rgba(30,34,36,0.045),
+    inset 0 1px 0 rgba(255,255,255,0.60) !important;
+
+  color:
+    #292d30 !important;
+}
+
+
+/* ------------------------------------------------------------
+   15. RECENT INTELLIGENCE
+   ------------------------------------------------------------ */
+
+body.light-mode .recent-card,
+body.light-mode [class*="recent"] {
+
+  color:
+    #292d30 !important;
+}
+
+
+body.light-mode .recent-card *,
+body.light-mode [class*="recent"] * {
+
+  text-shadow:
+    none !important;
+}
+
+
+/* ------------------------------------------------------------
+   16. INPUT / CHAT COMPOSER
+   ------------------------------------------------------------ */
+
+body.light-mode .composer,
+body.light-mode .chat-input,
+body.light-mode [class*="composer"] {
+
+  background:
+    rgba(248,249,248,0.86) !important;
+
+  border:
+    1px solid rgba(35,39,42,0.14) !important;
+
+  box-shadow:
+    0 12px 35px rgba(30,34,36,0.07),
+    inset 0 1px 0 rgba(255,255,255,0.70) !important;
+
+  color:
+    #25292c !important;
+}
+
+
+/* ------------------------------------------------------------
+   17. PROFILE / ACCOUNT PANEL
+   ------------------------------------------------------------ */
+
+body.light-mode .profile-panel,
+body.light-mode .account-panel,
+body.light-mode [class*="profile"],
+body.light-mode [class*="account-panel"] {
+
+  background:
+    linear-gradient(
+      155deg,
+      rgba(244,246,245,0.98),
+      rgba(226,230,228,0.98)
+    ) !important;
+
+  color:
+    #25292c !important;
+
+  border:
+    1px solid rgba(35,39,42,0.14) !important;
+
+  box-shadow:
+    -18px 0 45px rgba(25,29,31,0.12) !important;
+}
+
+
+/* Profile panel text */
+
+body.light-mode .profile-panel *,
+body.light-mode .account-panel *,
+body.light-mode [class*="profile"] * {
+
+  color:
+    #303539 !important;
+
+  text-shadow:
+    none !important;
+}
+
+
+/* ------------------------------------------------------------
+   18. PROFILE PANEL BUTTONS
+   ------------------------------------------------------------ */
+
+body.light-mode .profile-panel button,
+body.light-mode .account-panel button {
+
+  background:
+    rgba(255,255,255,0.52) !important;
+
+  color:
+    #303539 !important;
+
+  border:
+    1px solid rgba(35,39,42,0.13) !important;
+}
+
+
+body.light-mode .profile-panel button:hover,
+body.light-mode .account-panel button:hover {
+
+  background:
+    rgba(255,255,255,0.82) !important;
+}
+
+
+/* ------------------------------------------------------------
+   19. SCROLLBARS
+   ------------------------------------------------------------ */
+
+body.light-mode ::-webkit-scrollbar {
+
+  width: 9px;
+}
+
+
+body.light-mode ::-webkit-scrollbar-track {
+
+  background:
+    transparent !important;
+}
+
+
+body.light-mode ::-webkit-scrollbar-thumb {
+
+  background:
+    rgba(70,76,80,0.20) !important;
+
+  border-radius:
+    999px !important;
+}
+
+
+body.light-mode ::-webkit-scrollbar-thumb:hover {
+
+  background:
+    rgba(70,76,80,0.32) !important;
+}
+
+
+/* ------------------------------------------------------------
+   20. KEEP INTELLIGENCE FIELD VISIBLE
+   ------------------------------------------------------------ */
+
+body.light-mode canvas {
+
+  background:
+    transparent !important;
+
+  opacity:
+    0.72 !important;
+}
+
+
+/* ------------------------------------------------------------
+   21. REMOVE DARK-MODE TEXT SHADOWS / FILTERS
+   ------------------------------------------------------------ */
+
+body.light-mode * {
+
+  text-shadow:
+    none !important;
+}
+
+
+/* ------------------------------------------------------------
+   22. GOLD INTERACTION — VERY SUBTLE
+   ------------------------------------------------------------ */
+
+body.light-mode button:focus-visible,
+body.light-mode input:focus,
+body.light-mode textarea:focus {
+
+  outline:
+    2px solid rgba(164,122,50,0.30) !important;
+
+  outline-offset:
+    2px !important;
+}
+
+
+/* ------------------------------------------------------------
+   23. MOBILE LIGHT MODE
+   ------------------------------------------------------------ */
+
+@media (max-width: 768px) {
+
+  body.light-mode,
+  body.light,
+  body[data-theme="light"] {
+
+    background:
+      linear-gradient(
+        145deg,
+        #e5e8e7,
+        #edf0ef 55%,
+        #e2e5e4
+      ) !important;
+  }
+
+  body.light-mode aside,
+  body.light-mode .sidebar,
+  body.light-mode nav {
+
+    background:
+      linear-gradient(
+        160deg,
+        rgba(241,243,242,0.98),
+        rgba(225,229,227,0.98)
+      ) !important;
+
+    box-shadow:
+      8px 0 30px rgba(30,34,36,0.10) !important;
+  }
+
+  body.light-mode .card,
+  body.light-mode [class*="card"] {
+
+    box-shadow:
+      0 6px 22px rgba(30,34,36,0.055) !important;
+  }
+}
+
+/* =========================================================
+   AP SYNAPSE — LIGHT MODE MASTER SURFACE
+   FINAL OVERRIDE
+   body.light-mode = complete professional light theme
+   ========================================================= */
+
+body.light-mode {
+    --ap-bg: #e9ecef;
+    --ap-bg-deep: #e4e7ea;
+    --ap-surface: #f4f5f6;
+    --ap-surface-2: #eef0f2;
+    --ap-surface-3: #e7e9eb;
+
+    --ap-border: rgba(20, 24, 28, .12);
+    --ap-border-soft: rgba(20, 24, 28, .08);
+
+    --ap-text: #1b1e22;
+    --ap-text-2: #4e555c;
+    --ap-muted: #727980;
+
+    --ap-gold: #9a7028;
+    --ap-gold-soft: rgba(154,112,40,.14);
+
+    background:
+        radial-gradient(
+            100% 70% at 50% -15%,
+            rgba(255,255,255,.95),
+            transparent 58%
+        ),
+        linear-gradient(
+            145deg,
+            #e8ebed 0%,
+            #edf0f2 48%,
+            #e5e8eb 100%
+        ) !important;
+
+    color: var(--ap-text) !important;
+}
+
+
+/* =========================================================
+   ROOT WORKSPACE
+   ========================================================= */
+
+body.light-mode .app,
+body.light-mode .workspace,
+body.light-mode .main,
+body.light-mode .main-content,
+body.light-mode .content,
+body.light-mode .conversation,
+body.light-mode .projects-page,
+body.light-mode .assistant-page {
+
+    background: transparent !important;
+    color: var(--ap-text) !important;
+}
+
+
+/* =========================================================
+   SIDEBAR — SAME MATERIAL AS WORKSPACE
+   ========================================================= */
+
+body.light-mode .sidebar {
+
+    background:
+        linear-gradient(
+            180deg,
+            #e5e8eb 0%,
+            #eaedef 48%,
+            #e6e9eb 100%
+        ) !important;
+
+    color: var(--ap-text) !important;
+
+    border-right:
+        1px solid rgba(20,24,28,.11) !important;
+
+    box-shadow:
+        inset -1px 0 0 rgba(255,255,255,.65),
+        8px 0 28px rgba(20,24,28,.035) !important;
+}
+
+
+/* sidebar top/bottom gold lines */
+
+body.light-mode .sidebar::before,
+body.light-mode .sidebar::after {
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(154,112,40,.20),
+            transparent
+        ) !important;
+}
+
+
+/* =========================================================
+   SIDEBAR BRAND
+   ========================================================= */
+
+body.light-mode .brand-text h2 {
+
+    color: #181b1f !important;
+}
+
+body.light-mode .brand-text span {
+
+    color: #666d74 !important;
+}
+
+body.light-mode .brand-mark {
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(154,112,40,.16),
+            rgba(154,112,40,.055)
+        ) !important;
+
+    border:
+        1px solid rgba(154,112,40,.28) !important;
+
+    box-shadow:
+        0 8px 24px rgba(154,112,40,.07) !important;
+}
+
+
+/* =========================================================
+   SIDEBAR BUTTONS
+   ========================================================= */
+
+body.light-mode .new-chat-btn {
+
+    background:
+        linear-gradient(
+            180deg,
+            #f7f8f9,
+            #eceff1
+        ) !important;
+
+    color: #252a2f !important;
+
+    border:
+        1px solid rgba(20,24,28,.11) !important;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.9),
+        0 5px 16px rgba(20,24,28,.045) !important;
+}
+
+body.light-mode .new-chat-btn:hover {
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #eef0f2
+        ) !important;
+
+    color: #15181b !important;
+
+    border-color:
+        rgba(154,112,40,.28) !important;
+}
+
+
+/* =========================================================
+   SIDEBAR SEARCH
+   ========================================================= */
+
+body.light-mode .sidebar-search input {
+
+    background:
+        rgba(255,255,255,.68) !important;
+
+    color:
+        #202428 !important;
+
+    border:
+        1px solid rgba(20,24,28,.10) !important;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.85),
+        0 4px 14px rgba(20,24,28,.035) !important;
+}
+
+body.light-mode .sidebar-search input::placeholder {
+
+    color: #777e85 !important;
+}
+
+
+/* =========================================================
+   SIDEBAR LABELS
+   ========================================================= */
+
+body.light-mode .sidebar-group h4 {
+
+    color: #737a81 !important;
+}
+
+
+/* =========================================================
+   HISTORY
+   ========================================================= */
+
+body.light-mode .history-item {
+
+    background: transparent !important;
+
+    color: #555c63 !important;
+}
+
+body.light-mode .history-item:hover {
+
+    background:
+        rgba(255,255,255,.58) !important;
+
+    color: #181b1f !important;
+}
+
+body.light-mode .history-item.active {
+
+    background:
+        rgba(255,255,255,.72) !important;
+
+    color: #181b1f !important;
+
+    border-left-color:
+        #9a7028 !important;
+}
+
+
+/* =========================================================
+   SIDEBAR NAVIGATION
+   ========================================================= */
+
+body.light-mode .sidebar nav a {
+
+    background: transparent !important;
+
+    color: #4c535a !important;
+}
+
+body.light-mode .sidebar nav a:hover {
+
+    background:
+        rgba(255,255,255,.62) !important;
+
+    color: #171a1e !important;
+
+    transform: translateX(3px);
+}
+
+body.light-mode .sidebar nav a.active {
+
+    background:
+        rgba(255,255,255,.72) !important;
+
+    color: #171a1e !important;
+
+    border:
+        1px solid rgba(154,112,40,.18) !important;
+}
+
+
+/* =========================================================
+   SIDEBAR FOOTER
+   ========================================================= */
+
+body.light-mode .version {
+
+    color: #7b8288 !important;
+
+    border-top-color:
+        rgba(20,24,28,.08) !important;
+}
+
+
+/* =========================================================
+   TOP BAR
+   ========================================================= */
+
+body.light-mode .topbar,
+body.light-mode .top-bar,
+body.light-mode header {
+
+    background:
+        rgba(232,235,237,.78) !important;
+
+    color: var(--ap-text) !important;
+
+    border-bottom:
+        1px solid rgba(20,24,28,.09) !important;
+
+    backdrop-filter:
+        blur(20px) saturate(110%) !important;
+
+    -webkit-backdrop-filter:
+        blur(20px) saturate(110%) !important;
+}
+
+
+/* =========================================================
+   GLOBAL LIGHT-MODE TEXT
+   ========================================================= */
+
+body.light-mode h1,
+body.light-mode h2,
+body.light-mode h3,
+body.light-mode h4 {
+
+    color: #171a1e !important;
+}
+
+body.light-mode p {
+
+    color: #555c63 !important;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+body.light-mode .hero h1,
+body.light-mode .hero h1 *,
+body.light-mode .hero-title,
+body.light-mode .hero-title * {
+
+    color: #171a1e !important;
+}
+
+body.light-mode .hero p,
+body.light-mode .hero-subtitle {
+
+    color: #60676e !important;
+}
+
+
+/* =========================================================
+   HERO ACTION BUTTONS
+   ========================================================= */
+
+body.light-mode .hero-action-btn {
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.82),
+            rgba(241,243,244,.82)
+        ) !important;
+
+    color:
+        #2a2f34 !important;
+
+    border:
+        1px solid rgba(20,24,28,.12) !important;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.9),
+        0 5px 16px rgba(20,24,28,.035) !important;
+}
+
+body.light-mode .hero-action-btn:hover {
+
+    color:
+        #15181a !important;
+
+    border-color:
+        rgba(154,112,40,.32) !important;
+
+    background:
+        #ffffff !important;
+}
+
+
+/* =========================================================
+   RECENT INTELLIGENCE
+   ========================================================= */
+
+body.light-mode .recent-intelligence {
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(250,251,252,.82),
+            rgba(239,242,244,.78)
+        ) !important;
+
+    border:
+        1px solid rgba(20,24,28,.10) !important;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.9),
+        0 14px 35px rgba(20,24,28,.055) !important;
+
+    color:
+        #202428 !important;
+}
+
+
+body.light-mode .recent-intelligence h2 {
+
+    color: #171a1e !important;
+}
+
+body.light-mode .recent-kicker {
+
+    color: #9a7028 !important;
+}
+
+body.light-mode .recent-intelligence-header button {
+
+    color: #555c63 !important;
+}
+
+
+/* =========================================================
+   RECENT CARDS
+   ========================================================= */
+
+body.light-mode .recent-intelligence-grid > *,
+body.light-mode .recent-card,
+body.light-mode .history-card {
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.78),
+            rgba(241,243,245,.76)
+        ) !important;
+
+    border:
+        1px solid rgba(20,24,28,.10) !important;
+
+    color:
+        #24282d !important;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.85) !important;
+}
+
+
+/* =========================================================
+   GENERAL CARDS
+   ========================================================= */
+
+body.light-mode .card,
+body.light-mode .project-card,
+body.light-mode .prompt-chip {
+
+    background:
+        rgba(248,249,250,.82) !important;
+
+    color:
+        #202428 !important;
+
+    border-color:
+        rgba(20,24,28,.10) !important;
+
+    box-shadow:
+        0 12px 30px rgba(20,24,28,.05) !important;
+}
+
+
+/* =========================================================
+   COMMAND BAR / COMPOSER
+   ========================================================= */
+
+body.light-mode .command-bar,
+body.light-mode .composer,
+body.light-mode .chat-composer {
+
+    background:
+        rgba(248,249,250,.92) !important;
+
+    color:
+        #202428 !important;
+
+    border:
+        1px solid rgba(20,24,28,.11) !important;
+
+    box-shadow:
+        0 12px 35px rgba(20,24,28,.08),
+        inset 0 1px 0 rgba(255,255,255,.9) !important;
+}
+
+
+body.light-mode #userInput,
+body.light-mode .command-bar input,
+body.light-mode .command-bar textarea {
+
+    background:
+        transparent !important;
+
+    color:
+        #202428 !important;
+
+    border-color:
+        transparent !important;
+}
+
+body.light-mode #userInput::placeholder {
+
+    color:
+        #777e85 !important;
+}
+
+
+/* =========================================================
+   COMPOSER BUTTONS
+   ========================================================= */
+
+body.light-mode .command-bar button,
+body.light-mode .composer button,
+body.light-mode .chat-composer button {
+
+    color:
+        #4e555c !important;
+
+    background:
+        transparent !important;
+
+    border-color:
+        transparent !important;
+}
+
+body.light-mode .command-bar button:hover,
+body.light-mode .composer button:hover,
+body.light-mode .chat-composer button:hover {
+
+    background:
+        rgba(20,24,28,.055) !important;
+
+    color:
+        #171a1e !important;
+}
+
+
+/* SEND BUTTON — KEEP GOLD */
+
+body.light-mode #sendBtn {
+
+    background:
+        linear-gradient(
+            145deg,
+            #c9a45a,
+            #a98032
+        ) !important;
+
+    color:
+        #171717 !important;
+
+    border:
+        1px solid rgba(120,82,20,.25) !important;
+
+    box-shadow:
+        0 8px 22px rgba(154,112,40,.20) !important;
+}
+
+
+/* =========================================================
+   TOP ICON BUTTONS
+   ========================================================= */
+
+body.light-mode .topbar button,
+body.light-mode .top-bar button {
+
+    background:
+        rgba(248,249,250,.76) !important;
+
+    color:
+        #3d444b !important;
+
+    border:
+        1px solid rgba(20,24,28,.10) !important;
+
+    box-shadow:
+        0 4px 14px rgba(20,24,28,.035) !important;
+}
+
+
+/* =========================================================
+   PROFILE / POPUPS
+   ========================================================= */
+
+body.light-mode .popup-panel,
+body.light-mode .profile-panel,
+body.light-mode .profile-modal,
+body.light-mode .account-panel,
+body.light-mode [class*="profile-panel"],
+body.light-mode [class*="profile-modal"] {
+
+    background:
+        linear-gradient(
+            145deg,
+            #f5f6f7,
+            #e9ecef
+        ) !important;
+
+    color:
+        #202428 !important;
+
+    border:
+        1px solid rgba(20,24,28,.13) !important;
+
+    box-shadow:
+        0 24px 65px rgba(20,24,28,.18) !important;
+}
+
+body.light-mode .popup-panel *,
+body.light-mode .profile-panel *,
+body.light-mode .profile-modal *,
+body.light-mode .account-panel * {
+
+    color:
+        #30353a !important;
+}
+
+
+/* =========================================================
+   COMMAND PALETTE
+   ========================================================= */
+
+body.light-mode .command-palette {
+
+    background:
+        rgba(30,34,38,.20) !important;
+}
+
+body.light-mode .command-box {
+
+    background:
+        #f4f5f6 !important;
+
+    color:
+        #202428 !important;
+
+    border:
+        1px solid rgba(20,24,28,.12) !important;
+}
+
+body.light-mode #commandSearch {
+
+    background:
+        #ffffff !important;
+
+    color:
+        #202428 !important;
+}
+
+body.light-mode .command-item:hover {
+
+    background:
+        #e8ebed !important;
+
+    color:
+        #171a1e !important;
+}
+
+
+/* =========================================================
+   INPUTS / SELECTS / TEXTAREAS
+   ========================================================= */
+
+body.light-mode input,
+body.light-mode textarea,
+body.light-mode select {
+
+    color:
+        #202428 !important;
+
+    background-color:
+        #f8f9fa !important;
+
+    border-color:
+        rgba(20,24,28,.12) !important;
+}
+
+body.light-mode input::placeholder,
+body.light-mode textarea::placeholder {
+
+    color:
+        #777e85 !important;
+}
+
+
+/* =========================================================
+   GOLD ACCENT
+   ========================================================= */
+
+body.light-mode .gold,
+body.light-mode .workspace-badge,
+body.light-mode .recent-kicker {
+
+    color:
+        #9a7028 !important;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+body.light-mode ::-webkit-scrollbar-track {
+
+    background:
+        #e2e5e8 !important;
+}
+
+body.light-mode ::-webkit-scrollbar-thumb {
+
+    background:
+        #b8bec4 !important;
+}
+
+body.light-mode ::-webkit-scrollbar-thumb:hover {
+
+    background:
+        #9a7028 !important;
+}
+
+
+/* =========================================================
+   NEURAL FIELD — TRANSPARENT
+   ========================================================= */
+
+body.light-mode canvas#intelligence-field,
+body.light-mode #intelligence-field {
+
+    background:
+        transparent !important;
+}
+
+
+/* =========================================================
+   REMOVE DARK-MODE TEXT / SURFACE LEAKS
+   ========================================================= */
+
+body.light-mode [style*="color:#fff"],
+body.light-mode [style*="color: #fff"],
+body.light-mode [style*="color:white"],
+body.light-mode [style*="color: white"] {
+
+    color:
+        #202428 !important;
+}
+
+
+/* =========================================================
+   LIGHT MODE SHOULD NEVER BECOME PURE WHITE
+   ========================================================= */
+
+body.light-mode .workspace {
+
+    background:
+        linear-gradient(
+            145deg,
+            #edf0f2,
+            #e7eaec
+        ) !important;
+}
+
+
+/* =========================================================
+   FINAL CONTRAST
+   ========================================================= */
+
+body.light-mode .muted,
+body.light-mode .secondary {
+
+    color:
+        #687078 !important;
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL PROFESSIONAL LIGHT MODE
+   Complete light-surface normalization
+   Paste at the VERY BOTTOM so it overrides old dark rules.
+   ========================================================= */
+
+/* ---------- LIGHT MODE ROOT ---------- */
+
+html.light,
+html[data-theme="light"],
+body.light,
+body[data-theme="light"],
+body.light-mode {
+  --ap-bg: #f4f5f6;
+  --ap-surface: #ffffff;
+  --ap-surface-soft: #f8f9fa;
+  --ap-surface-muted: #eef0f2;
+
+  --ap-border: #d9dde1;
+  --ap-border-soft: #e5e8eb;
+
+  --ap-text: #17191c;
+  --ap-text-secondary: #555b62;
+  --ap-text-muted: #747b83;
+
+  --ap-gold: #a47727;
+  --ap-gold-soft: rgba(164, 119, 39, 0.10);
+
+  --ap-shadow:
+    0 12px 35px rgba(20, 25, 30, 0.08);
+
+  color-scheme: light;
+}
+
+
+/* =========================================================
+   GLOBAL SURFACES
+   ========================================================= */
+
+html.light body,
+html[data-theme="light"] body,
+body.light,
+body[data-theme="light"],
+body.light-mode {
+
+  background:
+    radial-gradient(
+      120% 90% at 50% -20%,
+      rgba(255,255,255,.95),
+      transparent 48%
+    ),
+    linear-gradient(
+      135deg,
+      #f1f3f5 0%,
+      #f7f8f9 48%,
+      #eef0f2 100%
+    ) !important;
+
+  color: var(--ap-text) !important;
+}
+
+
+/* Remove dark inherited surfaces */
+
+html.light *,
+html[data-theme="light"] *,
+body.light *,
+body[data-theme="light"] *,
+body.light-mode * {
+  --dark-bg: #ffffff;
+}
+
+
+/* =========================================================
+   APP / MAIN CONTAINERS
+   ========================================================= */
+
+html.light #root,
+html.light #app,
+html.light .app,
+html.light .app-container,
+html.light .main-container,
+
+html[data-theme="light"] #root,
+html[data-theme="light"] #app,
+html[data-theme="light"] .app,
+html[data-theme="light"] .app-container,
+html[data-theme="light"] .main-container,
+
+body.light #root,
+body.light #app,
+body.light .app,
+body.light .app-container,
+body.light .main-container {
+
+  background: transparent !important;
+  color: var(--ap-text) !important;
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+html.light .sidebar,
+html[data-theme="light"] .sidebar,
+body.light .sidebar,
+body[data-theme="light"] .sidebar,
+body.light-mode .sidebar {
+
+  background:
+    linear-gradient(
+      180deg,
+      #f4f5f6 0%,
+      #f7f8f9 52%,
+      #eef0f2 100%
+    ) !important;
+
+  border-right: 1px solid #d9dde1 !important;
+
+  color: var(--ap-text) !important;
+
+  box-shadow:
+    8px 0 28px rgba(20,25,30,.045) !important;
+}
+
+
+/* Sidebar text */
+
+html.light .sidebar *,
+html[data-theme="light"] .sidebar *,
+body.light .sidebar *,
+body[data-theme="light"] .sidebar *,
+body.light-mode .sidebar * {
+
+  color: inherit;
+}
+
+
+/* Sidebar headings */
+
+html.light .sidebar h1,
+html.light .sidebar h2,
+html.light .sidebar h3,
+html.light .sidebar strong,
+
+html[data-theme="light"] .sidebar h1,
+html[data-theme="light"] .sidebar h2,
+html[data-theme="light"] .sidebar h3,
+html[data-theme="light"] .sidebar strong,
+
+body.light .sidebar h1,
+body.light .sidebar h2,
+body.light .sidebar h3,
+body.light .sidebar strong {
+
+  color: #17191c !important;
+}
+
+
+/* Sidebar secondary text */
+
+html.light .sidebar small,
+html.light .sidebar span,
+html.light .sidebar p,
+
+html[data-theme="light"] .sidebar small,
+html[data-theme="light"] .sidebar span,
+html[data-theme="light"] .sidebar p,
+
+body.light .sidebar small,
+body.light .sidebar span,
+body.light .sidebar p {
+
+  color: #626970 !important;
+}
+
+
+/* =========================================================
+   SIDEBAR BUTTONS
+   ========================================================= */
+
+html.light .sidebar button,
+html.light .sidebar .nav-item,
+html.light .sidebar a,
+
+html[data-theme="light"] .sidebar button,
+html[data-theme="light"] .sidebar .nav-item,
+html[data-theme="light"] .sidebar a,
+
+body.light .sidebar button,
+body.light .sidebar .nav-item,
+body.light .sidebar a {
+
+  background: transparent !important;
+  color: #30353a !important;
+
+  border-color: transparent !important;
+
+  box-shadow: none !important;
+}
+
+
+/* Hover */
+
+html.light .sidebar button:hover,
+html.light .sidebar .nav-item:hover,
+html.light .sidebar a:hover,
+
+html[data-theme="light"] .sidebar button:hover,
+html[data-theme="light"] .sidebar .nav-item:hover,
+html[data-theme="light"] .sidebar a:hover,
+
+body.light .sidebar button:hover,
+body.light .sidebar .nav-item:hover,
+body.light .sidebar a:hover {
+
+  background: #e9ecef !important;
+  color: #17191c !important;
+}
+
+
+/* Active */
+
+html.light .sidebar .active,
+html.light .sidebar .active-item,
+html.light .sidebar .nav-item.active,
+
+html[data-theme="light"] .sidebar .active,
+html[data-theme="light"] .sidebar .active-item,
+html[data-theme="light"] .sidebar .nav-item.active,
+
+body.light .sidebar .active,
+body.light .sidebar .active-item,
+body.light .sidebar .nav-item.active {
+
+  background: #e7e9eb !important;
+  color: #17191c !important;
+
+  border: 1px solid #d5d9dd !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.8),
+    0 2px 8px rgba(20,25,30,.04) !important;
+}
+
+
+/* =========================================================
+   NEW CONVERSATION / INSTALL
+   ========================================================= */
+
+html.light .new-conversation,
+html.light .install-app,
+html.light .install-button,
+
+html[data-theme="light"] .new-conversation,
+html[data-theme="light"] .install-app,
+html[data-theme="light"] .install-button,
+
+body.light .new-conversation,
+body.light .install-app,
+body.light .install-button {
+
+  background: #ffffff !important;
+  color: #252a2f !important;
+
+  border: 1px solid #d7dce0 !important;
+
+  box-shadow:
+    0 3px 12px rgba(20,25,30,.055) !important;
+}
+
+
+/* =========================================================
+   SEARCH INPUTS
+   ========================================================= */
+
+html.light input,
+html.light textarea,
+html.light select,
+
+html[data-theme="light"] input,
+html[data-theme="light"] textarea,
+html[data-theme="light"] select,
+
+body.light input,
+body.light textarea,
+body.light select {
+
+  background: #ffffff !important;
+
+  color: #202428 !important;
+
+  border: 1px solid #d8dde1 !important;
+
+  box-shadow:
+    inset 0 1px 2px rgba(20,25,30,.025) !important;
+}
+
+
+html.light input::placeholder,
+html.light textarea::placeholder,
+
+html[data-theme="light"] input::placeholder,
+html[data-theme="light"] textarea::placeholder,
+
+body.light input::placeholder,
+body.light textarea::placeholder {
+
+  color: #858c93 !important;
+}
+
+
+/* =========================================================
+   TOP BAR
+   ========================================================= */
+
+html.light header,
+html.light .topbar,
+html.light .header,
+html.light .navbar,
+
+html[data-theme="light"] header,
+html[data-theme="light"] .topbar,
+html[data-theme="light"] .header,
+html[data-theme="light"] .navbar,
+
+body.light header,
+body.light .topbar,
+body.light .header,
+body.light .navbar {
+
+  background: rgba(246,247,248,.92) !important;
+
+  border-bottom: 1px solid #dfe2e5 !important;
+
+  color: #202428 !important;
+
+  backdrop-filter: blur(18px) saturate(120%);
+}
+
+
+/* =========================================================
+   TOP BAR BUTTONS
+   ========================================================= */
+
+html.light header button,
+html.light .topbar button,
+html.light .header button,
+
+html[data-theme="light"] header button,
+html[data-theme="light"] .topbar button,
+html[data-theme="light"] .header button,
+
+body.light header button,
+body.light .topbar button,
+body.light .header button {
+
+  background: rgba(255,255,255,.78) !important;
+
+  color: #34393e !important;
+
+  border: 1px solid #d9dde1 !important;
+
+  box-shadow:
+    0 2px 8px rgba(20,25,30,.04) !important;
+}
+
+
+/* =========================================================
+   MAIN CARDS / PANELS
+   ========================================================= */
+
+html.light .card,
+html.light .panel,
+html.light .workspace-card,
+html.light .recent-intelligence,
+html.light .recent-card,
+
+html[data-theme="light"] .card,
+html[data-theme="light"] .panel,
+html[data-theme="light"] .workspace-card,
+html[data-theme="light"] .recent-intelligence,
+html[data-theme="light"] .recent-card,
+
+body.light .card,
+body.light .panel,
+body.light .workspace-card,
+body.light .recent-intelligence,
+body.light .recent-card {
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.96),
+      rgba(248,249,250,.96)
+    ) !important;
+
+  color: #202428 !important;
+
+  border: 1px solid #dce0e4 !important;
+
+  box-shadow:
+    0 14px 35px rgba(20,25,30,.055) !important;
+}
+
+
+/* =========================================================
+   RECENT CONVERSATION CARDS
+   ========================================================= */
+
+html.light .recent-intelligence *,
+html.light .recent-card *,
+
+html[data-theme="light"] .recent-intelligence *,
+html[data-theme="light"] .recent-card *,
+
+body.light .recent-intelligence *,
+body.light .recent-card * {
+
+  color: inherit;
+}
+
+
+html.light .recent-card {
+  background: #f8f9fa !important;
+}
+
+
+/* =========================================================
+   HERO TEXT
+   ========================================================= */
+
+html.light h1,
+html.light h2,
+html.light h3,
+
+html[data-theme="light"] h1,
+html[data-theme="light"] h2,
+html[data-theme="light"] h3,
+
+body.light h1,
+body.light h2,
+body.light h3 {
+
+  color: #15181b !important;
+}
+
+
+/* IMPORTANT:
+   Prevent the dark-mode white hero heading from remaining white.
+*/
+
+html.light .hero h1,
+html.light .hero-title,
+html.light .main-title,
+html.light .welcome-title,
+
+html[data-theme="light"] .hero h1,
+html[data-theme="light"] .hero-title,
+html[data-theme="light"] .main-title,
+html[data-theme="light"] .welcome-title,
+
+body.light .hero h1,
+body.light .hero-title,
+body.light .main-title,
+body.light .welcome-title {
+
+  color: #17191c !important;
+}
+
+
+/* =========================================================
+   NORMAL BODY TEXT
+   ========================================================= */
+
+html.light p,
+html.light label,
+html.light .subtitle,
+html.light .description,
+
+html[data-theme="light"] p,
+html[data-theme="light"] label,
+html[data-theme="light"] .subtitle,
+html[data-theme="light"] .description,
+
+body.light p,
+body.light label,
+body.light .subtitle,
+body.light .description {
+
+  color: #5d646b !important;
+}
+
+
+/* =========================================================
+   ACTION / MODE BUTTONS
+   ========================================================= */
+
+html.light .mode-button,
+html.light .action-button,
+html.light .quick-action,
+html.light .quick-action button,
+
+html[data-theme="light"] .mode-button,
+html[data-theme="light"] .action-button,
+html[data-theme="light"] .quick-action,
+html[data-theme="light"] .quick-action button,
+
+body.light .mode-button,
+body.light .action-button,
+body.light .quick-action,
+body.light .quick-action button {
+
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff,
+      #f5f6f7
+    ) !important;
+
+  color: #252a2f !important;
+
+  border: 1px solid #d5d9dd !important;
+
+  box-shadow:
+    0 3px 10px rgba(20,25,30,.045) !important;
+}
+
+
+html.light .mode-button:hover,
+html.light .action-button:hover,
+html.light .quick-action:hover,
+
+html[data-theme="light"] .mode-button:hover,
+html[data-theme="light"] .action-button:hover,
+html[data-theme="light"] .quick-action:hover,
+
+body.light .mode-button:hover,
+body.light .action-button:hover,
+body.light .quick-action:hover {
+
+  background: #f0f2f4 !important;
+  border-color: #c9ced3 !important;
+}
+
+
+/* =========================================================
+   CHAT COMPOSER
+   ========================================================= */
+
+html.light .chat-input,
+html.light .composer,
+html.light .input-container,
+html.light .chat-composer,
+
+html[data-theme="light"] .chat-input,
+html[data-theme="light"] .composer,
+html[data-theme="light"] .input-container,
+html[data-theme="light"] .chat-composer,
+
+body.light .chat-input,
+body.light .composer,
+body.light .input-container,
+body.light .chat-composer {
+
+  background:
+    rgba(255,255,255,.96) !important;
+
+  border: 1px solid #d7dce0 !important;
+
+  color: #202428 !important;
+
+  box-shadow:
+    0 12px 30px rgba(20,25,30,.08) !important;
+}
+
+
+/* Composer buttons */
+
+html.light .chat-input button,
+html.light .composer button,
+html.light .input-container button,
+html.light .chat-composer button,
+
+html[data-theme="light"] .chat-input button,
+html[data-theme="light"] .composer button,
+html[data-theme="light"] .input-container button,
+html[data-theme="light"] .chat-composer button,
+
+body.light .chat-input button,
+body.light .composer button,
+body.light .input-container button,
+body.light .chat-composer button {
+
+  background: transparent !important;
+
+  color: #4c535a !important;
+
+  border-color: transparent !important;
+}
+
+
+/* =========================================================
+   GOLD ACCENTS
+   ========================================================= */
+
+html.light .gold,
+html.light .accent,
+html.light .brand-accent,
+
+html[data-theme="light"] .gold,
+html[data-theme="light"] .accent,
+html[data-theme="light"] .brand-accent,
+
+body.light .gold,
+body.light .accent,
+body.light .brand-accent {
+
+  color: #9a7025 !important;
+}
+
+
+/* =========================================================
+   OVERLAYS / MODALS / PROFILE PANELS
+   ========================================================= */
+
+html.light .modal,
+html.light .dialog,
+html.light .profile-panel,
+html.light .drawer,
+
+html[data-theme="light"] .modal,
+html[data-theme="light"] .dialog,
+html[data-theme="light"] .profile-panel,
+html[data-theme="light"] .drawer,
+
+body.light .modal,
+body.light .dialog,
+body.light .profile-panel,
+body.light .drawer {
+
+  background:
+    rgba(255,255,255,.98) !important;
+
+  color: #202428 !important;
+
+  border: 1px solid #d8dde1 !important;
+
+  box-shadow:
+    0 24px 70px rgba(20,25,30,.18) !important;
+}
+
+
+/* Modal text must NOT remain dark-mode white/black incorrectly */
+
+html.light .modal *,
+html.light .dialog *,
+html.light .profile-panel *,
+html.light .drawer *,
+
+html[data-theme="light"] .modal *,
+html[data-theme="light"] .dialog *,
+html[data-theme="light"] .profile-panel *,
+html[data-theme="light"] .drawer *,
+
+body.light .modal *,
+body.light .dialog *,
+body.light .profile-panel *,
+body.light .drawer * {
+
+  color: #30353a !important;
+}
+
+
+/* Headings inside panels */
+
+html.light .modal h1,
+html.light .modal h2,
+html.light .modal h3,
+html.light .dialog h1,
+html.light .dialog h2,
+html.light .dialog h3,
+html.light .profile-panel h1,
+html.light .profile-panel h2,
+html.light .profile-panel h3,
+
+html[data-theme="light"] .modal h1,
+html[data-theme="light"] .modal h2,
+html[data-theme="light"] .modal h3,
+html[data-theme="light"] .dialog h1,
+html[data-theme="light"] .dialog h2,
+html[data-theme="light"] .dialog h3,
+html[data-theme="light"] .profile-panel h1,
+html[data-theme="light"] .profile-panel h2,
+html[data-theme="light"] .profile-panel h3,
+
+body.light .modal h1,
+body.light .modal h2,
+body.light .modal h3,
+body.light .dialog h1,
+body.light .dialog h2,
+body.light .dialog h3,
+body.light .profile-panel h1,
+body.light .profile-panel h2,
+body.light .profile-panel h3 {
+
+  color: #17191c !important;
+}
+
+
+/* =========================================================
+   DROPDOWNS
+   ========================================================= */
+
+html.light .dropdown,
+html.light .menu,
+html.light .popover,
+
+html[data-theme="light"] .dropdown,
+html[data-theme="light"] .menu,
+html[data-theme="light"] .popover,
+
+body.light .dropdown,
+body.light .menu,
+body.light .popover {
+
+  background: #ffffff !important;
+
+  color: #252a2f !important;
+
+  border: 1px solid #d8dde1 !important;
+
+  box-shadow:
+    0 18px 45px rgba(20,25,30,.12) !important;
+}
+
+
+/* =========================================================
+   ICON VISIBILITY
+   ========================================================= */
+
+html.light svg,
+html.light i,
+
+html[data-theme="light"] svg,
+html[data-theme="light"] i,
+
+body.light svg,
+body.light i {
+
+  color: #50575e !important;
+}
+
+
+/* Keep gold brand icons */
+
+html.light .brand svg,
+html.light .gold-icon,
+
+html[data-theme="light"] .brand svg,
+html[data-theme="light"] .gold-icon,
+
+body.light .brand svg,
+body.light .gold-icon {
+
+  color: #9a7025 !important;
+}
+
+
+/* =========================================================
+   DIVIDERS
+   ========================================================= */
+
+html.light hr,
+html[data-theme="light"] hr,
+body.light hr {
+
+  border: 0 !important;
+
+  border-top: 1px solid #e0e3e6 !important;
+}
+
+
+/* =========================================================
+   SCROLLBARS
+   ========================================================= */
+
+html.light *,
+html[data-theme="light"] *,
+body.light * {
+
+  scrollbar-color: #c5cacf transparent;
+}
+
+
+/* =========================================================
+   INTELLIGENCE FIELD
+   Keep it subtle — NOT washed out.
+   ========================================================= */
+
+html.light canvas,
+html[data-theme="light"] canvas,
+body.light canvas {
+
+  background: transparent !important;
+
+  opacity: .30 !important;
+}
+
+
+/* =========================================================
+   FINAL CONTRAST SAFETY
+   ========================================================= */
+
+/* Prevent common dark-mode classes from destroying readability */
+
+html.light .text-white,
+html.light .text-light,
+html.light .text-muted-dark,
+html.light .dark-text,
+
+html[data-theme="light"] .text-white,
+html[data-theme="light"] .text-light,
+html[data-theme="light"] .text-muted-dark,
+html[data-theme="light"] .dark-text,
+
+body.light .text-white,
+body.light .text-light,
+body.light .text-muted-dark,
+body.light .dark-text {
+
+  color: #252a2f !important;
+}
+
+
+/* Never allow transparent/white text on light surfaces */
+
+html.light .hero,
+html.light .workspace,
+html.light .content,
+
+html[data-theme="light"] .hero,
+html[data-theme="light"] .workspace,
+html[data-theme="light"] .content,
+
+body.light .hero,
+body.light .workspace,
+body.light .content {
+
+  color: #202428 !important;
+}
+
+/* =========================================================
+   AP SYNAPSE — MOBILE THEME TOGGLE
+   Quiet / premium / minimal
+========================================================= */
+
+.ap-mobile-theme-toggle {
+    position: fixed !important;
+
+    top: 16px !important;
+    right: 16px !important;
+
+    width: 42px !important;
+    height: 42px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    border-radius: 50% !important;
+
+    cursor: pointer !important;
+    user-select: none !important;
+
+    z-index: 100004 !important;
+
+    border: 1px solid rgba(198,166,107,.20) !important;
+
+    background: rgba(255,255,255,.045) !important;
+
+    color: rgba(235,235,232,.78) !important;
+
+    box-shadow:
+        0 6px 20px rgba(0,0,0,.10),
+        inset 0 1px 0 rgba(255,255,255,.06) !important;
+
+    backdrop-filter: blur(14px) saturate(120%) !important;
+    -webkit-backdrop-filter: blur(14px) saturate(120%) !important;
+
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        color .2s ease,
+        transform .2s ease !important;
+}
+
+.ap-mobile-theme-toggle:hover {
+    background: rgba(198,166,107,.09) !important;
+    border-color: rgba(198,166,107,.38) !important;
+    color: #c6a66b !important;
+}
+
+.ap-mobile-theme-toggle:active {
+    transform: scale(.94) !important;
+}
+
+.ap-theme-icon {
+    display: block !important;
+
+    font-size: 18px !important;
+    line-height: 1 !important;
+
+    transition:
+        transform .25s ease,
+        opacity .2s ease !important;
+}
+
+.ap-mobile-theme-toggle:hover .ap-theme-icon {
+    transform: rotate(18deg) !important;
+}
+
+
+/* LIGHT MODE */
+
+body.light-mode .ap-mobile-theme-toggle {
+    background: rgba(255,255,255,.58) !important;
+
+    color: #555c63 !important;
+
+    border-color: rgba(20,24,28,.10) !important;
+
+    box-shadow:
+        0 5px 18px rgba(20,24,28,.055),
+        inset 0 1px 0 rgba(255,255,255,.9) !important;
+}
+
+body.light-mode .ap-mobile-theme-toggle:hover {
+    background: rgba(255,255,255,.90) !important;
+
+    color: #9a7028 !important;
+
+    border-color: rgba(154,112,40,.28) !important;
+}
+
+
+/* DESKTOP — don't show this mobile control */
+
+@media (min-width: 769px) {
+    .ap-mobile-theme-toggle {
+        display: none !important;
+    }
+}
+/* =========================================================
+   AP SYNAPSE — MOBILE TOPBAR ACTIONS
+   FINAL CLEAN / TOUCH-SAFE LAYOUT
+========================================================= */
+
+@media (max-width: 768px) {
+
+    /* Topbar action container */
+    .topbar-actions,
+    .top-bar-actions,
+    .topbar .actions,
+    .top-bar .actions {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 8px !important;
+        flex-wrap: nowrap !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* Notification + theme controls */
+    .topbar-actions > *,
+    .top-bar-actions > *,
+    .topbar .actions > *,
+    .top-bar .actions > * {
+        position: relative !important;
+        flex: 0 0 auto !important;
+        margin: 0 !important;
+    }
+
+    /* Individual action buttons */
+    .topbar button,
+    .top-bar button,
+    .topbar .icon-btn,
+    .top-bar .icon-btn {
+        width: 42px !important;
+        height: 42px !important;
+
+        min-width: 42px !important;
+        min-height: 42px !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        flex: 0 0 42px !important;
+
+        border-radius: 12px !important;
+
+        box-sizing: border-box !important;
+
+        position: relative !important;
+
+        cursor: pointer !important;
+
+        touch-action: manipulation !important;
+
+        z-index: 10 !important;
+    }
+
+    /* Never let icon/text overlap */
+    .topbar button svg,
+    .top-bar button svg,
+    .topbar .icon-btn svg,
+    .top-bar .icon-btn svg {
+        width: 18px !important;
+        height: 18px !important;
+
+        flex: 0 0 auto !important;
+
+        pointer-events: none !important;
+    }
+
+    /* Theme button specifically */
+    #themeToggle,
+    #theme-toggle,
+    #darkModeToggle,
+    #lightModeToggle {
+        width: 42px !important;
+        height: 42px !important;
+        min-width: 42px !important;
+        min-height: 42px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        border-radius: 12px !important;
+
+        flex: 0 0 42px !important;
+    }
+
+    /* Notification button */
+    #notificationBtn,
+    #notificationsBtn,
+    .notification-btn,
+    .notifications-btn {
+        width: 42px !important;
+        height: 42px !important;
+        min-width: 42px !important;
+        min-height: 42px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        border-radius: 12px !important;
+
+        flex: 0 0 42px !important;
+    }
+
+    /* Prevent notification badge from disturbing layout */
+    .notification-badge,
+    .notifications-badge,
+    .notification-count {
+        position: absolute !important;
+
+        top: 5px !important;
+        right: 5px !important;
+
+        min-width: 7px !important;
+        height: 7px !important;
+
+        padding: 0 !important;
+
+        border-radius: 50% !important;
+
+        pointer-events: none !important;
+    }
+
+    /* Keep topbar itself clean */
+    .topbar,
+    .top-bar {
+        display: flex !important;
+        align-items: center !important;
+
+        min-width: 0 !important;
+    }
+
+    /* Do not allow the title/logo area to crush the buttons */
+    .topbar > *,
+    .top-bar > * {
+        min-width: 0 !important;
+    }
+}
+
+/* =========================================================
+   AP SYNAPSE — MOBILE TOPBAR ACTIONS
+   FINAL CLEAN / TOUCH-SAFE LAYOUT
+========================================================= */
+
+@media (max-width: 768px) {
+
+    /* Topbar action container */
+    .topbar-actions,
+    .top-bar-actions,
+    .topbar .actions,
+    .top-bar .actions {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 8px !important;
+        flex-wrap: nowrap !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* Notification + theme controls */
+    .topbar-actions > *,
+    .top-bar-actions > *,
+    .topbar .actions > *,
+    .top-bar .actions > * {
+        position: relative !important;
+        flex: 0 0 auto !important;
+        margin: 0 !important;
+    }
+
+    /* Individual action buttons */
+    .topbar button,
+    .top-bar button,
+    .topbar .icon-btn,
+    .top-bar .icon-btn {
+        width: 42px !important;
+        height: 42px !important;
+
+        min-width: 42px !important;
+        min-height: 42px !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        flex: 0 0 42px !important;
+
+        border-radius: 12px !important;
+
+        box-sizing: border-box !important;
+
+        position: relative !important;
+
+        cursor: pointer !important;
+
+        touch-action: manipulation !important;
+
+        z-index: 10 !important;
+    }
+
+    /* Never let icon/text overlap */
+    .topbar button svg,
+    .top-bar button svg,
+    .topbar .icon-btn svg,
+    .top-bar .icon-btn svg {
+        width: 18px !important;
+        height: 18px !important;
+
+        flex: 0 0 auto !important;
+
+        pointer-events: none !important;
+    }
+
+    /* Theme button specifically */
+    #themeToggle,
+    #theme-toggle,
+    #darkModeToggle,
+    #lightModeToggle {
+        width: 42px !important;
+        height: 42px !important;
+        min-width: 42px !important;
+        min-height: 42px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        border-radius: 12px !important;
+
+        flex: 0 0 42px !important;
+    }
+
+    /* Notification button */
+    #notificationBtn,
+    #notificationsBtn,
+    .notification-btn,
+    .notifications-btn {
+        width: 42px !important;
+        height: 42px !important;
+        min-width: 42px !important;
+        min-height: 42px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        border-radius: 12px !important;
+
+        flex: 0 0 42px !important;
+    }
+
+    /* Prevent notification badge from disturbing layout */
+    .notification-badge,
+    .notifications-badge,
+    .notification-count {
+        position: absolute !important;
+
+        top: 5px !important;
+        right: 5px !important;
+
+        min-width: 7px !important;
+        height: 7px !important;
+
+        padding: 0 !important;
+
+        border-radius: 50% !important;
+
+        pointer-events: none !important;
+    }
+
+    /* Keep topbar itself clean */
+    .topbar,
+    .top-bar {
+        display: flex !important;
+        align-items: center !important;
+
+        min-width: 0 !important;
+    }
+
+    /* Do not allow the title/logo area to crush the buttons */
+    .topbar > *,
+    .top-bar > * {
+        min-width: 0 !important;
+    }
+}
+
+/* =========================================================
+   AP SYNAPSE — MOBILE TOPBAR FINAL CONTROL LAYOUT
+   Clean / Sober / Premium / Non-Jumbled
+========================================================= */
+
+@media (max-width: 768px) {
+
+    /* Keep the topbar controls in one clean row */
+    body.light-mode .topbar,
+    body.light-mode .top-bar,
+    body .topbar,
+    body .top-bar {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 8px !important;
+        padding: 10px 12px !important;
+        box-sizing: border-box !important;
+        overflow: visible !important;
+    }
+
+    /* Every topbar control gets a predictable size */
+    .topbar > button,
+    .top-bar > button {
+        position: relative !important;
+        flex: 0 0 40px !important;
+        width: 40px !important;
+        min-width: 40px !important;
+        max-width: 40px !important;
+        height: 40px !important;
+        min-height: 40px !important;
+        max-height: 40px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        box-sizing: border-box !important;
+        border-radius: 12px !important;
+
+        cursor: pointer !important;
+        touch-action: manipulation !important;
+        -webkit-tap-highlight-color: transparent !important;
+
+        z-index: 100 !important;
+    }
+
+    /* Notification */
+    #notificationBtn {
+        order: 1 !important;
+    }
+
+    /* Settings */
+    #settingsBtn {
+        order: 2 !important;
+    }
+
+    /* Theme */
+    #apMobileThemeToggle {
+        order: 3 !important;
+    }
+
+    /* Profile */
+    #profileBtn {
+        order: 4 !important;
+    }
+
+    /* Share */
+    #shareConversationBtn {
+        order: 5 !important;
+    }
+
+    /* Theme button — deliberately quiet and premium */
+    #apMobileThemeToggle {
+        border: 1px solid rgba(154,112,40,.18) !important;
+
+        background:
+            rgba(255,255,255,.58) !important;
+
+        color: #555c63 !important;
+
+        box-shadow:
+            0 3px 12px rgba(20,24,28,.045),
+            inset 0 1px 0 rgba(255,255,255,.8) !important;
+    }
+
+    #apMobileThemeToggle:hover {
+        background:
+            rgba(255,255,255,.82) !important;
+
+        color: #171a1e !important;
+
+        border-color:
+            rgba(154,112,40,.30) !important;
+    }
+
+    #apMobileThemeToggle:active {
+        transform: scale(.96) !important;
+    }
+
+    /* Dark mode version */
+    body:not(.light-mode) #apMobileThemeToggle {
+        background:
+            rgba(255,255,255,.055) !important;
+
+        color:
+            rgba(245,245,243,.82) !important;
+
+        border-color:
+            rgba(198,166,107,.20) !important;
+
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,.06) !important;
+    }
+
+    body:not(.light-mode) #apMobileThemeToggle:hover {
+        background:
+            rgba(255,255,255,.09) !important;
+
+        color:
+            #f5f5f3 !important;
+
+        border-color:
+            rgba(198,166,107,.34) !important;
+    }
+
+    /* Prevent SVG/icon sizes from causing the jumble */
+    #notificationBtn svg,
+    #settingsBtn svg,
+    #apMobileThemeToggle svg,
+    #profileBtn svg,
+    #shareConversationBtn svg {
+        width: 18px !important;
+        height: 18px !important;
+        min-width: 18px !important;
+        min-height: 18px !important;
+        max-width: 18px !important;
+        max-height: 18px !important;
+        flex: 0 0 18px !important;
+    }
+
+    /* Keep badges from changing button geometry */
+    #notificationBtn .notification-badge {
+        position: absolute !important;
+        top: 5px !important;
+        right: 5px !important;
+        min-width: 7px !important;
+        width: 7px !important;
+        height: 7px !important;
+        padding: 0 !important;
+        border-radius: 50% !important;
+        pointer-events: none !important;
+    }
+
+    /* Remove accidental transforms/margins from older rules */
+    #notificationBtn,
+    #settingsBtn,
+    #apMobileThemeToggle,
+    #profileBtn,
+    #shareConversationBtn {
+        transform: none !important;
+    }
+
+    #notificationBtn:active,
+    #settingsBtn:active,
+    #profileBtn:active,
+    #shareConversationBtn:active {
+        transform: scale(.96) !important;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 420px) {
+
+    .topbar,
+    .top-bar {
+        gap: 5px !important;
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .topbar > button,
+    .top-bar > button {
+        flex-basis: 36px !important;
+        width: 36px !important;
+        min-width: 36px !important;
+        max-width: 36px !important;
+
+        height: 36px !important;
+        min-height: 36px !important;
+        max-height: 36px !important;
+
+        border-radius: 11px !important;
+    }
+
+    #notificationBtn svg,
+    #settingsBtn svg,
+    #apMobileThemeToggle svg,
+    #profileBtn svg,
+    #shareConversationBtn svg {
+        width: 17px !important;
+        height: 17px !important;
+    }
+}
+
+/* =========================================================
+   AP SYNAPSE — MOBILE TOPBAR CONTROL GROUP
+   FINAL CLEAN LAYOUT
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    /* Keep the topbar controls in one clean row */
+    .topbar,
+    .top-bar {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        flex-wrap: nowrap !important;
+        overflow: visible !important;
+    }
+
+    /* Every topbar control gets its own independent box */
+    .topbar button,
+    .top-bar button {
+        position: relative !important;
+        inset: auto !important;
+        flex: 0 0 42px !important;
+
+        width: 42px !important;
+        min-width: 42px !important;
+        max-width: 42px !important;
+
+        height: 42px !important;
+        min-height: 42px !important;
+        max-height: 42px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        box-sizing: border-box !important;
+
+        transform: none !important;
+        z-index: 10 !important;
+
+        border-radius: 12px !important;
+        cursor: pointer !important;
+        pointer-events: auto !important;
+    }
+
+    /* -----------------------------------------------------
+       AP SYNAPSE CORE
+    ----------------------------------------------------- */
+
+    #synapseIdentityBtn {
+        flex: 0 0 42px !important;
+        width: 42px !important;
+        height: 42px !important;
+        z-index: 20 !important;
+    }
+
+    /* -----------------------------------------------------
+       INTELLIGENCE FIELD
+    ----------------------------------------------------- */
+
+    #intelligenceFieldBtn {
+        flex: 0 0 42px !important;
+        width: 42px !important;
+        height: 42px !important;
+        z-index: 20 !important;
+    }
+
+    /* -----------------------------------------------------
+       NOTIFICATION
+    ----------------------------------------------------- */
+
+    #notificationBtn {
+        flex: 0 0 42px !important;
+        width: 42px !important;
+        height: 42px !important;
+        z-index: 20 !important;
+    }
+
+    /* -----------------------------------------------------
+       SETTINGS
+    ----------------------------------------------------- */
+
+    #settingsBtn {
+        flex: 0 0 42px !important;
+        width: 42px !important;
+        height: 42px !important;
+        z-index: 20 !important;
+    }
+
+    /* -----------------------------------------------------
+       LIGHT / DARK TOGGLE
+    ----------------------------------------------------- */
+
+    #apMobileThemeToggle {
+        flex: 0 0 42px !important;
+
+        width: 42px !important;
+        min-width: 42px !important;
+        max-width: 42px !important;
+
+        height: 42px !important;
+        min-height: 42px !important;
+        max-height: 42px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        position: relative !important;
+        inset: auto !important;
+
+        transform: none !important;
+
+        border-radius: 12px !important;
+
+        z-index: 30 !important;
+
+        cursor: pointer !important;
+        pointer-events: auto !important;
+    }
+
+    /* -----------------------------------------------------
+       PROFILE
+    ----------------------------------------------------- */
+
+    #profileBtn {
+        flex: 0 0 42px !important;
+        width: 42px !important;
+        height: 42px !important;
+        z-index: 20 !important;
+    }
+
+    /* -----------------------------------------------------
+       SHARE
+    ----------------------------------------------------- */
+
+    #shareConversationBtn {
+        flex: 0 0 42px !important;
+        width: 42px !important;
+        height: 42px !important;
+        z-index: 20 !important;
+    }
+
+    /* Prevent icons from escaping their button */
+    .topbar button svg,
+    .top-bar button svg,
+    .topbar button i,
+    .top-bar button i {
+        position: relative !important;
+        inset: auto !important;
+
+        width: 19px !important;
+        height: 19px !important;
+
+        max-width: 19px !important;
+        max-height: 19px !important;
+
+        margin: 0 !important;
+        transform: none !important;
+    }
+
+    /* No button should overlap another */
+    .topbar button + button,
+    .top-bar button + button {
+        margin-left: 0 !important;
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — PREMIUM WHITEBOARD
+========================================================= */
+
+.projects-page {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 28px;
+}
+
+.whiteboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 18px;
+}
+
+.whiteboard-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    color: #c6a66b;
+    margin-bottom: 6px;
+}
+
+.whiteboard-header h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: #f5f5f5;
+}
+
+.whiteboard-header p {
+    margin: 6px 0 0;
+    color: rgba(255,255,255,.42);
+    font-size: 12px;
+}
+
+.whiteboard-tools {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.whiteboard-tools button {
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 12px;
+    background: rgba(255,255,255,.045);
+    color: rgba(255,255,255,.8);
+    cursor: pointer;
+    font-size: 17px;
+}
+
+.whiteboard-tools button:hover {
+    border-color: rgba(198,166,107,.35);
+    color: #c6a66b;
+}
+
+.whiteboard-shell {
+    width: 100%;
+    height: calc(100% - 105px);
+    min-height: 450px;
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(198,166,107,.28);
+    box-shadow: 0 20px 60px rgba(0,0,0,.22);
+}
+
+#apCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    cursor: crosshair;
+    touch-action: none;
+}
+
+/* =========================================================
+   AP SYNAPSE — CANVAS WHITEBOARD
+========================================================= */
+
+.ap-whiteboard {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: none;
+    flex-direction: column;
+    background: #f8f9fb;
+    color: #17191d;
+}
+
+.ap-whiteboard.open {
+    display: flex;
+}
+
+.ap-whiteboard-header {
+    height: 68px;
+    flex: 0 0 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-sizing: border-box;
+    background: rgba(255,255,255,.94);
+    border-bottom: 1px solid rgba(0,0,0,.08);
+}
+
+.ap-whiteboard-title {
+    font-size: 15px;
+    font-weight: 650;
+}
+
+.ap-whiteboard-subtitle {
+    margin-top: 3px;
+    font-size: 11px;
+    color: #777;
+}
+
+.ap-whiteboard-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.ap-whiteboard-actions button {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(0,0,0,.10);
+    border-radius: 11px;
+    background: #fff;
+    color: #202124;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.ap-whiteboard-actions button:hover {
+    border-color: #c6a66b;
+    color: #a17b32;
+}
+
+.ap-whiteboard-close {
+    margin-left: 4px;
+}
+
+.ap-whiteboard-canvas-wrap {
+    flex: 1;
+    min-height: 0;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+#apCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.10);
+    border-radius: 14px;
+    box-shadow: 0 8px 35px rgba(0,0,0,.08);
+    touch-action: none;
+    cursor: crosshair;
+}

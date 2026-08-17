@@ -836,6 +836,16 @@
         </button>
 
         <button
+            id="apMobileThemeToggle"
+            class="ap-mobile-theme-toggle"
+            type="button"
+            aria-label="Switch theme"
+            title="Switch theme"
+        >
+           <span class="ap-theme-icon" aria-hidden="true">☼</span>
+        </button>
+
+        <button
             id="profileBtn"
             class="profile-button"
             aria-label="Profile"
@@ -1180,41 +1190,25 @@ Paste your code here and ask AP Synapse to find bugs..."
 
 </section>
 
-<section id="workspacePage" class="projects-page" style="display:none;">
+<section id="workspacePage" class="projects-page workspace-page">
 
-    <div class="projects-header">
+    <div class="whiteboard-header">
+        <div>
+            <div class="whiteboard-eyebrow">VISUAL THINKING</div>
+            <h2>Whiteboard</h2>
+            <p>Think freely. Sketch, map, and build ideas with AP Synapse.</p>
+        </div>
 
-        <h1 id="workspaceTitle">Workspace</h1>
-
-        <p id="workspaceDescription">
-            Your AP Synapse workspace.
-        </p>
-
+        <div class="whiteboard-tools">
+            <button id="canvasPen" type="button" title="Pen">✎</button>
+            <button id="canvasErase" type="button" title="Eraser">⌫</button>
+            <button id="canvasClear" type="button" title="Clear">⌫</button>
+        </div>
     </div>
 
-    <div class="workspace-toolbox">
-
-        <button id="canvasPen">✏️ Pen</button>
-        <button id="canvasErase">🧹 Eraser</button>
-        <button id="canvasClear">🗑 Clear</button>
-
+    <div class="whiteboard-shell">
+        <canvas id="apCanvas"></canvas>
     </div>
-
-    <canvas
-        id="apCanvas"
-        width="1000"
-        height="500"
-        style="
-            width:100%;
-            max-width:1000px;
-            height:500px;
-            background:#ffffff;
-            border-radius:20px;
-            cursor:crosshair;
-            display:block;
-            margin:20px auto;
-        "
-    ></canvas>
 
 </section>
 
@@ -5775,6 +5769,90 @@ autocomplete="off">
 })();
 </script>
 </style>
+
+<script>
+/* =========================================================
+   AP SYNAPSE — MOBILE TOPBAR ACTION SAFETY
+========================================================= */
+
+(() => {
+    function setupMobileTopbar() {
+        const selectors = [
+            "#themeToggle",
+            "#theme-toggle",
+            "#darkModeToggle",
+            "#lightModeToggle",
+            "#notificationBtn",
+            "#notificationsBtn",
+            ".notification-btn",
+            ".notifications-btn"
+        ];
+
+        const controls = selectors
+            .flatMap(selector => [...document.querySelectorAll(selector)])
+            .filter((el, i, arr) => arr.indexOf(el) === i);
+
+        controls.forEach(el => {
+            el.style.position = "relative";
+            el.style.zIndex = "100";
+            el.style.pointerEvents = "auto";
+            el.style.touchAction = "manipulation";
+
+            el.addEventListener("touchstart", e => {
+                e.stopPropagation();
+            }, { passive: true });
+        });
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", setupMobileTopbar);
+    } else {
+        setupMobileTopbar();
+    }
+})();
+</script>
+
+<script>
+/* =========================================================
+   AP SYNAPSE — MOBILE TOPBAR ACTION SAFETY
+========================================================= */
+
+(() => {
+    function setupMobileTopbar() {
+        const selectors = [
+            "#themeToggle",
+            "#theme-toggle",
+            "#darkModeToggle",
+            "#lightModeToggle",
+            "#notificationBtn",
+            "#notificationsBtn",
+            ".notification-btn",
+            ".notifications-btn"
+        ];
+
+        const controls = selectors
+            .flatMap(selector => [...document.querySelectorAll(selector)])
+            .filter((el, i, arr) => arr.indexOf(el) === i);
+
+        controls.forEach(el => {
+            el.style.position = "relative";
+            el.style.zIndex = "100";
+            el.style.pointerEvents = "auto";
+            el.style.touchAction = "manipulation";
+
+            el.addEventListener("touchstart", e => {
+                e.stopPropagation();
+            }, { passive: true });
+        });
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", setupMobileTopbar);
+    } else {
+        setupMobileTopbar();
+    }
+})();
+</script>
 
 </body>
 </html>

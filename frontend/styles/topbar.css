@@ -627,3 +627,446 @@
 
     transform: none !important;
 }
+
+/* =========================================================
+   AP SYNAPSE — MOBILE TOPBAR
+   FINAL CLEAN / STABLE / TOUCH-SAFE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    /* -----------------------------------------------------
+       TOPBAR — ONE CLEAN ROW
+    ----------------------------------------------------- */
+
+    .topbar,
+    .top-bar {
+        position: relative !important;
+
+        width: 100% !important;
+        height: 64px !important;
+        min-height: 64px !important;
+
+        display: flex !important;
+        align-items: center !important;
+
+        padding: 8px 12px !important;
+        gap: 0 !important;
+
+        box-sizing: border-box !important;
+
+        overflow: visible !important;
+
+        z-index: 100 !important;
+    }
+
+
+    /* -----------------------------------------------------
+       LEFT SIDE — KEEP TITLE, REMOVE MOBILE CORE BUTTONS
+    ----------------------------------------------------- */
+
+    .topbar-left {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+
+        display: flex !important;
+        align-items: center !important;
+
+        overflow: hidden !important;
+    }
+
+
+    .workspace-title {
+        position: relative !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        justify-content: center !important;
+        align-items: flex-start !important;
+
+        min-width: 0 !important;
+
+        overflow: hidden !important;
+    }
+
+
+    /* AP SYNAPSE CORE — HIDDEN ON MOBILE */
+    .workspace-title > #synapseIdentityBtn,
+    .workspace-title > #intelligenceFieldBtn {
+
+        display: none !important;
+
+        position: static !important;
+
+        width: 0 !important;
+        height: 0 !important;
+
+        min-width: 0 !important;
+        min-height: 0 !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        visibility: hidden !important;
+        opacity: 0 !important;
+
+        pointer-events: none !important;
+    }
+
+
+    .workspace-badge {
+        display: block !important;
+
+        margin: 0 0 2px !important;
+
+        font-size: 8px !important;
+        line-height: 1 !important;
+    }
+
+
+    .workspace-title h1 {
+        margin: 0 !important;
+
+        font-size: 15px !important;
+        line-height: 1.15 !important;
+
+        white-space: nowrap !important;
+    }
+
+
+    .workspace-title p {
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       SEARCH — HIDDEN ON MOBILE TOPBAR
+       ----------------------------------------------------- */
+
+    .topbar-center {
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       RIGHT SIDE — FOUR CLEAN BUTTONS
+       Notification / Theme / Profile / Share
+    ----------------------------------------------------- */
+
+    .topbar-right {
+        flex: 0 0 auto !important;
+
+        min-width: 0 !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+
+        gap: 7px !important;
+
+        margin-left: 10px !important;
+
+        overflow: visible !important;
+    }
+
+
+    /* -----------------------------------------------------
+       MOBILE CONTROL GEOMETRY
+    ----------------------------------------------------- */
+
+    #notificationBtn,
+    #apMobileThemeToggle,
+    #profileBtn,
+    #shareConversationBtn {
+
+        position: relative !important;
+        inset: auto !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        flex: 0 0 38px !important;
+
+        width: 38px !important;
+        min-width: 38px !important;
+        max-width: 38px !important;
+
+        height: 38px !important;
+        min-height: 38px !important;
+        max-height: 38px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        box-sizing: border-box !important;
+
+        border-radius: 11px !important;
+
+        overflow: hidden !important;
+
+        transform: none !important;
+
+        pointer-events: auto !important;
+        cursor: pointer !important;
+    }
+
+
+    /* -----------------------------------------------------
+       NOTIFICATION
+    ----------------------------------------------------- */
+
+    #notificationBtn {
+        color: rgba(255,255,255,.72) !important;
+
+        background: rgba(255,255,255,.035) !important;
+
+        border: 1px solid rgba(255,255,255,.075) !important;
+    }
+
+
+    /* -----------------------------------------------------
+       THEME BUTTON
+    ----------------------------------------------------- */
+
+    #apMobileThemeToggle {
+
+        color: #d4a94f !important;
+
+        background: rgba(212,169,79,.075) !important;
+
+        border: 1px solid rgba(212,169,79,.25) !important;
+
+        font-size: 20px !important;
+        line-height: 1 !important;
+    }
+
+
+    #apMobileThemeToggle .ap-theme-icon {
+
+        display: inline-flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        width: 20px !important;
+        height: 20px !important;
+
+        max-width: none !important;
+
+        overflow: visible !important;
+
+        color: #d4a94f !important;
+
+        font-size: 20px !important;
+        line-height: 20px !important;
+
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+
+    /* -----------------------------------------------------
+       PROFILE
+    ----------------------------------------------------- */
+
+    #profileBtn {
+
+        color: #d4a94f !important;
+
+        background: rgba(212,169,79,.075) !important;
+
+        border: 1px solid rgba(212,169,79,.25) !important;
+    }
+
+
+    /* -----------------------------------------------------
+       SHARE
+    ----------------------------------------------------- */
+
+    #shareConversationBtn {
+
+        color: rgba(255,255,255,.78) !important;
+
+        background: rgba(255,255,255,.035) !important;
+
+        border: 1px solid rgba(255,255,255,.075) !important;
+
+        font-size: 19px !important;
+        line-height: 1 !important;
+    }
+
+
+    #shareConversationBtn > span:first-child {
+
+        display: inline-flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        width: 20px !important;
+        height: 20px !important;
+
+        max-width: none !important;
+
+        overflow: visible !important;
+
+        color: rgba(255,255,255,.88) !important;
+
+        font-size: 19px !important;
+        line-height: 20px !important;
+
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+
+    /* Hide "Share" text, KEEP ↗ ICON */
+    #shareConversationBtn > span:nth-child(2) {
+
+        display: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       GENERIC SVG SAFETY
+    ----------------------------------------------------- */
+
+    #notificationBtn svg,
+    #profileBtn svg {
+
+        display: block !important;
+
+        width: 18px !important;
+        height: 18px !important;
+
+        max-width: 18px !important;
+        max-height: 18px !important;
+
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+
+    /* -----------------------------------------------------
+       SETTINGS — KEEP HIDDEN ON MOBILE
+    ----------------------------------------------------- */
+
+    #settingsBtn {
+
+        display: none !important;
+
+        width: 0 !important;
+        height: 0 !important;
+
+        min-width: 0 !important;
+        min-height: 0 !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        visibility: hidden !important;
+        pointer-events: none !important;
+    }
+
+
+    /* -----------------------------------------------------
+       HOVER / ACTIVE — SOBER
+    ----------------------------------------------------- */
+
+    #notificationBtn:hover,
+    #apMobileThemeToggle:hover,
+    #profileBtn:hover,
+    #shareConversationBtn:hover {
+
+        transform: none !important;
+
+        background: rgba(255,255,255,.065) !important;
+    }
+
+
+    #apMobileThemeToggle:hover,
+    #profileBtn:hover {
+
+        border-color: rgba(212,169,79,.42) !important;
+    }
+
+
+    /* -----------------------------------------------------
+       VERY SMALL PHONES
+    ----------------------------------------------------- */
+
+    @media (max-width: 380px) {
+
+        .topbar {
+            padding-left: 8px !important;
+            padding-right: 8px !important;
+        }
+
+        .topbar-right {
+            gap: 5px !important;
+            margin-left: 6px !important;
+        }
+
+        #notificationBtn,
+        #apMobileThemeToggle,
+        #profileBtn,
+        #shareConversationBtn {
+
+            width: 36px !important;
+            min-width: 36px !important;
+            max-width: 36px !important;
+
+            height: 36px !important;
+            min-height: 36px !important;
+            max-height: 36px !important;
+        }
+    }
+}
+
+/* =========================================================
+   AP SYNAPSE — MOBILE CENTER BRAND
+   Subtle / Premium / Non-intrusive
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .topbar {
+        position: relative !important;
+    }
+
+    .topbar::after {
+        content: "AP Synapse";
+
+        position: absolute;
+        left: 45%;
+        top: 50%;
+
+        transform: translate(-50%, -50%);
+
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+
+        color: rgba(198, 166, 107, 0.78);
+
+        pointer-events: none;
+        user-select: none;
+        white-space: nowrap;
+
+        animation: apSynapseMobileBlink 3.8s ease-in-out infinite;
+    }
+}
+
+@keyframes apSynapseMobileBlink {
+
+    0%,
+    100% {
+        opacity: 0.58;
+    }
+
+    50% {
+        opacity: 0.92;
+    }
+}

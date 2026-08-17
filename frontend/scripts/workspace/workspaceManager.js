@@ -1990,3 +1990,185 @@ function showDocumentToast(message) {
     }, 2500);
 
 }
+
+/* =========================================================
+   AP SYNAPSE — WHITEBOARD ENGINE
+========================================================= */
+
+(() => {
+    const canvas = document.getElementById("apCanvas");
+    const penBtn = document.getElementById("canvasPen");
+    const eraseBtn = document.getElementById("canvasErase");
+    const clearBtn = document.getElementById("canvasClear");
+
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+
+    let drawing = false;
+    let erasing = false;
+    let lastPoint = null;
+
+    function resizeCanvas() {
+        const rect = canvas.getBoundingClientRect();
+
+        if (!rect.width || !rect.height) return;
+
+        const dpr = window.devicePixelRatio || 1;
+
+        const old = document.createElement("canvas");
+        old.width = canvas.width;
+        old.height = canvas.height;
+
+        if (canvas.width && canvas.height) {
+            old.getContext("2d").drawImage(canvas, 0, 0);
+        }
+
+        canvas.width = Math.round(rect.width * dpr);
+        canvas.height = Math.round(rect.height * dpr);
+
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = "#17191d";
+
+        if (old.width && old.height) {
+            ctx.drawImage(
+                old,
+                0,
+                0,
+                old.width,
+                old.height,
+                0,
+                0,
+                rect.width,
+                rect.height
+            );
+        }
+    }
+
+    function point(event) {
+        const rect = canvas.getBoundingClientRect();
+
+        return {
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top
+        };
+    }
+
+    canvas.addEventListener("pointerdown", event => {
+        event.preventDefault();
+
+        drawing = true;
+        lastPoint = point(event);
+
+        canvas.setPointerCapture?.(event.pointerId);
+    });
+
+    canvas.addEventListener("pointermove", event => {
+        if (!drawing || !lastPoint) return;
+
+        event.preventDefault();
+
+        const current = point(event);
+
+        ctx.globalCompositeOperation =
+            erasing
+                ? "destination-out"
+                : "source-over";
+
+        ctx.strokeStyle =
+            erasing
+                ? "rgba(0,0,0,1)"
+                : "#17191d";
+
+        ctx.lineWidth =
+            erasing
+                ? 24
+                : 3;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            lastPoint.x,
+            lastPoint.y
+        );
+
+        ctx.lineTo(
+            current.x,
+            current.y
+        );
+
+        ctx.stroke();
+
+        lastPoint = current;
+    });
+
+    function stopDrawing() {
+        drawing = false;
+        lastPoint = null;
+        ctx.globalCompositeOperation = "source-over";
+    }
+
+    canvas.addEventListener("pointerup", stopDrawing);
+    canvas.addEventListener("pointercancel", stopDrawing);
+    canvas.addEventListener("pointerleave", event => {
+        if (drawing) stopDrawing();
+    });
+
+    penBtn?.addEventListener("click", () => {
+        erasing = false;
+        canvas.style.cursor = "crosshair";
+    });
+
+    eraseBtn?.addEventListener("click", () => {
+        erasing = true;
+        canvas.style.cursor = "cell";
+    });
+
+    clearBtn?.addEventListener("click", () => {
+        const rect = canvas.getBoundingClientRect();
+
+        ctx.clearRect(
+            0,
+            0,
+            rect.width,
+            rect.height
+        );
+    });
+
+    window.addEventListener("resize", resizeCanvas);
+
+    /*
+     * IMPORTANT:
+     * Resize when the Projects/Canvas page becomes visible.
+     */
+    const observer = new MutationObserver(() => {
+        const rect = canvas.getBoundingClientRect();
+
+        if (
+            rect.width > 0 &&
+            rect.height > 0
+        ) {
+            resizeCanvas();
+        }
+    });
+
+    observer.observe(
+        document.getElementById("workspacePage") || canvas,
+        {
+            attributes: true,
+            attributeFilter: [
+                "style",
+                "class"
+            ]
+        }
+    );
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(resizeCanvas);
+    });
+
+})();

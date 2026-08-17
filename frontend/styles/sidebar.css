@@ -2466,3 +2466,30 @@ color:#666;
     order: 99 !important;
   }
 }
+
+/* =========================================================
+   AP SYNAPSE — SIDEBAR SURFACE
+   Structural background only
+   ========================================================= */
+
+aside,
+aside > *,
+aside > * > *,
+aside > * > * > *,
+aside > * > * > * > * {
+  background-color: #020304 !important;
+  background-image: none !important;
+}
+
+/* Keep the sidebar controls visually distinct */
+aside button,
+aside input,
+aside a {
+  background-image: initial;
+}
+
+/* Sidebar edge */
+aside {
+  border-right: 1px solid rgba(255, 255, 255, 0.035) !important;
+  box-shadow: none !important;
+}

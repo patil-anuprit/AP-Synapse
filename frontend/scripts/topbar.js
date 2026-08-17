@@ -413,3 +413,53 @@ if (sidebarProfileBtn) {
     });
 
 }
+
+/* =========================================================
+   AP SYNAPSE — MOBILE THEME TOGGLE FINAL
+========================================================= */
+
+(() => {
+    const btn = document.getElementById("apMobileThemeToggle");
+
+    if (!btn) {
+        console.warn("AP Synapse: mobile theme button not found.");
+        return;
+    }
+
+    if (btn.dataset.apThemeBound === "true") return;
+    btn.dataset.apThemeBound = "true";
+
+    const updateThemeButton = () => {
+        const light = document.body.classList.contains("light-mode");
+
+        btn.title = light
+            ? "Switch to dark mode"
+            : "Switch to light mode";
+
+        btn.setAttribute(
+            "aria-label",
+            light
+                ? "Switch to dark mode"
+                : "Switch to light mode"
+        );
+    };
+
+    btn.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        document.body.classList.toggle("light-mode");
+
+        localStorage.setItem(
+            "apSynapseTheme",
+            document.body.classList.contains("light-mode")
+                ? "light"
+                : "dark"
+        );
+
+        updateThemeButton();
+    });
+
+    updateThemeButton();
+})();
+

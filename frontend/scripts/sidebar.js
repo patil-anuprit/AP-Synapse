@@ -483,6 +483,8 @@ requestAnimationFrame(() => {
 
 });
 
+window.openSavedConversation = openSavedConversation;
+
     // ======================================
 // RESTORE EXACT CONVERSATION POSITION
 // ======================================
@@ -12185,4 +12187,43 @@ setTimeout(() => {
     console.log(
         "✅ AP SYNAPSE — MOBILE SIDEBAR SCROLL GUARD ACTIVE"
     );
+})();
+
+(() => {
+    const sidebar = document.querySelector(".sidebar");
+
+    if (!sidebar) return;
+
+    const closeMobileSidebar = () => {
+        if (window.innerWidth > 768) return;
+
+        sidebar.style.setProperty(
+            "transform",
+            "translate3d(-105%, 0, 0)",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "visibility",
+            "hidden",
+            "important"
+        );
+
+        sidebar.style.setProperty(
+            "pointer-events",
+            "none",
+            "important"
+        );
+    };
+
+    sidebar.addEventListener("click", (event) => {
+        const action = event.target.closest(
+            "button, .sidebar-item, .sidebar-button, .nav-item, .menu-item, .history-item"
+        );
+
+        if (!action) return;
+
+        // Let the existing AP Synapse action finish first.
+        setTimeout(closeMobileSidebar, 120);
+    });
 })();

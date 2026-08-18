@@ -6044,38 +6044,36 @@ button:active,
         canvas.style.cursor = "crosshair";
 
         function resize() {
-            if (!shell) return;
-
-            const rect = shell.getBoundingClientRect();
+            const rect = canvas.getBoundingClientRect();
 
             if (rect.width <= 0 || rect.height <= 0) return;
-
-            const old = document.createElement("canvas");
-            old.width = canvas.width;
-            old.height = canvas.height;
-
-            if (canvas.width && canvas.height) {
-                old.getContext("2d").drawImage(canvas, 0, 0);
-            }
 
             state.dpr = Math.min(
                 Math.max(window.devicePixelRatio || 1, 1),
                 2
             );
 
-            canvas.width = Math.max(
-                1,
-                Math.round(rect.width * state.dpr)
-            );
+           // Preserve existing drawing
+           const old = document.createElement("canvas");
 
-            canvas.height = Math.max(
-                1,
-                Math.round(rect.height * state.dpr)
-            );
+           if (canvas.width > 0 && canvas.height > 0) {
+              old.width = canvas.width;
+              old.height = canvas.height;
 
+              const oldCtx = old.getContext("2d");
+              oldCtx.drawImage(canvas, 0, 0);
+            }
+
+            // IMPORTANT:
+            // Canvas backing resolution follows its REAL displayed size.
+            canvas.width = Math.round(rect.width * state.dpr);
+            canvas.height = Math.round(rect.height * state.dpr);
+
+            // Keep CSS size exactly equal to displayed size.
             canvas.style.width = rect.width + "px";
             canvas.style.height = rect.height + "px";
-
+ 
+            // Work internally in CSS pixels.
             ctx.setTransform(
                 state.dpr,
                 0,
@@ -6088,28 +6086,62 @@ button:active,
             ctx.lineCap = "round";
             ctx.lineJoin = "round";
 
-            if (old.width && old.height) {
-                ctx.drawImage(
-                    old,
-                    0,
-                    0,
-                    old.width,
-                    old.height,
-                    0,
-                    0,
-                    rect.width,
-                    rect.height
-                );
-            }
+            // Restore previous drawing at the correct scale.
+           if (old.width && old.height) {
+              ctx.drawImage(
+                  old,
+                  0,
+                  0,
+                  old.width,
+                  old.height,
+                  0,
+                  0,
+                  rect.width,
+                  rect.height
+               );
+           }
+
+           ctx.globalCompositeOperation = "source-over";
         }
+
 
         function point(e) {
             const rect = canvas.getBoundingClientRect();
 
+            // Convert pointer position into the canvas's
+            // actual CSS-pixel coordinate system.
             return {
                 x: e.clientX - rect.left,
                 y: e.clientY - rect.top
             };
+        }
+
+
+        function move(e) {
+            if (!state.drawing) return;
+
+            const p = point(e);
+
+            ctx.beginPath();
+            ctx.moveTo(state.lastX, state.lastY);
+            ctx.lineTo(p.x, p.y);
+
+            if (state.erasing) {
+               ctx.globalCompositeOperation = "destination-out";
+               ctx.lineWidth = 28;
+               ctx.strokeStyle = "#000000";
+            } else {
+               ctx.globalCompositeOperation = "source-over";
+               ctx.lineWidth = 4;
+               ctx.strokeStyle = "#111111";
+            }
+
+            ctx.stroke();
+
+            state.lastX = p.x;
+            state.lastY = p.y;
+
+            e.preventDefault();
         }
 
         function start(e) {
@@ -6127,34 +6159,10 @@ button:active,
             state.lastX = p.x;
             state.lastY = p.y;
 
-            canvas.setPointerCapture?.(e.pointerId);
-
-            e.preventDefault();
-        }
-
-        function move(e) {
-            if (!state.drawing) return;
-
-            const p = point(e);
-
             ctx.beginPath();
-            ctx.moveTo(state.lastX, state.lastY);
-            ctx.lineTo(p.x, p.y);
+            ctx.moveTo(p.x, p.y);
 
-            if (state.erasing) {
-                ctx.globalCompositeOperation = "destination-out";
-                ctx.lineWidth = 28;
-                ctx.strokeStyle = "rgba(0,0,0,1)";
-            } else {
-                ctx.globalCompositeOperation = "source-over";
-                ctx.lineWidth = 4;
-                ctx.strokeStyle = "#111111";
-            }
-
-            ctx.stroke();
-
-            state.lastX = p.x;
-            state.lastY = p.y;
+            canvas.setPointerCapture?.(e.pointerId);
 
             e.preventDefault();
         }

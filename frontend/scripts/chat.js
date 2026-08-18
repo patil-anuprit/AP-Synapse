@@ -1671,7 +1671,9 @@ document.addEventListener("click", (e) => {
 
     speechSynthesis.cancel();
 
-    const speech = new SpeechSynthesisUtterance(text);
+    const speech = new SpeechSynthesisUtterance(
+    window.APcleanSpeech ? window.APcleanSpeech(text) : text
+    );
 
     speech.rate = 1;
 
@@ -1697,7 +1699,11 @@ speakBtn.addEventListener("click", () => {
 
     speechSynthesis.cancel();
 
-    const speech = new SpeechSynthesisUtterance(lastAIResponse);
+    const speech = new SpeechSynthesisUtterance(
+        window.APcleanSpeech
+            ? window.APcleanSpeech(lastAIResponse)
+            : lastAIResponse
+    );
 
     speech.lang = "en-US";
     speech.rate = 1;
@@ -1725,7 +1731,11 @@ if (speakBtn) {
 
         speechSynthesis.cancel();
 
-        const speech = new SpeechSynthesisUtterance(lastAIResponse);
+        const speech = new SpeechSynthesisUtterance(
+            window.APcleanSpeech
+                ? window.APcleanSpeech(lastAIResponse)
+                : lastAIResponse
+        );
 
         speech.lang = "en-US";
         speech.rate = 1;

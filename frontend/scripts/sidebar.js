@@ -608,6 +608,25 @@ document.querySelectorAll(".sidebar nav a").forEach(link => {
 
         break;
 
+    case "canvas":
+
+    document.body.dataset.page = "canvas";
+
+    openPage("canvas");
+
+    requestAnimationFrame(() => {
+
+        window.APWhiteboard?.open?.();
+
+        requestAnimationFrame(() => {
+            window.APWhiteboard?.init?.();
+            window.APWhiteboard?.resize?.();
+        });
+
+    });
+
+    break;
+
 
     case "knowledge":
 
@@ -634,16 +653,6 @@ document.querySelectorAll(".sidebar nav a").forEach(link => {
         openPage("automation");
 
         break;
-
-
-    case "canvas":
-
-        document.body.dataset.page = "canvas";
-
-        openPage("canvas");
-
-        break;
-
 
     case "code studio":
 
@@ -879,93 +888,6 @@ function renderRecentIntelligence() {
 }
 
 renderRecentIntelligence();
-
-// =====================================
-// AP SYNAPSE CANVAS
-// =====================================
-
-const canvas = document.getElementById("apCanvas");
-
-if (canvas) {
-
-    const ctx = canvas.getContext("2d");
-
-    let drawing = false;
-    let erasing = false;
-
-    function position(e) {
-
-        const rect = canvas.getBoundingClientRect();
-
-        return {
-            x: (e.clientX - rect.left) *
-               (canvas.width / rect.width),
-
-            y: (e.clientY - rect.top) *
-               (canvas.height / rect.height)
-        };
-
-    }
-
-    canvas.addEventListener("pointerdown", e => {
-
-        drawing = true;
-
-        const p = position(e);
-
-        ctx.beginPath();
-        ctx.moveTo(p.x, p.y);
-
-    });
-
-    canvas.addEventListener("pointermove", e => {
-
-        if (!drawing) return;
-
-        const p = position(e);
-
-        ctx.lineWidth = erasing ? 30 : 4;
-        ctx.lineCap = "round";
-        ctx.strokeStyle = erasing ? "#ffffff" : "#111111";
-
-        ctx.lineTo(p.x, p.y);
-        ctx.stroke();
-
-    });
-
-    canvas.addEventListener("pointerup", () => {
-
-        drawing = false;
-
-    });
-
-    canvas.addEventListener("pointerleave", () => {
-
-        drawing = false;
-
-    });
-
-    document.getElementById("canvasPen")?.addEventListener(
-        "click",
-        () => erasing = false
-    );
-
-    document.getElementById("canvasErase")?.addEventListener(
-        "click",
-        () => erasing = true
-    );
-
-    document.getElementById("canvasClear")?.addEventListener(
-        "click",
-        () => ctx.clearRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        )
-    );
-
-}
 
 /* ============================================================
    AP SYNAPSE — FINAL MOBILE SIDEBAR
@@ -12226,4 +12148,149 @@ setTimeout(() => {
         // Let the existing AP Synapse action finish first.
         setTimeout(closeMobileSidebar, 120);
     });
+})();
+
+/* =========================================================
+   AP SYNAPSE — MOBILE SIDEBAR VISIBILITY SYNC
+   Keeps History visible whenever sidebar is actually open
+========================================================= */
+
+(() => {
+    const sidebar = document.querySelector(".sidebar");
+
+    if (!sidebar) return;
+
+    const syncSidebarVisibility = () => {
+        if (window.innerWidth > 768) return;
+
+        const transform = getComputedStyle(sidebar).transform;
+        const hidden =
+            transform.includes("-320") ||
+            transform.includes("-326") ||
+            transform.includes("-336") ||
+            transform.includes("-105%");
+
+        if (hidden) {
+            sidebar.style.setProperty("visibility", "hidden", "important");
+            sidebar.style.setProperty("pointer-events", "none", "important");
+        } else {
+            sidebar.style.setProperty("visibility", "visible", "important");
+            sidebar.style.setProperty("pointer-events", "auto", "important");
+        }
+    };
+
+    const observer = new MutationObserver(() => {
+        requestAnimationFrame(syncSidebarVisibility);
+    });
+
+    observer.observe(sidebar, {
+        attributes: true,
+        attributeFilter: ["style", "class"]
+    });
+
+    window.addEventListener("resize", syncSidebarVisibility);
+
+    syncSidebarVisibility();
+})();
+
+(() => {
+    const sidebar = document.querySelector(".sidebar");
+
+    if (!sidebar) return;
+
+    window.apOpenMobileSidebar = () => {
+        sidebar.style.setProperty("transform", "translate3d(0,0,0)", "important");
+        sidebar.style.setProperty("visibility", "visible", "important");
+        sidebar.style.setProperty("pointer-events", "auto", "important");
+    };
+
+    window.apCloseMobileSidebar = () => {
+        sidebar.style.setProperty("transform", "translate3d(-105%,0,0)", "important");
+        sidebar.style.setProperty("visibility", "hidden", "important");
+        sidebar.style.setProperty("pointer-events", "none", "important");
+    };
+})();
+
+/* =========================================================
+   AP SYNAPSE — MOBILE HISTORY SPACE FIX
+   Permanent runtime layout correction
+   ========================================================= */
+
+(() => {
+  const applyMobileHistoryFix = () => {
+    if (window.innerWidth > 600) return;
+
+    const sidebar = document.querySelector(".sidebar");
+    const group = document.querySelector(".sidebar .recent-group");
+    const history = document.querySelector(".sidebar .history-list");
+
+    if (!sidebar || !group || !history) return;
+
+    const sidebarOpen =
+      sidebar.classList.contains("ap-sidebar-open") ||
+      getComputedStyle(sidebar).visibility === "visible";
+
+    if (!sidebarOpen) return;
+
+    /* Give the Recent/History section real physical space */
+    group.style.setProperty("display", "flex", "important");
+    group.style.setProperty("flex-direction", "column", "important");
+    group.style.setProperty("flex", "0 0 170px", "important");
+    group.style.setProperty("flex-shrink", "0", "important");
+    group.style.setProperty("height", "170px", "important");
+    group.style.setProperty("min-height", "170px", "important");
+    group.style.setProperty("max-height", "170px", "important");
+    group.style.setProperty("visibility", "visible", "important");
+    group.style.setProperty("opacity", "1", "important");
+    group.style.setProperty("overflow", "hidden", "important");
+
+    /* Make the actual history list fill that space */
+    history.style.setProperty("display", "flex", "important");
+    history.style.setProperty("flex-direction", "column", "important");
+    history.style.setProperty("flex", "1 1 auto", "important");
+    history.style.setProperty("flex-shrink", "1", "important");
+    history.style.setProperty("height", "auto", "important");
+    history.style.setProperty("min-height", "0", "important");
+    history.style.setProperty("max-height", "none", "important");
+    history.style.setProperty("overflow-y", "auto", "important");
+    history.style.setProperty("overflow-x", "hidden", "important");
+    history.style.setProperty("visibility", "visible", "important");
+    history.style.setProperty("opacity", "1", "important");
+
+    /* Entries */
+    history.querySelectorAll(".history-item").forEach(item => {
+      item.style.setProperty("display", "flex", "important");
+      item.style.setProperty("flex", "0 0 auto", "important");
+      item.style.setProperty("min-height", "52px", "important");
+      item.style.setProperty("visibility", "visible", "important");
+      item.style.setProperty("opacity", "1", "important");
+    });
+  };
+
+  /* Initial */
+  applyMobileHistoryFix();
+
+  /* After sidebar/navigation changes */
+  document.addEventListener("click", () => {
+    setTimeout(applyMobileHistoryFix, 50);
+    setTimeout(applyMobileHistoryFix, 250);
+  }, true);
+
+  /* Resize / device emulation */
+  window.addEventListener("resize", applyMobileHistoryFix);
+
+  /* Catch class/style changes made by sidebar.js */
+  const observer = new MutationObserver(() => {
+    if (window.innerWidth <= 600) {
+      requestAnimationFrame(applyMobileHistoryFix);
+    }
+  });
+
+  observer.observe(document.body, {
+    subtree: true,
+    attributes: true,
+    attributeFilter: ["class", "style"]
+  });
+
+  console.log("✅ AP SYNAPSE — PERMANENT MOBILE HISTORY FIX READY");
 })();

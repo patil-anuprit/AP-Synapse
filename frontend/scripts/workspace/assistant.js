@@ -269,11 +269,92 @@ const voiceCards =
         title.textContent =
             label;
 
-        const body =
-            document.createElement("div");
+        const body = document.createElement("div");
+        body.className = "live-talk-message-body";
 
-        body.textContent =
-            text;
+        const cleanVisualText = String(text ?? "")
+            // Remove fenced code blocks completely
+            .replace(/```[\s\S]*?```/g, "")
+
+            // Remove inline code formatting
+            .replace(/`([^`]+)`/g, "$1")
+
+            // Remove images and keep alt text
+            .replace(/!\[([^\]]*)\]\([^)]+\)/g, "$1")
+
+            // Convert Markdown links to visible text
+            .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+
+            // Remove Markdown headings
+            .replace(/^\s*#{1,6}\s*/gm, "")
+
+            // Remove bold / italic / strike formatting
+            .replace(/\*\*\*(.*?)\*\*\*/gs, "$1")
+            .replace(/\*\*(.*?)\*\*/gs, "$1")
+            .replace(/\*(.*?)\*/gs, "$1")
+            .replace(/__(.*?)__/gs, "$1")
+            .replace(/_(.*?)_/gs, "$1")
+            .replace(/~~(.*?)~~/gs, "$1")
+
+           // Clean list markers
+           .replace(/^\s*[-*+]\s+/gm, "• ")
+           .replace(/^\s*\d+\.\s+/gm, "")
+
+          // Remove quote markers
+          .replace(/^\s*>\s?/gm, "")
+
+          // LaTeX delimiters
+          .replace(/\\\((.*?)\\\)/gs, "$1")
+          .replace(/\\\[(.*?)\\\]/gs, "$1")
+          .replace(/\$\$([\s\S]*?)\$\$/g, "$1")
+          .replace(/\$([^$]+)\$/g, "$1")
+
+          // Common LaTeX fractions — including nested expressions
+          .replace(/\\frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, "$1/$2")
+
+          // Common LaTeX commands
+          .replace(/\\sqrt\s*\{([^{}]*)\}/g, "√$1")
+          .replace(/\\text\s*\{([^{}]*)\}/g, "$1")
+          .replace(/\\mathrm\s*\{([^{}]*)\}/g, "$1")
+          .replace(/\\mathbf\s*\{([^{}]*)\}/g, "$1")
+          .replace(/\\left/g, "")
+          .replace(/\\right/g, "")
+          .replace(/\\times/g, " × ")
+          .replace(/\\cdot/g, " · ")
+          .replace(/\\pm/g, " ± ")
+          .replace(/\\Delta/g, "Δ")
+          .replace(/\\theta/g, "θ")
+          .replace(/\\pi/g, "π")
+          .replace(/\\alpha/g, "α")
+          .replace(/\\beta/g, "β")
+          .replace(/\\gamma/g, "γ")
+          .replace(/\\lambda/g, "λ")
+          .replace(/\\mu/g, "μ")
+          .replace(/\\sigma/g, "σ")
+          .replace(/\\sum/g, "Σ")
+          .replace(/\\infty/g, "∞")
+          .replace(/\\circ/g, "°")
+
+          // Remove remaining LaTeX commands
+          .replace(/\\[a-zA-Z]+\*?/g, "")
+
+          // Remove remaining LaTeX braces
+          .replace(/[{}]/g, "")
+
+          // Remove formatting symbols that should never be visible
+          .replace(/[#*_~`]+/g, "")
+
+          // Clean table separators
+          .replace(/^\s*\|/gm, "")
+          .replace(/\|\s*$/gm, "")
+          .replace(/\|/g, "  ")
+
+          // Normalize whitespace
+          .replace(/[ \t]{2,}/g, " ")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+
+        body.textContent = cleanVisualText;
 
         message.appendChild(title);
         message.appendChild(body);
@@ -668,107 +749,336 @@ voiceCards.forEach(card => {
     // SPEAK
     // =====================================================
 
-    function speak(text) {
+    function cleanLiveTalkText(text) {
+    return String(text || "")
+        .replace(/```[\s\S]*?```/g, "")
+        .replace(/`([^`]+)`/g, "$1")
+        .replace(/^\s*#{1,6}\s*/gm, "")
+        .replace(/\*\*\*(.*?)\*\*\*/gs, "$1")
+        .replace(/\*\*(.*?)\*\*/gs, "$1")
+        .replace(/\*(.*?)\*/gs, "$1")
+        .replace(/__(.*?)__/gs, "$1")
+        .replace(/_(.*?)_/gs, "$1")
+        .replace(/~~(.*?)~~/gs, "$1")
+        .replace(/^\s*[-*+]\s+/gm, "")
+        .replace(/^\s*\d+\.\s+/gm, "")
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+        .replace(/^\s*>\s?/gm, "")
+        .replace(/[#*_~`]+/g, "")
+        .replace(/\s{2,}/g, " ")
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
+}
 
-        window.speechSynthesis.cancel();
+function speak(text, gender = selectedVoiceType) {
+
+    if (!text) return;
+
+    window.speechSynthesis.cancel();
+
+    // =====================================================
+    // CLEAN TEXT FOR SPEECH
+    // =====================================================
+
+    let cleanText = String(text)
+
+        .replace(/```[\s\S]*?```/g, "")
+        .replace(/`([^`]+)`/g, "$1")
+
+        .replace(/!\[.*?\]\(.*?\)/g, "")
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+
+        .replace(/#{1,6}\s*/g, "")
+
+        .replace(/\*\*\*(.*?)\*\*\*/gs, "$1")
+        .replace(/\*\*(.*?)\*\*/gs, "$1")
+        .replace(/\*(.*?)\*/gs, "$1")
+
+        .replace(/__(.*?)__/gs, "$1")
+        .replace(/_(.*?)_/gs, "$1")
+        .replace(/~~(.*?)~~/gs, "$1")
+
+        .replace(/^\s*[-*+]\s+/gm, "")
+        .replace(/^\s*\d+\.\s+/gm, "")
+        .replace(/^\s*>\s?/gm, "")
+
+        .replace(/\$\$([\s\S]*?)\$\$/g, "$1")
+        .replace(/\$([^$]+)\$/g, "$1")
+
+        .replace(/\\\((.*?)\\\)/gs, "$1")
+        .replace(/\\\[(.*?)\\\]/gs, "$1")
+
+        .replace(
+            /\\frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g,
+            "$1 divided by $2"
+        )
+
+        .replace(
+            /\\sqrt\s*\{([^{}]*)\}/g,
+            "square root of $1"
+        )
+
+        .replace(/\\text\s*\{([^{}]*)\}/g, "$1")
+        .replace(/\\mathrm\s*\{([^{}]*)\}/g, "$1")
+
+        .replace(/\\left/g, "")
+        .replace(/\\right/g, "")
+
+        .replace(/\\times/g, " times ")
+        .replace(/\\cdot/g, " times ")
+
+        .replace(/\\Delta/g, "delta")
+        .replace(/\\theta/g, "theta")
+        .replace(/\\pi/g, "pi")
+        .replace(/\\alpha/g, "alpha")
+        .replace(/\\beta/g, "beta")
+        .replace(/\\gamma/g, "gamma")
+        .replace(/\\sigma/g, "sigma")
+        .replace(/\\infty/g, "infinity")
+        .replace(/\\circ/g, " degrees ")
+
+        // Remove any remaining LaTeX commands
+        .replace(/\\[a-zA-Z]+\*?/g, "")
+
+        // Remove remaining braces and formatting symbols
+        .replace(/[{}]/g, "")
+        .replace(/[#$*_~`|]+/g, "")
+
+        .replace(/\s+/g, " ")
+        .trim();
+
+    if (!cleanText) return;
 
 
-        const utterance =
-            new SpeechSynthesisUtterance(text);
+    // =====================================================
+    // SPEECH OBJECT
+    // =====================================================
 
-        utterance.lang = "en-IN";
+    const speech =
+        new SpeechSynthesisUtterance(cleanText);
 
-        utterance.rate = 1.03;
+    speech.lang = "en-IN";
+    speech.rate = 0.95;
+    speech.volume = 1;
 
-        utterance.pitch =
-            selectedVoiceType === "male"
-                ? 0.92
-                : 1.05;
+    speech.pitch =
+        gender === "male"
+            ? 0.85
+            : 1.05;
 
-        utterance.volume = 1;
 
-        if (selectedVoice) {
-            utterance.voice = selectedVoice;
+    // =====================================================
+    // VOICE SELECTION
+    // =====================================================
+
+    const voices =
+        window.speechSynthesis.getVoices();
+
+    const englishVoices =
+        voices.filter(voice =>
+            /^en(-|_)/i.test(voice.lang)
+        );
+
+
+    const maleHints = [
+        "male",
+        "david",
+        "mark",
+        "daniel",
+        "george",
+        "guy",
+        "ryan",
+        "james"
+    ];
+
+
+    const femaleHints = [
+        "female",
+        "zira",
+        "samantha",
+        "victoria",
+        "susan",
+        "karen",
+        "aria",
+        "jenny",
+        "hazel"
+    ];
+
+
+    function matchesVoice(
+        voice,
+        hints
+    ) {
+
+        const name =
+            voice.name.toLowerCase();
+
+        return hints.some(
+            hint =>
+                name.includes(
+                    hint.toLowerCase()
+                )
+        );
+    }
+
+
+    let chosenVoice = null;
+
+
+    // =====================================================
+    // MALE
+    // =====================================================
+
+    if (gender === "male") {
+
+        chosenVoice =
+            englishVoices.find(
+                voice =>
+                    matchesVoice(
+                        voice,
+                        maleHints
+                    )
+            );
+
+
+        // Do not accidentally choose an obvious
+        // female voice as the male fallback.
+
+        if (!chosenVoice) {
+
+            chosenVoice =
+                englishVoices.find(
+                    voice =>
+                        !matchesVoice(
+                            voice,
+                            femaleHints
+                        )
+                );
         }
 
+    }
 
-        utterance.onstart =
-            () => {
 
-                speaking = true;
+    // =====================================================
+    // FEMALE
+    // =====================================================
 
-                screen.classList.add(
-                    "is-speaking"
+    else {
+
+        chosenVoice =
+            englishVoices.find(
+                voice =>
+                    matchesVoice(
+                        voice,
+                        femaleHints
+                    )
+            );
+
+
+        // Do not accidentally choose an obvious
+        // male voice as the female fallback.
+
+        if (!chosenVoice) {
+
+            chosenVoice =
+                englishVoices.find(
+                    voice =>
+                        !matchesVoice(
+                            voice,
+                            maleHints
+                        )
                 );
+        }
 
-                screen.classList.remove(
-                    "is-listening"
-                );
-
-                status.textContent =
-                    "AP Synapse is speaking";
-
-                micText.textContent =
-                    "AP Synapse is speaking";
-
-            };
+    }
 
 
-        utterance.onend =
-            () => {
+    // Final fallback only if the browser exposes
+    // no identifiable gender-specific voice.
 
-                speaking = false;
+    if (!chosenVoice) {
 
-                screen.classList.remove(
-                    "is-speaking"
-                );
-
-                status.textContent =
-                    "Listening";
-
-                micText.textContent =
-                    "Microphone is on";
+        chosenVoice =
+            englishVoices[0] ||
+            voices[0] ||
+            null;
+    }
 
 
-                /*
-                 * Automatically return to
-                 * listening after AP Synapse
-                 * finishes speaking.
-                 */
+    if (chosenVoice) {
 
-                if (active) {
+        speech.voice =
+            chosenVoice;
 
-                    setTimeout(
-                        startListening,
-                        180
-                    );
+        speech.lang =
+            chosenVoice.lang;
 
-                }
+        console.log(
+            "🎙️ AP SYNAPSE SPEAKING:",
+            gender,
+            "|",
+            chosenVoice.name,
+            "|",
+            chosenVoice.lang
+        );
 
-            };
+    } else {
 
-
-        utterance.onerror =
-            () => {
-
-                speaking = false;
-
-                screen.classList.remove(
-                    "is-speaking"
-                );
-
-                if (active) {
-                    startListening();
-                }
-
-            };
-
-
-        window.speechSynthesis.speak(
-            utterance
+        console.warn(
+            "⚠️ AP Synapse: no speech voice available."
         );
 
     }
+
+
+    // =====================================================
+    // SPEAK
+    // =====================================================
+
+    speaking = true;
+
+    window.speechSynthesis.speak(
+        speech
+    );
+
+
+    speech.onend = () => {
+
+        speaking = false;
+
+        screen.classList.remove(
+            "is-speaking"
+        );
+
+        if (active && !paused) {
+
+            updateLiveTalkStatus(
+                "Listening",
+                "Speak naturally — AP Synapse is listening…"
+            );
+
+            startListening();
+
+        }
+
+    };
+
+
+    speech.onerror = () => {
+
+        speaking = false;
+
+        screen.classList.remove(
+            "is-speaking"
+        );
+
+        if (active && !paused) {
+            startListening();
+        }
+
+    };
+
+}
 
 
     // =====================================================

@@ -871,6 +871,17 @@
 
 <div class="workspace-content">
 
+    <section
+    id="workspacePage"
+    class="workspace-page"
+    style="display: none;"
+    aria-hidden="true"
+>
+    <div class="workspace-page-content">
+        <!-- AP Synapse Workspace -->
+    </div>
+</section>
+
 <section id="assistantPage" class="conversation">
 
     <div
@@ -1190,28 +1201,6 @@ Paste your code here and ask AP Synapse to find bugs..."
 
 </section>
 
-<section id="workspacePage" class="projects-page workspace-page">
-
-    <div class="whiteboard-header">
-        <div>
-            <div class="whiteboard-eyebrow">VISUAL THINKING</div>
-            <h2>Whiteboard</h2>
-            <p>Think freely. Sketch, map, and build ideas with AP Synapse.</p>
-        </div>
-
-        <div class="whiteboard-tools">
-            <button id="canvasPen" type="button" title="Pen">✎</button>
-            <button id="canvasErase" type="button" title="Eraser">⌫</button>
-            <button id="canvasClear" type="button" title="Clear">⌫</button>
-        </div>
-    </div>
-
-    <div class="whiteboard-shell">
-        <canvas id="apCanvas"></canvas>
-    </div>
-
-</section>
-
 <section id="knowledgePage" class="projects-page" style="display:none;">
 
 <div class="projects-header">
@@ -1504,25 +1493,22 @@ Research the latest information about solar energy, summarize the key findings a
 
 <section id="canvasPage" class="projects-page" style="display:none;">
 
-<div class="projects-header">
+    <div class="projects-header">
+        <h1>🎨 Canvas</h1>
+        <p>Infinite AI Whiteboard.</p>
+    </div>
 
-<h1>🎨 Canvas</h1>
+    <div class="whiteboard-shell">
 
-<p>Infinite AI Whiteboard.</p>
+        <div class="whiteboard-toolbar">
+            <button id="canvasPen" type="button">✏️ Pen</button>
+            <button id="canvasErase" type="button">🧹 Eraser</button>
+            <button id="canvasClear" type="button">🗑 Clear</button>
+        </div>
 
-</div>
+        <canvas id="apCanvas"></canvas>
 
-<div class="projects-grid">
-
-<div class="project-card">
-
-<h2>Visual Thinking</h2>
-
-<p>Brainstorm with AP Synapse.</p>
-
-</div>
-
-</div>
+    </div>
 
 </section>
 
@@ -5851,6 +5837,459 @@ autocomplete="off">
     } else {
         setupMobileTopbar();
     }
+})();
+</script>
+
+<!-- =========================================================
+     AP SYNAPSE — TURBO PERFORMANCE MODE
+     UI-FIRST / LOW-LATENCY / RESPONSIVE
+========================================================= -->
+<style>
+/* Instant interaction */
+button,
+a,
+[role="button"],
+.sidebar-item,
+.nav-item,
+.menu-item,
+.live-talk-voice-card {
+    transition-duration: 80ms !important;
+}
+
+/* Prevent expensive transition stacks */
+.sidebar,
+.ap-sidebar,
+.sidebar *,
+.ap-sidebar * {
+    transition-property: transform, opacity, background-color, border-color !important;
+}
+
+/* GPU acceleration for major moving surfaces */
+.sidebar,
+.ap-sidebar,
+#assistantPage,
+#chatWindow,
+#liveTalkScreen,
+.live-talk-screen,
+.modal,
+.panel {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform;
+}
+
+/* Do not animate layout-heavy properties */
+.sidebar,
+.ap-sidebar {
+    contain: layout paint style;
+}
+
+/* Chat/history rendering isolation */
+.history-list,
+#history-list,
+.chat-messages,
+#chatMessages,
+#transcript,
+.live-talk-transcript {
+    contain: content;
+}
+
+/* Large background effects must not interfere with clicks */
+.intelligence-field,
+#intelligenceField,
+.intelligence-background,
+.neural-background {
+    pointer-events: none !important;
+}
+
+/* Faster scrolling */
+.sidebar,
+.ap-sidebar,
+.history-list,
+.chat-messages,
+.live-talk-transcript {
+    scroll-behavior: auto !important;
+}
+
+/* Reduce expensive visual effects while interacting */
+body.ap-fast-interaction *,
+body.ap-fast-interaction *::before,
+body.ap-fast-interaction *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+}
+
+/* Keep text rendering responsive */
+body {
+    text-rendering: optimizeSpeed;
+}
+
+/* Avoid accidental image/layout delays */
+img {
+    content-visibility: auto;
+}
+
+/* Instant visual response for active controls */
+button:active,
+[role="button"]:active,
+.sidebar-item:active,
+.nav-item:active {
+    transform: translateZ(0) scale(.985) !important;
+}
+</style>
+
+<script>
+/* =========================================================
+   AP SYNAPSE — TURBO INTERACTION ENGINE
+========================================================= */
+
+(() => {
+
+    let turboTimer = null;
+
+    function turboInteraction() {
+
+        document.body.classList.add(
+            "ap-fast-interaction"
+        );
+
+        clearTimeout(turboTimer);
+
+        turboTimer = setTimeout(() => {
+            document.body.classList.remove(
+                "ap-fast-interaction"
+            );
+        }, 90);
+    }
+
+    document.addEventListener(
+        "pointerdown",
+        turboInteraction,
+        { passive: true }
+    );
+
+    document.addEventListener(
+        "keydown",
+        turboInteraction,
+        { passive: true }
+    );
+
+    /* Make sidebar scrolling independent */
+    document.querySelectorAll(
+        ".sidebar, .ap-sidebar, .history-list"
+    ).forEach(element => {
+
+        element.style.overscrollBehavior =
+            "contain";
+
+    });
+
+    /* Keep history rendering lightweight */
+    const history =
+        document.querySelector(
+            ".history-list"
+        );
+
+    if (history) {
+
+        history.style.contain =
+            "content";
+
+        history.style.willChange =
+            "scroll-position";
+
+    }
+
+    console.log(
+        "⚡ AP SYNAPSE TURBO PERFORMANCE MODE ACTIVE"
+    );
+
+})();
+</script>
+
+<script>
+(() => {
+    "use strict";
+
+    function initAPWhiteboard() {
+        const page = document.getElementById("canvasPage");
+        const canvas = document.getElementById("apCanvas");
+        const pen = document.getElementById("canvasPen");
+        const erase = document.getElementById("canvasErase");
+        const clear = document.getElementById("canvasClear");
+
+        if (!page || !canvas || !pen || !erase || !clear) {
+            console.warn("AP Whiteboard: required elements missing.");
+            return;
+        }
+
+        const shell = canvas.closest(".whiteboard-shell");
+        const ctx = canvas.getContext("2d");
+
+        if (!ctx) {
+            console.error("AP Whiteboard: 2D context unavailable.");
+            return;
+        }
+
+        const state = {
+            drawing: false,
+            erasing: false,
+            lastX: 0,
+            lastY: 0,
+            dpr: 1
+        };
+
+        canvas.style.touchAction = "none";
+        canvas.style.pointerEvents = "auto";
+        canvas.style.cursor = "crosshair";
+
+        function resize() {
+            if (!shell) return;
+
+            const rect = shell.getBoundingClientRect();
+
+            if (rect.width <= 0 || rect.height <= 0) return;
+
+            const old = document.createElement("canvas");
+            old.width = canvas.width;
+            old.height = canvas.height;
+
+            if (canvas.width && canvas.height) {
+                old.getContext("2d").drawImage(canvas, 0, 0);
+            }
+
+            state.dpr = Math.min(
+                Math.max(window.devicePixelRatio || 1, 1),
+                2
+            );
+
+            canvas.width = Math.max(
+                1,
+                Math.round(rect.width * state.dpr)
+            );
+
+            canvas.height = Math.max(
+                1,
+                Math.round(rect.height * state.dpr)
+            );
+
+            canvas.style.width = rect.width + "px";
+            canvas.style.height = rect.height + "px";
+
+            ctx.setTransform(
+                state.dpr,
+                0,
+                0,
+                state.dpr,
+                0,
+                0
+            );
+
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
+
+            if (old.width && old.height) {
+                ctx.drawImage(
+                    old,
+                    0,
+                    0,
+                    old.width,
+                    old.height,
+                    0,
+                    0,
+                    rect.width,
+                    rect.height
+                );
+            }
+        }
+
+        function point(e) {
+            const rect = canvas.getBoundingClientRect();
+
+            return {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            };
+        }
+
+        function start(e) {
+            if (e.pointerType === "mouse" && e.button !== 0) {
+                return;
+            }
+
+            if (!canvas.getBoundingClientRect().width) {
+                return;
+            }
+
+            const p = point(e);
+
+            state.drawing = true;
+            state.lastX = p.x;
+            state.lastY = p.y;
+
+            canvas.setPointerCapture?.(e.pointerId);
+
+            e.preventDefault();
+        }
+
+        function move(e) {
+            if (!state.drawing) return;
+
+            const p = point(e);
+
+            ctx.beginPath();
+            ctx.moveTo(state.lastX, state.lastY);
+            ctx.lineTo(p.x, p.y);
+
+            if (state.erasing) {
+                ctx.globalCompositeOperation = "destination-out";
+                ctx.lineWidth = 28;
+                ctx.strokeStyle = "rgba(0,0,0,1)";
+            } else {
+                ctx.globalCompositeOperation = "source-over";
+                ctx.lineWidth = 4;
+                ctx.strokeStyle = "#111111";
+            }
+
+            ctx.stroke();
+
+            state.lastX = p.x;
+            state.lastY = p.y;
+
+            e.preventDefault();
+        }
+
+        function stop(e) {
+            state.drawing = false;
+
+            ctx.globalCompositeOperation = "source-over";
+
+            if (
+                e?.pointerId !== undefined &&
+                canvas.hasPointerCapture?.(e.pointerId)
+            ) {
+                canvas.releasePointerCapture?.(e.pointerId);
+            }
+        }
+
+        function activatePen() {
+            state.erasing = false;
+
+            pen.classList.add("active");
+            erase.classList.remove("active");
+
+            ctx.globalCompositeOperation = "source-over";
+
+            console.log("✎ AP WHITEBOARD — PEN ACTIVE");
+        }
+
+        function activateEraser() {
+            state.erasing = true;
+
+            erase.classList.add("active");
+            pen.classList.remove("active");
+
+            console.log("⌫ AP WHITEBOARD — ERASER ACTIVE");
+        }
+
+        function clearCanvas() {
+            const rect = canvas.getBoundingClientRect();
+
+            ctx.save();
+            ctx.setTransform(
+                state.dpr,
+                0,
+                0,
+                state.dpr,
+                0,
+                0
+            );
+
+            ctx.clearRect(
+                0,
+                0,
+                rect.width,
+                rect.height
+            );
+
+            ctx.restore();
+
+            console.log("🧹 AP WHITEBOARD — CLEARED");
+        }
+
+        if (canvas.dataset.apEngineReady !== "true") {
+
+            canvas.addEventListener(
+                "pointerdown",
+                start,
+                { passive: false }
+            );
+
+            canvas.addEventListener(
+                "pointermove",
+                move,
+                { passive: false }
+            );
+
+            canvas.addEventListener(
+                "pointerup",
+                stop
+            );
+
+            canvas.addEventListener(
+                "pointercancel",
+                stop
+            );
+
+            canvas.addEventListener(
+                "pointerleave",
+                stop
+            );
+
+            pen.addEventListener("click", activatePen);
+            erase.addEventListener("click", activateEraser);
+            clear.addEventListener("click", clearCanvas);
+
+            canvas.dataset.apEngineReady = "true";
+        }
+
+        function open() {
+            page.style.display = "block";
+            page.style.visibility = "visible";
+            page.style.opacity = "1";
+            page.style.pointerEvents = "auto";
+
+            requestAnimationFrame(() => {
+                resize();
+                activatePen();
+            });
+        }
+
+        window.APWhiteboard = {
+            open,
+            init: open,
+            resize,
+            clear: clearCanvas,
+            pen: activatePen,
+            erase: activateEraser
+        };
+
+        console.log("⚡ AP SYNAPSE WHITEBOARD — FINAL ENGINE READY");
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener(
+            "DOMContentLoaded",
+            initAPWhiteboard,
+            { once: true }
+        );
+    } else {
+        initAPWhiteboard();
+    }
+
+    window.addEventListener("resize", () => {
+        window.APWhiteboard?.resize?.();
+    });
 })();
 </script>
 

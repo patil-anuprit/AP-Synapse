@@ -450,7 +450,12 @@ document.getElementById("documentsBtn")?.addEventListener("click", (e) => {
 
 document.getElementById("canvasBtn")?.addEventListener("click", (e) => {
     e.preventDefault();
+
     showPage("canvasPage");
+
+    requestAnimationFrame(() => {
+        window.initAPSynapseWhiteboard?.();
+    });
 });
 
 document.getElementById("assistantBtn")?.addEventListener("click", (e) => {

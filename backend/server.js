@@ -253,6 +253,10 @@ app.post("/chat", async (req, res) => {
         const web = true;
         const documentImage = req.body?.documentImage || "";
 
+        const explicitImageRequest =
+            /\b(create|generate|make|draw|design|render|produce|paint|illustrate|visualize)\b/i.test(message) &&
+            /\b(image|picture|photo|portrait|artwork|illustration|wallpaper|poster|scene)\b/i.test(message);
+
         if (!message) {
             return res.status(400).json({
                 error: "Message is required."
@@ -269,195 +273,35 @@ app.post("/chat", async (req, res) => {
         );
     // ==========================================
     // AP SYNAPSE — VISUAL FORGE
-    // PRIMARY + ONLY IMAGE ENGINE
+    // ONLY FOR EXPLICIT IMAGE REQUESTS
     // ==========================================
 
-    try {
-
-        console.log(
-            "🎨 AP SYNAPSE → VISUAL FORGE → fal"
-        );
-
-        const visualResult =
-            await generateVisualImage(message);
-
-        console.log(
-            "✅ VISUAL FORGE IMAGE GENERATED"
-        );
-
-        return res.json(
-            visualResult
-        );
-
-    }
-
-    catch (visualError) {
-
-        console.error(
-            "❌ VISUAL FORGE IMAGE FAILED:"
-        );
-
-        console.error(
-            visualError
-        );
-
-        return res.status(502).json({
-
-            type: "error",
-
-            code:
-                "VISUAL_FORGE_IMAGE_FAILED",
-
-            error:
-                visualError?.message ||
-                "AP Synapse Visual Forge could not generate the image."
-
-        });
-
-    }
-    return res.status(502).json({
-        error:
-            "All AP Synapse image-generation providers are currently unavailable."
-    });
-
-    } catch (error) {
-
-        console.error("Chat request failed:", error);
-
-        return res.status(500).json({
-            error: "Unable to process chat request."
-        });
-    }
-
-});
-
-// ==========================================
-// AP SYNAPSE â€” GOOGLE SIGN-IN VERIFICATION
-// ==========================================
-
-app.post("/auth/google", async (req, res) => {
-    try {
-        console.log("ðŸ” Google authentication request received.");
-
-        // ------------------------------------------
-        // 1. Receive Google credential
-        // ------------------------------------------
-
-        const credential = req.body?.credential;
-
-        if (!credential) {
-            console.warn("âš ï¸ Google credential missing.");
-            return res.status(400).json({
-                success: false,
-                error: "Google credential is required."
-            });
-        }
-
-        console.log("âœ… Google credential received.");
-
-        // ------------------------------------------
-        // 2. Verify credential with Google
-        // ------------------------------------------
-
-        const ticket = await googleClient.verifyIdToken({
-            idToken: credential,
-            audience: process.env.GOOGLE_CLIENT_ID
-        });
-
-        // ------------------------------------------
-        // 3. Extract verified Google identity
-        // ------------------------------------------
-
-        const payload = ticket.getPayload();
-
-        if (!payload) {
-            console.warn("âš ï¸ Google returned no payload.");
-            return res.status(401).json({
-                success: false,
-                error: "Invalid Google credential."
-            });
-        }
-
-        // ------------------------------------------
-        // 4. Build AP Synapse user
-        // ------------------------------------------
-
-        const user = {
-            googleId: payload.sub || "",
-            name: payload.name || "AP Synapse User",
-            email: payload.email || "",
-            picture: payload.picture || "",
-            emailVerified: payload.email_verified === true
-        };
-
-        // ==========================================
-        // AP SYNAPSE â€” SIGN-IN SECURITY EMAIL
-        // ==========================================
+    if (explicitImageRequest) {
 
         try {
 
-            if (user.email) {
+            console.log("🎨 AP SYNAPSE → VISUAL FORGE → fal");
 
-                await dispatchCommunication({
+            const visualResult =
+                await generateVisualImage(message);
 
-                    type:
-                       COMMUNICATION_TYPES.SECURITY,
+            console.log("✅ VISUAL FORGE IMAGE GENERATED");
 
-                    email:
-                       user.email,
+            return res.json(visualResult);
 
-                    name:
-                       user.name || "AP Synapse User",
+        } catch (visualError) {
 
-                    sessionId:
-                       sessionId,
+            console.error("❌ VISUAL FORGE IMAGE FAILED:", visualError);
 
-                    payload: {
-
-                       title:
-                           "New sign-in detected.",
-
-                       subject:
-                           "New sign-in to your AP Synapse account",
-
-                       message:
-                           "Your AP Synapse account was just signed in to using Google. If this was you, no action is required."
-
-                    }
-
-                });
-
-                console.log(
-                    "âœ‰ï¸ AP Synapse security communication dispatched:",
-                    user.email
-                );
-
-            }
-
-        } catch (emailError) {
-
-            // Email failure must NEVER break Google Sign-In.
-
-            console.error(
-                "âš ï¸ Sign-in security communication failed:",
-                emailError.message
-            );
-
+            return res.status(502).json({
+                type: "error",
+                code: "VISUAL_FORGE_IMAGE_FAILED",
+                error:
+                    visualError?.message ||
+                    "AP Synapse Visual Forge could not generate the image."
+            });
         }
-
-        // ------------------------------------------
-        // 5. Successful authentication
-        // ------------------------------------------
-
-        console.log("âœ… Google Sign-In verified successfully.");
-        console.log("ðŸ‘¤ User:", user.name);
-        console.log("ðŸ“§ Email:", user.email);
-
-        return res.status(200).json({
-            success: true,
-            message: "Google Sign-In successful.",
-            user
-        });
+    }
     } catch (error) {
         console.error("âŒ Google Sign-In verification failed.");
         console.error(error);
@@ -785,5 +629,10 @@ initializeDatabase()
         process.exit(1);
 
     });
+
+
+
+
+
 
 

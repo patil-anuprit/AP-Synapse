@@ -1267,7 +1267,7 @@ scrollChatToBottom(true);
            .getElementById("thinking")
            ?.remove();
 
-        console.log("?? CHAT RESPONSE:", response.status, response.headers.get("content-type"));
+        console.log("⚠️ CHAT ERROR RESPONSE:", error?.status || "unknown");
 
         addMessage(
             "ai-message",

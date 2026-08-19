@@ -279,7 +279,7 @@ app.post("/chat", async (req, res) => {
         );
 
         const visualResult =
-            await generateVisualImage(prompt);
+            await generateVisualImage(message);
 
         console.log(
             "✅ VISUAL FORGE IMAGE GENERATED"
@@ -785,4 +785,5 @@ initializeDatabase()
         process.exit(1);
 
     });
+
 

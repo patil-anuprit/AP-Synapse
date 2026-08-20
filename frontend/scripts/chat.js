@@ -372,6 +372,22 @@ async function sendMessage() {
 
     if (!message) return;
 
+
+    // ============================================================
+// AP SYNAPSE — CLOSE MOBILE KEYBOARD AFTER SEND
+// ============================================================
+
+if (
+    window.innerWidth <= 768 &&
+    input
+) {
+    input.blur();
+
+    setTimeout(() => {
+        document.activeElement?.blur();
+    }, 50);
+}
+
     // =====================================
     // EDITED MESSAGE MODE
     // =====================================
@@ -1563,95 +1579,471 @@ function downloadImage(url){
 
 }
 
+// ============================================================
+// AP SYNAPSE — PREMIUM UPLOADED FILE MESSAGE
+// ============================================================
+
+function getUploadType(file) {
+
+    const type = file?.type || "";
+    const name = file?.name || "";
+
+    if (type.startsWith("image/")) {
+        return "image";
+    }
+
+    if (
+        type === "application/pdf" ||
+        /\.pdf$/i.test(name)
+    ) {
+        return "PDF";
+    }
+
+    return "document";
+}
+
+
+function createUploadedFileMessage(file) {
+
+    const type = getUploadType(file);
+
+    const wrapper = document.createElement("div");
+
+    wrapper.className =
+        "message user ap-upload-message";
+
+    wrapper.dataset.messageId =
+        `ap-upload-${Date.now()}-${Math.random()
+            .toString(36)
+            .slice(2, 8)}`;
+
+    const avatar =
+        document.createElement("div");
+
+    avatar.className = "avatar";
+    avatar.textContent = "U";
+
+
+    const body =
+        document.createElement("div");
+
+    body.className =
+        "message-body ap-upload-body";
+
+
+    // ========================================================
+    // IMAGE
+    // ========================================================
+
+    if (type === "image") {
+
+        const objectUrl =
+            URL.createObjectURL(file);
+
+        body.innerHTML = `
+
+            <div class="ap-upload-card ap-upload-image-card">
+
+                <div class="ap-upload-header">
+
+                    <div class="ap-upload-icon">
+                        ◈
+                    </div>
+
+                    <div class="ap-upload-title-group">
+
+                        <div class="ap-upload-title">
+                            Image
+                        </div>
+
+                        <div class="ap-upload-status">
+                            Uploaded successfully
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="ap-upload-preview">
+
+                    <img
+                        src="${objectUrl}"
+                        alt="Uploaded image"
+                        class="ap-upload-image"
+                    >
+
+                </div>
+
+                <div class="ap-upload-footer">
+
+                    <span>
+                        Ready for analysis
+                    </span>
+
+                    <span class="ap-upload-check">
+                        ✓
+                    </span>
+
+                </div>
+
+            </div>
+
+        `;
+
+        // Keep object URL alive while the message exists.
+        body
+            .querySelector(".ap-upload-image")
+            ?.addEventListener("load", () => {
+                // Intentionally retained for chat preview.
+            });
+
+    }
+
+    // ========================================================
+    // PDF
+    // ========================================================
+
+    else if (type === "PDF") {
+
+        body.innerHTML = `
+
+            <div class="ap-upload-card ap-upload-document-card">
+
+                <div class="ap-upload-document-icon">
+                    PDF
+                </div>
+
+                <div class="ap-upload-document-content">
+
+                    <div class="ap-upload-title">
+                        PDF
+                    </div>
+
+                    <div class="ap-upload-status">
+                        Uploaded successfully
+                    </div>
+
+                    <div class="ap-upload-ready">
+                        Ready for analysis
+                    </div>
+
+                </div>
+
+                <div class="ap-upload-check">
+                    ✓
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+    // ========================================================
+    // DOCUMENT
+    // ========================================================
+
+    else {
+
+        body.innerHTML = `
+
+            <div class="ap-upload-card ap-upload-document-card">
+
+                <div class="ap-upload-document-icon">
+                    DOC
+                </div>
+
+                <div class="ap-upload-document-content">
+
+                    <div class="ap-upload-title">
+                        Document
+                    </div>
+
+                    <div class="ap-upload-status">
+                        Uploaded successfully
+                    </div>
+
+                    <div class="ap-upload-ready">
+                        Ready for analysis
+                    </div>
+
+                </div>
+
+                <div class="ap-upload-check">
+                    ✓
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    wrapper.appendChild(avatar);
+    wrapper.appendChild(body);
+
+    chatWindow.appendChild(wrapper);
+
+    requestAnimationFrame(() => {
+
+        scrollChatToBottom(true);
+        refreshConversationNavigator();
+
+    });
+
+    return wrapper;
+}
+
+// ============================================================
+// AP SYNAPSE — PREMIUM FILE UPLOAD
+// ============================================================
+
 console.log("ABOUT TO REGISTER FILE EVENT");
 
 fileInput.addEventListener("change", async (event) => {
 
     console.log("✅ FILE SELECTED");
 
-    const file = event.target.files[0];
+    const file =
+        event.target.files[0];
 
-    console.log("Selected File:", file);
+    console.log(
+        "Selected File:",
+        file
+    );
 
     if (!file) return;
 
-try {
 
-    addMessage(
-        "user-message",
-        `📎 Uploading **${file.name}**...`
-    );
+    const uploadType =
+        getUploadType(file);
 
-    const formData = new FormData();
 
-    formData.append("file", file);
+    try {
 
-    const response = await fetch(
-    "https://ap-synapse-backend.onrender.com/upload",
-    {
-        method: "POST",
+        // ====================================================
+        // ENTER CHAT MODE
+        // ====================================================
 
-        headers: {
-            "x-session-id": getSessionId()
-        },
+        document.body.classList.add(
+            "chat-active"
+        );
 
-        body: formData
+
+        if (heroScreen) {
+
+            heroScreen.style.setProperty(
+                "display",
+                "none",
+                "important"
+            );
+
+            heroScreen.style.visibility =
+                "hidden";
+
+            heroScreen.style.pointerEvents =
+                "none";
+
+        }
+
+
+        if (chatWindow) {
+
+            chatWindow.style.setProperty(
+                "display",
+                "flex",
+                "important"
+            );
+
+            chatWindow.style.visibility =
+                "visible";
+
+            chatWindow.style.pointerEvents =
+                "auto";
+
+        }
+
+
+        // ====================================================
+        // SHOW PREMIUM ATTACHMENT
+        // ====================================================
+
+        createUploadedFileMessage(file);
+
+
+        // ====================================================
+        // UPLOAD TO BACKEND
+        // ====================================================
+
+        const formData =
+            new FormData();
+
+        formData.append(
+            "file",
+            file
+        );
+
+
+        const response =
+            await fetch(
+                "https://ap-synapse-backend.onrender.com/upload",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "x-session-id":
+                            getSessionId()
+                    },
+
+                    body: formData
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Upload failed"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "📄 UPLOAD RESPONSE:",
+            data
+        );
+
+
+        // ====================================================
+        // STORE DOCUMENT CONTENT
+        // ====================================================
+
+        window.currentDocument =
+            data.content || "";
+
+
+        window.currentDocumentImage =
+            "";
+
+
+        // ====================================================
+        // STORE OPTIMIZED IMAGE
+        // ====================================================
+
+        if (
+
+            data.content &&
+
+            typeof data.content ===
+                "object" &&
+
+            data.content.type ===
+                "image" &&
+
+            data.content.dataUrl
+
+        ) {
+
+            window.currentDocumentImage =
+                data.content.dataUrl;
+
+
+            console.log(
+                "🖼️ Optimized image data stored."
+            );
+
+        }
+
+
+        console.log(
+            "📚 Document stored."
+        );
+
+
+        // ====================================================
+        // CLEAN PREMIUM CONFIRMATION
+        // ====================================================
+
+        let confirmation =
+            "Document uploaded successfully.";
+
+
+        if (uploadType === "image") {
+
+            confirmation =
+                "Image uploaded successfully.";
+
+        }
+
+        else if (uploadType === "PDF") {
+
+            confirmation =
+                "PDF uploaded successfully.";
+
+        }
+
+
+        addMessage(
+            "ai-message",
+            `✅ **${confirmation}**
+
+You can ask me anything about it.`
+        );
+
+
+        // ====================================================
+        // INPUT STATE
+        // ====================================================
+
+        if (input) {
+
+            input.placeholder =
+                uploadType === "image"
+                    ? "Ask anything about this image..."
+                    : uploadType === "PDF"
+                        ? "Ask anything about this PDF..."
+                        : "Ask anything about this document...";
+
+
+            input.focus();
+
+        }
+
+
+        // ====================================================
+        // RESET FILE INPUT
+        // ====================================================
+
+        fileInput.value = "";
+
+
     }
-);
 
-    if (!response.ok) {
+    catch (err) {
 
-        throw new Error("Upload failed");
+        console.error(
+            "🔥 UPLOAD ERROR:",
+            err
+        );
+
+
+        addMessage(
+            "ai-message",
+            `❌ **Upload failed.**
+
+${err.message || "Unable to upload the file."}`
+        );
+
+
+        fileInput.value = "";
 
     }
-
-    const data = await response.json();
-
-    console.log("?? IMAGE DATA:", data);
-
-    window.currentDocument = data.content || "";
-
-window.currentDocumentImage = "";
-
-if (
-    data.content &&
-    typeof data.content === "object" &&
-    data.content.type === "image" &&
-    data.content.dataUrl
-) {
-
-    window.currentDocumentImage =
-        data.content.dataUrl;
-
-    console.log(
-        "🖼️ Optimized image data stored from backend."
-    );
-
-}
-
-console.log("Document stored.");
-console.log(window.currentDocument);
-
-    addMessage(
-        "ai-message",
-        `✅ **${data.original}** uploaded successfully.
-
-You can now ask me anything about this document.`
-    );
-
-}
-catch(err){
-
-    console.error("UPLOAD ERROR:", err);
-
-    alert("UPLOAD ERROR:\n\n" + err.message);
-
-    addMessage(
-        "ai-message",
-        "❌ Document upload failed.\n\n" + err.message
-    );
-
-}
 
 });
 

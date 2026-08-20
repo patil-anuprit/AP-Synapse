@@ -1,0 +1,41 @@
+import { fal } from "@fal-ai/client";
+
+fal.config({
+    credentials: process.env.FAL_KEY
+});
+
+export async function generateVisualImage(prompt) {
+
+    const result = await fal.subscribe(
+        "fal-ai/nano-banana-2",
+        {
+            input: {
+                prompt: `
+Create a premium, highly detailed image based on this request:
+
+${prompt}
+
+Priorities:
+- accurate interpretation
+- excellent composition
+- coherent lighting
+- high visual quality
+- natural details
+- professional finish
+- no unnecessary artifacts
+                `.trim()
+            }
+        }
+    );
+
+    const url =
+        result?.data?.images?.[0]?.url;
+
+    if (!url) {
+        throw new Error(
+            "Visual Forge returned no image."
+        );
+    }
+
+    return url;
+}

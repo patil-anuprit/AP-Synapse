@@ -1,0 +1,54 @@
+{
+  "packageId": "com.apsynapse.app",
+  "host": "ap-synapse.vercel.app",
+  "name": "AP Synapse",
+  "launcherName": "AP Synapse",
+  "display": "standalone",
+  "themeColor": "#0B0B0C",
+  "themeColorDark": "#000000",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#0B0B0C",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://ap-synapse.vercel.app/favicon.png",
+  "maskableIconUrl": "https://ap-synapse.vercel.app/favicon.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "D:\\Projects\\AP-Synapse\\android.keystore",
+    "alias": "ap-synapse"
+  },
+  "appVersionName": "1",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://ap-synapse.vercel.app/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {
+    "playBilling": {
+      "enabled": true
+    },
+    "locationDelegation": {
+      "enabled": true
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://ap-synapse.vercel.app/",
+  "minSdkVersion": 21,
+  "orientation": "portrait-primary",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "protocolHandlers": [],
+  "fileHandlers": [],
+  "launchHandlerClientMode": "",
+  "displayOverride": [],
+  "appVersion": "1"
+}

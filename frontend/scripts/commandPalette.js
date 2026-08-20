@@ -220,7 +220,7 @@ async function handleGoogleSignIn(response) {
         );
 
         const authResponse = await fetch(
-            "https://ap-synapse-backend.onrender.com/auth/google",
+            "https://api.ap-synapse.com/auth/google",
             {
                 method: "POST",
 

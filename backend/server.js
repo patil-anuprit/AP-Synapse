@@ -342,7 +342,7 @@ app.post("/chat", async (req, res) => {
             );
 
             const imageUrl =
-                `https://ap-synapse-backend.onrender.com/image?prompt=${encodeURIComponent(message)}`;
+                `https://api.ap-synapse.com/image?prompt=${encodeURIComponent(message)}`;
 
             return res.json({
                 type: "image",

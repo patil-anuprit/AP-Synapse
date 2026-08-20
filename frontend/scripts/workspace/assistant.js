@@ -623,7 +623,7 @@ voiceCards.forEach(card => {
 
             const response =
                 await fetch(
-                    "https://ap-synapse-backend.onrender.com/chat",
+                    "https://api.ap-synapse.com/chat",
                     {
                         method: "POST",
 
@@ -1397,3 +1397,4 @@ function updateLiveTalkStatus(
     );
 
 })();
+

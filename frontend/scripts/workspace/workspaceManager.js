@@ -216,7 +216,7 @@ if (runAutomationBtn) {
 
                 const response =
                     await fetch(
-                        "https://ap-synapse-backend.onrender.com/chat",
+                        "https://api.ap-synapse.com/chat",
                         {
 
                             method: "POST",
@@ -337,7 +337,7 @@ if (codeGenerateBtn) {
 
                 const response =
                     await fetch(
-                        "https://ap-synapse-backend.onrender.com/chat",
+                        "https://api.ap-synapse.com/chat",
                         {
 
                             method: "POST",
@@ -979,7 +979,7 @@ async function uploadDocument(file) {
 
         const response =
             await fetch(
-                "https://ap-synapse-backend.onrender.com/upload",
+                "https://api.ap-synapse.com/upload",
                 {
                     method: "POST",
                     body: formData
@@ -1553,7 +1553,7 @@ if (documentsFileInput) {
 
                 const response =
                     await fetch(
-                        "https://ap-synapse-backend.onrender.com/upload",
+                        "https://api.ap-synapse.com/upload",
                         {
                             method: "POST",
 
@@ -1763,7 +1763,7 @@ async function askDocumentQuestion() {
 
         const response =
             await fetch(
-                "https://ap-synapse-backend.onrender.com/chat",
+                "https://api.ap-synapse.com/chat",
                 {
 
                     method: "POST",
@@ -1995,4 +1995,5 @@ function showDocumentToast(message) {
     }, 2500);
 
 }
+
 

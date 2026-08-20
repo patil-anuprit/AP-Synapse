@@ -1,4 +1,4 @@
-﻿import { getSessionId } from "./session.js";
+import { getSessionId } from "./session.js";
 import {
     saveProject
 } from "./projects.js";
@@ -9,7 +9,7 @@ import {
     truncateConversation
 } from "./workspace/history.js";
 
-console.log("✅ chat.js loaded");
+console.log("? chat.js loaded");
 console.log("PAGE LOADED:", Date.now());
 console.log("STEP 1");
 const input = document.getElementById("userInput");
@@ -31,7 +31,7 @@ let currentConversationId =
     window.currentConversationId = id;
 
     console.log(
-        "🔄 Active conversation:",
+        "?? Active conversation:",
         currentConversationId
     );
 
@@ -66,7 +66,7 @@ function ensureConversation() {
     currentConversationId = conversation.id;
 
     console.log(
-        "📚 Active conversation:",
+        "?? Active conversation:",
         currentConversationId
     );
 
@@ -228,7 +228,7 @@ function getCurrentConversationMessages() {
 
 }
 // ============================================================
-// AP SYNAPSE — USER MESSAGE ACTIONS
+// AP SYNAPSE � USER MESSAGE ACTIONS
 // ============================================================
 
 function createUserMessageActions(messageElement, body) {
@@ -255,7 +255,7 @@ function createUserMessageActions(messageElement, body) {
             aria-label="Copy message"
             title="Copy"
         >
-            ⧉
+            ?
         </button>
 
         <button
@@ -265,7 +265,7 @@ function createUserMessageActions(messageElement, body) {
             aria-label="Edit message"
             title="Edit"
         >
-            ✎
+            ?
         </button>
     `;
 
@@ -355,7 +355,7 @@ function createUserMessageActions(messageElement, body) {
         );
 
         showToast(
-            "Edit message — press Enter to regenerate"
+            "Edit message � press Enter to regenerate"
         );
 
     });
@@ -374,7 +374,7 @@ async function sendMessage() {
 
 
     // ============================================================
-// AP SYNAPSE — CLOSE MOBILE KEYBOARD AFTER SEND
+// AP SYNAPSE � CLOSE MOBILE KEYBOARD AFTER SEND
 // ============================================================
 
 if (
@@ -402,7 +402,7 @@ if (
     ) {
 
         console.log(
-            "✏️ Regenerating from edited message:",
+            "?? Regenerating from edited message:",
             editState
         );
 
@@ -512,7 +512,7 @@ chatWindow.style.setProperty(
 
 
     // =====================================
-    // SAVE USER MESSAGE — EXACTLY ONCE
+    // SAVE USER MESSAGE � EXACTLY ONCE
     // =====================================
 
     saveHistoryMessage(
@@ -523,7 +523,7 @@ chatWindow.style.setProperty(
 
 
     // =====================================
-    // SHOW USER MESSAGE — EXACTLY ONCE
+    // SHOW USER MESSAGE � EXACTLY ONCE
     // =====================================
 
     addMessage(
@@ -547,7 +547,7 @@ chatWindow.style.setProperty(
         );
 
     console.log(
-        "🖼️ Frontend image request detected:",
+        "??? Frontend image request detected:",
         isImageRequest,
         "|",
         message
@@ -656,7 +656,7 @@ const thinkingInterval =
 
 
         const response = await fetch(
-            "https://ap-synapse-backend.onrender.com/chat",
+            "https://api.ap-synapse.com/chat",
             {
                 method: "POST",
 
@@ -850,7 +850,7 @@ if (contentType.includes("application/json")) {
 
 
         // =====================================
-// READ STREAM — OPTIMIZED
+// READ STREAM � OPTIMIZED
 // =====================================
 
 let rawText = "";
@@ -858,7 +858,7 @@ let renderScheduled = false;
 let streamFinished = false;
 
 // ============================================================
-// AP SYNAPSE — STRUCTURED WEB SOURCES
+// AP SYNAPSE � STRUCTURED WEB SOURCES
 // ============================================================
 
 let apSynapseSources = [];
@@ -878,7 +878,7 @@ const renderAIMessage = () => {
 
     aiMessage.innerHTML =
         marked.parse(rendered) +
-        '<span class="typingCursor">▋</span>';
+        '<span class="typingCursor">?</span>';
 
     // Make every rendered source URL visibly clickable.
     aiMessage
@@ -970,7 +970,7 @@ if (
                     .slice(0, 5);
 
             console.log(
-                "🔗 AP SYNAPSE SOURCES RECEIVED:",
+                "?? AP SYNAPSE SOURCES RECEIVED:",
                 apSynapseSources.length
             );
 
@@ -979,7 +979,7 @@ if (
     } catch (sourceError) {
 
         console.warn(
-            "⚠️ Source payload parsing failed:",
+            "?? Source payload parsing failed:",
             sourceError
         );
 
@@ -1017,7 +1017,7 @@ if (finalChunk) {
 }
 
 // =====================================
-// AP SYNAPSE — FINAL RESPONSE RENDER
+// AP SYNAPSE � FINAL RESPONSE RENDER
 // =====================================
 
 function renderLinks(text) {
@@ -1036,7 +1036,7 @@ function renderLinks(text) {
                     rel="noopener noreferrer"
                     class="ap-source-link"
                 >
-                    <span class="ap-source-link-icon">↗</span>
+                    <span class="ap-source-link-icon">?</span>
                     <span class="ap-source-link-text">
                         ${cleanUrl}
                     </span>
@@ -1047,7 +1047,7 @@ function renderLinks(text) {
 }
 
 // ============================================================
-// AP SYNAPSE — PREMIUM WEB SOURCE CARDS
+// AP SYNAPSE � PREMIUM WEB SOURCE CARDS
 // ============================================================
 
 function renderAPSynapseSources(sources) {
@@ -1109,7 +1109,7 @@ function renderAPSynapseSources(sources) {
                             <span class="ap-source-domain">
                                 ${domain}
                                 <span class="ap-source-arrow">
-                                    ↗
+                                    ?
                                 </span>
                             </span>
 
@@ -1140,7 +1140,7 @@ function renderAPSynapseSources(sources) {
 
             <div class="ap-sources-heading">
                 <span class="ap-sources-heading-mark">
-                    ◈
+                    ?
                 </span>
 
                 <span>
@@ -1229,7 +1229,7 @@ scrollChatToBottom(true);
 
 
         // =====================================
-        // SAVE COMPLETE AI RESPONSE — ONCE
+        // SAVE COMPLETE AI RESPONSE � ONCE
         // =====================================
 
         const completeAIResponse =
@@ -1266,10 +1266,10 @@ scrollChatToBottom(true);
 
     catch (error) {
 
-        console.error("🔥 FULL AP SYNAPSE ERROR:", error);
-        console.error("🔥 ERROR NAME:", error?.name);
-        console.error("🔥 ERROR MESSAGE:", error?.message);
-        console.error("🔥 ERROR STACK:", error?.stack);
+        console.error("?? FULL AP SYNAPSE ERROR:", error);
+        console.error("?? ERROR NAME:", error?.name);
+        console.error("?? ERROR MESSAGE:", error?.message);
+        console.error("?? ERROR STACK:", error?.stack);
 
         console.error(
             "AP SYNAPSE ERROR:",
@@ -1283,11 +1283,11 @@ scrollChatToBottom(true);
            .getElementById("thinking")
            ?.remove();
 
-        console.log("⚠️ CHAT ERROR RESPONSE:", error?.status || "unknown");
+        console.log("?? CHAT ERROR RESPONSE:", error?.status || "unknown");
 
         addMessage(
             "ai-message",
-            "⚠️ Unable to connect to AP Synapse."
+            "?? Unable to connect to AP Synapse."
         );
 
     }
@@ -1380,11 +1380,11 @@ Project created successfully.
 
 What would you like to do first?
 
-• Plan the project
-• Research
-• Write code
-• Create documentation
-• Build a roadmap`
+� Plan the project
+� Research
+� Write code
+� Create documentation
+� Build a roadmap`
 
     );
 
@@ -1412,7 +1412,7 @@ if (SpeechRecognition && voiceBtn) {
 
     voiceBtn.addEventListener("click", () => {
 
-        voiceBtn.innerHTML = "🎙️";
+        voiceBtn.innerHTML = "???";
 
         recognition.start();
 
@@ -1428,7 +1428,7 @@ if (SpeechRecognition && voiceBtn) {
 
     recognition.onend = () => {
 
-        voiceBtn.innerHTML = "🎤";
+        voiceBtn.innerHTML = "??";
 
         if (input.value.trim()) {
 
@@ -1440,7 +1440,7 @@ if (SpeechRecognition && voiceBtn) {
 
     recognition.onerror = () => {
 
-        voiceBtn.innerHTML = "🎤";
+        voiceBtn.innerHTML = "??";
 
         showToast("Voice recognition failed.");
 
@@ -1464,7 +1464,7 @@ if (imageUpload) {
 
 addMessage(
 "user-message",
-`📷 **${file.name}**
+`?? **${file.name}**
 
 <img src="${url}" style="max-width:250px;border-radius:12px;margin-top:10px;">`
 );
@@ -1507,17 +1507,17 @@ addMessage(
 
 "ai-message",
 
-`🎨 Image generation is ready.
+`?? Image generation is ready.
 
 Type something like:
 
-• Create a futuristic city
+� Create a futuristic city
 
-• Draw a solar system
+� Draw a solar system
 
-• Generate a medical diagram
+� Generate a medical diagram
 
-• Create an AI logo`
+� Create an AI logo`
 
 );
 
@@ -1553,8 +1553,8 @@ webBtn.addEventListener("click", () => {
 
     showToast(
         window.webMode
-            ? "🌐 Web Search Enabled"
-            : "🌐 Web Search Disabled"
+            ? "?? Web Search Enabled"
+            : "?? Web Search Disabled"
     );
 
 });
@@ -1580,7 +1580,7 @@ function downloadImage(url){
 }
 
 // ============================================================
-// AP SYNAPSE — PREMIUM UPLOADED FILE MESSAGE
+// AP SYNAPSE � PREMIUM UPLOADED FILE MESSAGE
 // ============================================================
 
 function getUploadType(file) {
@@ -1647,7 +1647,7 @@ function createUploadedFileMessage(file) {
                 <div class="ap-upload-header">
 
                     <div class="ap-upload-icon">
-                        ◈
+                        ?
                     </div>
 
                     <div class="ap-upload-title-group">
@@ -1681,7 +1681,7 @@ function createUploadedFileMessage(file) {
                     </span>
 
                     <span class="ap-upload-check">
-                        ✓
+                        ?
                     </span>
 
                 </div>
@@ -1730,7 +1730,7 @@ function createUploadedFileMessage(file) {
                 </div>
 
                 <div class="ap-upload-check">
-                    ✓
+                    ?
                 </div>
 
             </div>
@@ -1770,7 +1770,7 @@ function createUploadedFileMessage(file) {
                 </div>
 
                 <div class="ap-upload-check">
-                    ✓
+                    ?
                 </div>
 
             </div>
@@ -1796,14 +1796,14 @@ function createUploadedFileMessage(file) {
 }
 
 // ============================================================
-// AP SYNAPSE — PREMIUM FILE UPLOAD
+// AP SYNAPSE � PREMIUM FILE UPLOAD
 // ============================================================
 
 console.log("ABOUT TO REGISTER FILE EVENT");
 
 fileInput.addEventListener("change", async (event) => {
 
-    console.log("✅ FILE SELECTED");
+    console.log("? FILE SELECTED");
 
     const file =
         event.target.files[0];
@@ -1887,7 +1887,7 @@ fileInput.addEventListener("change", async (event) => {
 
         const response =
             await fetch(
-                "https://ap-synapse-backend.onrender.com/upload",
+                "https://api.ap-synapse.com/upload",
                 {
                     method: "POST",
 
@@ -1915,7 +1915,7 @@ fileInput.addEventListener("change", async (event) => {
 
 
         console.log(
-            "📄 UPLOAD RESPONSE:",
+            "?? UPLOAD RESPONSE:",
             data
         );
 
@@ -1955,14 +1955,14 @@ fileInput.addEventListener("change", async (event) => {
 
 
             console.log(
-                "🖼️ Optimized image data stored."
+                "??? Optimized image data stored."
             );
 
         }
 
 
         console.log(
-            "📚 Document stored."
+            "?? Document stored."
         );
 
 
@@ -1991,7 +1991,7 @@ fileInput.addEventListener("change", async (event) => {
 
         addMessage(
             "ai-message",
-            `✅ **${confirmation}**
+            `? **${confirmation}**
 
 You can ask me anything about it.`
         );
@@ -2028,14 +2028,14 @@ You can ask me anything about it.`
     catch (err) {
 
         console.error(
-            "🔥 UPLOAD ERROR:",
+            "?? UPLOAD ERROR:",
             err
         );
 
 
         addMessage(
             "ai-message",
-            `❌ **Upload failed.**
+            `? **Upload failed.**
 
 ${err.message || "Unable to upload the file."}`
         );
@@ -2059,7 +2059,7 @@ document.addEventListener("click", (e) => {
         e.target
         .closest(".message-body")
         .innerText
-        .replace("🔊 Read Aloud","");
+        .replace("?? Read Aloud","");
 
     speechSynthesis.cancel();
 
@@ -2199,8 +2199,8 @@ document.body.classList.toggle("light-mode");
 
 showToast(
 dark
-? "☀ Light Mode Enabled"
-: "🌙 Dark Mode Enabled"
+? "? Light Mode Enabled"
+: "?? Dark Mode Enabled"
 );
 
 });
@@ -2282,8 +2282,8 @@ if(!e.target.classList.contains("copyBtn")) return;
 const text=e.target
 .closest(".message-body")
 .innerText
-.replace("📋 Copy","")
-.replace("🔊 Read Aloud","");
+.replace("?? Copy","")
+.replace("?? Read Aloud","");
 
 navigator.clipboard.writeText(text);
 
@@ -2308,8 +2308,8 @@ showToast(
 }
 
 /* =========================================================
-   AP SYNAPSE — PREMIUM MESSAGE CONTROLS
-   Copy • Share • Regenerate • Timestamps • Tooltips
+   AP SYNAPSE � PREMIUM MESSAGE CONTROLS
+   Copy � Share � Regenerate � Timestamps � Tooltips
    ========================================================= */
 
 (() => {
@@ -2374,7 +2374,7 @@ showToast(
                 button.innerHTML;
 
             button.innerHTML =
-                `<span class="ap-action-icon">✓</span>
+                `<span class="ap-action-icon">?</span>
                  <span>Copied</span>`;
 
             setTimeout(() => {
@@ -2442,7 +2442,7 @@ showToast(
             button.innerHTML;
 
         button.innerHTML =
-            `<span class="ap-action-icon">✓</span>
+            `<span class="ap-action-icon">?</span>
              <span>Copied</span>`;
 
         setTimeout(() => {
@@ -2486,7 +2486,7 @@ showToast(
                 title="Copy response"
                 aria-label="Copy response"
             >
-                <span class="ap-action-icon">⧉</span>
+                <span class="ap-action-icon">?</span>
                 <span class="ap-action-label">Copy</span>
             </button>
 
@@ -2498,7 +2498,7 @@ showToast(
                 title="Share response"
                 aria-label="Share response"
             >
-                <span class="ap-action-icon">↗</span>
+                <span class="ap-action-icon">?</span>
                 <span class="ap-action-label">Share</span>
             </button>
 
@@ -2632,7 +2632,7 @@ showToast(
 })();
 
 // ============================================================
-// AP SYNAPSE — CONVERSATION NAVIGATOR
+// AP SYNAPSE � CONVERSATION NAVIGATOR
 // ============================================================
 
 function getConversationMessages() {
@@ -2664,7 +2664,7 @@ function getMessageLabel(message, index) {
     }
 
     return text.length > 52
-        ? `${text.slice(0, 52)}…`
+        ? `${text.slice(0, 52)}�`
         : text;
 }
 
@@ -2796,7 +2796,7 @@ function escapeHTML(value) {
 }
 
 // ============================================================
-// AP SYNAPSE — JUMP TO LATEST
+// AP SYNAPSE � JUMP TO LATEST
 // ============================================================
 
 const jumpToLatestBtn =
@@ -2853,3 +2853,4 @@ jumpToLatestBtn?.addEventListener(
 
     }
 );
+

@@ -18,7 +18,7 @@ const button = document.getElementById("sendBtn");
 const chat = document.getElementById("chatWindow");
 
 const BACKEND_URL =
-    "https://ap-synapse-backend.onrender.com";
+    "https://api.ap-synapse.com";
 
 async function sendMessage() {
 

@@ -1,0 +1,2495 @@
+.sidebar{
+
+position:relative;
+
+width:290px;
+
+height:100vh;
+
+background:#0d0d0d;
+
+border-right:1px solid rgba(255,255,255,.06);
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:space-between;
+
+padding:26px;
+
+overflow:hidden;
+
+backdrop-filter:blur(24px);
+
+}
+
+.sidebar::before{
+
+content:"";
+
+position:absolute;
+
+top:0;
+
+left:0;
+
+width:100%;
+
+height:1px;
+
+background:linear-gradient(
+
+90deg,
+
+transparent,
+
+rgba(212,175,55,.18),
+
+transparent
+
+);
+
+}
+
+.sidebar::after{
+
+content:"";
+
+position:absolute;
+
+bottom:0;
+
+left:0;
+
+width:100%;
+
+height:1px;
+
+background:linear-gradient(
+
+90deg,
+
+transparent,
+
+rgba(212,175,55,.18),
+
+transparent
+
+);
+
+}
+
+@keyframes fadeSlide{
+
+from{
+
+opacity:0;
+
+transform:translateY(20px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:none;
+
+}
+
+}
+
+.sidebar-header{
+
+display:flex;
+
+flex-direction:column;
+
+gap:22px;
+
+}
+
+.brand{
+
+display:flex;
+
+align-items:center;
+
+gap:14px;
+
+}
+
+.brand-mark{
+
+width:54px;
+
+height:54px;
+
+border-radius:18px;
+
+background:linear-gradient(145deg,#d4af37,#b89427);
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:22px;
+
+font-weight:700;
+
+color:#111;
+
+box-shadow:0 12px 30px rgba(212,175,55,.28);
+
+}
+
+.brand-text h2{
+
+margin:0;
+
+font-size:21px;
+
+font-weight:700;
+
+color:#fff;
+
+}
+
+.brand-text span{
+
+font-size:12px;
+
+color:#8a8a8a;
+
+letter-spacing:.08em;
+
+text-transform:uppercase;
+
+}
+
+.new-chat-btn{
+
+height:52px;
+
+border:none;
+
+border-radius:16px;
+
+background:#1b1b1b;
+
+color:#fff;
+
+font-size:15px;
+
+font-weight:600;
+
+cursor:pointer;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+gap:10px;
+
+transition:
+
+background .28s,
+
+color .28s,
+
+transform .28s,
+
+box-shadow .28s;
+
+}
+
+.new-chat-btn:hover{
+
+background:#232323;
+
+transform:translateY(-2px);
+
+box-shadow:
+
+0 10px 40px rgba(212,175,55,.12);
+
+}
+
+.sidebar-search input{
+
+width:100%;
+
+height:46px;
+
+border:none;
+
+outline:none;
+
+background:#171717;
+
+border-radius:14px;
+
+padding:0 18px;
+
+color:#fff;
+
+font-size:14px;
+
+}
+
+.sidebar-search input::placeholder{
+
+color:#666;
+
+}
+
+.sidebar-group{
+
+margin-top:28px;
+
+animation:
+fadeSlide .55s cubic-bezier(.22,.61,.36,1);
+
+}
+
+.sidebar-group h4{
+
+font-size:11px;
+
+font-weight:700;
+
+letter-spacing:.15em;
+
+color:#666;
+
+margin-bottom:16px;
+
+}
+
+.history-item{
+
+width:100%;
+
+height:46px;
+
+margin-bottom:8px;
+
+border:none;
+
+background:transparent;
+
+border-radius:12px;
+
+text-align:left;
+
+padding:0 16px;
+
+color:#cfcfcf;
+
+cursor:pointer;
+
+transition:
+
+background .28s ease,
+
+color .28s ease,
+
+transform .28s ease,
+
+box-shadow .28s ease;
+
+font-size:14px;
+
+}
+
+.history-item:hover{
+
+background:#191919;
+
+color:#fff;
+
+}
+
+.history-item.active{
+
+background:#1d1d1d;
+
+color:#fff;
+
+border-left:2px solid #d4af37;
+
+padding-left:14px;
+
+}
+
+.sidebar nav{
+
+display:flex;
+
+flex-direction:column;
+
+gap:8px;
+
+}
+
+.sidebar nav a{
+
+text-decoration:none;
+
+color:#b8b8b8;
+
+padding:12px 16px;
+
+border-radius:12px;
+
+transition:
+
+background .28s ease,
+
+color .28s ease,
+
+transform .28s ease,
+
+box-shadow .28s ease;
+
+font-size:14px;
+
+}
+
+.sidebar nav a:hover{
+
+background:#1b1b1b;
+
+color:#fff;
+
+transform:translateX(5px);
+
+}
+
+.sidebar-footer{
+
+display:flex;
+
+flex-direction:column;
+
+gap:18px;
+
+}
+
+.version{
+
+padding-top:20px;
+
+border-top:1px solid rgba(255,255,255,.06);
+
+font-size:11px;
+
+letter-spacing:.08em;
+
+text-transform:uppercase;
+
+color:#666;
+
+}
+
+/* =========================================================
+   AP SYNAPSE — PREMIUM SIDEBAR SYSTEM
+   ========================================================= */
+
+.sidebar {
+    width: 255px;
+    min-width: 255px;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    padding: 26px 20px 18px;
+
+    background: rgba(14, 15, 18, .94);
+
+    border-right: 1px solid rgba(255,255,255,.07);
+}
+
+
+/* ---------------------------------------------------------
+   HEADER
+   --------------------------------------------------------- */
+
+.sidebar-header {
+    flex: 0 0 auto;
+}
+
+
+/* ---------------------------------------------------------
+   BRAND
+   --------------------------------------------------------- */
+
+.brand {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    margin: 2px 8px 28px;
+}
+
+.brand-mark {
+    width: 42px;
+    height: 42px;
+
+    flex: 0 0 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(198,166,107,.18),
+            rgba(198,166,107,.04)
+        );
+
+    border: 1px solid rgba(198,166,107,.30);
+
+    color: #c6a66b;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    box-shadow:
+        0 8px 25px rgba(198,166,107,.08);
+}
+
+.brand-text h2 {
+    margin: 0;
+
+    color: #f2f2f2;
+
+    font-size: 17px;
+    font-weight: 650;
+
+    letter-spacing: -.3px;
+}
+
+.brand-text span {
+    display: block;
+
+    margin-top: 4px;
+
+    color: rgba(255,255,255,.42);
+
+    font-size: 10px;
+
+    line-height: 1.4;
+
+    letter-spacing: 1.4px;
+
+    text-transform: uppercase;
+}
+
+
+/* ---------------------------------------------------------
+   NEW CONVERSATION
+   --------------------------------------------------------- */
+
+.new-chat-btn {
+    width: 100%;
+
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    margin-bottom: 12px;
+
+    border-radius: 14px;
+
+    border: 1px solid rgba(255,255,255,.07);
+
+    background: rgba(255,255,255,.045);
+
+    color: rgba(255,255,255,.88);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    box-shadow: none;
+
+    transform: none !important;
+}
+
+.new-chat-btn:hover {
+    background: rgba(198,166,107,.09);
+
+    border-color: rgba(198,166,107,.25);
+
+    color: #c6a66b;
+
+    transform: none !important;
+}
+
+
+/* ---------------------------------------------------------
+   SEARCH
+   --------------------------------------------------------- */
+
+.sidebar-search {
+    margin-bottom: 26px;
+}
+
+.sidebar-search input {
+    width: 100%;
+
+    height: 44px;
+
+    box-sizing: border-box;
+
+    padding: 0 14px;
+
+    border-radius: 13px;
+
+    border: 1px solid transparent;
+
+    background: rgba(255,255,255,.035);
+
+    color: #eee;
+
+    font-size: 12px;
+
+    outline: none;
+}
+
+.sidebar-search input::placeholder {
+    color: rgba(255,255,255,.32);
+}
+
+.sidebar-search input:focus {
+    border-color: rgba(198,166,107,.22);
+
+    box-shadow: none;
+}
+
+
+/* ---------------------------------------------------------
+   GROUPS
+   --------------------------------------------------------- */
+
+.sidebar-group {
+    min-width: 0;
+}
+
+.sidebar-group h4 {
+    margin: 0 9px 10px;
+
+    color: rgba(255,255,255,.30);
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.8px;
+}
+
+
+/* ---------------------------------------------------------
+   RECENT HISTORY
+   --------------------------------------------------------- */
+
+.sidebar-group:has(.history-list) {
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.history-list {
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    overflow-y: auto;
+
+    overflow-x: hidden;
+
+    padding-right: 3px;
+}
+
+.history-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.12);
+
+    border-radius: 20px;
+}
+
+
+/* ---------------------------------------------------------
+   HISTORY ITEM
+   --------------------------------------------------------- */
+
+.history-item {
+    position: relative;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 10px 10px;
+
+    margin-bottom: 3px;
+
+    border-radius: 11px;
+
+    overflow: hidden;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        border-color .2s ease;
+}
+
+.history-item:hover {
+    background: rgba(255,255,255,.045);
+}
+
+.history-item.active {
+    background: rgba(198,166,107,.075);
+
+    box-shadow:
+        inset 2px 0 0 #c6a66b;
+}
+
+.history-item-content {
+    min-width: 0;
+
+    padding-right: 22px;
+}
+
+.history-title {
+    width: 100%;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+    color: rgba(255,255,255,.78);
+
+    font-size: 12px;
+
+    line-height: 1.4;
+}
+
+.history-preview {
+    width: 100%;
+
+    margin-top: 3px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+    color: rgba(255,255,255,.30);
+
+    font-size: 10px;
+
+    line-height: 1.4;
+}
+
+.history-time {
+    margin-top: 3px;
+
+    color: rgba(255,255,255,.20);
+
+    font-size: 9px;
+}
+
+.history-delete {
+    position: absolute;
+
+    right: 7px;
+    top: 50%;
+
+    width: 24px;
+    height: 24px;
+
+    transform: translateY(-50%) !important;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    color: rgba(255,255,255,.22);
+
+    opacity: 0;
+
+    cursor: pointer;
+}
+
+.history-item:hover .history-delete {
+    opacity: 1;
+}
+
+.history-delete:hover {
+    color: #c6a66b;
+
+    background: rgba(255,255,255,.06);
+
+    transform:
+        translateY(-50%) !important;
+}
+
+.history-empty {
+    padding: 12px 9px;
+
+    color: rgba(255,255,255,.25);
+
+    font-size: 11px;
+}
+
+
+/* ---------------------------------------------------------
+   WORKSPACE NAV
+   --------------------------------------------------------- */
+
+.sidebar-group nav {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+.sidebar-group nav a {
+    display: flex;
+
+    align-items: center;
+
+    min-height: 36px;
+
+    padding: 0 10px;
+
+    border-radius: 10px;
+
+    color: rgba(255,255,255,.52);
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    transition:
+        background .2s ease,
+        color .2s ease;
+}
+
+.sidebar-group nav a:hover {
+    background: rgba(255,255,255,.045);
+
+    color: rgba(255,255,255,.90);
+
+    transform: none !important;
+}
+
+.sidebar-group nav a.active {
+    background: rgba(198,166,107,.08);
+
+    color: #c6a66b;
+
+    box-shadow:
+        inset 2px 0 0 #c6a66b;
+}
+
+
+/* ---------------------------------------------------------
+   FOOTER
+   --------------------------------------------------------- */
+
+.sidebar-footer {
+    flex: 0 0 auto;
+
+    margin-top: 14px;
+
+    padding-top: 12px;
+
+    border-top: 1px solid rgba(255,255,255,.06);
+}
+
+.sidebar-footer nav {
+    display: flex;
+
+    gap: 4px;
+}
+
+.sidebar-footer nav a {
+    flex: 1;
+
+    padding: 8px;
+
+    color: rgba(255,255,255,.30);
+
+    font-size: 10px;
+
+    text-align: center;
+
+    text-decoration: none;
+
+    border-radius: 8px;
+}
+
+.sidebar-footer nav a:hover {
+    color: rgba(255,255,255,.65);
+
+    background: rgba(255,255,255,.035);
+}
+
+.version {
+    margin-top: 8px;
+
+    color: rgba(255,255,255,.18);
+
+    font-size: 9px;
+
+    text-align: center;
+
+    letter-spacing: .8px;
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 800px) {
+
+    .sidebar {
+        width: 220px;
+        min-width: 220px;
+
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — PREMIUM HISTORY PANEL
+   ========================================================= */
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+
+    min-height: 0;
+
+    max-height: calc(100vh - 420px);
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding-right: 6px;
+
+    scrollbar-width: thin;
+}
+
+.history-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.history-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+    background: rgba(198,166,107,.25);
+    border-radius: 20px;
+}
+
+.history-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(198,166,107,.55);
+}
+
+
+/* Individual conversation */
+
+.history-item {
+    position: relative;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 11px 12px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+
+    border: 1px solid transparent;
+}
+
+.history-item:hover {
+    background: rgba(255,255,255,.045);
+
+    border-color: rgba(198,166,107,.12);
+
+    transform: translateX(2px);
+}
+
+.history-item.active {
+    background: rgba(198,166,107,.075);
+
+    border-color: rgba(198,166,107,.20);
+}
+
+.history-item-content {
+    min-width: 0;
+
+    padding-right: 24px;
+}
+
+.history-title {
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: rgba(255,255,255,.82);
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.history-preview {
+    margin-top: 4px;
+
+    font-size: 11px;
+
+    line-height: 1.4;
+
+    color: rgba(255,255,255,.38);
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.history-time {
+    margin-top: 5px;
+
+    font-size: 9px;
+
+    color: rgba(198,166,107,.55);
+}
+
+.history-delete {
+    position: absolute;
+
+    right: 8px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 22px;
+    height: 22px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background: transparent;
+
+    color: rgba(255,255,255,.25);
+
+    cursor: pointer;
+}
+
+.history-delete:hover {
+    color: #c6a66b;
+
+    background: rgba(198,166,107,.08);
+
+    transform: translateY(-50%) !important;
+}
+
+.history-empty {
+    padding: 20px 10px;
+
+    text-align: center;
+
+    color: rgba(255,255,255,.30);
+
+    font-size: 12px;
+}
+
+/* ============================================================
+   AP SYNAPSE — FINAL SIDEBAR HISTORY LAYOUT
+   Keeps navigation at the top and history below it.
+   Does NOT change sidebar functionality.
+   ============================================================ */
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Workspace + Settings/Profile area stays above history */
+.sidebar > .sidebar-content,
+.sidebar > .sidebar-main,
+.sidebar > .sidebar-nav {
+    flex-shrink: 0;
+}
+
+/* History becomes the flexible lower section */
+.sidebar .history,
+.sidebar #history,
+.sidebar .history-container,
+.sidebar .conversation-history,
+.sidebar .recent-conversations {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Keep history visually below the fixed navigation */
+.sidebar .history,
+.sidebar #history,
+.sidebar .history-container,
+.sidebar .conversation-history,
+.sidebar .recent-conversations {
+    margin-top: 12px;
+}
+
+/* Premium scrollbar */
+.sidebar .history::-webkit-scrollbar,
+.sidebar #history::-webkit-scrollbar,
+.sidebar .history-container::-webkit-scrollbar,
+.sidebar .conversation-history::-webkit-scrollbar,
+.sidebar .recent-conversations::-webkit-scrollbar {
+    width: 5px;
+}
+
+.sidebar .history::-webkit-scrollbar-thumb,
+.sidebar #history::-webkit-scrollbar-thumb,
+.sidebar .history-container::-webkit-scrollbar-thumb,
+.sidebar .conversation-history::-webkit-scrollbar-thumb,
+.sidebar .recent-conversations::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgba(255,255,255,.14);
+}
+
+.sidebar .history::-webkit-scrollbar-track,
+.sidebar #history::-webkit-scrollbar-track,
+.sidebar .history-container::-webkit-scrollbar-track,
+.sidebar .conversation-history::-webkit-scrollbar-track,
+.sidebar .recent-conversations::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* ============================================================
+   AP SYNAPSE — SIDEBAR HISTORY VISIBILITY
+   Keep navigation first, history below it.
+   ============================================================ */
+
+.sidebar {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+}
+
+/* Main sidebar navigation stays at the top */
+.sidebar .sidebar-nav,
+.sidebar .workspace-nav,
+.sidebar .nav-section,
+.sidebar .sidebar-menu {
+    flex: 0 0 auto !important;
+}
+
+/* History area */
+.sidebar .history,
+.sidebar .history-section,
+.sidebar .conversation-history,
+.sidebar .chat-history,
+.sidebar #historyList,
+.sidebar .history-list {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    width: 100% !important;
+}
+
+/* Make sure history does not disappear behind other sections */
+.sidebar .history *,
+.sidebar .history-section *,
+.sidebar .conversation-history *,
+.sidebar .chat-history *,
+.sidebar #historyList *,
+.sidebar .history-list * {
+    visibility: visible;
+}
+
+/* Clean scrollbar */
+.sidebar .history::-webkit-scrollbar,
+.sidebar .history-section::-webkit-scrollbar,
+.sidebar .conversation-history::-webkit-scrollbar,
+.sidebar .chat-history::-webkit-scrollbar,
+.sidebar #historyList::-webkit-scrollbar,
+.sidebar .history-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.sidebar .history::-webkit-scrollbar-thumb,
+.sidebar .history-section::-webkit-scrollbar-thumb,
+.sidebar .conversation-history::-webkit-scrollbar-thumb,
+.sidebar .chat-history::-webkit-scrollbar-thumb,
+.sidebar #historyList::-webkit-scrollbar-thumb,
+.sidebar .history-list::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+}
+
+/* Prevent the history container from being pushed outside the sidebar */
+.sidebar > * {
+    min-width: 0;
+}
+
+/* ============================================================
+   AP SYNAPSE — FINAL DESKTOP SIDEBAR HISTORY VISIBILITY FIX
+   Keeps existing sidebar logic untouched.
+   Navigation first → history below → history scrolls independently.
+   ============================================================ */
+
+@media (min-width: 769px) {
+
+    /* Main sidebar becomes a stable vertical workspace */
+    .sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100vh !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Header / top navigation remain natural height */
+    .sidebar-header {
+        flex: 0 0 auto !important;
+    }
+
+    /* Workspace / navigation section stays above history */
+    .sidebar > .sidebar-group:not(.recent-group) {
+        flex: 0 0 auto !important;
+    }
+
+    /* Recent/history section occupies ALL remaining sidebar space */
+    .sidebar .recent-group {
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        height: auto !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+        overflow: hidden !important;
+
+        position: relative !important;
+        z-index: 5 !important;
+    }
+
+    /* RECENT heading stays visible */
+    .sidebar .recent-group > *:not(.history-list) {
+        flex: 0 0 auto !important;
+    }
+
+    /* History itself gets the remaining space */
+    .sidebar .history-list {
+        display: flex !important;
+        flex-direction: column !important;
+
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        height: auto !important;
+        max-height: none !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        position: relative !important;
+        z-index: 6 !important;
+
+        scrollbar-width: thin;
+        box-sizing: border-box !important;
+    }
+
+    /* Every history item remains visible and clickable */
+    .sidebar .history-list .history-item {
+        flex: 0 0 auto !important;
+
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        position: relative !important;
+        z-index: 7 !important;
+
+        pointer-events: auto !important;
+    }
+
+    /* Prevent another rule from collapsing the history area */
+    .sidebar .recent-group,
+    .sidebar .recent-group .history-list,
+    .sidebar .recent-group .history-item {
+        transform: none !important;
+    }
+
+    /* Keep navigation above history without covering it */
+    .sidebar .sidebar-header,
+    .sidebar > .sidebar-group:not(.recent-group) {
+        position: relative !important;
+        z-index: 20 !important;
+    }
+}
+
+/* ============================================================
+   AP SYNAPSE — HISTORY CONTAINER FINAL VISIBILITY OVERRIDE
+   ============================================================ */
+
+@media (min-width: 769px) {
+
+    .sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100vh !important;
+        min-height: 100vh !important;
+        overflow: hidden !important;
+    }
+
+    /* Navigation occupies only its natural height */
+    .sidebar-header {
+        flex: 0 0 auto !important;
+    }
+
+    /* Every top navigation group remains above history */
+    .sidebar > .sidebar-group:not(.recent-group) {
+        flex: 0 0 auto !important;
+        height: auto !important;
+        min-height: auto !important;
+        max-height: none !important;
+    }
+
+    /* ========================================================
+       RECENT SECTION — FORCE IT TO EXIST
+       ======================================================== */
+
+    .sidebar > .sidebar-group.recent-group {
+        display: flex !important;
+        flex-direction: column !important;
+
+        flex: 1 1 0% !important;
+
+        height: auto !important;
+        min-height: 1px !important;
+        max-height: none !important;
+
+        overflow: hidden !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        position: relative !important;
+        box-sizing: border-box !important;
+    }
+
+    /* ========================================================
+       HISTORY — TAKE ALL REMAINING SPACE
+       ======================================================== */
+
+    .sidebar > .sidebar-group.recent-group > .history-list {
+        display: flex !important;
+        flex-direction: column !important;
+
+        flex: 1 1 auto !important;
+
+        height: auto !important;
+        min-height: 1px !important;
+        max-height: none !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        position: relative !important;
+        box-sizing: border-box !important;
+
+        pointer-events: auto !important;
+    }
+
+    /* History entries */
+    .sidebar .history-list > .history-item {
+        display: flex !important;
+        flex: 0 0 auto !important;
+
+        min-height: 58px !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        pointer-events: auto !important;
+    }
+
+    /* Don't let a hidden/collapsed parent kill the history */
+    .sidebar .recent-group,
+    .sidebar .recent-group .history-list {
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
+
+/* ============================================================
+   AP SYNAPSE — HISTORY FORCE-REVEAL
+   FINAL DESKTOP OVERRIDE
+   ============================================================ */
+
+@media (min-width: 769px) {
+
+    .sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100vh !important;
+        min-height: 100vh !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Do NOT let the previous flex layout collapse RECENT */
+    .sidebar .recent-group {
+        display: flex !important;
+        flex-direction: column !important;
+
+        flex: 0 0 360px !important;
+
+        width: 100% !important;
+        height: 360px !important;
+        min-height: 360px !important;
+        max-height: 360px !important;
+
+        margin-top: 12px !important;
+
+        overflow: hidden !important;
+
+        position: relative !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    /* History list gets the remaining recent-group space */
+    .sidebar .recent-group .history-list {
+        display: flex !important;
+        flex-direction: column !important;
+
+        flex: 1 1 auto !important;
+
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        position: relative !important;
+    }
+
+    .sidebar .recent-group .history-item {
+        display: flex !important;
+        flex: 0 0 auto !important;
+
+        width: 100% !important;
+        min-height: 58px !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
+
+/* ============================================================
+   AP SYNAPSE — FINAL HISTORY VISIBILITY
+   ============================================================ */
+
+@media (min-width: 769px) {
+
+    .sidebar {
+        height: 100vh !important;
+        min-height: 0 !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        display: block !important;
+    }
+
+    /* Existing navigation stays normal */
+    .sidebar > .ap-sidebar-topbar,
+    .sidebar > .sidebar-header,
+    .sidebar > .sidebar-group,
+    .sidebar > .sidebar-footer {
+        flex: none !important;
+    }
+
+    /* HISTORY */
+    .sidebar > .recent-group {
+        display: flex !important;
+        flex-direction: column !important;
+
+        width: 100% !important;
+
+        height: 360px !important;
+        min-height: 360px !important;
+        max-height: 360px !important;
+
+        flex: none !important;
+
+        overflow: hidden !important;
+    }
+
+    .sidebar > .recent-group .history-list {
+        display: flex !important;
+        flex-direction: column !important;
+
+        width: 100% !important;
+
+        height: 100% !important;
+        min-height: 0 !important;
+        max-height: none !important;
+
+        flex: 1 1 auto !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    .sidebar > .recent-group .history-item {
+        display: flex !important;
+        flex: none !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
+
+/* AP SYNAPSE — FINAL HISTORY OVERRIDE */
+
+@media (min-width: 769px) {
+    .sidebar > .recent-group {
+        flex: 0 0 360px !important;
+        height: 360px !important;
+        min-height: 360px !important;
+        max-height: 360px !important;
+        overflow: hidden !important;
+    }
+
+    .sidebar > .recent-group > .history-list,
+    .sidebar > .recent-group .history-list {
+        flex: 1 1 auto !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .sidebar > .recent-group .history-item {
+        flex: 0 0 auto !important;
+        display: flex !important;
+    }
+}
+
+/* ============================================================
+   AP SYNAPSE — PREMIUM MOBILE SIDEBAR SCROLL
+   Native-feeling • fast • smooth • touch-first
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    /* --------------------------------------------------------
+       SIDEBAR — PRIMARY TOUCH SCROLL SURFACE
+       -------------------------------------------------------- */
+
+    .sidebar {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        /*
+         * Native momentum scrolling on supported mobile engines.
+         */
+        -webkit-overflow-scrolling: touch;
+
+        /*
+         * Keep vertical scrolling dominant.
+         */
+        touch-action: pan-y;
+
+        /*
+         * Prevent the browser from unnecessarily
+         * chaining this scroll into the page.
+         */
+        overscroll-behavior-y: contain;
+
+        /*
+         * Avoid accidental text selection while dragging.
+         */
+        -webkit-user-select: none;
+        user-select: none;
+
+        /*
+         * Smooth native scrollbar behavior.
+         */
+        scrollbar-width: thin;
+    }
+
+
+    /* --------------------------------------------------------
+       HISTORY — INDEPENDENT FAST SCROLL
+       -------------------------------------------------------- */
+
+    .sidebar .history-list {
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        -webkit-overflow-scrolling: touch;
+
+        touch-action: pan-y;
+
+        overscroll-behavior-y: contain;
+
+        scrollbar-width: thin;
+    }
+
+
+    /* --------------------------------------------------------
+       BUTTONS REMAIN EASY TO TAP
+       -------------------------------------------------------- */
+
+    .sidebar button,
+    .sidebar a,
+    .sidebar [role="button"] {
+
+        touch-action: manipulation;
+
+        -webkit-tap-highlight-color: transparent;
+    }
+
+
+    /* --------------------------------------------------------
+       HISTORY ITEMS — DON'T FIGHT THE FINGER
+       -------------------------------------------------------- */
+
+    .sidebar .history-item {
+
+        touch-action: pan-y;
+
+        -webkit-user-select: none;
+        user-select: none;
+    }
+
+
+    /* --------------------------------------------------------
+       REMOVE MOBILE SCROLLBAR VISUAL CLUTTER
+       -------------------------------------------------------- */
+
+    .sidebar::-webkit-scrollbar,
+    .sidebar .history-list::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar-track,
+    .sidebar .history-list::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb,
+    .sidebar .history-list::-webkit-scrollbar-thumb {
+        border-radius: 999px;
+    }
+}
+
+
+/* ============================================================
+   VERY SMALL PHONES
+   ============================================================ */
+
+@media (max-width: 420px) {
+
+    .sidebar {
+        touch-action: pan-y;
+        overscroll-behavior-y: contain;
+    }
+
+    .sidebar .history-list {
+        touch-action: pan-y;
+        overscroll-behavior-y: contain;
+    }
+}
+
+/* ============================================================
+   AP SYNAPSE — MOBILE SIDEBAR LAYOUT
+   Navigation first → Settings/Profile → History last
+   Native touch scrolling
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+
+        height: 100vh !important;
+        min-height: 100vh !important;
+        max-height: 100vh !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
+        overscroll-behavior-y: contain;
+    }
+
+    /* Existing navigation sections remain above history */
+    .sidebar > .sidebar-header,
+    .sidebar > .sidebar-group:not(.recent-group),
+    .sidebar > .sidebar-footer {
+        flex-shrink: 0 !important;
+    }
+
+    /* History must be a REAL section after the controls */
+    .sidebar > .recent-group {
+        order: 999 !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        flex: 0 0 360px !important;
+
+        width: 100% !important;
+        height: 360px !important;
+        min-height: 360px !important;
+        max-height: 360px !important;
+
+        overflow: hidden !important;
+    }
+
+    .sidebar > .recent-group .history-list {
+        display: flex !important;
+        flex-direction: column !important;
+
+        flex: 1 1 auto !important;
+
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
+        overscroll-behavior-y: contain;
+    }
+
+    .sidebar .history-item {
+        flex: 0 0 auto !important;
+    }
+}
+
+/* AP SYNAPSE — FINAL SIDEBAR ORDER */
+.sidebar > .recent-group {
+    order: 3 !important;
+}
+
+.sidebar > .recent-group {
+    order: 3 !important;
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL SIDEBAR ORDER & HISTORY LAYOUT
+   Buttons → History → Footer
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+    }
+
+    /* Top bar */
+    .sidebar > .ap-sidebar-topbar {
+        order: 0 !important;
+        flex: 0 0 auto !important;
+    }
+
+    /* Logo / install / new conversation area */
+    .sidebar > .sidebar-header {
+        order: 1 !important;
+        flex: 0 0 auto !important;
+    }
+
+    /* MAIN SIDEBAR BUTTONS */
+    .sidebar > .sidebar-group:not(.recent-group) {
+        order: 2 !important;
+        flex: 0 0 auto !important;
+    }
+
+    /* HISTORY — MUST COME AFTER ALL BUTTONS */
+    .sidebar > .recent-group {
+        order: 3 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 0 !important;
+        min-height: 180px !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: hidden !important;
+    }
+
+    /* Actual history scroller */
+    .sidebar > .recent-group .history-list {
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        /* Mobile-native scrolling */
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior-y: contain !important;
+        touch-action: pan-y !important;
+    }
+
+    /* Footer stays LAST */
+    .sidebar > .sidebar-footer {
+        order: 4 !important;
+        flex: 0 0 auto !important;
+    }
+}
+
+/* AP SYNAPSE — SIDEBAR HISTORY FINAL */
+.sidebar {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* Navigation section */
+.sidebar > .sidebar-group:not(.recent-group) {
+    order: 2 !important;
+    flex: 0 0 auto !important;
+}
+
+/* History section */
+.sidebar > .recent-group {
+    order: 3 !important;
+    display: flex !important;
+    flex-direction: column !important;
+
+    flex: 1 1 auto !important;
+    min-height: 160px !important;
+    height: auto !important;
+
+    overflow: hidden !important;
+}
+
+/* History scrolling itself */
+.sidebar > .recent-group > .history-list {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    -webkit-overflow-scrolling: touch !important;
+}
+
+/* Footer */
+.sidebar > .sidebar-footer {
+    order: 99 !important;
+    flex: 0 0 auto !important;
+}
+
+ /* AP SYNAPSE — MOBILE SIDEBAR TOUCH SCROLL */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        touch-action: pan-y !important;
+        overscroll-behavior: contain !important;
+    }
+
+    /* Keep navigation buttons above history */
+    .sidebar > .sidebar-group:not(.recent-group) {
+        flex: 0 0 auto !important;
+        order: 2 !important;
+    }
+
+    /* Dedicated history viewport */
+    .sidebar > .recent-group {
+        order: 3 !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        flex: 1 1 auto !important;
+        min-height: 120px !important;
+        height: auto !important;
+
+        overflow: hidden !important;
+
+        touch-action: pan-y !important;
+        overscroll-behavior: contain !important;
+    }
+
+    .sidebar > .recent-group .history-list {
+        display: flex !important;
+        flex-direction: column !important;
+
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        height: auto !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior-y: contain !important;
+
+        /* Critical mobile touch behavior */
+        touch-action: pan-y !important;
+
+        /* Prevent browser gesture interference */
+        scrollbar-width: thin;
+    }
+
+    /* History rows should scroll, not trigger accidental gestures */
+    .sidebar > .recent-group .history-item {
+        touch-action: pan-y !important;
+        user-select: none !important;
+        -webkit-user-select: none !important;
+    }
+
+    /* Keep actual controls clickable */
+    .sidebar > .recent-group button {
+        touch-action: manipulation !important;
+    }
+
+    .sidebar > .sidebar-footer {
+        order: 99 !important;
+        flex: 0 0 auto !important;
+    }
+}
+
+@media (max-width: 767px) {
+    aside.sidebar {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        touch-action: pan-y !important;
+        overscroll-behavior-y: contain !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL MOBILE SIDEBAR / HISTORY SYSTEM
+   Single source of truth for sidebar layout + scrolling
+   ========================================================= */
+
+.sidebar {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    overscroll-behavior: none !important;
+}
+
+/* Topbar */
+.sidebar > .ap-sidebar-topbar {
+    order: 0 !important;
+    flex: 0 0 auto !important;
+}
+
+/* Header / logo / user area */
+.sidebar > .sidebar-header {
+    order: 1 !important;
+    flex: 0 0 auto !important;
+}
+
+/* Main buttons — ALWAYS BEFORE HISTORY */
+.sidebar > .sidebar-group:not(.recent-group) {
+    order: 2 !important;
+    flex: 0 0 auto !important;
+    min-height: 0 !important;
+}
+
+/* =========================================================
+   HISTORY — ALWAYS BELOW BUTTONS
+   ========================================================= */
+
+.sidebar > .recent-group {
+    order: 3 !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    /*
+       Take all remaining sidebar space.
+       Do NOT use 58px / 96px / 105px here.
+    */
+    flex: 1 1 0 !important;
+
+    width: 100% !important;
+    height: auto !important;
+    min-height: 120px !important;
+    max-height: none !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    overflow: hidden !important;
+
+    position: relative !important;
+    z-index: 2 !important;
+
+    box-sizing: border-box !important;
+}
+
+/* History heading */
+.sidebar > .recent-group > h4 {
+    flex: 0 0 auto !important;
+    margin: 8px 12px !important;
+}
+
+/* ACTUAL SCROLL AREA */
+.sidebar > .recent-group .history-list {
+    display: flex !important;
+    flex-direction: column !important;
+
+    flex: 1 1 0 !important;
+
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+
+    margin: 0 !important;
+    padding: 0 6px 12px 0 !important;
+
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+
+    /*
+       Critical for mobile.
+       Finger movement scrolls history instead of
+       triggering buttons underneath/around it.
+    */
+    touch-action: pan-y !important;
+    -webkit-overflow-scrolling: touch !important;
+
+    overscroll-behavior-y: contain !important;
+    overscroll-behavior-x: none !important;
+
+    position: relative !important;
+    z-index: 3 !important;
+
+    box-sizing: border-box !important;
+}
+
+/* History items must remain clickable */
+.sidebar > .recent-group .history-item {
+    flex: 0 0 auto !important;
+    position: relative !important;
+    z-index: 4 !important;
+}
+
+/* Footer stays at bottom */
+.sidebar > .sidebar-footer {
+    order: 99 !important;
+    flex: 0 0 auto !important;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+
+        overflow: hidden !important;
+        touch-action: none !important;
+    }
+
+    .sidebar > .ap-sidebar-topbar,
+    .sidebar > .sidebar-header,
+    .sidebar > .sidebar-group:not(.recent-group),
+    .sidebar > .sidebar-footer {
+        flex-shrink: 0 !important;
+    }
+
+    .sidebar > .recent-group {
+        flex: 1 1 0 !important;
+        min-height: 120px !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: hidden !important;
+    }
+
+    .sidebar > .recent-group .history-list {
+        flex: 1 1 0 !important;
+
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        touch-action: pan-y !important;
+        -webkit-overflow-scrolling: touch !important;
+
+        overscroll-behavior-y: contain !important;
+        overscroll-behavior-x: none !important;
+    }
+}
+
+/* ===== FINAL SIDEBAR ORDER + HISTORY FIX ===== */
+
+.sidebar > .sidebar-group:not(.recent-group) {
+    order: 2 !important;
+    flex: 0 0 auto !important;
+}
+
+.sidebar > .recent-group {
+    order: 3 !important;
+    flex: 1 1 0 !important;
+    min-height: 140px !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.sidebar > .recent-group .history-list {
+    flex: 1 1 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    touch-action: pan-y !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+}
+
+.sidebar > .sidebar-footer {
+    order: 99 !important;
+    flex: 0 0 auto !important;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        overflow: hidden !important;
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+    }
+
+    .sidebar > .recent-group {
+        order: 3 !important;
+        flex: 1 1 0 !important;
+        min-height: 140px !important;
+        height: auto !important;
+        max-height: none !important;
+    }
+
+    .sidebar > .recent-group .history-list {
+        flex: 1 1 0 !important;
+        min-height: 0 !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow-y: auto !important;
+        touch-action: pan-y !important;
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior: contain !important;
+    }
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL MOBILE SIDEBAR STRUCTURE
+   Buttons → History → Footer
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    /* Keep the sidebar itself as the fixed mobile container */
+    aside.sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+        overflow: hidden !important;
+    }
+
+    /* Header / top controls */
+    aside.sidebar > .sidebar-header {
+        order: 1 !important;
+        flex: 0 0 auto !important;
+    }
+
+    /* Main navigation buttons */
+    aside.sidebar > .sidebar-group:not(.recent-group) {
+        order: 2 !important;
+        flex: 0 0 auto !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    /* HISTORY MUST COME AFTER BUTTONS */
+    aside.sidebar > .recent-group {
+        order: 3 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 0 !important;
+        width: 100% !important;
+        min-height: 120px !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: hidden !important;
+        position: relative !important;
+    }
+
+    /* Actual scrolling area */
+    aside.sidebar > .recent-group > .history-list {
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        /* Mobile scrolling */
+        touch-action: pan-y !important;
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior-y: contain !important;
+    }
+
+    /* Footer always stays last */
+    aside.sidebar > .sidebar-footer {
+        order: 99 !important;
+        flex: 0 0 auto !important;
+    }
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL MOBILE SIDEBAR ORDER
+   ========================================================= */
+@media (max-width: 767px) {
+
+  aside.sidebar {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Topbar */
+  aside.sidebar > .ap-sidebar-topbar {
+    order: 0 !important;
+    flex: 0 0 auto !important;
+  }
+
+  /* Header / logo / profile area */
+  aside.sidebar > .sidebar-header {
+    order: 1 !important;
+    flex: 0 0 auto !important;
+  }
+
+  /* Main navigation buttons */
+  aside.sidebar > .sidebar-group:not(.recent-group) {
+    order: 2 !important;
+    flex: 0 0 auto !important;
+  }
+
+  /* History MUST come after buttons */
+  aside.sidebar > .recent-group {
+    order: 3 !important;
+    flex: 0 0 120px !important;
+    min-height: 120px !important;
+    max-height: 120px !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    position: relative !important;
+  }
+
+  aside.sidebar > .recent-group .history-list {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+  }
+
+  /* Footer stays last */
+  aside.sidebar > .sidebar-footer {
+    order: 99 !important;
+    flex: 0 0 auto !important;
+  }
+}
+
+/* AP SYNAPSE — FINAL MOBILE SIDEBAR LAYOUT FIX */
+@media (max-width: 767px) {
+  aside.sidebar > .sidebar-group:not(.recent-group) {
+    order: 2 !important;
+  }
+
+  aside.sidebar > .recent-group {
+    order: 3 !important;
+    flex: 0 0 120px !important;
+    min-height: 120px !important;
+    max-height: 120px !important;
+    overflow: hidden !important;
+  }
+
+  aside.sidebar > .recent-group .history-list {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+  }
+
+  aside.sidebar > .sidebar-footer {
+    order: 99 !important;
+  }
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL MOBILE SIDEBAR ORDER
+   History AFTER sidebar buttons, BEFORE footer
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+  aside.sidebar {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior-y: contain !important;
+  }
+
+  /* Fixed top area */
+  aside.sidebar > .ap-sidebar-topbar {
+    order: 0 !important;
+    flex: 0 0 auto !important;
+  }
+
+  aside.sidebar > .sidebar-header {
+    order: 1 !important;
+    flex: 0 0 auto !important;
+  }
+
+  /* MAIN SIDEBAR BUTTONS */
+  aside.sidebar > .sidebar-group:not(.recent-group) {
+    order: 2 !important;
+    flex: 0 0 auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  /* HISTORY */
+  aside.sidebar > .recent-group {
+    order: 3 !important;
+    flex: 0 0 120px !important;
+    width: 100% !important;
+    height: 120px !important;
+    min-height: 120px !important;
+    max-height: 120px !important;
+    overflow: hidden !important;
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  aside.sidebar > .recent-group .history-list {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+    touch-action: pan-y !important;
+  }
+
+  /* FOOTER ALWAYS LAST */
+  aside.sidebar > .sidebar-footer {
+    order: 99 !important;
+    flex: 0 0 auto !important;
+  }
+}
+
+/* AP SYNAPSE — FINAL SIDEBAR STRUCTURE */
+@media (max-width: 767px) {
+  aside.sidebar > .ap-sidebar-topbar {
+    order: 0 !important;
+  }
+
+  aside.sidebar > .sidebar-header {
+    order: 1 !important;
+  }
+
+  aside.sidebar > .sidebar-group:not(.recent-group) {
+    order: 2 !important;
+  }
+
+  aside.sidebar > .recent-group {
+    order: 3 !important;
+    flex: 0 0 120px !important;
+    height: 120px !important;
+    min-height: 120px !important;
+    max-height: 120px !important;
+    overflow: hidden !important;
+  }
+
+  aside.sidebar > .recent-group .history-list {
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+    touch-action: pan-y !important;
+  }
+
+  aside.sidebar > .sidebar-footer {
+    order: 99 !important;
+  }
+}
+
+/* =========================================================
+   AP SYNAPSE — SIDEBAR SURFACE
+   Structural background only
+   ========================================================= */
+
+aside,
+aside > *,
+aside > * > *,
+aside > * > * > *,
+aside > * > * > * > * {
+  background-color: #020304 !important;
+  background-image: none !important;
+}
+
+/* Keep the sidebar controls visually distinct */
+aside button,
+aside input,
+aside a {
+  background-image: initial;
+}
+
+/* Sidebar edge */
+aside {
+  border-right: 1px solid rgba(255, 255, 255, 0.035) !important;
+  box-shadow: none !important;
+}

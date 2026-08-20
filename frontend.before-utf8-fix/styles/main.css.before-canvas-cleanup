@@ -29089,63 +29089,32 @@ body:not(.light-mode)
 }
 
 /* =========================================================
-
-/* =========================================================
-   AP SYNAPSE � WHITEBOARD SYSTEM
-   SINGLE AUTHORITATIVE IMPLEMENTATION
-   Desktop + Tablet + Mobile
-========================================================= */
-
-#canvasPage {
-    position: relative !important;
-    width: 100% !important;
-    min-height: calc(100vh - 70px) !important;
-    padding: 0 !important;
-    box-sizing: border-box !important;
-    overflow: visible !important;
-}
-
-/* ---------------------------------------------------------
-   HEADER
---------------------------------------------------------- */
-
-#canvasPage .projects-header {
-    position: relative !important;
-    z-index: 20 !important;
-    margin-bottom: 10px !important;
-}
-
-/* ---------------------------------------------------------
-   WHITEBOARD SHELL
---------------------------------------------------------- */
+   AP SYNAPSE — CANVAS / WHITEBOARD FINAL VISIBILITY FIX
+   ========================================================= */
 
 #canvasPage .whiteboard-shell {
-    position: relative !important;
-
-    width: calc(100% - 24px) !important;
-    height: calc(100vh - 135px) !important;
-
-    min-height: 600px !important;
-
-    margin: 0 12px !important;
-    padding: 0 !important;
-
-    box-sizing: border-box !important;
-
-    overflow: hidden !important;
-
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
 
+    position: absolute !important;
+    inset: 0 !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    min-width: 0 !important;
+    min-height: 0 !important;
+
+    overflow: hidden !important;
     pointer-events: auto !important;
 }
 
-/* ---------------------------------------------------------
-   CANVAS
---------------------------------------------------------- */
-
 #canvasPage #apCanvas {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+
     position: absolute !important;
     inset: 0 !important;
 
@@ -29155,69 +29124,46 @@ body:not(.light-mode)
     min-width: 1px !important;
     min-height: 1px !important;
 
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-
-    box-sizing: border-box !important;
-
     background: #ffffff !important;
-
-    border: 1px solid rgba(0,0,0,.12) !important;
-    border-radius: 14px !important;
-
-    z-index: 1 !important;
-
     pointer-events: auto !important;
-    touch-action: none !important;
 }
 
-/* ---------------------------------------------------------
-   TOOLBAR
---------------------------------------------------------- */
+/* =========================================================
+   AP SYNAPSE — CANVAS TOOLBAR
+   FINAL DESKTOP + MOBILE INTERACTION FIX
+========================================================= */
+
+#canvasPage .whiteboard-shell {
+    position: relative !important;
+}
+
+/* =========================================================
+   TOOLBAR — ALWAYS ABOVE CANVAS / FIELD
+========================================================= */
 
 #canvasPage .whiteboard-toolbar {
-    position: absolute !important;
-
-    top: 16px !important;
-    left: 50% !important;
-
-    transform: translateX(-50%) !important;
-
-    z-index: 10000 !important;
+    position: relative !important;
+    z-index: 2147483000 !important;
 
     display: flex !important;
     align-items: center !important;
-    justify-content: center !important;
-
-    gap: 8px !important;
-
-    padding: 7px !important;
-
-    box-sizing: border-box !important;
-
-    background: rgba(255,255,255,.97) !important;
-
-    border: 1px solid rgba(0,0,0,.12) !important;
-    border-radius: 13px !important;
-
-    box-shadow: 0 8px 25px rgba(0,0,0,.14) !important;
+    gap: 10px !important;
 
     isolation: isolate !important;
 
     pointer-events: auto !important;
 }
 
-/* ---------------------------------------------------------
-   TOOL BUTTONS
---------------------------------------------------------- */
+/* =========================================================
+   PEN / ERASER / CLEAR
+========================================================= */
 
 #canvasPage #canvasPen,
 #canvasPage #canvasErase,
 #canvasPage #canvasClear {
 
     position: relative !important;
-    z-index: 10001 !important;
+    z-index: 2147483001 !important;
 
     min-width: 100px !important;
     min-height: 46px !important;
@@ -29227,13 +29173,13 @@ body:not(.light-mode)
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-
     gap: 6px !important;
 
     box-sizing: border-box !important;
 
     background: #ffffff !important;
 
+    /* FORCE DARK, READABLE TEXT */
     color: #17191d !important;
     -webkit-text-fill-color: #17191d !important;
 
@@ -29248,12 +29194,13 @@ body:not(.light-mode)
     opacity: 1 !important;
     visibility: visible !important;
 
+    text-shadow: none !important;
+
     cursor: pointer !important;
     pointer-events: auto !important;
 
-    text-shadow: none !important;
-
-    box-shadow: 0 2px 8px rgba(0,0,0,.08) !important;
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.08) !important;
 
     transition:
         transform .15s ease,
@@ -29262,9 +29209,9 @@ body:not(.light-mode)
         box-shadow .15s ease !important;
 }
 
-/* ---------------------------------------------------------
+/* =========================================================
    HOVER
---------------------------------------------------------- */
+========================================================= */
 
 #canvasPage #canvasPen:hover,
 #canvasPage #canvasErase:hover,
@@ -29277,55 +29224,68 @@ body:not(.light-mode)
 
     border-color: #a9abb0 !important;
 
-    transform: translateY(-1px) !important;
+    transform: translateY(-1px);
 
-    box-shadow: 0 5px 14px rgba(0,0,0,.12) !important;
+    box-shadow:
+        0 5px 14px rgba(0,0,0,.12) !important;
 }
 
-/* ---------------------------------------------------------
-   ACTIVE TOOL
---------------------------------------------------------- */
+/* =========================================================
+   ACTIVE PEN / ERASER
+========================================================= */
 
 #canvasPage #canvasPen.active,
 #canvasPage #canvasErase.active {
 
-    background: #17191d !important;
+    background: #f0eadf !important;
 
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
+    color: #17191d !important;
+    -webkit-text-fill-color: #17191d !important;
 
-    border-color: #17191d !important;
+    border-color: #c6a66b !important;
 
     box-shadow:
         0 0 0 2px rgba(198,166,107,.18),
         0 5px 14px rgba(0,0,0,.10) !important;
 }
 
-/* ---------------------------------------------------------
-   CLEAR
---------------------------------------------------------- */
+/* =========================================================
+   CLEAR — NEUTRAL PREMIUM STATE
+========================================================= */
 
 #canvasPage #canvasClear {
     color: #17191d !important;
     -webkit-text-fill-color: #17191d !important;
 }
 
-/* ---------------------------------------------------------
-   DESKTOP
---------------------------------------------------------- */
+#canvasPage #canvasClear:hover {
+    background: #f4f4f5 !important;
+}
+
+/* =========================================================
+   DESKTOP — EXTRA CLICK CLEARANCE
+========================================================= */
 
 @media (min-width: 769px) {
 
-    #canvasPage .whiteboard-shell {
-        width: calc(100% - 24px) !important;
-        height: calc(100vh - 135px) !important;
-        min-height: 650px !important;
-
-        margin: 0 12px !important;
-    }
-
     #canvasPage .whiteboard-toolbar {
-        top: 16px !important;
+
+        position: relative !important;
+
+        /* Gives the toolbar breathing room below
+           the Canvas page header / top controls */
+        margin-top: 18px !important;
+
+        padding: 6px !important;
+
+        border-radius: 14px !important;
+
+        background: rgba(255,255,255,.96) !important;
+
+        border: 1px solid rgba(0,0,0,.08) !important;
+
+        box-shadow:
+            0 8px 24px rgba(0,0,0,.10) !important;
     }
 
     #canvasPage #canvasPen,
@@ -29339,122 +29299,314 @@ body:not(.light-mode)
     }
 }
 
-/* ---------------------------------------------------------
+/* =========================================================
+   MOBILE — COMFORTABLE TOUCH TARGET
+========================================================= */
+
+@media (max-width: 768px) {
+
+    #canvasPage .whiteboard-toolbar {
+
+        gap: 7px !important;
+
+        padding: 5px !important;
+
+        overflow-x: auto !important;
+        max-width: 100% !important;
+    }
+
+    #canvasPage #canvasPen,
+    #canvasPage #canvasErase,
+    #canvasPage #canvasClear {
+
+        min-width: 86px !important;
+        min-height: 44px !important;
+
+        padding: 0 12px !important;
+
+        font-size: 13px !important;
+
+        flex: 0 0 auto !important;
+    }
+}
+/* =========================================================
+   AP SYNAPSE — CANVAS FINAL SIZE FIX
+   MAXIMUM WHITEBOARD AREA
+========================================================= */
+
+#canvasPage {
+    position: relative !important;
+    width: 100% !important;
+    min-height: calc(100vh - 70px) !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* Canvas heading stays compact */
+#canvasPage .projects-header {
+    position: relative !important;
+    z-index: 5 !important;
+    margin-bottom: 10px !important;
+}
+
+/* LARGE WHITEBOARD */
+#canvasPage .whiteboard-shell {
+    position: relative !important;
+
+    width: calc(100% - 24px) !important;
+    height: calc(100vh - 145px) !important;
+
+    min-height: 600px !important;
+
+    margin: 0 12px !important;
+    padding: 0 !important;
+
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+}
+
+/* FULL-SIZE CANVAS */
+#canvasPage #apCanvas {
+    position: absolute !important;
+
+    top: 0 !important;
+    left: 0 !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    display: block !important;
+
+    box-sizing: border-box !important;
+
+    background: #ffffff !important;
+
+    border: 1px solid rgba(0,0,0,.12) !important;
+    border-radius: 14px !important;
+
+    z-index: 1 !important;
+
+    touch-action: none !important;
+}
+
+/* FLOATING TOOLBAR — DOES NOT TAKE CANVAS SPACE */
+#canvasPage .whiteboard-toolbar {
+    position: absolute !important;
+
+    top: 16px !important;
+    left: 50% !important;
+
+    transform: translateX(-50%) !important;
+
+    z-index: 9999 !important;
+
+    display: flex !important;
+    gap: 8px !important;
+
+    padding: 7px !important;
+
+    background: rgba(255,255,255,.97) !important;
+
+    border: 1px solid rgba(0,0,0,.12) !important;
+    border-radius: 13px !important;
+
+    box-shadow: 0 8px 25px rgba(0,0,0,.14) !important;
+
+    pointer-events: auto !important;
+}
+
+/* BUTTONS — DARK, CLEAR, CLICKABLE */
+#canvasPage .whiteboard-toolbar button {
+    position: relative !important;
+
+    z-index: 10000 !important;
+
+    min-width: 90px !important;
+    height: 42px !important;
+
+    padding: 0 14px !important;
+
+    background: #ffffff !important;
+
+    color: #17191d !important;
+
+    border: 1px solid rgba(0,0,0,.16) !important;
+    border-radius: 10px !important;
+
+    font-size: 13px !important;
+    font-weight: 700 !important;
+
+    cursor: pointer !important;
+
+    pointer-events: auto !important;
+}
+
+#canvasPage .whiteboard-toolbar button:hover {
+    background: #f2f3f5 !important;
+    border-color: #a88950 !important;
+}
+
+#canvasPage .whiteboard-toolbar button.active {
+    background: #17191d !important;
+    color: #ffffff !important;
+    border-color: #17191d !important;
+}
+
+/* =========================================================
+   DESKTOP — GIVE THE BOARD ALMOST ALL AVAILABLE SPACE
+========================================================= */
+
+@media (min-width: 769px) {
+
+    #canvasPage .whiteboard-shell {
+        height: calc(100vh - 135px) !important;
+        min-height: 650px !important;
+    }
+
+}
+
+
+/* =========================================================
    MOBILE
---------------------------------------------------------- */
+========================================================= */
+
+@media (max-width: 768px) {
+
+    #canvasPage .whiteboard-shell {
+        width: calc(100% - 16px) !important;
+        height: calc(100vh - 125px) !important;
+        min-height: 500px !important;
+        margin: 0 8px !important;
+    }
+
+    #canvasPage .whiteboard-toolbar {
+        top: 10px !important;
+        left: 10px !important;
+        right: 10px !important;
+        transform: none !important;
+
+        justify-content: center !important;
+
+        max-width: calc(100% - 20px) !important;
+        overflow-x: auto !important;
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — MOBILE CANVAS
+   MOVE ENTIRE WHITEBOARD DOWN
+========================================================= */
 
 @media (max-width: 768px) {
 
     #canvasPage {
+        position: relative !important;
+        overflow: visible !important;
+
+        /* Give the Canvas page breathing room below the mobile top area */
         padding-top: 55px !important;
+        box-sizing: border-box !important;
     }
 
     #canvasPage .projects-header {
+        position: relative !important;
+        z-index: 20 !important;
+
         margin-top: 0 !important;
         margin-bottom: 14px !important;
     }
 
+    /*
+       ENTIRE WHITEBOARD MOVES DOWN TOGETHER
+    */
     #canvasPage .whiteboard-shell {
+        position: relative !important;
 
         width: calc(100% - 16px) !important;
 
         height: calc(100vh - 235px) !important;
-
         min-height: 460px !important;
 
         margin: 0 8px !important;
 
+        box-sizing: border-box !important;
+
         overflow: hidden !important;
     }
 
+    /*
+       TOOLBAR STAYS ATTACHED TO THE BOARD
+    */
     #canvasPage .whiteboard-toolbar {
+        position: absolute !important;
 
         top: 16px !important;
         left: 8px !important;
         right: 8px !important;
 
-        width: auto !important;
-        max-width: none !important;
-
         transform: none !important;
+
+        z-index: 99999 !important;
+
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
 
         gap: 6px !important;
 
         padding: 7px !important;
 
-        justify-content: center !important;
+        box-sizing: border-box !important;
 
-        overflow: hidden !important;
+        background: rgba(255,255,255,.98) !important;
+
+        border: 1px solid rgba(0,0,0,.14) !important;
+        border-radius: 12px !important;
+
+        box-shadow: 0 8px 24px rgba(0,0,0,.16) !important;
     }
 
     #canvasPage .whiteboard-toolbar button {
-
         flex: 1 1 0 !important;
 
         min-width: 0 !important;
-
-        width: auto !important;
         height: 42px !important;
 
-        padding: 0 8px !important;
+        color: #17191d !important;
+        background: #ffffff !important;
+
+        border: 1px solid rgba(0,0,0,.16) !important;
+        border-radius: 9px !important;
 
         font-size: 12px !important;
+        font-weight: 700 !important;
 
         white-space: nowrap !important;
     }
 
+    #canvasPage .whiteboard-toolbar button.active {
+        background: #17191d !important;
+        color: #ffffff !important;
+    }
+
+    /*
+       FULL DRAWING SURFACE
+    */
     #canvasPage #apCanvas {
+        position: absolute !important;
 
         inset: 0 !important;
 
         width: 100% !important;
         height: 100% !important;
 
-        border-radius: 12px !important;
+        z-index: 1 !important;
     }
 }
 
-/* ---------------------------------------------------------
-   SMALL PHONES
---------------------------------------------------------- */
-
-@media (max-width: 380px) {
-
-    #canvasPage {
-        padding-top: 48px !important;
-    }
-
-    #canvasPage .whiteboard-shell {
-
-        width: calc(100% - 12px) !important;
-
-        margin: 0 6px !important;
-
-        min-height: 440px !important;
-
-        height: calc(100vh - 220px) !important;
-    }
-
-    #canvasPage .whiteboard-toolbar {
-
-        left: 6px !important;
-        right: 6px !important;
-
-        gap: 4px !important;
-        padding: 5px !important;
-    }
-
-    #canvasPage .whiteboard-toolbar button {
-
-        height: 40px !important;
-
-        padding: 0 5px !important;
-
-        font-size: 11px !important;
-    }
-}
-
-/* AP SYNAPSE — FINAL MOBILE COMMAND ROW
+/* ============================================================
+   AP SYNAPSE — FINAL MOBILE COMMAND ROW
    LIVE TALK SEPARATED — NO OVERLAP
    ============================================================ */
 
@@ -30225,614 +30377,3 @@ body:not(.light-mode)
     opacity: 1;
     pointer-events: auto;
 }
-
-/* =========================================================
-   AP SYNAPSE � WHITEBOARD CANVAS FINAL OVERRIDE
-   LAST RULE � CANVAS MUST BE VISIBLE + DRAWABLE
-========================================================= */
-
-#canvasPage .whiteboard-shell {
-    position: relative !important;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    width: calc(100% - 16px) !important;
-    height: calc(100vh - 180px) !important;
-    min-height: 500px !important;
-    margin: 0 8px !important;
-    overflow: hidden !important;
-    background: #ffffff !important;
-    pointer-events: auto !important;
-}
-
-#canvasPage #apCanvas {
-    position: absolute !important;
-    inset: 0 !important;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    width: 100% !important;
-    height: 100% !important;
-    min-width: 1px !important;
-    min-height: 1px !important;
-    background: #ffffff !important;
-    border: 1px solid #c9c9c9 !important;
-    border-radius: 14px !important;
-    z-index: 1 !important;
-    pointer-events: auto !important;
-    touch-action: none !important;
-}
-
-#canvasPage .whiteboard-toolbar {
-    z-index: 10000 !important;
-}
-
-@media (max-width: 768px) {
-    #canvasPage .whiteboard-shell {
-        height: calc(100vh - 220px) !important;
-        min-height: 460px !important;
-    }
-}
-
-
-/* =========================================================
-   AP SYNAPSE � WHITEBOARD CANVAS HEIGHT FINAL FIX
-   ========================================================= */
-
-#canvasPage .whiteboard-shell {
-    width: 100% !important;
-    min-height: 520px !important;
-    height: 520px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    position: relative !important;
-    overflow: hidden !important;
-}
-
-#canvasPage .whiteboard-toolbar {
-    flex: 0 0 auto !important;
-    height: 64px !important;
-    min-height: 64px !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-    position: relative !important;
-    z-index: 10 !important;
-}
-
-#canvasPage #apCanvas {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    width: 100% !important;
-    height: 440px !important;
-    min-width: 0 !important;
-    min-height: 440px !important;
-    flex: 1 1 auto !important;
-    position: relative !important;
-    z-index: 5 !important;
-    background: #ffffff !important;
-    border: 1px solid rgba(0,0,0,.12) !important;
-    box-sizing: border-box !important;
-    touch-action: none !important;
-    cursor: crosshair !important;
-}
-
-@media (max-width: 700px) {
-    #canvasPage .whiteboard-shell {
-        height: calc(100vh - 180px) !important;
-        min-height: 420px !important;
-    }
-
-    #canvasPage #apCanvas {
-        height: calc(100vh - 244px) !important;
-        min-height: 350px !important;
-    }
-}
-
-
-/* =========================================================
-   AP SYNAPSE � WHITEBOARD CANVAS HEIGHT FINAL FIX
-   ========================================================= */
-
-#canvasPage .whiteboard-shell {
-    width: 100% !important;
-    min-height: 520px !important;
-    height: 520px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    position: relative !important;
-    overflow: hidden !important;
-}
-
-#canvasPage .whiteboard-toolbar {
-    flex: 0 0 auto !important;
-    height: 64px !important;
-    min-height: 64px !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-    position: relative !important;
-    z-index: 10 !important;
-}
-
-#canvasPage #apCanvas {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    width: 100% !important;
-    height: 440px !important;
-    min-width: 0 !important;
-    min-height: 440px !important;
-    flex: 1 1 auto !important;
-    position: relative !important;
-    z-index: 5 !important;
-    background: #ffffff !important;
-    border: 1px solid rgba(0,0,0,.12) !important;
-    box-sizing: border-box !important;
-    touch-action: none !important;
-    cursor: crosshair !important;
-}
-
-@media (max-width: 700px) {
-    #canvasPage .whiteboard-shell {
-        height: calc(100vh - 180px) !important;
-        min-height: 420px !important;
-    }
-
-    #canvasPage #apCanvas {
-        height: calc(100vh - 244px) !important;
-        min-height: 350px !important;
-    }
-}
-
-
-/* =========================================================
-   AP SYNAPSE � WHITEBOARD FINAL LAYOUT OVERRIDE
-   MUST REMAIN LAST
-   ========================================================= */
-
-#canvasPage {
-    position: relative !important;
-    overflow: visible !important;
-    height: auto !important;
-    min-height: 620px !important;
-    max-height: none !important;
-}
-
-#canvasPage .whiteboard-shell {
-    position: relative !important;
-    display: block !important;
-    width: 100% !important;
-    height: 520px !important;
-    min-height: 520px !important;
-    max-height: none !important;
-    overflow: visible !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage .whiteboard-toolbar {
-    position: relative !important;
-    z-index: 20 !important;
-    width: 100% !important;
-    height: 64px !important;
-    min-height: 64px !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage #apCanvas {
-    position: absolute !important;
-    display: block !important;
-    left: 0 !important;
-    top: 64px !important;
-    width: 100% !important;
-    height: 440px !important;
-    min-width: 0 !important;
-    min-height: 440px !important;
-    max-width: none !important;
-    max-height: 440px !important;
-    box-sizing: border-box !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    background: #ffffff !important;
-    border: 1px solid rgba(0,0,0,.15) !important;
-    z-index: 10 !important;
-}
-
-
-/* =========================================================
-   AP SYNAPSE � WHITEBOARD HARD HEIGHT OVERRIDE
-   FINAL CANVAS VISIBILITY FIX
-========================================================= */
-
-#canvasPage {
-    min-height: 620px !important;
-    height: 620px !important;
-    overflow: visible !important;
-}
-
-#canvasPage .whiteboard-shell {
-    width: 100% !important;
-    height: 520px !important;
-    min-height: 520px !important;
-    max-height: none !important;
-    display: flex !important;
-    flex-direction: column !important;
-    overflow: visible !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage .whiteboard-toolbar {
-    flex: 0 0 64px !important;
-    height: 64px !important;
-    min-height: 64px !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-}
-
-#canvasPage #apCanvas {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: relative !important;
-    width: calc(100% - 2px) !important;
-    height: 440px !important;
-    min-height: 440px !important;
-    max-height: 440px !important;
-    flex: 0 0 440px !important;
-    margin: 0 auto !important;
-    box-sizing: border-box !important;
-    background: #ffffff !important;
-    border: 1px solid rgba(0,0,0,.14) !important;
-    pointer-events: auto !important;
-    touch-action: none !important;
-    z-index: 10 !important;
-}
-
-
-/* =========================================================
-   AP SYNAPSE � WHITEBOARD FINAL GEOMETRY
-========================================================= */
-
-#canvasPage {
-    height: 620px !important;
-    min-height: 620px !important;
-    overflow: visible !important;
-}
-
-#canvasPage .whiteboard-shell {
-    display: block !important;
-    height: 520px !important;
-    min-height: 520px !important;
-    max-height: 520px !important;
-    overflow: visible !important;
-}
-
-#canvasPage #apCanvas {
-    display: block !important;
-    width: 100% !important;
-    height: 440px !important;
-    min-height: 440px !important;
-    max-height: 440px !important;
-    flex: none !important;
-    box-sizing: border-box !important;
-    background: #ffffff !important;
-    border: 1px solid rgba(0,0,0,.15) !important;
-    position: relative !important;
-    z-index: 20 !important;
-}
-
-
-/* =========================================================
-   AP SYNAPSE � WHITEBOARD
-   PERMANENT STABLE LAYOUT
-========================================================= */
-
-#canvasPage {
-    display: block !important;
-    height: 620px !important;
-    min-height: 620px !important;
-    overflow: visible !important;
-}
-
-#canvasPage .whiteboard-shell {
-    display: block !important;
-    position: relative !important;
-    width: 100% !important;
-    height: 520px !important;
-    min-height: 520px !important;
-    max-height: 520px !important;
-    flex: none !important;
-    overflow: visible !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage .whiteboard-toolbar {
-    display: flex !important;
-    width: 100% !important;
-    height: 64px !important;
-    min-height: 64px !important;
-    max-height: 64px !important;
-    flex: none !important;
-    align-items: center !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage #apCanvas {
-    display: block !important;
-    position: absolute !important;
-    top: 80px !important;
-    left: 0 !important;
-    right: 0 !important;
-
-    width: 100% !important;
-    height: 440px !important;
-    min-height: 440px !important;
-    max-height: 440px !important;
-
-    flex: none !important;
-    box-sizing: border-box !important;
-
-    background: #ffffff !important;
-    border: 1px solid rgba(0, 0, 0, 0.16) !important;
-
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    touch-action: none !important;
-
-    z-index: 999 !important;
-}
-
-
-/* =========================================================
-   AP SYNAPSE � WHITEBOARD FINAL DIMENSION LOCK
-   Prevent all legacy flex/CSS rules from collapsing canvas
-========================================================= */
-
-#canvasPage {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    min-height: 620px !important;
-    height: auto !important;
-}
-
-#canvasPage .whiteboard-shell {
-    display: flex !important;
-    flex-direction: column !important;
-    width: 100% !important;
-    height: 520px !important;
-    min-height: 520px !important;
-    max-height: 520px !important;
-    flex: none !important;
-    overflow: hidden !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage .whiteboard-toolbar {
-    display: flex !important;
-    flex: none !important;
-    height: 64px !important;
-    min-height: 64px !important;
-    max-height: 64px !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage #apCanvas {
-    display: block !important;
-    position: relative !important;
-    width: 100% !important;
-    height: 440px !important;
-    min-height: 440px !important;
-    max-height: 440px !important;
-    flex: none !important;
-    box-sizing: border-box !important;
-    touch-action: none !important;
-    pointer-events: auto !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-@media (max-width: 700px) {
-
-    #canvasPage .whiteboard-shell {
-        height: 520px !important;
-        min-height: 520px !important;
-    }
-
-    #canvasPage #apCanvas {
-        height: 440px !important;
-        min-height: 440px !important;
-        max-height: 440px !important;
-    }
-
-}
-
-
-/* =========================================================
-   AP SYNAPSE � PREMIUM WHITEBOARD
-   FINAL AUTHORITATIVE LAYOUT
-========================================================= */
-
-#canvasPage {
-    width: 100% !important;
-    max-width: none !important;
-    min-width: 0 !important;
-    min-height: 620px !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage .projects-header {
-    flex: none !important;
-}
-
-#canvasPage .whiteboard-shell {
-    display: flex !important;
-    flex-direction: column !important;
-    width: 100% !important;
-    height: 520px !important;
-    min-height: 520px !important;
-    max-height: 520px !important;
-    max-width: none !important;
-    flex: none !important;
-    box-sizing: border-box !important;
-    overflow: hidden !important;
-}
-
-#canvasPage .whiteboard-toolbar {
-    display: flex !important;
-    align-items: center !important;
-    flex: none !important;
-    width: 100% !important;
-    height: 64px !important;
-    min-height: 64px !important;
-    max-height: 64px !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage #apCanvas {
-    display: block !important;
-    position: relative !important;
-    width: 100% !important;
-    height: 440px !important;
-    min-height: 440px !important;
-    max-height: 440px !important;
-    max-width: none !important;
-    flex: none !important;
-    box-sizing: border-box !important;
-    touch-action: none !important;
-    pointer-events: auto !important;
-    cursor: crosshair !important;
-}
-
-#canvasPage #canvasPen,
-#canvasPage #canvasErase,
-#canvasPage #canvasClear {
-    flex: 0 0 auto !important;
-    min-height: 42px !important;
-    cursor: pointer !important;
-}
-
-#canvasPage #canvasPen.active,
-#canvasPage #canvasErase.active {
-    transform: translateY(-1px);
-}
-
-@media (max-width: 700px) {
-
-    #canvasPage {
-        min-height: 560px !important;
-    }
-
-    #canvasPage .whiteboard-shell {
-        height: 460px !important;
-        min-height: 460px !important;
-        max-height: 460px !important;
-    }
-
-    #canvasPage #apCanvas {
-        height: 396px !important;
-        min-height: 396px !important;
-        max-height: 396px !important;
-    }
-
-}
-
-/* AP SYNAPSE WHITEBOARD � AUTHORITATIVE FINAL FIX */
-
-#canvasPage {
-    width: 100vw !important;
-    max-width: none !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage .whiteboard-shell {
-    display: block !important;
-    width: calc(100vw - 40px) !important;
-    height: 520px !important;
-    min-height: 520px !important;
-    max-height: 520px !important;
-    max-width: none !important;
-    flex: none !important;
-    overflow: hidden !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage .whiteboard-toolbar {
-    display: flex !important;
-    width: 100% !important;
-    height: 64px !important;
-    min-height: 64px !important;
-    max-height: 64px !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage #apCanvas {
-    display: block !important;
-    width: 100% !important;
-    height: 440px !important;
-    min-height: 440px !important;
-    max-height: 440px !important;
-    flex: none !important;
-    box-sizing: border-box !important;
-    pointer-events: auto !important;
-    touch-action: none !important;
-}
- 
-/* =========================================================
-   AP SYNAPSE � WHITEBOARD FINAL DIMENSION LOCK
-   Prevent canvas collapse / flex shrink
-========================================================= */
-
-#canvasPage .whiteboard-shell {
-    width: 100% !important;
-    min-height: 520px !important;
-    height: 520px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    overflow: hidden !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage .whiteboard-toolbar {
-    flex: 0 0 64px !important;
-    height: 64px !important;
-    min-height: 64px !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage #apCanvas {
-    display: block !important;
-    position: relative !important;
-    flex: 0 0 auto !important;
-    width: 100% !important;
-    height: 440px !important;
-    min-height: 440px !important;
-    max-height: 440px !important;
-    box-sizing: border-box !important;
-    touch-action: none !important;
-    pointer-events: auto !important;
-}
-
-@media (max-width: 600px) {
-    #canvasPage .whiteboard-shell {
-        height: 520px !important;
-        min-height: 520px !important;
-    }
-
-    #canvasPage #apCanvas {
-        height: 440px !important;
-        min-height: 440px !important;
-        max-height: 440px !important;
-    }
-}
-

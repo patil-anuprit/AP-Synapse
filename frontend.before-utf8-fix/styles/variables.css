@@ -1,0 +1,55 @@
+/* ===================================================
+   AP Synapse Design Tokens
+   =================================================== */
+
+:root{
+
+/* Colors */
+
+--bg:#0D0F12;
+--surface:#171A1F;
+--surface-hover:#1E232A;
+
+--border:#2A2F36;
+
+--text:#F5F5F3;
+--text-secondary:#9CA3AF;
+
+--accent:#C6A66B;
+--accent-hover:#D4B57C;
+
+/* Radius */
+
+--radius-small:10px;
+--radius-medium:16px;
+--radius-large:24px;
+
+/* Shadows */
+
+--shadow-soft:
+0 8px 30px rgba(0,0,0,.18);
+
+--shadow-hover:
+0 12px 45px rgba(0,0,0,.25);
+
+/* Typography */
+
+--font:"Inter",sans-serif;
+
+/* Layout */
+
+--sidebar-width:250px;
+
+--header-height:90px;
+
+/* Spacing */
+
+--space-1:8px;
+--space-2:16px;
+--space-3:24px;
+--space-4:32px;
+--space-5:48px;
+--space-6:64px;
+--space-7:96px;
+
+}

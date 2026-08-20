@@ -1,0 +1,43 @@
+.toast{
+
+position:fixed;
+
+bottom:30px;
+
+right:30px;
+
+padding:16px 22px;
+
+background:#171b22;
+
+border:1px solid rgba(198,166,107,.2);
+
+border-radius:16px;
+
+color:white;
+
+z-index:99999;
+
+animation:toastIn .35s ease;
+
+}
+
+@keyframes toastIn{
+
+from{
+
+opacity:0;
+
+transform:translateY(20px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}

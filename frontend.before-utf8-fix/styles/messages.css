@@ -1,0 +1,574 @@
+/* ==========================================================
+   AP Synapse Messages System
+   Premium Workspace Edition
+==========================================================*/
+
+#chatWindow{
+
+    width:100%;
+    max-width:980px;
+
+    margin:auto;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:28px;
+
+    padding:40px 0 60px;
+
+}
+
+/* ---------------- Message ---------------- */
+
+.message{
+
+    display:flex;
+
+    gap:18px;
+
+    width:100%;
+
+    animation:messageFade .35s ease;
+
+}
+
+/* ---------------- User ---------------- */
+
+.message.user{
+
+    justify-content:flex-end;
+
+}
+
+.message.user .message-body{
+
+    background:linear-gradient(
+        135deg,
+        rgba(198,166,107,.18),
+        rgba(198,166,107,.08)
+    );
+
+    border:1px solid rgba(198,166,107,.20);
+
+}
+
+/* ---------------- AI ---------------- */
+
+.message.ai{
+
+    justify-content:flex-start;
+
+}
+
+.message.ai .message-body{
+
+    background:rgba(22,24,29,.94);
+
+    border:1px solid rgba(255,255,255,.06);
+
+}
+
+/* ---------------- Avatar ---------------- */
+
+.avatar{
+
+    width:46px;
+    height:46px;
+
+    flex-shrink:0;
+
+    border-radius:16px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:15px;
+    font-weight:700;
+
+    user-select:none;
+
+}
+
+.message.ai .avatar{
+
+    background:linear-gradient(
+        135deg,
+        #d4af37,
+        #b89427
+    );
+
+    color:#111;
+
+    box-shadow:
+    0 12px 28px rgba(212,175,55,.25);
+
+}
+
+.message.user .avatar{
+
+    background:#2d3444;
+
+    color:white;
+
+}
+
+/* ---------------- Bubble ---------------- */
+
+.message-body{
+
+    max-width:780px;
+
+    padding:24px 28px;
+
+    border-radius:24px;
+
+    color:#ECECEC;
+
+    line-height:1.8;
+
+    font-size:16px;
+
+    box-shadow:
+    0 18px 45px rgba(0,0,0,.18);
+
+}
+
+/* ---------------- Typography ---------------- */
+
+.message-body h1,
+.message-body h2,
+.message-body h3{
+
+    margin-bottom:18px;
+
+    color:white;
+
+}
+
+.message-body p{
+
+    margin-bottom:16px;
+
+}
+
+.message-body ul,
+.message-body ol{
+
+    padding-left:22px;
+
+    margin:18px 0;
+
+}
+
+.message-body li{
+
+    margin:8px 0;
+
+}
+
+/* ---------------- Code ---------------- */
+
+.message-body pre{
+
+    background:#0f172a;
+
+    border-radius:18px;
+
+    padding:20px;
+
+    overflow:auto;
+
+    margin:24px 0;
+
+}
+
+.message-body code{
+
+    font-family:Consolas,monospace;
+
+}
+
+/* ---------------- Tables ---------------- */
+
+.message-body table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin:24px 0;
+
+}
+
+.message-body th,
+.message-body td{
+
+    padding:14px;
+
+    border:1px solid rgba(255,255,255,.10);
+
+}
+
+/* ---------------- Footer ---------------- */
+
+.message-footer{
+
+    margin-top:20px;
+
+    font-size:12px;
+
+    color:#8e8e8e;
+
+}
+
+/* ---------------- Thinking ---------------- */
+
+#thinking{
+
+    padding:18px 24px;
+
+    border-radius:18px;
+
+    background:#171717;
+
+    border:1px solid rgba(255,255,255,.05);
+
+    color:#888;
+
+    font-style:italic;
+
+}
+
+/* ---------------- Animation ---------------- */
+
+@keyframes messageFade{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(18px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:none;
+
+    }
+
+}
+
+.message{
+
+display:flex;
+
+gap:18px;
+
+margin-bottom:28px;
+
+animation:messageAppear .35s ease;
+
+}
+
+.message.user{
+
+justify-content:flex-end;
+
+}
+
+.message.ai{
+
+justify-content:flex-start;
+
+}
+
+.avatar{
+
+width:46px;
+
+height:46px;
+
+border-radius:16px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-weight:700;
+
+flex-shrink:0;
+
+background:linear-gradient(135deg,#c6a66b,#8f7441);
+
+color:#111;
+
+}
+
+.message.user .avatar{
+
+background:#3d5afe;
+
+color:white;
+
+order:2;
+
+}
+
+.message-body{
+
+max-width:760px;
+
+background:#181c22;
+
+padding:22px 26px;
+
+border-radius:22px;
+
+line-height:1.8;
+
+border:1px solid rgba(255,255,255,.05);
+
+}
+
+.message.user .message-body{
+
+background:#263447;
+
+}
+
+.message-footer{
+
+margin-top:16px;
+
+font-size:12px;
+
+opacity:.55;
+
+}
+
+@keyframes messageAppear{
+
+from{
+
+opacity:0;
+
+transform:translateY(20px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:none;
+
+}
+
+}
+
+.thinking{
+
+display:none;
+
+align-items:center;
+
+gap:10px;
+
+margin:18px 0;
+
+padding:18px;
+
+background:#111827;
+
+border-radius:18px;
+
+width:max-content;
+
+border:1px solid rgba(198,166,107,.15);
+
+}
+
+.thinking-dot{
+
+width:8px;
+
+height:8px;
+
+border-radius:50%;
+
+background:#c6a66b;
+
+animation:thinking 1.2s infinite;
+
+}
+
+.thinking-dot:nth-child(2){
+
+animation-delay:.2s;
+
+}
+
+.thinking-dot:nth-child(3){
+
+animation-delay:.4s;
+
+}
+
+@keyframes thinking{
+
+0%,80%,100%{
+
+transform:scale(.5);
+
+opacity:.3;
+
+}
+
+40%{
+
+transform:scale(1);
+
+opacity:1;
+
+}
+
+}
+
+.typing-cursor{
+
+display:inline-block;
+
+width:10px;
+
+height:20px;
+
+margin-left:2px;
+
+background:#c6a66b;
+
+animation:blinkCursor .8s infinite;
+
+vertical-align:middle;
+
+}
+
+@keyframes blinkCursor{
+
+0%,50%{
+
+opacity:1;
+
+}
+
+51%,100%{
+
+opacity:0;
+
+}
+
+}
+
+pre{
+
+position:relative;
+
+}
+
+.copy-btn{
+
+position:absolute;
+
+top:10px;
+
+right:10px;
+
+background:#c6a66b;
+
+color:#111;
+
+border:none;
+
+padding:6px 12px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+font-size:12px;
+
+font-weight:600;
+
+}
+
+#voiceBtn,
+#sendBtn,
+#stopBtn,
+#attachBtn{
+
+transition:.25s;
+
+}
+
+#voiceBtn:hover,
+#sendBtn:hover,
+#stopBtn:hover,
+#attachBtn:hover{
+
+transform:translateY(-3px);
+
+box-shadow:0 12px 30px rgba(198,166,107,.25);
+
+}
+
+.message-toolbar{
+
+display:flex;
+
+gap:10px;
+
+margin-top:12px;
+
+}
+
+.message-toolbar button{
+
+background:rgba(255,255,255,.05);
+
+border:none;
+
+padding:8px 12px;
+
+border-radius:10px;
+
+color:white;
+
+cursor:pointer;
+
+transition:.25s;
+
+}
+
+.message-toolbar button:hover{
+
+background:rgba(198,166,107,.18);
+
+transform:translateY(-2px);
+
+}
+
+#deepThinkBtn.active{
+
+background:#c6a66b;
+
+color:#111;
+
+box-shadow:0 0 24px rgba(198,166,107,.45);
+
+}

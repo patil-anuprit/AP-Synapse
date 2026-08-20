@@ -1,0 +1,5013 @@
+/* ===================================================
+   AP Synapse Layout Engine v1
+   =================================================== */
+
+.app{
+    display:grid;
+    grid-template-columns:240px 1fr;
+    height:100vh;
+    background:transparent;
+}
+
+/* ---------------- Sidebar ---------------- */
+
+.sidebar{
+    display:flex;
+    flex-direction:column;
+    width:240px;
+    height:100vh;
+    padding:28px;
+    overflow-y:auto;
+    background:rgba(18,20,24,.82);
+    backdrop-filter:blur(22px);
+    border-right:1px solid var(--border);
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin-bottom:42px;
+}
+
+.sidebar nav{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.sidebar nav a{
+    padding:13px 16px;
+
+    border-radius:14px;
+
+    color:var(--text-secondary);
+
+    transition:.18s ease;
+}
+
+.sidebar nav a:hover{
+
+    background:rgba(255,255,255,.04);
+
+    color:var(--text);
+
+}
+
+.sidebar nav a.active{
+
+    background:rgba(198,166,107,.12);
+
+    border:1px solid rgba(198,166,107,.22);
+
+    color:var(--text);
+
+}
+
+/* ---------------- Workspace ---------------- */
+
+.workspace-content{
+
+flex:1;
+
+position:relative;
+
+overflow:hidden;
+
+padding:0;
+
+display:flex;
+
+}
+
+
+
+/* ---------------- Header ---------------- */
+
+.topbar{
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+height:90px;
+margin-bottom:0;
+
+flex-shrink:0;
+
+}
+
+.greeting h1{
+
+    font-size:28px;
+
+    font-weight:700;
+
+    margin-bottom:4px;
+
+}
+
+.greeting p{
+
+    color:var(--text-secondary);
+
+    font-size:19px;
+
+}
+
+.top-actions{
+
+    display:flex;
+
+    gap:14px;
+
+}
+
+/* ---------------- Sections ---------------- */
+
+.command-section{
+
+    position:absolute;
+
+    left:36px;
+
+    right:36px;
+
+    bottom:24px;
+
+    z-index:100;
+
+}
+
+.workspace-tabs{
+
+    display:flex;
+
+    gap:18px;
+
+    margin-top:28px;
+
+}
+
+.divider{
+
+    margin:34px 0;
+
+    height:1px;
+
+    background:var(--border);
+
+}
+
+/* ---------------- Conversation ---------------- */
+
+.conversation{
+
+width:100%;
+height:100%;
+
+display:flex;
+
+flex-direction:column;
+
+position:relative;
+
+}
+
+#chatWindow{
+
+    width:100%;
+
+    max-width:900px;
+
+    height:100%;
+
+    display:none;
+
+    flex-direction:column;
+
+    overflow-y:auto;
+
+    margin:auto;
+
+}
+
+/* ==========================================
+   Intelligence Field Layer
+========================================== */
+
+#intelligence-field{
+
+position:fixed;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+z-index:-1;
+
+pointer-events:none;
+
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL MOBILE RESPONSIVE ENGINE
+   ========================================================= */
+
+@media (max-width: 700px){
+
+    /* ---------- GLOBAL ---------- */
+
+    html,
+    body{
+        width:100%;
+        min-width:0;
+        max-width:100%;
+        margin:0;
+        padding:0;
+        overflow:hidden;
+    }
+
+    body{
+        min-height:100dvh;
+    }
+
+    /* ---------- APP ---------- */
+
+    .app{
+        display:grid;
+        grid-template-columns:72px minmax(0,1fr);
+        width:100%;
+        height:100dvh;
+        min-width:0;
+        overflow:hidden;
+    }
+
+    /* =====================================================
+       MOBILE SIDEBAR
+       ===================================================== */
+
+    .sidebar{
+        display:flex;
+        position:relative;
+        width:72px;
+        min-width:72px;
+        height:100dvh;
+        padding:14px 8px;
+        box-sizing:border-box;
+        overflow:hidden;
+
+        flex-direction:column;
+        align-items:center;
+
+        background:rgba(18,20,24,.94);
+        backdrop-filter:blur(24px);
+
+        border-right:1px solid var(--border);
+
+        z-index:500;
+    }
+
+    .sidebar-header{
+        width:100%;
+    }
+
+    .brand{
+        width:100%;
+        justify-content:center;
+    }
+
+    .brand-mark{
+        width:42px;
+        height:42px;
+        min-width:42px;
+
+        display:flex;
+        align-items:center;
+        justify-content:center;
+
+        border-radius:13px;
+    }
+
+    .brand-text{
+        display:none;
+    }
+
+    .new-chat-btn{
+        width:48px;
+        height:48px;
+        margin:20px auto 14px;
+
+        padding:0;
+
+        display:flex;
+        align-items:center;
+        justify-content:center;
+
+        border-radius:14px;
+
+        font-size:0;
+    }
+
+    .new-chat-btn span:first-child{
+        font-size:22px;
+    }
+
+    .new-chat-btn span:last-child{
+        display:none;
+    }
+
+    .sidebar-search{
+        display:none;
+    }
+
+    .sidebar-group{
+        width:100%;
+        margin-top:12px;
+    }
+
+    .sidebar-group h4{
+        display:none;
+    }
+
+    .sidebar-group nav{
+        width:100%;
+        align-items:center;
+        gap:8px;
+    }
+
+    .sidebar nav a{
+        width:48px;
+        height:44px;
+
+        padding:0;
+
+        display:flex;
+        align-items:center;
+        justify-content:center;
+
+        border-radius:13px;
+
+        font-size:0;
+        white-space:nowrap;
+    }
+
+    /*
+       Show compact symbols without changing HTML.
+    */
+
+    .sidebar-group nav a::before{
+        font-size:17px;
+    }
+
+    .sidebar-group nav a:nth-child(1)::before{
+        content:"⌂";
+    }
+
+    .sidebar-group nav a:nth-child(2)::before{
+        content:"▦";
+    }
+
+    .sidebar-group nav a:nth-child(3)::before{
+        content:"✦";
+    }
+
+    .sidebar-group nav a:nth-child(4)::before{
+        content:"▤";
+    }
+
+    .sidebar-group nav a:nth-child(5)::before{
+        content:"⚡";
+    }
+
+    .sidebar-group nav a:nth-child(6)::before{
+        content:"</>";
+        font-size:12px;
+        font-weight:700;
+    }
+
+    .sidebar-group nav a:nth-child(7)::before{
+        content:"□";
+    }
+
+    .sidebar-footer{
+        width:100%;
+        margin-top:auto;
+    }
+
+    .sidebar-footer nav{
+        width:100%;
+        align-items:center;
+    }
+
+    .sidebar-footer nav a{
+        width:48px;
+        height:44px;
+        padding:0;
+
+        display:flex;
+        align-items:center;
+        justify-content:center;
+
+        font-size:0;
+    }
+
+    .sidebar-footer nav a:first-child::before{
+        content:"⚙";
+        font-size:17px;
+    }
+
+    .sidebar-footer nav a:nth-child(2)::before{
+        content:"●";
+        font-size:14px;
+    }
+
+    .version{
+        display:none;
+    }
+
+    /* =====================================================
+       WORKSPACE
+       ===================================================== */
+
+    .workspace{
+        width:100%;
+        min-width:0;
+        max-width:none;
+
+        height:100dvh;
+
+        padding:0;
+
+        overflow:hidden;
+
+        box-sizing:border-box;
+    }
+
+    /* =====================================================
+       TOPBAR
+       ===================================================== */
+
+    .topbar{
+        width:100%;
+        min-width:0;
+        height:64px;
+
+        padding:10px 14px;
+
+        margin:0;
+
+        box-sizing:border-box;
+
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+    }
+
+    .topbar-left{
+        width:auto;
+        min-width:0;
+        flex:1;
+    }
+
+    .workspace-title{
+        min-width:0;
+    }
+
+    .workspace-badge{
+        font-size:8px;
+        letter-spacing:1.4px;
+    }
+
+    .greeting h1{
+        margin:2px 0 0;
+        font-size:17px;
+        line-height:1.1;
+    }
+
+    .greeting p{
+        display:none;
+    }
+
+    .topbar-center{
+        display:none;
+    }
+
+    .topbar-right{
+        display:flex;
+        gap:5px;
+        flex:0 0 auto;
+    }
+
+    .topbar-right .top-icon{
+        width:34px;
+        height:34px;
+        padding:0;
+        font-size:14px;
+    }
+
+    .profile-button{
+        width:36px;
+        height:36px;
+        padding:0;
+        font-size:12px;
+    }
+
+    /* =====================================================
+       CONTENT
+       ===================================================== */
+
+    .workspace-content{
+        width:100%;
+        min-width:0;
+
+        height:calc(100dvh - 64px);
+
+        padding:0 12px 78px;
+
+        box-sizing:border-box;
+
+        overflow-y:auto;
+        overflow-x:hidden;
+
+        display:block;
+    }
+
+    .conversation{
+        width:100%;
+        min-width:0;
+
+        min-height:100%;
+
+        display:flex;
+
+        align-items:center;
+        justify-content:center;
+
+        box-sizing:border-box;
+    }
+
+    /* =====================================================
+       HERO
+       ===================================================== */
+
+    .hero-screen{
+        width:100%;
+        min-width:0;
+
+        min-height:calc(100dvh - 145px);
+
+        padding:20px 0 80px;
+
+        box-sizing:border-box;
+
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    }
+
+    .hero-container{
+        width:100%;
+        max-width:430px;
+        min-width:0;
+
+        margin:0 auto;
+
+        padding:0 8px;
+
+        box-sizing:border-box;
+
+        display:flex;
+        flex-direction:column;
+
+        align-items:center;
+        justify-content:center;
+
+        text-align:center;
+
+        gap:14px;
+    }
+
+    .hero-badge{
+        margin-bottom:2px;
+
+        padding:5px 13px;
+
+        font-size:8px;
+        letter-spacing:1.5px;
+    }
+
+    .hero-title{
+        width:100%;
+        max-width:390px;
+
+        margin:0;
+
+        padding:0;
+
+        font-size:30px;
+        line-height:1.08;
+        letter-spacing:-1.3px;
+
+        overflow-wrap:break-word;
+    }
+
+    .hero-description{
+        width:100%;
+        max-width:330px;
+
+        margin:0 auto 8px;
+        padding:0;
+
+        font-size:12px;
+        line-height:1.55;
+    }
+
+    .hero-prompt{
+        width:100%;
+        max-width:350px;
+
+        grid-template-columns:1fr 1fr;
+
+        gap:8px;
+
+        margin:0 auto;
+    }
+
+    .prompt-chip{
+        width:100%;
+        min-width:0;
+        height:46px;
+
+        padding:0 5px;
+
+        border-radius:13px;
+
+        font-size:11px;
+
+        box-sizing:border-box;
+    }
+
+    /* =====================================================
+       CHAT
+       ===================================================== */
+
+    #chatWindow{
+        width:100%;
+        max-width:100%;
+        min-width:0;
+
+        height:100%;
+
+        padding:12px 0 85px;
+
+        box-sizing:border-box;
+
+        overflow-x:hidden;
+        overflow-y:auto;
+    }
+
+    .message{
+        width:100%;
+        max-width:100%;
+
+        box-sizing:border-box;
+    }
+
+    .message-body{
+        max-width:calc(100% - 45px);
+
+        min-width:0;
+
+        overflow-wrap:anywhere;
+        word-break:break-word;
+    }
+
+    /* =====================================================
+       PROJECTS / WORKSPACES
+       ===================================================== */
+
+    .projects-page{
+        width:100%;
+        max-width:100%;
+        min-width:0;
+
+        padding:22px 4px 90px;
+
+        box-sizing:border-box;
+
+        overflow:hidden;
+    }
+
+    .projects-header{
+        width:100%;
+        max-width:100%;
+
+        text-align:center;
+
+        box-sizing:border-box;
+    }
+
+    .projects-header h1{
+        font-size:25px;
+        line-height:1.2;
+    }
+
+    .projects-header p{
+        font-size:12px;
+        line-height:1.5;
+    }
+
+    .projects-grid{
+        width:100%;
+        max-width:100%;
+
+        grid-template-columns:1fr;
+
+        gap:10px;
+
+        box-sizing:border-box;
+    }
+
+    .project-card{
+        width:100%;
+        min-width:0;
+
+        box-sizing:border-box;
+
+        overflow:hidden;
+    }
+
+    /* =====================================================
+       COMMAND BAR
+       ===================================================== */
+
+    .command-section{
+        position:fixed;
+
+        left:7px;
+        right:7px;
+        bottom:7px;
+
+        width:auto;
+        max-width:none;
+
+        z-index:2000;
+
+        box-sizing:border-box;
+    }
+
+    .command-bar{
+        width:100%;
+        max-width:none;
+        min-width:0;
+
+        height:54px;
+
+        padding:5px 6px 5px 12px;
+
+        gap:4px;
+
+        border-radius:17px;
+
+        display:flex;
+        align-items:center;
+
+        box-sizing:border-box;
+    }
+
+    #userInput{
+        flex:1 1 auto;
+
+        min-width:0;
+        width:auto;
+
+        padding:0;
+
+        font-size:12px;
+    }
+
+    .command-bar button{
+        flex:0 0 28px;
+
+        width:28px;
+        height:34px;
+
+        padding:0;
+
+        font-size:12px;
+    }
+
+    #sendBtn{
+        flex:0 0 37px;
+
+        width:37px;
+        height:38px;
+
+        border-radius:12px;
+
+        font-size:17px;
+    }
+
+    /* Keep all major controls accessible */
+    #webBtn,
+    #deepThinkBtn{
+        display:flex;
+    }
+
+    /* =====================================================
+       MODALS
+       ===================================================== */
+
+    .project-modal{
+        padding:14px;
+
+        box-sizing:border-box;
+    }
+
+    .project-box{
+        width:100%;
+        max-width:390px;
+
+        box-sizing:border-box;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width:390px){
+
+    .app{
+        grid-template-columns:62px minmax(0,1fr);
+    }
+
+    .sidebar{
+        width:62px;
+        min-width:62px;
+        padding-left:5px;
+        padding-right:5px;
+    }
+
+    .brand-mark{
+        width:38px;
+        height:38px;
+        min-width:38px;
+    }
+
+    .new-chat-btn,
+    .sidebar nav a,
+    .sidebar-footer nav a{
+        width:42px;
+    }
+
+    .hero-title{
+        font-size:27px;
+    }
+
+    .hero-description{
+        font-size:11.5px;
+        max-width:300px;
+    }
+
+    .hero-prompt{
+        max-width:320px;
+    }
+
+    .prompt-chip{
+        height:43px;
+        font-size:10.5px;
+    }
+
+    .command-section{
+        left:4px;
+        right:4px;
+        bottom:4px;
+    }
+
+    .command-bar{
+        height:50px;
+        border-radius:15px;
+        padding-left:9px;
+    }
+
+    .command-bar button{
+        flex-basis:25px;
+        width:25px;
+        height:31px;
+        font-size:11px;
+    }
+
+    #sendBtn{
+        flex-basis:34px;
+        width:34px;
+        height:36px;
+    }
+}
+
+/* =========================================================
+   AP SYNAPSE — EMERGENCY MOBILE LAYOUT OVERRIDE
+   MUST BE LAST
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    html,
+    body {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+
+    /* REMOVE THE BROKEN GRID BEHAVIOR */
+    .app {
+        display: block !important;
+        position: relative !important;
+
+        width: 100vw !important;
+        max-width: 100vw !important;
+        min-width: 0 !important;
+
+        height: 100dvh !important;
+        overflow: hidden !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* FORCE SIDEBAR TO EXIST */
+    .sidebar {
+        display: flex !important;
+
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        width: 64px !important;
+        min-width: 64px !important;
+        max-width: 64px !important;
+
+        height: 100dvh !important;
+
+        padding: 12px 6px !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+
+        z-index: 9999 !important;
+
+        flex-direction: column !important;
+        align-items: center !important;
+
+        background: rgba(18,20,24,.97) !important;
+        backdrop-filter: blur(24px) !important;
+
+        border-right: 1px solid var(--border) !important;
+    }
+
+    /* HIDE TEXT, KEEP SIDEBAR CONTROLS */
+    .sidebar .brand-text,
+    .sidebar .sidebar-search,
+    .sidebar .sidebar-group h4,
+    .sidebar .version {
+        display: none !important;
+    }
+
+    .sidebar .brand {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    .sidebar .brand-mark {
+        width: 40px !important;
+        height: 40px !important;
+        min-width: 40px !important;
+    }
+
+    .sidebar .new-chat-btn {
+        width: 42px !important;
+        height: 42px !important;
+
+        margin: 18px auto !important;
+        padding: 0 !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        font-size: 0 !important;
+    }
+
+    .sidebar .new-chat-btn span:first-child {
+        display: block !important;
+        font-size: 21px !important;
+    }
+
+    .sidebar .new-chat-btn span:last-child {
+        display: none !important;
+    }
+
+    .sidebar nav {
+        width: 100% !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+
+        gap: 7px !important;
+    }
+
+    .sidebar nav a {
+        display: flex !important;
+
+        width: 42px !important;
+        height: 42px !important;
+
+        min-width: 42px !important;
+
+        padding: 0 !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        font-size: 0 !important;
+    }
+
+    /* MOBILE ICONS */
+    .sidebar-group nav a:nth-child(1)::before {
+        content: "⌂" !important;
+        font-size: 18px !important;
+    }
+
+    .sidebar-group nav a:nth-child(2)::before {
+        content: "▦" !important;
+        font-size: 18px !important;
+    }
+
+    .sidebar-group nav a:nth-child(3)::before {
+        content: "✦" !important;
+        font-size: 17px !important;
+    }
+
+    .sidebar-group nav a:nth-child(4)::before {
+        content: "▤" !important;
+        font-size: 17px !important;
+    }
+
+    .sidebar-group nav a:nth-child(5)::before {
+        content: "⚡" !important;
+        font-size: 16px !important;
+    }
+
+    .sidebar-group nav a:nth-child(6)::before {
+        content: "</>" !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+    }
+
+    .sidebar-group nav a:nth-child(7)::before {
+        content: "□" !important;
+        font-size: 18px !important;
+    }
+
+    .sidebar-footer {
+        width: 100% !important;
+        margin-top: auto !important;
+    }
+
+    .sidebar-footer nav a:first-child::before {
+        content: "⚙" !important;
+        font-size: 17px !important;
+    }
+
+    .sidebar-footer nav a:last-child::before {
+        content: "●" !important;
+        font-size: 13px !important;
+    }
+
+    /* =====================================================
+       MAIN WORKSPACE
+       ===================================================== */
+
+    .workspace {
+        display: flex !important;
+
+        position: relative !important;
+
+        width: calc(100vw - 64px) !important;
+        max-width: calc(100vw - 64px) !important;
+        min-width: 0 !important;
+
+        height: 100dvh !important;
+
+        margin-left: 64px !important;
+
+        padding: 0 !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+    }
+
+    /* TOP BAR */
+    .topbar {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: 62px !important;
+
+        padding: 9px 12px !important;
+
+        margin: 0 !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .topbar-center {
+        display: none !important;
+    }
+
+    .topbar-left {
+        min-width: 0 !important;
+        flex: 1 !important;
+    }
+
+    .workspace-title {
+        min-width: 0 !important;
+    }
+
+    .workspace-title h1,
+    .greeting h1 {
+        font-size: 17px !important;
+        white-space: nowrap !important;
+    }
+
+    .workspace-title p,
+    .greeting p {
+        display: none !important;
+    }
+
+    .topbar-right {
+        flex-shrink: 0 !important;
+        gap: 4px !important;
+    }
+
+    .top-icon {
+        width: 32px !important;
+        height: 32px !important;
+        padding: 0 !important;
+    }
+
+    .profile-button {
+        width: 34px !important;
+        height: 34px !important;
+    }
+
+    /* =====================================================
+       CONTENT — FORCE EVERYTHING INSIDE VIEWPORT
+       ===================================================== */
+
+    .workspace-content {
+        display: block !important;
+
+        position: relative !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: calc(100dvh - 62px) !important;
+
+        padding: 0 10px 75px !important;
+
+        margin: 0 !important;
+
+        box-sizing: border-box !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+    }
+
+    .conversation {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        min-height: calc(100dvh - 140px) !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        box-sizing: border-box !important;
+    }
+
+    /* =====================================================
+       HERO — CENTERED
+       ===================================================== */
+
+    .hero-screen {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        min-height: calc(100dvh - 145px) !important;
+
+        padding: 15px 5px 80px !important;
+
+        box-sizing: border-box !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .hero-container {
+        width: 100% !important;
+        max-width: 360px !important;
+        min-width: 0 !important;
+
+        margin: auto !important;
+        padding: 0 !important;
+
+        box-sizing: border-box !important;
+
+        text-align: center !important;
+    }
+
+    .hero-title {
+        width: 100% !important;
+        max-width: 360px !important;
+
+        font-size: 29px !important;
+        line-height: 1.08 !important;
+
+        letter-spacing: -1px !important;
+
+        overflow-wrap: break-word !important;
+    }
+
+    .hero-description {
+        width: 100% !important;
+        max-width: 320px !important;
+
+        margin: 12px auto 20px !important;
+
+        font-size: 12px !important;
+        line-height: 1.5 !important;
+    }
+
+    .hero-prompt {
+        width: 100% !important;
+        max-width: 340px !important;
+
+        margin: 0 auto !important;
+
+        display: grid !important;
+
+        grid-template-columns: 1fr 1fr !important;
+
+        gap: 8px !important;
+    }
+
+    .prompt-chip {
+        width: 100% !important;
+        min-width: 0 !important;
+
+        height: 44px !important;
+
+        padding: 0 3px !important;
+
+        box-sizing: border-box !important;
+
+        font-size: 10px !important;
+
+        border-radius: 12px !important;
+    }
+
+    /* =====================================================
+       COMMAND BAR
+       ===================================================== */
+
+    .command-section {
+        position: fixed !important;
+
+        left: 70px !important;
+        right: 6px !important;
+        bottom: 6px !important;
+
+        width: auto !important;
+
+        margin: 0 !important;
+
+        z-index: 10000 !important;
+    }
+
+    .command-bar {
+        width: 100% !important;
+        min-width: 0 !important;
+
+        height: 52px !important;
+
+        padding: 5px 5px 5px 10px !important;
+
+        gap: 3px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    #userInput {
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+
+        font-size: 11px !important;
+    }
+
+    .command-bar button {
+        flex: 0 0 27px !important;
+
+        width: 27px !important;
+        height: 34px !important;
+
+        padding: 0 !important;
+    }
+
+    #sendBtn {
+        flex: 0 0 36px !important;
+
+        width: 36px !important;
+        height: 37px !important;
+    }
+
+    /* CHAT */
+    #chatWindow {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+
+        padding-bottom: 75px !important;
+
+        overflow-x: hidden !important;
+    }
+
+    /* PROJECT / WORKSPACE PAGES */
+    .projects-page {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        padding: 20px 4px 80px !important;
+
+        box-sizing: border-box !important;
+
+        overflow-x: hidden !important;
+    }
+
+    .projects-grid {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        grid-template-columns: 1fr !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .project-card {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        box-sizing: border-box !important;
+    }
+}
+
+/* =========================================================
+   AP SYNAPSE — MOBILE EMERGENCY OVERRIDE
+   FINAL RESPONSIVE FIX
+   ========================================================= */
+
+@media screen and (max-width:700px){
+
+    html,
+    body{
+        width:100% !important;
+        min-width:0 !important;
+        max-width:100% !important;
+        height:100% !important;
+        margin:0 !important;
+        padding:0 !important;
+        overflow:hidden !important;
+    }
+
+    .app{
+        display:grid !important;
+
+        grid-template-columns:64px minmax(0,1fr) !important;
+
+        width:100vw !important;
+        min-width:0 !important;
+        max-width:100vw !important;
+
+        height:100dvh !important;
+
+        overflow:hidden !important;
+    }
+
+    /* =========================
+       SIDEBAR
+       ========================= */
+
+    .sidebar{
+        display:flex !important;
+
+        visibility:visible !important;
+        opacity:1 !important;
+        transform:none !important;
+
+        position:relative !important;
+
+        left:auto !important;
+        right:auto !important;
+
+        width:64px !important;
+        min-width:64px !important;
+        max-width:64px !important;
+
+        height:100dvh !important;
+
+        padding:12px 5px !important;
+
+        margin:0 !important;
+
+        box-sizing:border-box !important;
+
+        overflow:hidden !important;
+
+        z-index:9999 !important;
+    }
+
+    .sidebar-header{
+        width:100% !important;
+        min-width:0 !important;
+    }
+
+    .brand{
+        width:100% !important;
+        justify-content:center !important;
+    }
+
+    .brand-text{
+        display:none !important;
+    }
+
+    .brand-mark{
+        width:40px !important;
+        height:40px !important;
+        min-width:40px !important;
+    }
+
+    .new-chat-btn{
+        width:44px !important;
+        height:44px !important;
+
+        margin:18px auto !important;
+        padding:0 !important;
+
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+
+        font-size:0 !important;
+    }
+
+    .new-chat-btn span:last-child{
+        display:none !important;
+    }
+
+    .sidebar-search{
+        display:none !important;
+    }
+
+    .sidebar-group{
+        width:100% !important;
+        min-width:0 !important;
+    }
+
+    .sidebar-group h4{
+        display:none !important;
+    }
+
+    .sidebar nav{
+        width:100% !important;
+
+        display:flex !important;
+        flex-direction:column !important;
+        align-items:center !important;
+
+        gap:7px !important;
+    }
+
+    .sidebar nav a{
+        width:44px !important;
+        min-width:44px !important;
+        max-width:44px !important;
+
+        height:42px !important;
+
+        padding:0 !important;
+        margin:0 !important;
+
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+
+        font-size:0 !important;
+
+        box-sizing:border-box !important;
+    }
+
+    .sidebar-footer{
+        width:100% !important;
+        margin-top:auto !important;
+    }
+
+    .sidebar-footer .version{
+        display:none !important;
+    }
+
+    /* =========================
+       MAIN WORKSPACE
+       ========================= */
+
+    .workspace{
+        width:100% !important;
+        min-width:0 !important;
+        max-width:none !important;
+
+        height:100dvh !important;
+
+        padding:0 !important;
+        margin:0 !important;
+
+        overflow:hidden !important;
+
+        box-sizing:border-box !important;
+    }
+
+    /* =========================
+       TOP BAR
+       ========================= */
+
+    .topbar{
+        width:100% !important;
+        min-width:0 !important;
+
+        height:62px !important;
+
+        padding:8px 10px !important;
+        margin:0 !important;
+
+        box-sizing:border-box !important;
+
+        overflow:hidden !important;
+    }
+
+    .topbar-left{
+        min-width:0 !important;
+        flex:1 !important;
+    }
+
+    .workspace-title{
+        min-width:0 !important;
+    }
+
+    .workspace-badge{
+        font-size:7px !important;
+        letter-spacing:1px !important;
+    }
+
+    .greeting h1{
+        font-size:16px !important;
+        margin:2px 0 0 !important;
+    }
+
+    .greeting p{
+        display:none !important;
+    }
+
+    .topbar-center{
+        display:none !important;
+    }
+
+    .topbar-right{
+        flex-shrink:0 !important;
+        gap:4px !important;
+    }
+
+    .topbar-right .top-icon{
+        width:32px !important;
+        height:32px !important;
+        padding:0 !important;
+    }
+
+    .profile-button{
+        width:34px !important;
+        height:34px !important;
+        padding:0 !important;
+    }
+
+    /* =========================
+       CONTENT
+       ========================= */
+
+    .workspace-content{
+        display:block !important;
+
+        width:100% !important;
+        min-width:0 !important;
+        max-width:none !important;
+
+        height:calc(100dvh - 62px) !important;
+
+        padding:0 10px 76px !important;
+        margin:0 !important;
+
+        box-sizing:border-box !important;
+
+        overflow-x:hidden !important;
+        overflow-y:auto !important;
+    }
+
+    .conversation{
+        display:flex !important;
+
+        width:100% !important;
+        min-width:0 !important;
+        max-width:none !important;
+
+        min-height:100% !important;
+
+        margin:0 !important;
+        padding:0 !important;
+
+        box-sizing:border-box !important;
+    }
+
+    /* =========================
+       HERO
+       ========================= */
+
+    .hero-screen{
+        display:flex !important;
+
+        width:100% !important;
+        min-width:0 !important;
+        max-width:none !important;
+
+        min-height:calc(100dvh - 145px) !important;
+
+        margin:0 !important;
+        padding:20px 0 60px !important;
+
+        box-sizing:border-box !important;
+
+        align-items:center !important;
+        justify-content:center !important;
+    }
+
+    .hero-container{
+        display:flex !important;
+
+        width:100% !important;
+        min-width:0 !important;
+        max-width:400px !important;
+
+        margin:0 auto !important;
+        padding:0 5px !important;
+
+        box-sizing:border-box !important;
+
+        align-items:center !important;
+        justify-content:center !important;
+
+        text-align:center !important;
+    }
+
+    .hero-title{
+        width:100% !important;
+        max-width:360px !important;
+
+        font-size:29px !important;
+        line-height:1.08 !important;
+
+        letter-spacing:-1px !important;
+
+        overflow-wrap:anywhere !important;
+    }
+
+    .hero-description{
+        width:100% !important;
+        max-width:310px !important;
+
+        font-size:12px !important;
+        line-height:1.5 !important;
+    }
+
+    .hero-prompt{
+        display:grid !important;
+
+        width:100% !important;
+        max-width:340px !important;
+
+        grid-template-columns:1fr 1fr !important;
+
+        gap:8px !important;
+
+        margin:0 auto !important;
+    }
+
+    .prompt-chip{
+        width:100% !important;
+        min-width:0 !important;
+
+        height:44px !important;
+
+        font-size:11px !important;
+
+        box-sizing:border-box !important;
+    }
+
+    /* =========================
+       CHAT
+       ========================= */
+
+    #chatWindow{
+        width:100% !important;
+        min-width:0 !important;
+        max-width:none !important;
+
+        box-sizing:border-box !important;
+
+        overflow-x:hidden !important;
+    }
+
+    .message{
+        max-width:100% !important;
+        min-width:0 !important;
+
+        box-sizing:border-box !important;
+    }
+
+    .message-body{
+        max-width:calc(100% - 42px) !important;
+        min-width:0 !important;
+
+        overflow-wrap:anywhere !important;
+        word-break:break-word !important;
+    }
+
+    /* =========================
+       PROJECT / WORKSPACE PAGES
+       ========================= */
+
+    .projects-page{
+        width:100% !important;
+        min-width:0 !important;
+        max-width:none !important;
+
+        padding:20px 4px 85px !important;
+
+        box-sizing:border-box !important;
+
+        overflow-x:hidden !important;
+    }
+
+    .projects-header{
+        width:100% !important;
+        max-width:none !important;
+
+        text-align:center !important;
+    }
+
+    .projects-grid{
+        width:100% !important;
+        min-width:0 !important;
+        max-width:none !important;
+
+        grid-template-columns:1fr !important;
+
+        gap:10px !important;
+    }
+
+    .project-card{
+        width:100% !important;
+        min-width:0 !important;
+
+        box-sizing:border-box !important;
+    }
+
+    /* =========================
+       COMMAND BAR
+       ========================= */
+
+    .command-section{
+        position:fixed !important;
+
+        left:5px !important;
+        right:5px !important;
+        bottom:5px !important;
+
+        width:auto !important;
+
+        margin:0 !important;
+
+        z-index:10000 !important;
+    }
+
+    .command-bar{
+        width:100% !important;
+        min-width:0 !important;
+        max-width:none !important;
+
+        height:52px !important;
+
+        padding:5px 6px 5px 10px !important;
+
+        box-sizing:border-box !important;
+
+        display:flex !important;
+        align-items:center !important;
+
+        gap:3px !important;
+    }
+
+    #userInput{
+        flex:1 1 auto !important;
+
+        min-width:0 !important;
+        width:auto !important;
+
+        font-size:11px !important;
+
+        padding:0 !important;
+    }
+
+    .command-bar button{
+        flex:0 0 27px !important;
+
+        width:27px !important;
+        height:32px !important;
+
+        padding:0 !important;
+
+        font-size:11px !important;
+    }
+
+    #sendBtn{
+        flex:0 0 36px !important;
+
+        width:36px !important;
+        height:37px !important;
+
+        font-size:16px !important;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media screen and (max-width:390px){
+
+    .app{
+        grid-template-columns:58px minmax(0,1fr) !important;
+    }
+
+    .sidebar{
+        width:58px !important;
+        min-width:58px !important;
+        max-width:58px !important;
+    }
+
+    .brand-mark{
+        width:36px !important;
+        height:36px !important;
+        min-width:36px !important;
+    }
+
+    .new-chat-btn,
+    .sidebar nav a,
+    .sidebar-footer nav a{
+        width:40px !important;
+        min-width:40px !important;
+        max-width:40px !important;
+    }
+
+    .hero-title{
+        font-size:26px !important;
+    }
+
+    .hero-prompt{
+        max-width:310px !important;
+    }
+
+    .prompt-chip{
+        height:41px !important;
+        font-size:10px !important;
+    }
+}
+
+/* =========================================================
+   AP SYNAPSE — MOBILE RESPONSIVE ENGINE
+   FINAL MOBILE OVERRIDE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    /* ---------- GLOBAL ---------- */
+
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+
+    body {
+        position: relative;
+    }
+
+    /* ---------- APP ---------- */
+
+    .app {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        height: 100dvh !important;
+        overflow: hidden !important;
+    }
+
+    /* ---------- SIDEBAR ---------- */
+
+    .sidebar {
+        display: none !important;
+    }
+
+    /* ---------- WORKSPACE ---------- */
+
+    .workspace {
+        display: flex !important;
+        flex-direction: column !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: 100dvh !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    /* ---------- TOPBAR ---------- */
+
+    .topbar {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: auto !important;
+        min-height: 64px !important;
+
+        padding: 14px 16px !important;
+        margin: 0 !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .topbar-left {
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .workspace-title {
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .workspace-badge {
+        font-size: 9px !important;
+        letter-spacing: 1.5px !important;
+    }
+
+    .workspace-title h1,
+    #greeting {
+        font-size: 20px !important;
+        line-height: 1.1 !important;
+
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+
+        margin: 2px 0 !important;
+    }
+
+    .workspace-title p {
+        display: none !important;
+    }
+
+    /* Hide large desktop controls */
+
+    .topbar-center {
+        display: none !important;
+    }
+
+    .topbar-right {
+        display: flex !important;
+        flex-shrink: 0 !important;
+        gap: 6px !important;
+    }
+
+    .top-icon {
+        width: 36px !important;
+        height: 36px !important;
+        padding: 0 !important;
+    }
+
+    .profile-button {
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        padding: 0 !important;
+    }
+
+    /* ---------- CONTENT ---------- */
+
+    .workspace-content {
+        display: flex !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        flex: 1 !important;
+
+        height: auto !important;
+        min-height: 0 !important;
+
+        overflow: hidden !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .conversation {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: 100% !important;
+        min-height: 0 !important;
+
+        padding: 0 16px !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+    }
+
+    /* ---------- HERO ---------- */
+
+    .hero-screen {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        min-height: 0 !important;
+        height: 100% !important;
+
+        padding: 20px 0 110px !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        box-sizing: border-box !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    .hero-container {
+        width: 100% !important;
+        max-width: 520px !important;
+        min-width: 0 !important;
+
+        margin: auto !important;
+        padding: 20px 0 !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        text-align: center !important;
+
+        gap: 16px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .hero-badge {
+        margin: 0 0 4px !important;
+        padding: 6px 14px !important;
+
+        font-size: 9px !important;
+        letter-spacing: 1.7px !important;
+    }
+
+    .hero-title {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        font-size: clamp(32px, 10vw, 46px) !important;
+
+        line-height: 1.02 !important;
+        letter-spacing: -1.5px !important;
+
+        margin: 0 !important;
+
+        overflow-wrap: normal !important;
+    }
+
+    .hero-description {
+        width: 100% !important;
+        max-width: 400px !important;
+
+        margin: 0 auto !important;
+
+        padding: 0 10px !important;
+
+        font-size: 14px !important;
+        line-height: 1.55 !important;
+
+        box-sizing: border-box !important;
+    }
+
+    /* ---------- HERO CHIPS ---------- */
+
+    .hero-prompt {
+        width: 100% !important;
+        max-width: 420px !important;
+
+        display: grid !important;
+
+        grid-template-columns: 1fr 1fr !important;
+
+        gap: 10px !important;
+
+        margin-top: 4px !important;
+    }
+
+    .prompt-chip {
+        width: 100% !important;
+        min-width: 0 !important;
+
+        height: 48px !important;
+
+        padding: 0 8px !important;
+
+        border-radius: 14px !important;
+
+        font-size: 13px !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
+    /* ---------- CHAT WINDOW ---------- */
+
+    #chatWindow {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: 100% !important;
+
+        padding: 10px 0 100px !important;
+
+        box-sizing: border-box !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+    }
+
+    .message {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        box-sizing: border-box !important;
+    }
+
+    /* ---------- PROJECT / WORKSPACE PAGES ---------- */
+
+    .projects-page {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: 100% !important;
+
+        padding: 24px 16px 110px !important;
+
+        box-sizing: border-box !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    .projects-header {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .projects-header h1 {
+        font-size: 28px !important;
+        line-height: 1.15 !important;
+    }
+
+    .projects-header p {
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+    }
+
+    .projects-grid {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+
+        gap: 12px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .project-card {
+        width: 100% !important;
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+    }
+
+    /* ---------- COMMAND BAR ---------- */
+
+    .command-section {
+        position: fixed !important;
+
+        left: 8px !important;
+        right: 8px !important;
+        bottom: 8px !important;
+
+        width: auto !important;
+
+        z-index: 1000 !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .command-bar {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        display: flex !important;
+        align-items: center !important;
+
+        padding: 7px !important;
+
+        border-radius: 18px !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+    }
+
+    #userInput {
+        flex: 1 1 auto !important;
+
+        width: auto !important;
+        min-width: 0 !important;
+
+        font-size: 13px !important;
+
+        padding: 10px 8px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .command-bar button {
+        flex: 0 0 auto !important;
+
+        width: 34px !important;
+        height: 34px !important;
+
+        min-width: 34px !important;
+
+        padding: 0 !important;
+
+        border-radius: 10px !important;
+
+        font-size: 15px !important;
+    }
+
+    #deepThinkBtn {
+        display: none !important;
+    }
+
+    #stopBtn {
+        display: none !important;
+    }
+
+    #sendBtn {
+        width: 38px !important;
+        min-width: 38px !important;
+        height: 38px !important;
+
+        border-radius: 12px !important;
+    }
+
+    /* ---------- MODALS ---------- */
+
+    .project-modal {
+        position: fixed !important;
+
+        inset: 0 !important;
+
+        width: 100vw !important;
+        height: 100dvh !important;
+
+        padding: 16px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .project-box {
+        width: 100% !important;
+        max-width: 440px !important;
+
+        box-sizing: border-box !important;
+    }
+
+}
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 430px) {
+
+    .hero-screen {
+        padding-top: 10px !important;
+    }
+
+    .hero-container {
+        max-width: 100% !important;
+        padding: 12px 0 !important;
+    }
+
+    .hero-title {
+        font-size: clamp(30px, 9.5vw, 40px) !important;
+    }
+
+    .hero-description {
+        font-size: 13px !important;
+        max-width: 340px !important;
+    }
+
+    .hero-prompt {
+        max-width: 340px !important;
+        gap: 8px !important;
+    }
+
+    .prompt-chip {
+        height: 44px !important;
+        font-size: 12px !important;
+        border-radius: 12px !important;
+    }
+
+    .command-section {
+        left: 6px !important;
+        right: 6px !important;
+        bottom: 6px !important;
+    }
+
+    .command-bar {
+        padding: 5px !important;
+        border-radius: 16px !important;
+    }
+
+    #userInput {
+        font-size: 12px !important;
+    }
+
+    .command-bar button {
+        width: 31px !important;
+        min-width: 31px !important;
+        height: 31px !important;
+        font-size: 14px !important;
+    }
+
+    #sendBtn {
+        width: 36px !important;
+        min-width: 36px !important;
+        height: 36px !important;
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL MOBILE EXPERIENCE
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+}
+
+body {
+    margin: 0;
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    height: 100dvh;
+    overflow: hidden;
+}
+
+/* =========================================================
+   MOBILE SIDEBAR
+   ========================================================= */
+
+.sidebar {
+    position: relative;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+
+    min-height: 0;
+
+    padding: 14px 14px 10px;
+
+    flex-shrink: 0;
+
+    overflow: hidden;
+
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+
+    background: rgba(18,20,24,.94);
+    backdrop-filter: blur(24px);
+}
+
+/* Brand */
+
+.logo,
+.brand {
+    min-width: 0;
+}
+
+.sidebar-header {
+    width: 100%;
+    min-width: 0;
+}
+
+.sidebar-search {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.sidebar-search input {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Recent section becomes horizontal */
+
+.sidebar-group {
+    width: 100%;
+    min-width: 0;
+    margin-top: 10px;
+}
+
+.sidebar-group h4 {
+    margin: 8px 0;
+}
+
+.sidebar-group:has(.history-item) {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.history-item {
+    flex-shrink: 0;
+}
+
+/* Workspace navigation */
+
+.sidebar nav {
+    display: flex;
+    flex-direction: row;
+
+    width: 100%;
+    max-width: 100%;
+
+    gap: 7px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    padding-bottom: 4px;
+
+    scrollbar-width: none;
+}
+
+.sidebar nav::-webkit-scrollbar {
+    display: none;
+}
+
+.sidebar nav a {
+    flex: 0 0 auto;
+    white-space: nowrap;
+
+    padding: 9px 13px;
+    border-radius: 12px;
+
+    font-size: 13px;
+}
+
+/* Footer */
+
+.sidebar-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    width: 100%;
+    min-width: 0;
+
+    margin-top: 8px;
+}
+
+.sidebar-footer nav {
+    width: auto;
+}
+
+.version {
+    white-space: nowrap;
+    font-size: 10px;
+    opacity: .6;
+}
+
+/* =========================================================
+   MAIN WORKSPACE
+   ========================================================= */
+
+.workspace {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+
+    height: auto;
+    min-height: 0;
+
+    flex: 1;
+
+    padding: 12px 12px 88px;
+
+    overflow: hidden;
+}
+
+/* =========================================================
+   TOP BAR
+   ========================================================= */
+
+.topbar {
+    width: 100%;
+    min-width: 0;
+
+    height: auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 10px;
+
+    margin: 0;
+}
+
+.topbar-left,
+.topbar-center,
+.topbar-right {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.workspace-title {
+    min-width: 0;
+}
+
+.greeting h1,
+.workspace-title h1 {
+    font-size: 21px;
+    line-height: 1.15;
+    margin: 0;
+}
+
+.greeting p,
+.workspace-title p {
+    font-size: 12px;
+    margin: 4px 0 0;
+}
+
+.topbar-center {
+    order: 3;
+}
+
+.global-search {
+    width: 100%;
+    max-width: 100%;
+}
+
+.global-search input {
+    min-width: 0;
+    width: 100%;
+}
+
+.topbar-right {
+    display: flex;
+    justify-content: flex-end;
+    gap: 7px;
+}
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.workspace-content {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+
+    height: auto;
+    min-height: 0;
+
+    overflow: hidden;
+
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+}
+
+.conversation {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero-screen {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+
+    min-height: 0;
+
+    padding: 24px 8px 30px;
+
+    overflow: hidden;
+}
+
+.hero-container {
+    width: 100%;
+    max-width: 560px;
+    min-width: 0;
+
+    gap: 16px;
+
+    margin: 0 auto;
+}
+
+.hero-title {
+    width: 100%;
+    max-width: 100%;
+
+    font-size: clamp(30px, 9vw, 44px);
+
+    line-height: 1.03;
+    letter-spacing: -1.5px;
+
+    overflow-wrap: break-word;
+}
+
+.hero-description {
+    width: 100%;
+    max-width: 460px;
+
+    font-size: 14px;
+    line-height: 1.55;
+
+    margin-bottom: 12px;
+}
+
+.hero-prompt {
+    width: 100%;
+    max-width: 460px;
+
+    display: grid;
+    grid-template-columns: 1fr;
+
+    gap: 9px;
+}
+
+.prompt-chip {
+    width: 100%;
+    min-width: 0;
+
+    height: 48px;
+
+    font-size: 13px;
+}
+
+/* =========================================================
+   CHAT
+   ========================================================= */
+
+#chatWindow {
+    width: 100%;
+    max-width: 760px;
+    min-width: 0;
+
+    height: 100%;
+
+    padding: 4px 0 20px;
+
+    overflow-x: hidden;
+}
+
+.message {
+    max-width: 100%;
+    min-width: 0;
+}
+
+.message-body {
+    max-width: calc(100vw - 80px);
+    min-width: 0;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+/* =========================================================
+   PROJECTS / WORKSPACES
+   ========================================================= */
+
+.projects-page {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    overflow-x: hidden;
+
+    padding: 10px 2px 100px;
+}
+
+.projects-header {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.projects-header h1 {
+    font-size: 26px;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+}
+
+.projects-header p {
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.projects-grid {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    display: grid;
+    grid-template-columns: 1fr;
+
+    gap: 12px;
+}
+
+.project-card {
+    width: 100%;
+    min-width: 0;
+
+    overflow: hidden;
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   COMMAND BAR
+   ========================================================= */
+
+.command-section {
+    position: fixed;
+
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+
+    width: auto;
+    max-width: none;
+
+    z-index: 1000;
+}
+
+.command-bar {
+    width: 100%;
+    max-width: 100%;
+
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 4px;
+
+    padding: 6px;
+
+    border-radius: 18px;
+}
+
+.command-bar input#userInput {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+
+    font-size: 13px;
+}
+
+.command-bar button {
+    flex: 0 0 auto;
+
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+
+    padding: 0;
+
+    border-radius: 10px;
+}
+
+.command-bar #sendBtn {
+    width: 40px;
+    min-width: 40px;
+}
+
+/* =========================================================
+   MODALS / POPUPS
+   ========================================================= */
+
+.project-modal,
+.popup-panel,
+.command-palette,
+.image-viewer {
+    max-width: 100vw;
+}
+
+.project-box {
+    width: calc(100vw - 28px);
+    max-width: 460px;
+}
+
+/* =========================================================
+   TABLET / LARGER MOBILE
+   ========================================================= */
+
+@media (min-width: 600px) and (max-width: 900px) {
+
+    .hero-prompt {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 620px;
+    }
+
+    .hero-title {
+        font-size: 42px;
+    }
+
+    .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .sidebar {
+        padding: 10px;
+    }
+
+    .workspace {
+        padding-left: 9px;
+        padding-right: 9px;
+    }
+
+    .hero-screen {
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+
+    .hero-title {
+        font-size: 29px;
+    }
+
+    .hero-description {
+        font-size: 13px;
+    }
+
+    .command-section {
+        left: 5px;
+        right: 5px;
+        bottom: 5px;
+    }
+
+    .command-bar button {
+        width: 30px;
+        min-width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
+
+    .command-bar #sendBtn {
+        width: 36px;
+        min-width: 36px;
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — PROFESSIONAL MOBILE RESPONSIVE ENGINE
+   Desktop layout remains untouched.
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    /* ---------- GLOBAL MOBILE SAFETY ---------- */
+
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+    }
+
+    body {
+        margin: 0;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    /* ---------- APP ---------- */
+
+    .app {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        height: 100dvh;
+        overflow: hidden;
+    }
+
+    /* ---------- SIDEBAR ---------- */
+
+    .sidebar {
+        display: none;
+    }
+
+    /* ---------- MAIN WORKSPACE ---------- */
+
+    .workspace {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        height: 100dvh;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    /* ---------- TOPBAR ---------- */
+
+    .topbar {
+        width: 100%;
+        height: auto;
+        min-height: 72px;
+        padding: 14px 16px;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        overflow: hidden;
+    }
+
+    .topbar-left {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .workspace-title {
+        min-width: 0;
+    }
+
+    .workspace-badge {
+        display: inline-flex;
+        max-width: 100%;
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        white-space: nowrap;
+    }
+
+    .workspace-title h1,
+    #greeting {
+        margin: 2px 0 0;
+        font-size: 18px;
+        line-height: 1.15;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .workspace-title p {
+        display: none;
+    }
+
+    /* Hide desktop search on small screens */
+    .topbar-center {
+        display: none;
+    }
+
+    /* ---------- TOP ACTIONS ---------- */
+
+    .topbar-right {
+        display: flex;
+        flex-shrink: 0;
+        gap: 6px;
+    }
+
+    .topbar-right .top-icon {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        padding: 0;
+    }
+
+    .profile-button {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+        padding: 0;
+    }
+
+    /* ---------- CONTENT AREA ---------- */
+
+    .workspace-content {
+        width: 100%;
+        min-width: 0;
+        height: calc(100dvh - 72px);
+        min-height: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .conversation {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* ---------- HERO ---------- */
+
+    .hero-screen {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        min-height: 0;
+        height: 100%;
+        padding: 20px 16px 110px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .hero-container {
+        width: 100%;
+        max-width: 520px;
+        min-width: 0;
+        margin: auto;
+        padding: 10px 0 30px;
+        gap: 16px;
+    }
+
+    .hero-badge {
+        font-size: 9px;
+        letter-spacing: 1.8px;
+        padding: 6px 13px;
+        margin-bottom: 4px;
+    }
+
+    .hero-title {
+        width: 100%;
+        max-width: 100%;
+        font-size: clamp(32px, 10vw, 46px);
+        line-height: 1.02;
+        letter-spacing: -1.5px;
+        margin: 0 auto;
+    }
+
+    .hero-description {
+        width: 100%;
+        max-width: 430px;
+        padding: 0 8px;
+        margin: 0 auto 8px;
+        font-size: 14px;
+        line-height: 1.55;
+    }
+
+    /* ---------- HERO PROMPTS ---------- */
+
+    .hero-prompt {
+        width: 100%;
+        max-width: 460px;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+    }
+
+    .prompt-chip {
+        width: 100%;
+        min-width: 0;
+        height: 48px;
+        padding: 0 8px;
+        border-radius: 15px;
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .prompt-chip:hover {
+        transform: none;
+    }
+
+    /* ---------- CHAT WINDOW ---------- */
+
+    #chatWindow {
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        min-width: 0;
+        padding: 10px 12px 100px;
+        overflow-x: hidden;
+    }
+
+    .message {
+        max-width: 100%;
+    }
+
+    .message-body {
+        max-width: calc(100vw - 70px);
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    /* ---------- COMMAND BAR ---------- */
+
+    .command-section {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        width: 100%;
+        max-width: 100%;
+        padding: 8px 10px;
+
+        z-index: 1000;
+
+        background: linear-gradient(
+            to top,
+            rgba(10,11,14,.98),
+            rgba(10,11,14,.82),
+            transparent
+        );
+    }
+
+    .command-bar {
+        width: 100%;
+        max-width: 760px;
+        min-width: 0;
+        min-height: 52px;
+
+        margin: 0 auto;
+
+        padding: 6px 7px;
+
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        border-radius: 18px;
+    }
+
+    #userInput {
+        min-width: 0;
+        width: 100%;
+        flex: 1;
+
+        font-size: 14px;
+        padding: 10px 7px;
+    }
+
+    /* Keep controls compact */
+    .command-bar button {
+        flex: 0 0 34px;
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+        padding: 0;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 10px;
+    }
+
+    #sendBtn {
+        flex: 0 0 42px;
+        width: 42px;
+        min-width: 42px;
+        height: 42px;
+        border-radius: 13px;
+    }
+
+    /* ---------- PROJECT / WORKSPACE PAGES ---------- */
+
+    .projects-page {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 22px 16px 110px;
+    }
+
+    .projects-header {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .projects-header h1 {
+        font-size: 28px;
+        line-height: 1.15;
+        overflow-wrap: anywhere;
+    }
+
+    .projects-header p {
+        font-size: 14px;
+        line-height: 1.55;
+    }
+
+    .projects-grid {
+        width: 100%;
+        max-width: 100%;
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .project-card {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    /* ---------- MODALS ---------- */
+
+    .project-modal {
+        padding: 16px;
+    }
+
+    .project-box {
+        width: 100%;
+        max-width: 430px;
+        max-height: 90dvh;
+        overflow-y: auto;
+        padding: 22px;
+        border-radius: 20px;
+    }
+
+    /* ---------- POPUPS ---------- */
+
+    .popup-panel {
+        width: calc(100% - 28px);
+        max-width: 430px;
+        max-height: 80dvh;
+        overflow-y: auto;
+    }
+
+    /* ---------- IMAGE VIEWER ---------- */
+
+    .image-viewer {
+        width: 100%;
+        height: 100dvh;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .topbar {
+        padding: 12px 12px;
+    }
+
+    .topbar-right .top-icon {
+        display: none;
+    }
+
+    .profile-button {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+    }
+
+    .hero-screen {
+        padding-left: 13px;
+        padding-right: 13px;
+        padding-bottom: 105px;
+    }
+
+    .hero-title {
+        font-size: clamp(30px, 9.5vw, 40px);
+    }
+
+    .hero-description {
+        font-size: 13px;
+    }
+
+    .hero-prompt {
+        grid-template-columns: 1fr;
+        max-width: 360px;
+    }
+
+    .prompt-chip {
+        height: 46px;
+    }
+
+    .command-section {
+        padding: 7px 7px;
+    }
+
+    .command-bar {
+        border-radius: 17px;
+        padding: 5px;
+    }
+
+    .command-bar button {
+        flex-basis: 31px;
+        width: 31px;
+        min-width: 31px;
+        height: 31px;
+    }
+
+    #sendBtn {
+        flex-basis: 40px;
+        width: 40px;
+        min-width: 40px;
+        height: 40px;
+    }
+
+    #userInput {
+        font-size: 13px;
+    }
+
+}
+
+
+/* =========================================================
+   LANDSCAPE PHONES
+   ========================================================= */
+
+@media (max-width: 768px) and (orientation: landscape) {
+
+    .hero-screen {
+        align-items: flex-start;
+        padding-top: 20px;
+    }
+
+    .hero-container {
+        padding-bottom: 90px;
+    }
+
+    .hero-prompt {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — MOBILE RESPONSIVE ENGINE
+   Desktop layout remains untouched.
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+    }
+
+    body {
+        margin: 0;
+    }
+
+    .app {
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        height: 100dvh !important;
+        overflow: hidden !important;
+        position: relative;
+    }
+
+    /* -------------------------
+       MOBILE SIDEBAR
+       ------------------------- */
+
+    .sidebar {
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        bottom: 0 !important;
+
+        width: min(82vw, 320px) !important;
+        max-width: 320px !important;
+
+        height: 100dvh !important;
+
+        box-sizing: border-box !important;
+
+        z-index: 5000 !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        padding: 22px 18px !important;
+
+        transform: translateX(-105%);
+        transition: transform .28s cubic-bezier(.22,1,.36,1);
+
+        background: rgba(15,17,20,.97) !important;
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+
+        box-shadow: 18px 0 50px rgba(0,0,0,.35);
+    }
+
+    /*
+       Supports common existing mobile-sidebar states.
+       If your sidebar.js already adds one of these classes,
+       the drawer opens automatically.
+    */
+
+    .sidebar.open,
+    .sidebar.active,
+    .sidebar.mobile-open,
+    body.sidebar-open .sidebar {
+        transform: translateX(0) !important;
+    }
+
+    /* -------------------------
+       MAIN WORKSPACE
+       ------------------------- */
+
+    .workspace {
+        position: relative !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: 100dvh !important;
+
+        margin: 0 !important;
+
+        padding:
+            12px
+            14px
+            calc(88px + env(safe-area-inset-bottom))
+            14px !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+    }
+
+    /* -------------------------
+       TOPBAR
+       ------------------------- */
+
+    .topbar {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: auto !important;
+        min-height: 64px !important;
+
+        margin: 0 0 8px !important;
+
+        display: flex !important;
+        align-items: center !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .topbar-left {
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .workspace-title {
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .workspace-title h1,
+    .greeting h1 {
+        font-size: 20px !important;
+        line-height: 1.15 !important;
+
+        max-width: 100% !important;
+
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .workspace-title p,
+    .greeting p {
+        font-size: 12px !important;
+
+        max-width: 100% !important;
+
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .topbar-center {
+        display: none !important;
+    }
+
+    .topbar-right {
+        display: none !important;
+    }
+
+    /* -------------------------
+       CONTENT
+       ------------------------- */
+
+    .workspace-content {
+        display: block !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: calc(100dvh - 78px) !important;
+
+        overflow: hidden !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .conversation {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: 100% !important;
+
+        display: flex !important;
+
+        justify-content: center !important;
+        align-items: center !important;
+
+        position: relative !important;
+
+        overflow: hidden !important;
+    }
+
+    /* -------------------------
+       HERO
+       ------------------------- */
+
+    .hero-screen {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+
+        padding: 12px 4px 100px !important;
+
+        overflow: hidden !important;
+    }
+
+    .hero-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+
+        text-align: center !important;
+    }
+
+    .hero-title {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        font-size: clamp(30px, 9vw, 44px) !important;
+
+        line-height: 1.05 !important;
+
+        overflow-wrap: anywhere !important;
+    }
+
+    .hero-description {
+        width: 100% !important;
+        max-width: 340px !important;
+
+        margin-left: auto !important;
+        margin-right: auto !important;
+
+        font-size: 13px !important;
+        line-height: 1.55 !important;
+    }
+
+    /* -------------------------
+       PROMPT CHIPS
+       ------------------------- */
+
+    .hero-prompt {
+        width: 100% !important;
+        max-width: 360px !important;
+
+        margin: 22px auto 0 !important;
+
+        display: grid !important;
+
+        grid-template-columns: 1fr 1fr !important;
+
+        gap: 8px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .prompt-chip {
+        width: 100% !important;
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+
+        padding: 12px 8px !important;
+
+        font-size: 12px !important;
+
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+    }
+
+    /* -------------------------
+       CHAT
+       ------------------------- */
+
+    #chatWindow,
+    .chat-window {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: 100% !important;
+
+        box-sizing: border-box !important;
+
+        padding:
+            8px
+            2px
+            110px !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+    }
+
+    .message {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .message-body {
+        min-width: 0 !important;
+        max-width: calc(100% - 42px) !important;
+
+        overflow-wrap: anywhere !important;
+        word-break: break-word !important;
+    }
+
+    /* -------------------------
+       PROJECT / WORKSPACE PAGES
+       ------------------------- */
+
+    .projects-page {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: 100% !important;
+
+        box-sizing: border-box !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        padding: 10px 2px 110px !important;
+    }
+
+    .projects-header {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        box-sizing: border-box !important;
+
+        text-align: left !important;
+    }
+
+    .projects-header h1 {
+        font-size: 28px !important;
+        line-height: 1.15 !important;
+
+        overflow-wrap: anywhere !important;
+    }
+
+    .projects-header p {
+        font-size: 13px !important;
+        line-height: 1.5 !important;
+    }
+
+    .projects-grid {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        display: grid !important;
+
+        grid-template-columns: 1fr !important;
+
+        gap: 12px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .project-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+
+        overflow-wrap: anywhere !important;
+    }
+
+    /* -------------------------
+       COMMAND BAR
+       ------------------------- */
+
+    .command-section {
+        position: fixed !important;
+
+        left: 10px !important;
+        right: 10px !important;
+
+        bottom:
+            calc(10px + env(safe-area-inset-bottom)) !important;
+
+        width: auto !important;
+
+        z-index: 4000 !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .command-bar {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        min-height: 56px !important;
+
+        box-sizing: border-box !important;
+
+        padding: 7px !important;
+
+        display: flex !important;
+        align-items: center !important;
+
+        gap: 4px !important;
+
+        border-radius: 18px !important;
+    }
+
+    #userInput {
+        flex: 1 1 auto !important;
+
+        min-width: 0 !important;
+        width: auto !important;
+
+        font-size: 14px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .command-bar button {
+        flex: 0 0 auto !important;
+
+        width: 38px !important;
+        min-width: 38px !important;
+        height: 38px !important;
+
+        padding: 0 !important;
+    }
+
+    #sendBtn {
+        width: 42px !important;
+        min-width: 42px !important;
+        height: 42px !important;
+    }
+
+    /* Hide lower-priority controls on narrow screens,
+       while keeping the core assistant usable. */
+
+    #speakBtn,
+    #webBtn,
+    #deepThinkBtn {
+        display: none !important;
+    }
+
+    /* -------------------------
+       MOBILE MENU BUTTON
+       ------------------------- */
+
+    .mobile-menu-btn,
+    .menu-toggle,
+    .sidebar-toggle,
+    .hamburger {
+        position: fixed !important;
+
+        top: 14px !important;
+        left: 14px !important;
+
+        z-index: 6000 !important;
+    }
+
+    /* -------------------------
+       PREVENT DESKTOP WIDTH
+       ------------------------- */
+
+    img,
+    canvas,
+    video,
+    iframe,
+    table,
+    pre {
+        max-width: 100% !important;
+    }
+
+    pre {
+        overflow-x: auto !important;
+    }
+
+    #intelligence-field {
+        position: fixed !important;
+
+        inset: 0 !important;
+
+        width: 100vw !important;
+        height: 100dvh !important;
+
+        max-width: 100vw !important;
+
+        pointer-events: none !important;
+    }
+}
+
+/* =========================================================
+   AP SYNAPSE — FINAL MOBILE RESPONSIVE OVERRIDE
+   Desktop layout remains untouched.
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0 !important;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden !important;
+    }
+
+    body {
+        min-height: 100dvh;
+    }
+
+    .app {
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100vw !important;
+        height: 100dvh !important;
+        overflow: hidden !important;
+    }
+
+    /* ---------- SIDEBAR ---------- */
+
+    .sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+
+        width: min(300px, 86vw) !important;
+        height: 100dvh !important;
+
+        box-sizing: border-box !important;
+
+        z-index: 10000 !important;
+
+        transform: translateX(-105%) !important;
+        transition: transform .25s ease !important;
+
+        padding: 24px 18px !important;
+    }
+
+    /* Supports common sidebar-open states */
+    body.sidebar-open .sidebar,
+    .app.sidebar-open .sidebar,
+    .sidebar.open {
+        transform: translateX(0) !important;
+    }
+
+    /* ---------- MAIN WORKSPACE ---------- */
+
+    .workspace {
+        position: relative !important;
+
+        width: 100% !important;
+        max-width: 100vw !important;
+        min-width: 0 !important;
+
+        height: 100dvh !important;
+
+        box-sizing: border-box !important;
+
+        padding: 14px 12px 92px !important;
+
+        overflow: hidden !important;
+    }
+
+    /* ---------- TOPBAR ---------- */
+
+    .topbar {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        height: auto !important;
+        min-height: 58px !important;
+
+        margin: 0 0 8px !important;
+
+        display: flex !important;
+        align-items: center !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .topbar-left {
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .workspace-title {
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .workspace-title h1,
+    .greeting h1 {
+        max-width: 100% !important;
+
+        font-size: 18px !important;
+        line-height: 1.15 !important;
+
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .workspace-title p,
+    .greeting p {
+        font-size: 12px !important;
+
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .topbar-center,
+    .global-search {
+        display: none !important;
+    }
+
+    .topbar-right {
+        margin-left: auto !important;
+        flex-shrink: 0 !important;
+        gap: 6px !important;
+    }
+
+    .top-icon {
+        width: 38px !important;
+        height: 38px !important;
+    }
+
+    .profile-button {
+        width: 38px !important;
+        height: 38px !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* ---------- CONTENT ---------- */
+
+    .workspace-content {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: calc(100dvh - 74px) !important;
+
+        display: block !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .conversation {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        min-height: 100% !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+    }
+
+    /* ---------- HERO ---------- */
+
+    #heroScreen,
+    .hero-screen {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+
+        padding: 20px 4px 110px !important;
+    }
+
+    .hero-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+
+        text-align: center !important;
+    }
+
+    .hero-title {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        font-size: clamp(34px, 10vw, 48px) !important;
+        line-height: 1.02 !important;
+
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+
+        margin: 14px auto !important;
+    }
+
+    .hero-description {
+        width: 100% !important;
+        max-width: 340px !important;
+
+        margin: 0 auto !important;
+
+        font-size: 14px !important;
+        line-height: 1.55 !important;
+    }
+
+    .hero-prompt {
+        width: 100% !important;
+        max-width: 360px !important;
+
+        margin: 22px auto 0 !important;
+
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+
+        gap: 9px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .prompt-chip {
+        width: 100% !important;
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+
+        padding: 13px 8px !important;
+
+        font-size: 12px !important;
+
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    /* ---------- CHAT ---------- */
+
+    #chatWindow {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: 100% !important;
+
+        box-sizing: border-box !important;
+
+        padding: 8px 2px 100px !important;
+    }
+
+    .message {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .message-body {
+        min-width: 0 !important;
+        max-width: calc(100vw - 75px) !important;
+
+        overflow-wrap: anywhere !important;
+        word-break: break-word !important;
+    }
+
+    /* ---------- PROJECT / WORKSPACE PAGES ---------- */
+
+    .projects-page {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+
+        padding: 16px 4px 110px !important;
+        overflow-x: hidden !important;
+    }
+
+    .projects-header {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .projects-header h1 {
+        font-size: 28px !important;
+        line-height: 1.15 !important;
+
+        overflow-wrap: anywhere !important;
+    }
+
+    .projects-header p {
+        font-size: 13px !important;
+        line-height: 1.5 !important;
+    }
+
+    .projects-grid {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        display: grid !important;
+
+        grid-template-columns: 1fr !important;
+
+        gap: 12px !important;
+    }
+
+    .project-card {
+        width: 100% !important;
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+    }
+
+    /* ---------- COMMAND BAR ---------- */
+
+    .command-section {
+        position: fixed !important;
+
+        left: 10px !important;
+        right: 10px !important;
+        bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+
+        width: auto !important;
+        max-width: none !important;
+
+        z-index: 9000 !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .command-bar {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+
+        display: flex !important;
+        align-items: center !important;
+
+        padding: 7px !important;
+
+        gap: 5px !important;
+
+        border-radius: 18px !important;
+    }
+
+    #userInput {
+        flex: 1 1 auto !important;
+
+        width: 1px !important;
+        min-width: 0 !important;
+
+        font-size: 13px !important;
+    }
+
+    #attachBtn,
+    #imageGenBtn,
+    #voiceBtn,
+    #speakBtn,
+    #webBtn,
+    #deepThinkBtn,
+    #stopBtn {
+        flex: 0 0 32px !important;
+
+        width: 32px !important;
+        min-width: 32px !important;
+        height: 32px !important;
+
+        padding: 0 !important;
+
+        font-size: 14px !important;
+    }
+
+    #sendBtn {
+        flex: 0 0 42px !important;
+
+        width: 42px !important;
+        min-width: 42px !important;
+        height: 42px !important;
+
+        padding: 0 !important;
+    }
+
+    /* ---------- BACKGROUND ---------- */
+
+    .background,
+    #intelligence-field {
+        position: fixed !important;
+
+        inset: 0 !important;
+
+        width: 100vw !important;
+        height: 100dvh !important;
+
+        max-width: 100vw !important;
+
+        pointer-events: none !important;
+    }
+
+    /* Prevent any child from creating horizontal overflow */
+    .workspace *,
+    .workspace-content *,
+    .conversation *,
+    .projects-page * {
+        max-width: 100% !important;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .workspace {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+
+    .hero-title {
+        font-size: 34px !important;
+    }
+
+    .hero-prompt {
+        grid-template-columns: 1fr !important;
+        max-width: 310px !important;
+    }
+
+    .hero-description {
+        max-width: 310px !important;
+    }
+
+    .command-section {
+        left: 7px !important;
+        right: 7px !important;
+    }
+
+    #attachBtn,
+    #imageGenBtn,
+    #voiceBtn,
+    #speakBtn,
+    #webBtn,
+    #deepThinkBtn,
+    #stopBtn {
+        display: none !important;
+    }
+
+    #sendBtn {
+        flex-basis: 40px !important;
+        width: 40px !important;
+        min-width: 40px !important;
+    }
+}
+
+/* ============================================================
+   AP SYNAPSE — MOBILE EMERGENCY FINAL OVERRIDE
+   FIXES DESKTOP CONTENT LEAKING INTO MOBILE VIEW
+   DESKTOP IS NOT CHANGED
+   ============================================================ */
+
+@media screen and (max-width: 768px) {
+
+    html {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+    }
+
+    body {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+    }
+
+    /* ================= APP ================= */
+
+    .app {
+        display: block !important;
+
+        position: relative !important;
+
+        width: 100vw !important;
+        min-width: 0 !important;
+        max-width: 100vw !important;
+
+        height: 100dvh !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        left: 0 !important;
+        right: 0 !important;
+
+        transform: none !important;
+
+        overflow: hidden !important;
+    }
+
+
+    /* ================= WORKSPACE ================= */
+
+    main.workspace,
+    .workspace {
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        position: relative !important;
+
+        width: 100vw !important;
+        min-width: 0 !important;
+        max-width: 100vw !important;
+
+        height: 100dvh !important;
+
+        margin: 0 !important;
+        padding: 12px 10px 88px !important;
+
+        left: 0 !important;
+        right: 0 !important;
+        top: 0 !important;
+
+        transform: none !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+    }
+
+
+    /* ================= TOPBAR ================= */
+
+    .topbar {
+
+        position: relative !important;
+
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        height: auto !important;
+        min-height: 55px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        left: 0 !important;
+        right: 0 !important;
+
+        transform: none !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .topbar-left {
+        min-width: 0 !important;
+        width: auto !important;
+        max-width: 65% !important;
+    }
+
+    .topbar-right {
+        margin-left: auto !important;
+        flex-shrink: 0 !important;
+    }
+
+    .topbar-center {
+        display: none !important;
+    }
+
+
+    /* ================= CONTENT ================= */
+
+    .workspace-content {
+
+        position: relative !important;
+
+        display: block !important;
+
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        height: calc(100dvh - 65px) !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        left: 0 !important;
+        right: 0 !important;
+
+        transform: none !important;
+
+        box-sizing: border-box !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+    }
+
+
+    /* ================= CONVERSATION ================= */
+
+    .conversation {
+
+        position: relative !important;
+
+        display: flex !important;
+
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        height: 100% !important;
+        min-height: 0 !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        left: 0 !important;
+        right: 0 !important;
+        top: 0 !important;
+
+        transform: none !important;
+
+        box-sizing: border-box !important;
+
+        overflow-x: hidden !important;
+    }
+
+
+    /* ================= HERO — CRITICAL ================= */
+
+    #heroScreen,
+    .hero-screen {
+
+        position: relative !important;
+
+        display: flex !important;
+
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        height: auto !important;
+        min-height: 100% !important;
+
+        margin: 0 !important;
+        padding: 25px 8px 110px !important;
+
+        left: 0 !important;
+        right: 0 !important;
+        top: 0 !important;
+        bottom: auto !important;
+
+        transform: none !important;
+
+        box-sizing: border-box !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        overflow-x: hidden !important;
+    }
+
+
+    .hero-container {
+
+        position: relative !important;
+
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 370px !important;
+
+        margin: 0 auto !important;
+        padding: 0 !important;
+
+        left: 0 !important;
+        right: 0 !important;
+
+        transform: none !important;
+
+        box-sizing: border-box !important;
+
+        text-align: center !important;
+    }
+
+
+    .hero-title {
+
+        position: relative !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        margin: 14px auto !important;
+
+        left: 0 !important;
+        right: 0 !important;
+
+        transform: none !important;
+
+        font-size: 35px !important;
+        line-height: 1.05 !important;
+
+        overflow-wrap: normal !important;
+        word-break: normal !important;
+    }
+
+
+    .hero-description {
+
+        width: 100% !important;
+        max-width: 330px !important;
+
+        margin: 0 auto !important;
+
+        font-size: 13px !important;
+        line-height: 1.5 !important;
+    }
+
+
+    /* ================= HERO BUTTONS ================= */
+
+    .hero-prompt {
+
+        display: grid !important;
+
+        width: 100% !important;
+        max-width: 350px !important;
+
+        grid-template-columns: 1fr 1fr !important;
+
+        gap: 9px !important;
+
+        margin: 22px auto !important;
+
+        padding: 0 !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .prompt-chip {
+
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        box-sizing: border-box !important;
+
+        padding: 13px 7px !important;
+
+        font-size: 12px !important;
+
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
+
+    /* ================= CHAT ================= */
+
+    #chatWindow {
+
+        position: relative !important;
+
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        height: 100% !important;
+
+        margin: 0 !important;
+        padding: 10px 2px 90px !important;
+
+        left: 0 !important;
+        right: 0 !important;
+
+        transform: none !important;
+
+        box-sizing: border-box !important;
+
+        overflow-x: hidden !important;
+    }
+
+
+    /* ================= PROJECT / WORKSPACE ================= */
+
+    .projects-page {
+
+        position: relative !important;
+
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        margin: 0 !important;
+        padding: 20px 5px 100px !important;
+
+        left: 0 !important;
+        right: 0 !important;
+
+        transform: none !important;
+
+        box-sizing: border-box !important;
+
+        overflow-x: hidden !important;
+    }
+
+    .projects-grid {
+
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        grid-template-columns: 1fr !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .project-card {
+
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* ================= SIDEBAR ================= */
+
+    .sidebar {
+
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 0 !important;
+
+        width: min(300px, 85vw) !important;
+        height: 100dvh !important;
+
+        z-index: 99999 !important;
+
+        box-sizing: border-box !important;
+
+        transform: translateX(-110%) !important;
+
+        transition: transform .25s ease !important;
+    }
+
+    .sidebar.open,
+    body.sidebar-open .sidebar,
+    .app.sidebar-open .sidebar {
+        transform: translateX(0) !important;
+    }
+
+
+    /* ================= COMMAND BAR ================= */
+
+    .command-section {
+
+        position: fixed !important;
+
+        left: 8px !important;
+        right: 8px !important;
+
+        bottom: calc(8px + env(safe-area-inset-bottom)) !important;
+
+        width: auto !important;
+        max-width: none !important;
+
+        z-index: 100000 !important;
+
+        box-sizing: border-box !important;
+    }
+
+    .command-bar {
+
+        display: flex !important;
+        align-items: center !important;
+
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+
+        box-sizing: border-box !important;
+
+        padding: 6px !important;
+        gap: 5px !important;
+
+        overflow: hidden !important;
+    }
+
+    #userInput {
+
+        flex: 1 1 auto !important;
+
+        width: 1px !important;
+        min-width: 0 !important;
+        max-width: none !important;
+
+        box-sizing: border-box !important;
+
+        font-size: 13px !important;
+    }
+
+    #sendBtn {
+
+        flex: 0 0 42px !important;
+
+        width: 42px !important;
+        min-width: 42px !important;
+        height: 42px !important;
+    }
+
+
+    /* ================= GLOBAL OVERFLOW KILL ================= */
+
+    .workspace,
+    .workspace > *,
+    .workspace-content,
+    .conversation,
+    .hero-screen,
+    .hero-container {
+
+        min-width: 0 !important;
+        max-width: 100vw !important;
+    }
+
+    .workspace *,
+    .workspace-content *,
+    .conversation * {
+
+        box-sizing: border-box;
+    }
+}
+
+
+/* ============================================================
+   SMALL PHONE
+   ============================================================ */
+
+@media screen and (max-width: 420px) {
+
+    .workspace {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .hero-prompt {
+        grid-template-columns: 1fr !important;
+        max-width: 300px !important;
+    }
+
+    .hero-title {
+        font-size: 33px !important;
+    }
+
+    .hero-container {
+        max-width: 340px !important;
+    }
+
+    .command-section {
+        left: 6px !important;
+        right: 6px !important;
+    }
+}

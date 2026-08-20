@@ -1,0 +1,1124 @@
+﻿/* =========================================================
+   AP SYNAPSE — MOBILE EXPERIENCE SYSTEM
+   Dedicated mobile visual + responsive layer
+   Version: 1.0
+========================================================= */
+
+@media (max-width: 768px) {
+
+    /* -----------------------------------------------------
+       MOBILE FOUNDATION
+    ----------------------------------------------------- */
+
+    html,
+    body {
+        width: 100%;
+        min-width: 0;
+        height: 100%;
+        min-height: 100%;
+        overflow: hidden !important;
+    }
+
+    body {
+        -webkit-tap-highlight-color: transparent;
+        text-rendering: optimizeLegibility;
+    }
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    /* -----------------------------------------------------
+       APP / WORKSPACE
+    ----------------------------------------------------- */
+
+    .app {
+        width: 100vw !important;
+        height: 100dvh !important;
+        min-height: 100dvh !important;
+        overflow: hidden !important;
+    }
+
+    .workspace {
+        width: 100% !important;
+        height: 100dvh !important;
+        min-width: 0 !important;
+        margin-left: 0 !important;
+        overflow: hidden !important;
+    }
+
+    .workspace-content {
+        width: 100% !important;
+        min-width: 0 !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+    }
+
+    /* -----------------------------------------------------
+       TOP BAR
+    ----------------------------------------------------- */
+
+    .topbar {
+        width: 100% !important;
+        min-height: 62px;
+        padding-left: 64px !important;
+        padding-right: 10px !important;
+
+        display: flex !important;
+        align-items: center !important;
+
+        position: relative;
+        z-index: 500;
+    }
+
+    /* Give mobile topbar controls comfortable touch targets */
+
+    .topbar button,
+    .topbar a,
+    #themeToggle,
+    #theme-toggle,
+    #darkModeToggle,
+    #lightModeToggle,
+    #notificationBtn,
+    #notificationsBtn {
+        min-width: 42px;
+        min-height: 42px;
+    }
+
+    /* -----------------------------------------------------
+       MOBILE MENU BUTTON
+    ----------------------------------------------------- */
+
+    #apMobileMenu {
+        position: fixed !important;
+
+        top: 12px !important;
+        left: 12px !important;
+
+        width: 46px !important;
+        height: 46px !important;
+        min-width: 46px !important;
+        min-height: 46px !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        z-index: 100000 !important;
+
+        border-radius: 14px !important;
+
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    #apMobileMenu:active {
+        transform: scale(.94) !important;
+    }
+
+    /* -----------------------------------------------------
+       MOBILE SIDEBAR
+    ----------------------------------------------------- */
+
+    .sidebar {
+        width: min(320px, 86vw) !important;
+        max-width: 320px !important;
+
+        height: 100dvh !important;
+        min-height: 100dvh !important;
+
+        z-index: 99999 !important;
+
+        overflow: hidden !important;
+
+        padding-bottom: env(safe-area-inset-bottom) !important;
+
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Sidebar internal navigation gets its own scroll area */
+
+    .sidebar nav,
+    .sidebar-content,
+    .sidebar-main,
+    .sidebar-body {
+        min-height: 0;
+    }
+
+    .sidebar nav {
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* -----------------------------------------------------
+       MOBILE SIDEBAR OVERLAY
+    ----------------------------------------------------- */
+
+    #apSidebarOverlay {
+        z-index: 99998 !important;
+
+        touch-action: manipulation;
+
+        -webkit-backdrop-filter: blur(3px);
+        backdrop-filter: blur(3px);
+    }
+
+    /* -----------------------------------------------------
+       SIDEBAR ITEMS — PREMIUM TOUCH TARGETS
+    ----------------------------------------------------- */
+
+    .sidebar button,
+    .sidebar a,
+    .sidebar-item,
+    .nav-item,
+    .menu-item {
+        min-height: 44px;
+
+        touch-action: manipulation;
+
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .sidebar-item:active,
+    .nav-item:active,
+    .menu-item:active {
+        transform: scale(.985) !important;
+    }
+
+    /* -----------------------------------------------------
+       CHAT
+    ----------------------------------------------------- */
+
+    #chatWindow {
+        width: 100% !important;
+        height: auto !important;
+
+        flex: 1 1 0 !important;
+
+        min-width: 0 !important;
+        min-height: 0 !important;
+
+        padding:
+            20px
+            14px
+            calc(120px + env(safe-area-inset-bottom))
+            14px !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain;
+    }
+
+    #chatWindow .message {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        margin-top: 12px;
+        margin-bottom: 12px;
+    }
+
+    #chatWindow .message-body {
+        max-width: 100% !important;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    #chatWindow pre {
+        max-width: 100% !important;
+        overflow-x: auto !important;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #chatWindow img,
+    #chatWindow video,
+    #chatWindow iframe {
+        max-width: 100% !important;
+        height: auto;
+    }
+
+    /* -----------------------------------------------------
+       USER / ASSISTANT MESSAGES
+    ----------------------------------------------------- */
+
+    .user,
+    .assistant {
+        max-width: 92% !important;
+
+        padding: 13px 15px !important;
+
+        border-radius: 16px !important;
+
+        font-size: 14px;
+        line-height: 1.55;
+    }
+
+    /* -----------------------------------------------------
+       COMMAND SECTION
+    ----------------------------------------------------- */
+
+    .command-section {
+        width: 100% !important;
+
+        flex: 0 0 auto !important;
+
+        padding:
+            8px
+            10px
+            calc(10px + env(safe-area-inset-bottom)) !important;
+
+        position: relative;
+        z-index: 100;
+    }
+
+    .command-bar {
+        width: 100% !important;
+
+        border-radius: 18px !important;
+
+        min-height: 52px;
+
+        margin: 0 !important;
+    }
+
+    .command-bar input,
+    .command-bar textarea {
+        min-height: 44px;
+
+        font-size: 16px !important;
+    }
+
+    .command-bar button {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    #uploadBtn {
+        min-width: 44px;
+        min-height: 44px;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 8px;
+    }
+
+    /* -----------------------------------------------------
+       HERO
+    ----------------------------------------------------- */
+
+    #heroScreen {
+        width: 100% !important;
+        min-width: 0 !important;
+        min-height: 0 !important;
+
+        padding:
+            24px
+            16px
+            40px !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* -----------------------------------------------------
+       FULL WORKSPACE PAGES
+    ----------------------------------------------------- */
+
+    #codeStudioPage,
+    #projectsPage,
+    #workspacePage,
+    #knowledgePage,
+    #documentsPage,
+    #automationPage,
+    #canvasPage,
+    #assistantPage {
+        width: 100% !important;
+        min-width: 0 !important;
+        min-height: 0 !important;
+
+        padding:
+            24px
+            16px
+            calc(50px + env(safe-area-inset-bottom)) !important;
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* -----------------------------------------------------
+       HEADERS
+    ----------------------------------------------------- */
+
+    .projects-header,
+    .assistant-header {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        gap: 8px;
+
+        margin-bottom: 20px;
+    }
+
+    .projects-header h1,
+    .assistant-header h1 {
+        font-size: clamp(26px, 7vw, 36px);
+        line-height: 1.1;
+    }
+
+    .projects-header p,
+    .assistant-header p {
+        max-width: 100%;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    /* -----------------------------------------------------
+       GRIDS
+    ----------------------------------------------------- */
+
+    .assistant-grid {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+
+    .code-layout {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+
+    /* -----------------------------------------------------
+       CARDS
+    ----------------------------------------------------- */
+
+    .assistant-card,
+    .project-card,
+    .code-ai {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        padding: 18px !important;
+
+        border-radius: 18px !important;
+    }
+
+    /* -----------------------------------------------------
+       CODE STUDIO
+    ----------------------------------------------------- */
+
+    #codeStudioInput {
+        width: 100% !important;
+
+        min-height: 190px !important;
+
+        font-size: 15px !important;
+        line-height: 1.55;
+
+        padding: 15px !important;
+    }
+
+    #codeGenerateBtn {
+        width: 100% !important;
+
+        min-height: 48px;
+
+        margin-top: 12px !important;
+    }
+
+    #codeStudioOutput {
+        width: 100% !important;
+
+        min-height: 120px !important;
+
+        padding: 16px !important;
+
+        overflow-x: auto !important;
+
+        font-size: 14px;
+        line-height: 1.55;
+    }
+
+    .code-editor textarea {
+        height: 420px !important;
+
+        font-size: 14px !important;
+
+        padding: 15px !important;
+    }
+
+    /* -----------------------------------------------------
+       COMMAND PALETTE
+    ----------------------------------------------------- */
+
+    .command-palette {
+        padding:
+            72px
+            10px
+            10px !important;
+
+        align-items: flex-start !important;
+    }
+
+    .command-box {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        border-radius: 18px !important;
+    }
+
+    #commandSearch {
+        padding: 17px !important;
+
+        font-size: 16px !important;
+    }
+
+    .command-item {
+        min-height: 48px;
+
+        padding: 15px 16px !important;
+    }
+
+    /* -----------------------------------------------------
+       POPUPS / PANELS
+    ----------------------------------------------------- */
+
+    .popup-panel {
+        top: 72px !important;
+        right: 10px !important;
+        left: 10px !important;
+
+        width: auto !important;
+        max-width: none !important;
+
+        max-height: calc(100dvh - 90px);
+
+        overflow-y: auto;
+
+        border-radius: 18px !important;
+    }
+
+    /* -----------------------------------------------------
+       NOTIFICATIONS
+    ----------------------------------------------------- */
+
+    #apSynapseNotificationCenter {
+        padding:
+            68px
+            10px
+            10px !important;
+    }
+
+    .ap-notification-panel {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        max-height:
+            calc(100dvh - 78px) !important;
+
+        border-radius: 19px !important;
+    }
+
+    .ap-notification-header {
+        padding: 18px 16px 14px !important;
+    }
+
+    .ap-notification-toolbar {
+        padding: 10px 12px !important;
+    }
+
+    .ap-notification-item {
+        grid-template-columns: 34px minmax(0, 1fr);
+        gap: 10px;
+
+        padding: 13px 11px !important;
+    }
+
+    .ap-notification-item-icon {
+        width: 34px;
+        height: 34px;
+    }
+
+    /* -----------------------------------------------------
+       BUTTONS
+    ----------------------------------------------------- */
+
+    button,
+    [role="button"],
+    a {
+        touch-action: manipulation;
+    }
+
+    .primary-btn,
+    .quick-action {
+        min-height: 46px;
+    }
+
+    /* -----------------------------------------------------
+       TABLES
+    ----------------------------------------------------- */
+
+    table {
+        display: block;
+
+        width: 100%;
+
+        overflow-x: auto;
+
+        white-space: nowrap;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* -----------------------------------------------------
+       SAFE AREA
+    ----------------------------------------------------- */
+
+    .sidebar-footer,
+    .command-section {
+        padding-bottom:
+            max(
+                10px,
+                env(safe-area-inset-bottom)
+            );
+    }
+
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 390px) {
+
+    .topbar {
+        padding-left: 60px !important;
+    }
+
+    #apMobileMenu {
+        top: 10px !important;
+        left: 10px !important;
+
+        width: 44px !important;
+        height: 44px !important;
+    }
+
+    #chatWindow {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+
+    .user,
+    .assistant {
+        max-width: 96% !important;
+    }
+
+    #codeStudioPage,
+    #projectsPage,
+    #workspacePage,
+    #knowledgePage,
+    #documentsPage,
+    #automationPage,
+    #canvasPage {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+
+}
+
+
+/* =========================================================
+   LANDSCAPE PHONES
+========================================================= */
+
+@media (max-width: 900px) and (orientation: landscape) {
+
+    .sidebar {
+        width: min(300px, 70vw) !important;
+    }
+
+    #chatWindow {
+        padding-bottom: 100px !important;
+    }
+
+    #heroScreen {
+        padding-top: 16px !important;
+    }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (max-width: 768px) and (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — MOBILE PREMIUM POLISH
+   Interaction + spacing + visual stability
+========================================================= */
+
+@media (max-width: 768px) {
+
+    /* -----------------------------------------------------
+       PREVENT MOBILE WIDTH BREAKOUTS
+    ----------------------------------------------------- */
+
+    body,
+    .app,
+    .workspace,
+    .workspace-content,
+    .conversation,
+    #assistantPage,
+    #chatWindow,
+    #heroScreen,
+    .projects-page {
+        max-width: 100vw !important;
+    }
+
+    /* -----------------------------------------------------
+       BETTER MOBILE TEXT RENDERING
+    ----------------------------------------------------- */
+
+    body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    p {
+        overflow-wrap: break-word;
+    }
+
+    /* -----------------------------------------------------
+       MOBILE TOUCH FEEDBACK
+    ----------------------------------------------------- */
+
+    button,
+    a,
+    [role="button"],
+    input,
+    textarea,
+    select {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    [role="button"]:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible {
+        outline: 2px solid rgba(198,166,107,.75);
+        outline-offset: 2px;
+    }
+
+    /* -----------------------------------------------------
+       SIDEBAR PREMIUM MOBILE FEEL
+    ----------------------------------------------------- */
+
+    .sidebar {
+        box-shadow:
+            20px 0 70px rgba(0,0,0,.42),
+            4px 0 20px rgba(0,0,0,.18);
+    }
+
+    body.ap-mobile-sidebar-open {
+        overflow: hidden !important;
+    }
+
+    /* -----------------------------------------------------
+       SIDEBAR HEADER
+    ----------------------------------------------------- */
+
+    .sidebar-header {
+        padding-top:
+            max(14px, env(safe-area-inset-top)) !important;
+    }
+
+    /* -----------------------------------------------------
+       SIDEBAR FOOTER
+    ----------------------------------------------------- */
+
+    .sidebar-footer {
+        padding-bottom:
+            max(14px, env(safe-area-inset-bottom)) !important;
+    }
+
+    /* -----------------------------------------------------
+       TOPBAR SAFE AREA
+    ----------------------------------------------------- */
+
+    .topbar {
+        padding-top:
+            env(safe-area-inset-top) !important;
+
+        min-height:
+            calc(62px + env(safe-area-inset-top));
+    }
+
+    #apMobileMenu {
+        top:
+            max(10px, env(safe-area-inset-top)) !important;
+    }
+
+    /* -----------------------------------------------------
+       CHAT MESSAGE RHYTHM
+    ----------------------------------------------------- */
+
+    #chatWindow {
+        scroll-padding-top: 20px;
+        scroll-padding-bottom: 120px;
+    }
+
+    #chatWindow .message {
+        animation: apMobileMessageIn .22s ease both;
+    }
+
+    @keyframes apMobileMessageIn {
+
+        from {
+            opacity: 0;
+            transform: translateY(5px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    }
+
+    /* -----------------------------------------------------
+       MOBILE CODE BLOCKS
+    ----------------------------------------------------- */
+
+    #chatWindow code {
+        font-size: .88em;
+    }
+
+    #chatWindow pre {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+
+        border-radius: 12px !important;
+
+        max-width: 100vw !important;
+    }
+
+    /* -----------------------------------------------------
+       INPUT / KEYBOARD FRIENDLY
+    ----------------------------------------------------- */
+
+    input,
+    textarea,
+    select {
+        font-size: 16px !important;
+    }
+
+    textarea {
+        max-width: 100%;
+    }
+
+    /* -----------------------------------------------------
+       PROJECT / ASSISTANT CARDS
+    ----------------------------------------------------- */
+
+    .assistant-card,
+    .project-card {
+        overflow: hidden;
+    }
+
+    .assistant-card > *,
+    .project-card > * {
+        max-width: 100%;
+    }
+
+    /* -----------------------------------------------------
+       ACTION BUTTONS
+    ----------------------------------------------------- */
+
+    .quick-action,
+    .primary-btn,
+    .create-project-btn {
+        width: 100%;
+        min-height: 48px;
+    }
+
+    /* -----------------------------------------------------
+       HORIZONTAL CHIP / TOOLBAR SCROLL
+    ----------------------------------------------------- */
+
+    .code-toolbar,
+    .prompt-chips,
+    .prompt-chip-container {
+        max-width: 100%;
+
+        overflow-x: auto;
+
+        flex-wrap: nowrap !important;
+
+        padding-bottom: 4px;
+
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .code-toolbar::-webkit-scrollbar,
+    .prompt-chips::-webkit-scrollbar,
+    .prompt-chip-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* -----------------------------------------------------
+       MODALS
+    ----------------------------------------------------- */
+
+    .modal,
+    .panel {
+        max-width: calc(100vw - 20px) !important;
+    }
+
+    /* -----------------------------------------------------
+       NOTIFICATION CENTER — EDGE SAFE
+    ----------------------------------------------------- */
+
+    #apSynapseNotificationCenter {
+        padding-top:
+            max(68px, calc(env(safe-area-inset-top) + 58px)) !important;
+    }
+
+    /* -----------------------------------------------------
+       MOBILE SCROLLBARS
+    ----------------------------------------------------- */
+
+    #chatWindow,
+    .sidebar nav,
+    .projects-page,
+    #codeStudioPage,
+    #knowledgePage,
+    #documentsPage,
+    #automationPage,
+    #canvasPage {
+        scrollbar-width: thin;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .topbar {
+        padding-left: 56px !important;
+        padding-right: 6px !important;
+    }
+
+    #apMobileMenu {
+        width: 42px !important;
+        height: 42px !important;
+        min-width: 42px !important;
+        min-height: 42px !important;
+    }
+
+    #chatWindow {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .user,
+    .assistant {
+        max-width: 98% !important;
+        padding: 12px !important;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE LANDSCAPE — COMPACT MODE
+========================================================= */
+
+@media (max-width: 900px) and (orientation: landscape) {
+
+    .topbar {
+        min-height: 54px !important;
+    }
+
+    #apMobileMenu {
+        top: 7px !important;
+        width: 42px !important;
+        height: 42px !important;
+    }
+
+    #chatWindow {
+        padding-top: 12px !important;
+        padding-bottom: 90px !important;
+    }
+
+    .sidebar {
+        width: min(300px, 72vw) !important;
+    }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    #chatWindow .message {
+        animation: none !important;
+    }
+
+}
+
+/* =========================================================
+   AP SYNAPSE — MOBILE WHITEBOARD / CANVAS
+   FULL AVAILABLE VIEWPORT
+========================================================= */
+
+@media (max-width: 768px) {
+
+    #canvasPage {
+        position: relative !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 0 !important;
+
+        margin: 0 !important;
+        padding:
+            14px
+            10px
+            calc(90px + env(safe-area-inset-bottom))
+            10px !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+    }
+
+    #canvasPage .projects-header {
+        flex: 0 0 auto !important;
+        width: 100% !important;
+        margin-bottom: 12px !important;
+    }
+
+    #canvasPage .whiteboard-shell {
+        position: relative !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        flex: 1 1 0 !important;
+
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+
+        box-sizing: border-box !important;
+
+        overflow: hidden !important;
+
+        border-radius: 18px !important;
+    }
+
+    #canvasPage .whiteboard-toolbar {
+        position: relative !important;
+
+        flex: 0 0 auto !important;
+
+        width: 100% !important;
+
+        display: flex !important;
+        flex-wrap: wrap !important;
+
+        gap: 8px !important;
+
+        box-sizing: border-box !important;
+
+        z-index: 10 !important;
+    }
+
+    #canvasPage #apCanvas {
+        display: block !important;
+
+        position: relative !important;
+
+        flex: 1 1 0 !important;
+
+        width: 100% !important;
+        height: auto !important;
+
+        min-width: 0 !important;
+        min-height: 0 !important;
+
+        max-width: none !important;
+
+        box-sizing: border-box !important;
+
+        touch-action: none !important;
+        pointer-events: auto !important;
+    }
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 480px) {
+
+    #canvasPage {
+        padding:
+            10px
+            8px
+            calc(82px + env(safe-area-inset-bottom))
+            8px !important;
+    }
+
+    #canvasPage .whiteboard-toolbar {
+        gap: 6px !important;
+    }
+
+    #canvasPage .whiteboard-toolbar button {
+        min-height: 42px !important;
+        padding: 9px 12px !important;
+    }
+}

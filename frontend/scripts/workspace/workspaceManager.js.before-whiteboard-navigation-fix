@@ -1,4 +1,4 @@
-import { getSessionId } from "../session.js";
+﻿import { getSessionId } from "../session.js";
 import { openAssistant } from "./assistant.js";
 
 function showToast(text) {
@@ -60,7 +60,7 @@ function renderKnowledge() {
 
         knowledgeGrid.innerHTML = `
             <div class="project-card">
-                <h2>📚 Knowledge Library</h2>
+                <h2>ðŸ“š Knowledge Library</h2>
                 <p>
                     Your saved knowledge will appear here.
                 </p>
@@ -91,7 +91,7 @@ function renderKnowledge() {
             <button
                 class="delete-knowledge"
                 data-index="${index}">
-                🗑 Delete
+                ðŸ—‘ Delete
             </button>
         `;
 
@@ -137,7 +137,7 @@ if (saveKnowledgeBtn) {
 
         renderKnowledge();
 
-        showToast("📚 Knowledge saved");
+        showToast("ðŸ“š Knowledge saved");
 
     });
 
@@ -210,7 +210,7 @@ if (runAutomationBtn) {
             }
 
             automationResult.textContent =
-                "⚡ AP Synapse is running the workflow...";
+                "âš¡ AP Synapse is running the workflow...";
 
             try {
 
@@ -264,10 +264,10 @@ Give the user the result clearly and concisely.`,
 
                 automationResult.textContent =
                     result ||
-                    "✅ Workflow completed.";
+                    "âœ… Workflow completed.";
 
                 showToast(
-                    "⚡ Automation completed"
+                    "âš¡ Automation completed"
                 );
 
             }
@@ -277,13 +277,13 @@ Give the user the result clearly and concisely.`,
                 console.error("AUTOMATION ERROR:", error);
 
                 automationResult.textContent =
-                    `⚠️ Automation failed.
+                    `âš ï¸ Automation failed.
 
             ${error.message}
 
             Please check the browser console for details.`;
 
-                showToast("⚠️ Automation failed");
+                showToast("âš ï¸ Automation failed");
 
           }
 
@@ -331,7 +331,7 @@ if (codeGenerateBtn) {
             }
 
             codeOutput.textContent =
-                "💻 AP Synapse Code Studio is thinking...";
+                "ðŸ’» AP Synapse Code Studio is thinking...";
 
             try {
 
@@ -398,7 +398,7 @@ ${request}`,
                     "No result returned.";
 
                 showToast(
-                    "💻 Code Studio completed"
+                    "ðŸ’» Code Studio completed"
                 );
 
             }
@@ -408,13 +408,13 @@ ${request}`,
                 console.error("CODE STUDIO ERROR:", error);
 
                 codeOutput.textContent =
-                    `⚠️ Code Studio failed.
+                    `âš ï¸ Code Studio failed.
 
             ${error.message}
 
             Please check the browser console for details.`;
 
-                showToast("⚠️ Code Studio failed");
+                showToast("âš ï¸ Code Studio failed");
 
             }
 
@@ -464,7 +464,7 @@ document.getElementById("assistantBtn")?.addEventListener("click", (e) => {
 });
 
 // ==========================================================
-// AP SYNAPSE — PROJECTS / DOCUMENTS / PROFILE
+// AP SYNAPSE â€” PROJECTS / DOCUMENTS / PROFILE
 // ==========================================================
 
 const PROJECT_STORAGE_KEY = "apSynapseProjects";
@@ -567,7 +567,7 @@ function renderDashboardProjects() {
 
         realProjectsGrid.innerHTML = `
             <div class="project-card">
-                <h2>✨ No projects yet</h2>
+                <h2>âœ¨ No projects yet</h2>
 
                 <p>
                     Create your first project and turn an idea
@@ -619,7 +619,7 @@ function renderDashboardProjects() {
                     data-id="${project.id}"
                     type="button"
                 >
-                    ×
+                    Ã—
                 </button>
 
             </div>
@@ -709,7 +709,7 @@ function createDashboardProject() {
 
     renderDashboardProjects();
 
-    showToast("✨ Project created");
+    showToast("âœ¨ Project created");
 
 }
 
@@ -791,7 +791,7 @@ realProjectsGrid?.addEventListener(
 
             showToast(
                 project.status === "completed"
-                ? "✅ Project completed"
+                ? "âœ… Project completed"
                 : "Project reopened"
             );
 
@@ -897,7 +897,7 @@ function renderDocuments() {
 
         documentsGrid.innerHTML = `
             <div class="project-card">
-                <h2>📄 Your document library is empty</h2>
+                <h2>ðŸ“„ Your document library is empty</h2>
 
                 <p>
                     Upload a document to begin working with it
@@ -922,7 +922,7 @@ function renderDocuments() {
 
         card.innerHTML = `
 
-            <h2>📄 ${escapeHTML(doc.name)}</h2>
+            <h2>ðŸ“„ ${escapeHTML(doc.name)}</h2>
 
             <p>
                 ${escapeHTML(doc.type || "Document")}
@@ -964,7 +964,7 @@ async function uploadDocument(file) {
 
     if (!file) return;
 
-    showToast("📤 Uploading " + file.name + "...");
+    showToast("ðŸ“¤ Uploading " + file.name + "...");
 
     try {
 
@@ -1027,7 +1027,7 @@ async function uploadDocument(file) {
         renderDocuments();
 
         showToast(
-            "✅ Document ready for AP Synapse"
+            "âœ… Document ready for AP Synapse"
         );
 
 
@@ -1040,7 +1040,7 @@ async function uploadDocument(file) {
         );
 
         showToast(
-            "❌ Document upload failed"
+            "âŒ Document upload failed"
         );
 
     }
@@ -1142,7 +1142,7 @@ documentsGrid?.addEventListener(
             }
 
             showToast(
-                "📄 Document loaded into Assistant"
+                "ðŸ“„ Document loaded into Assistant"
             );
 
             return;
@@ -1198,7 +1198,7 @@ documentAskBtn?.addEventListener(
         input.focus();
 
         showToast(
-            "📚 Ready to work with your documents"
+            "ðŸ“š Ready to work with your documents"
         );
 
     }
@@ -1330,7 +1330,7 @@ document
     });
 
     // ==========================================
-// AP SYNAPSE — DOCUMENTS UPLOAD BRIDGE
+// AP SYNAPSE â€” DOCUMENTS UPLOAD BRIDGE
 // ==========================================
 
 const documentsUploadCard =
@@ -1397,15 +1397,15 @@ if (documentsFileInput) {
         }
 
         fileStatus.innerHTML = `
-            <h2>📄 ${file.name}</h2>
+            <h2>ðŸ“„ ${file.name}</h2>
 
             <p>
                 ${(file.size / 1024 / 1024).toFixed(2)} MB
-                · ${file.type || "Unknown file type"}
+                Â· ${file.type || "Unknown file type"}
             </p>
 
             <p>
-                ⏳ Uploading to AP Synapse...
+                â³ Uploading to AP Synapse...
             </p>
         `;
 
@@ -1597,7 +1597,7 @@ if (documentsFileInput) {
                 if (documentStatus) {
 
                     documentStatus.textContent =
-                        `✓ ${window.currentDocumentName} is ready`;
+                        `âœ“ ${window.currentDocumentName} is ready`;
 
                 }
 
@@ -1613,7 +1613,7 @@ if (documentsFileInput) {
                 if (documentFileStatus) {
 
                     documentFileStatus.textContent =
-                        "✓ Ready for questions";
+                        "âœ“ Ready for questions";
 
                 }
 
@@ -1627,7 +1627,7 @@ if (documentsFileInput) {
 
 
                 showDocumentToast(
-                    "Document ready — you can now ask questions."
+                    "Document ready â€” you can now ask questions."
                 );
 
 
@@ -1655,7 +1655,7 @@ if (documentsFileInput) {
                 if (documentStatus) {
 
                     documentStatus.textContent =
-                        "❌ Document upload failed";
+                        "âŒ Document upload failed";
 
                 }
 
@@ -1853,7 +1853,7 @@ async function askDocumentQuestion() {
 
             documentAnswer.innerHTML = `
                 <p>
-                    ⚠️ AP Synapse could not answer this question.
+                    âš ï¸ AP Synapse could not answer this question.
                 </p>
                 <small>
                     Please check your connection and try again.
@@ -1870,7 +1870,7 @@ async function askDocumentQuestion() {
             false;
 
         askDocumentBtn.textContent =
-            "Ask AP Synapse →";
+            "Ask AP Synapse â†’";
 
     }
 

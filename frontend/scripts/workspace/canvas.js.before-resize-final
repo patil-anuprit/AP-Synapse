@@ -39,73 +39,70 @@
     }
 
     function resizeCanvas() {
-
         if (!findElements()) return;
 
         const canvas = state.canvas;
-        const shell = canvas.closest(".whiteboard-shell");
-
-        if (!shell) return;
-
         const ctx = getContext();
 
         if (!ctx) return;
 
         /*
          * IMPORTANT:
-         * Never measure the canvas itself to determine its height.
-         *
-         * The canvas can temporarily be 0px/2px high while flex layout
-         * is resolving. Measuring that value and writing it back creates
-         * the permanent 2px collapse.
+         * Never use the canvas's current height as its target height.
+         * It may already be collapsed to 2px.
          */
 
-        const shellRect = shell.getBoundingClientRect();
+        const shell =
+            canvas.closest(".whiteboard-shell");
+
+        if (!shell) return;
+
+        const shellRect =
+            shell.getBoundingClientRect();
 
         const toolbar =
             shell.querySelector(".whiteboard-toolbar");
 
-        const toolbarRect =
-            toolbar?.getBoundingClientRect();
-
-        const shellWidth =
-            Math.max(1, shellRect.width);
-
         const toolbarHeight =
-            toolbarRect?.height || 64;
+            toolbar
+                ? toolbar.getBoundingClientRect().height
+                : 64;
 
-        const availableHeight =
+        const width =
+            Math.max(
+                1,
+                shellRect.width
+            );
+
+        const height =
             Math.max(
                 320,
                 shellRect.height - toolbarHeight
             );
 
-        const cssWidth =
-            Math.max(1, shellWidth - 2);
+        const dpr =
+            Math.min(
+                Math.max(
+                    window.devicePixelRatio || 1,
+                    1
+                ),
+                2
+            );
 
         /*
-         * Use the actual available layout height.
-         * Never write the canvas's previous measured height.
+         * Preserve existing drawing.
          */
 
-        const cssHeight =
-            Math.max(320, availableHeight);
-
-        const dpr = Math.min(
-            Math.max(window.devicePixelRatio || 1, 1),
-            2
-        );
+        const oldCanvas =
+            document.createElement("canvas");
 
         const oldWidth = canvas.width;
         const oldHeight = canvas.height;
 
-        let oldCanvas = null;
-
-        if (oldWidth > 0 && oldHeight > 0) {
-
-            oldCanvas =
-                document.createElement("canvas");
-
+        if (
+            oldWidth > 0 &&
+            oldHeight > 0
+        ) {
             oldCanvas.width = oldWidth;
             oldCanvas.height = oldHeight;
 
@@ -122,33 +119,33 @@
         }
 
         /*
-         * CSS controls layout.
-         * Do NOT write canvas.style.height from canvas.getBoundingClientRect().
+         * Set real backing resolution.
          */
 
-        canvas.style.width =
-            `${cssWidth}px`;
+        canvas.width =
+            Math.round(width * dpr);
 
-        canvas.style.height =
-            `${cssHeight}px`;
+        canvas.height =
+            Math.round(height * dpr);
+
+        /*
+         * Set CSS dimensions explicitly.
+         */
+
+        canvas.style.removeProperty("width");
+        canvas.style.removeProperty("height");
+        canvas.style.removeProperty("min-height");
+        canvas.style.removeProperty("max-height");
 
         canvas.style.minHeight =
-            `${cssHeight}px`;
+            `${height}px`;
 
         canvas.style.maxHeight =
             "none";
 
-        canvas.width =
-            Math.max(
-                1,
-                Math.round(cssWidth * dpr)
-            );
-
-        canvas.height =
-            Math.max(
-                1,
-                Math.round(cssHeight * dpr)
-            );
+        /*
+         * Work in CSS pixels.
+         */
 
         ctx.setTransform(
             dpr,
@@ -159,23 +156,21 @@
             0
         );
 
-        ctx.lineCap =
-            "round";
-
-        ctx.lineJoin =
-            "round";
-
-        ctx.lineWidth =
-            4;
-
-        ctx.strokeStyle =
-            "#111";
-
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = "#111";
         ctx.globalCompositeOperation =
             "source-over";
 
-        if (oldCanvas) {
+        /*
+         * Restore previous drawing.
+         */
 
+        if (
+            oldCanvas.width > 0 &&
+            oldCanvas.height > 0
+        ) {
             ctx.drawImage(
                 oldCanvas,
                 0,
@@ -184,17 +179,16 @@
                 oldCanvas.height,
                 0,
                 0,
-                cssWidth,
-                cssHeight
+                width,
+                height
             );
-
         }
 
         console.log(
-            "AP WHITEBOARD RESIZED:",
+            "AP WHITEBOARD RESIZED",
             {
-                width: cssWidth,
-                height: cssHeight,
+                width,
+                height,
                 dpr
             }
         );
@@ -570,116 +564,4 @@
     } else {
         initialize();
     }
-})();
-
-
-/* =========================================================
-   AP SYNAPSE — WHITEBOARD HARD LAYOUT LOCK
-   FINAL: BYPASS PARENT FLEX COLLAPSE
-========================================================= */
-
-(() => {
-    const styleId = "ap-synapse-whiteboard-hard-lock";
-
-    function installWhiteboardLock() {
-
-        if (!document.getElementById(styleId)) {
-
-            const style = document.createElement("style");
-            style.id = styleId;
-
-            style.textContent = `
-                #canvasPage {
-                    position: fixed !important;
-                    inset: 0 !important;
-                    width: 100vw !important;
-                    height: 100vh !important;
-                    min-width: 0 !important;
-                    min-height: 0 !important;
-                    max-width: none !important;
-                    max-height: none !important;
-                    box-sizing: border-box !important;
-                    overflow: auto !important;
-                }
-
-                #canvasPage .whiteboard-shell {
-                    display: flex !important;
-                    flex-direction: column !important;
-                    width: calc(100vw - 40px) !important;
-                    height: 520px !important;
-                    min-height: 520px !important;
-                    max-height: 520px !important;
-                    max-width: none !important;
-                    flex: none !important;
-                    box-sizing: border-box !important;
-                    overflow: hidden !important;
-                    margin-left: 20px !important;
-                    margin-right: 20px !important;
-                }
-
-                #canvasPage .whiteboard-toolbar {
-                    display: flex !important;
-                    flex: none !important;
-                    width: 100% !important;
-                    height: 64px !important;
-                    min-height: 64px !important;
-                    max-height: 64px !important;
-                    box-sizing: border-box !important;
-                }
-
-                #canvasPage #apCanvas {
-                    display: block !important;
-                    position: relative !important;
-                    width: 100% !important;
-                    height: 440px !important;
-                    min-height: 440px !important;
-                    max-height: 440px !important;
-                    flex: none !important;
-                    box-sizing: border-box !important;
-                    pointer-events: auto !important;
-                    touch-action: none !important;
-                    visibility: visible !important;
-                    opacity: 1 !important;
-                }
-            `;
-
-            document.head.appendChild(style);
-        }
-
-        const page = document.getElementById("canvasPage");
-        const shell = page?.querySelector(".whiteboard-shell");
-        const canvas = document.getElementById("apCanvas");
-
-        if (!page || !shell || !canvas) return;
-
-        page.style.setProperty("position", "fixed", "important");
-        page.style.setProperty("inset", "0", "important");
-        page.style.setProperty("width", "100vw", "important");
-        page.style.setProperty("height", "100vh", "important");
-
-        shell.style.setProperty("display", "flex", "important");
-        shell.style.setProperty("flex", "none", "important");
-        shell.style.setProperty("height", "520px", "important");
-        shell.style.setProperty("min-height", "520px", "important");
-
-        canvas.style.setProperty("display", "block", "important");
-        canvas.style.setProperty("flex", "none", "important");
-        canvas.style.setProperty("width", "100%", "important");
-        canvas.style.setProperty("height", "440px", "important");
-        canvas.style.setProperty("min-height", "440px", "important");
-        canvas.style.setProperty("max-height", "440px", "important");
-    }
-
-    installWhiteboardLock();
-
-    new MutationObserver(installWhiteboardLock)
-        .observe(document.body, {
-            childList: true,
-            subtree: true,
-            attributes: true,
-            attributeFilter: ["style", "class"]
-        });
-
-    window.addEventListener("resize", installWhiteboardLock);
-
 })();

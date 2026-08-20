@@ -1,4 +1,4 @@
-@import url("sidebar.css");
+﻿@import url("sidebar.css");
 @import url("variables.css");
 @import url("base.css");
 @import url("layout.css");
@@ -488,7 +488,7 @@ border:1px solid rgba(255,255,255,.08);
 }
 
 /* =========================================================
-   AP SYNAPSE — CLEAN CHAT LAYOUT
+   AP SYNAPSE â€” CLEAN CHAT LAYOUT
    ========================================================= */
 
 html,
@@ -545,7 +545,7 @@ body {
 }
 
 /* =========================================================
-   CHAT — THE ONLY VERTICAL SCROLL CONTAINER
+   CHAT â€” THE ONLY VERTICAL SCROLL CONTAINER
    ========================================================= */
 
 #chatWindow {
@@ -630,7 +630,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FULL SCREEN WORKSPACE FIX
+   AP SYNAPSE â€” FULL SCREEN WORKSPACE FIX
    ========================================================= */
 
 html,
@@ -775,7 +775,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — CLEAN WORKSPACE LAYOUT
+   AP SYNAPSE â€” CLEAN WORKSPACE LAYOUT
    ========================================================= */
 
 html,
@@ -835,7 +835,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FULL WORKSPACE PAGES
+   AP SYNAPSE â€” FULL WORKSPACE PAGES
    ========================================================= */
 
 #codeStudioPage,
@@ -927,7 +927,7 @@ body {
 }
 
 /* =========================================================
-   COMMAND BAR — ASSISTANT ONLY
+   COMMAND BAR â€” ASSISTANT ONLY
    ========================================================= */
 
 .command-section {
@@ -944,7 +944,7 @@ body[data-page="canvas"] .command-section {
 }
 
 /* =========================================================
-   COMMAND BAR — ALWAYS AT BOTTOM
+   COMMAND BAR â€” ALWAYS AT BOTTOM
    ========================================================= */
 
 .command-section {
@@ -1034,7 +1034,7 @@ body[data-page="canvas"] .command-section {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL WORKSPACE PAGE FIX
+   AP SYNAPSE â€” FINAL WORKSPACE PAGE FIX
    ========================================================= */
 
 /* Keep the whole application inside the viewport */
@@ -1088,7 +1088,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL GLOBAL SCROLL FIX
+   AP SYNAPSE â€” FINAL GLOBAL SCROLL FIX
    ========================================================= */
 
 html,
@@ -1400,7 +1400,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL PREMIUM HOME COMPOSITION
+   AP SYNAPSE â€” FINAL PREMIUM HOME COMPOSITION
    ========================================================= */
 
 /* ---------- SIDEBAR HISTORY ---------- */
@@ -1775,7 +1775,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL STABLE APP LAYOUT
+   AP SYNAPSE â€” FINAL STABLE APP LAYOUT
    ========================================================= */
 
 html,
@@ -1973,7 +1973,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL SCROLL SYSTEM
+   AP SYNAPSE â€” FINAL SCROLL SYSTEM
    ========================================================= */
 
 html,
@@ -2024,7 +2024,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL SCROLL + HISTORY STABILITY FIX
+   AP SYNAPSE â€” FINAL SCROLL + HISTORY STABILITY FIX
    DO NOT ADD MORE LAYOUT RULES AFTER THIS BLOCK
    ========================================================= */
 
@@ -2173,7 +2173,7 @@ body {
 
 
 /* =========================================================
-   CHAT — ONLY CHAT SCROLLS
+   CHAT â€” ONLY CHAT SCROLLS
    ========================================================= */
 
 #chatWindow {
@@ -2341,7 +2341,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — HISTORY VISIBILITY FINAL
+   AP SYNAPSE â€” HISTORY VISIBILITY FINAL
    ========================================================= */
 
 .sidebar .recent-group {
@@ -2377,7 +2377,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL INTELLIGENCE DASHBOARD
+   AP SYNAPSE â€” FINAL INTELLIGENCE DASHBOARD
    ========================================================= */
 
 #heroScreen .hero-container {
@@ -2697,7 +2697,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL PERFECT SCREEN FIT
+   AP SYNAPSE â€” FINAL PERFECT SCREEN FIT
    HOME / ASSISTANT
    ========================================================= */
 
@@ -2736,7 +2736,7 @@ body {
 }
 
 /* =========================================================
-   HERO — FIT EXACTLY INSIDE AVAILABLE SPACE
+   HERO â€” FIT EXACTLY INSIDE AVAILABLE SPACE
    ========================================================= */
 
 #heroScreen {
@@ -2831,7 +2831,7 @@ body {
 }
 
 /* =========================================================
-   COMMAND BAR — FIT AT BOTTOM
+   COMMAND BAR â€” FIT AT BOTTOM
    ========================================================= */
 
 .command-section {
@@ -2993,7 +2993,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL VIEWPORT FIT
+   AP SYNAPSE â€” FINAL VIEWPORT FIT
    HOME + SIDEBAR HISTORY
    FINAL POLISH OVERRIDE
    ========================================================= */
@@ -3023,7 +3023,7 @@ body {
 
 
 /* ---------------------------------------------------------
-   2. SIDEBAR — CLEAN VERTICAL SYSTEM
+   2. SIDEBAR â€” CLEAN VERTICAL SYSTEM
 --------------------------------------------------------- */
 
 .sidebar {
@@ -3055,7 +3055,7 @@ body {
 
 
 /* ---------------------------------------------------------
-   3. HISTORY — NEVER OVERLAP WORKSPACE
+   3. HISTORY â€” NEVER OVERLAP WORKSPACE
 --------------------------------------------------------- */
 
 .recent-group {
@@ -3538,7 +3538,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL CLEAN VIEWPORT SYSTEM
+   AP SYNAPSE â€” FINAL CLEAN VIEWPORT SYSTEM
    DO NOT ADD MORE LAYOUT OVERRIDES AFTER THIS
    ========================================================= */
 
@@ -3721,7 +3721,7 @@ body {
 
 
 /* =========================================================
-   HERO — NORMAL FLOW
+   HERO â€” NORMAL FLOW
    ========================================================= */
 
 #heroScreen {
@@ -3788,7 +3788,7 @@ body {
 
 
 /* =========================================================
-   HERO TITLE — MUCH SMALLER
+   HERO TITLE â€” MUCH SMALLER
    ========================================================= */
 
 #heroScreen .hero-title {
@@ -4041,7 +4041,7 @@ body {
 }
 
 /* =========================================
-   AP SYNAPSE — SETTINGS
+   AP SYNAPSE â€” SETTINGS
 ========================================= */
 
 .settings-grid {
@@ -4314,7 +4314,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — EMERGENCY HERO CONSOLE RESTORE
+   AP SYNAPSE â€” EMERGENCY HERO CONSOLE RESTORE
    ========================================================= */
 
 #heroScreen .console-actions {
@@ -4397,7 +4397,7 @@ body {
 }
 
 /* ==========================================
-   AP SYNAPSE — EMERGENCY LAYOUT RESTORE
+   AP SYNAPSE â€” EMERGENCY LAYOUT RESTORE
    ========================================== */
 
 .background {
@@ -4534,7 +4534,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL VIEWPORT STABILIZER
+   AP SYNAPSE â€” FINAL VIEWPORT STABILIZER
    ========================================================= */
 
 html,
@@ -4660,7 +4660,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL EMERGENCY LAYOUT FIX
+   AP SYNAPSE â€” FINAL EMERGENCY LAYOUT FIX
    Restores hero/content to the visible workspace
    ========================================================= */
 
@@ -4690,7 +4690,7 @@ body {
     overflow: hidden !important;
 }
 
-/* HERO — force it back into the actual viewport */
+/* HERO â€” force it back into the actual viewport */
 #heroScreen {
     position: absolute !important;
     inset: 0 !important;
@@ -4791,7 +4791,7 @@ body.chat-active #heroScreen {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL VIEWPORT POSITION RESET
+   AP SYNAPSE â€” FINAL VIEWPORT POSITION RESET
    ========================================================= */
 
 .workspace,
@@ -4904,7 +4904,7 @@ body.chat-active #heroScreen {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL VIEWPORT POSITION FIX
+   AP SYNAPSE â€” FINAL VIEWPORT POSITION FIX
    ========================================================= */
 
 html,
@@ -4974,7 +4974,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL VIEWPORT ALIGNMENT FIX
+   AP SYNAPSE â€” FINAL VIEWPORT ALIGNMENT FIX
    ========================================================= */
 
 html,
@@ -5045,7 +5045,7 @@ body {
 }
 
 /* =====================================================
-   AP SYNAPSE — FINAL VIEWPORT EMERGENCY FIX
+   AP SYNAPSE â€” FINAL VIEWPORT EMERGENCY FIX
    ===================================================== */
 
 html,
@@ -5137,7 +5137,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL VIEWPORT POSITION FIX
+   AP SYNAPSE â€” FINAL VIEWPORT POSITION FIX
    ========================================================= */
 
 html,
@@ -5250,7 +5250,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL VIEWPORT LOCK
+   AP SYNAPSE â€” FINAL VIEWPORT LOCK
    ========================================================= */
 
 html,
@@ -5317,7 +5317,7 @@ body {
     box-sizing: border-box !important;
 }
 /* =========================================================
-   FINAL UI FIX — FULL SCREEN + LEFT ALIGNMENT + CLICKABLE
+   FINAL UI FIX â€” FULL SCREEN + LEFT ALIGNMENT + CLICKABLE
    Paste at the VERY BOTTOM of main.css
    ========================================================= */
 
@@ -5543,7 +5543,7 @@ body,
 }
 
 /* =========================================================
-   AP SYNAPSE — FULL SCREEN LAYOUT OVERRIDE
+   AP SYNAPSE â€” FULL SCREEN LAYOUT OVERRIDE
    ========================================================= */
 
 html,
@@ -5661,7 +5661,7 @@ iframe {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL POSITION + CLICK FIX
+   AP SYNAPSE â€” FINAL POSITION + CLICK FIX
    ========================================================= */
 
 /* ---------- FULL VIEWPORT ---------- */
@@ -5907,7 +5907,7 @@ aside canvas {
 }
 
 /* =========================================
-   AP SYNAPSE — FINAL TRUE CENTER
+   AP SYNAPSE â€” FINAL TRUE CENTER
    ========================================= */
 
 .workspace-content {
@@ -5964,7 +5964,7 @@ aside canvas {
 }
 
 /* =========================================
-   AP SYNAPSE — FINAL WORKSPACE WIDTH FIX
+   AP SYNAPSE â€” FINAL WORKSPACE WIDTH FIX
    ========================================= */
 
 .app {
@@ -6000,7 +6000,7 @@ aside canvas {
 }
 
 /* =========================================
-   AP SYNAPSE — CLEAN LAYOUT RESET
+   AP SYNAPSE â€” CLEAN LAYOUT RESET
    ========================================= */
 
 html,
@@ -6101,7 +6101,7 @@ body {
 }
 
 /* =========================================
-   AP SYNAPSE — WORKSPACE PAGES
+   AP SYNAPSE â€” WORKSPACE PAGES
    ========================================= */
 
 .projects-page {
@@ -6139,7 +6139,7 @@ body {
 }
 
 /* =========================================
-   AP SYNAPSE — FULL WORKSPACE PAGE SYSTEM
+   AP SYNAPSE â€” FULL WORKSPACE PAGE SYSTEM
    ========================================= */
 
 .workspace-content {
@@ -6230,7 +6230,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL VIEWPORT / PAGE LAYOUT FIX
+   AP SYNAPSE â€” FINAL VIEWPORT / PAGE LAYOUT FIX
    ========================================================= */
 
 html,
@@ -6344,7 +6344,7 @@ body {
     z-index: 500 !important;
 }
 
-/* AP Synapse SEO accessibility content — do not occupy layout space */
+/* AP Synapse SEO accessibility content â€” do not occupy layout space */
 .ap-synapse-seo {
     position: absolute !important;
     width: 1px !important;
@@ -6358,7 +6358,7 @@ body {
 }
 
 /* =====================================================
-   AP SYNAPSE — STOP WORKSPACE FLEX WRAP
+   AP SYNAPSE â€” STOP WORKSPACE FLEX WRAP
    ===================================================== */
 
 .app {
@@ -6406,7 +6406,7 @@ body {
 }
 
 /* =====================================================
-   AP SYNAPSE — PAGE STACK
+   AP SYNAPSE â€” PAGE STACK
    ===================================================== */
 
 .workspace-content {
@@ -6442,7 +6442,7 @@ body {
 }
 
 /* =========================================
-   AP SYNAPSE — PAGE SYSTEM FINAL FIX
+   AP SYNAPSE â€” PAGE SYSTEM FINAL FIX
 ========================================= */
 
 .workspace-content {
@@ -6507,7 +6507,7 @@ body {
 }
 
 /* =========================================
-   AP SYNAPSE — PAGE LAYOUT FINAL FIX
+   AP SYNAPSE â€” PAGE LAYOUT FINAL FIX
    ========================================= */
 
 .workspace {
@@ -6582,7 +6582,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL PAGE STACK FIX
+   AP SYNAPSE â€” FINAL PAGE STACK FIX
    All workspace pages occupy the same content viewport.
    ========================================================= */
 
@@ -6668,7 +6668,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — DEFINITIVE WORKSPACE PAGE OVERLAY FIX
+   AP SYNAPSE â€” DEFINITIVE WORKSPACE PAGE OVERLAY FIX
    ========================================================= */
 
 .workspace-content {
@@ -6733,7 +6733,7 @@ body {
     transform: none !important;
 }
 
-/* AP SYNAPSE — PAGE VISIBILITY CONTROL */
+/* AP SYNAPSE â€” PAGE VISIBILITY CONTROL */
 
 .workspace-content {
     position: relative !important;
@@ -6758,7 +6758,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — ASSISTANT WELCOME LAYER FIX
+   AP SYNAPSE â€” ASSISTANT WELCOME LAYER FIX
    ========================================================= */
 
 /* Assistant is a normal page, not a permanent overlay */
@@ -6801,7 +6801,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — SINGLE PAGE WORKSPACE SYSTEM
+   AP SYNAPSE â€” SINGLE PAGE WORKSPACE SYSTEM
 ========================================================= */
 
 .workspace-content {
@@ -6851,7 +6851,7 @@ body {
 }
 
 /* =====================================================
-   AP SYNAPSE — WORKSPACE PAGE STACK
+   AP SYNAPSE â€” WORKSPACE PAGE STACK
 ===================================================== */
 
 .workspace-content {
@@ -6890,7 +6890,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL SIDEBAR STRUCTURE POLISH
+   AP SYNAPSE â€” FINAL SIDEBAR STRUCTURE POLISH
    DO NOT TOUCH ROUTING
 ========================================================= */
 
@@ -6979,7 +6979,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — PREMIUM WELCOME HERO
+   AP SYNAPSE â€” PREMIUM WELCOME HERO
 ========================================================= */
 
 .hero-screen {
@@ -7137,7 +7137,7 @@ body {
 }
 
 /* =========================================================
-   RECENT INTELLIGENCE — PREMIUM CENTER CARD
+   RECENT INTELLIGENCE â€” PREMIUM CENTER CARD
 ========================================================= */
 
 .recent-intelligence {
@@ -7260,7 +7260,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — HERO ACTION CLICK FIX
+   AP SYNAPSE â€” HERO ACTION CLICK FIX
    DO NOT CHANGE DESIGN
 ========================================================= */
 
@@ -7297,7 +7297,7 @@ body {
     pointer-events: none !important;
 }
 
-/* AP SYNAPSE — HERO BUTTON CLICK FIX */
+/* AP SYNAPSE â€” HERO BUTTON CLICK FIX */
 
 .hero-screen,
 .hero-container,
@@ -7331,7 +7331,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — WELCOME ACTION LAYER
+   AP SYNAPSE â€” WELCOME ACTION LAYER
    Fixes chatWindow blocking hero buttons
 ========================================================= */
 
@@ -7364,7 +7364,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL HERO POLISH
+   AP SYNAPSE â€” FINAL HERO POLISH
    ========================================================= */
 
 /* ---------- HERO TITLE ---------- */
@@ -7551,7 +7551,7 @@ body {
 }
 
 /* =====================================================
-   AP SYNAPSE — ADVANCED SETTINGS
+   AP SYNAPSE â€” ADVANCED SETTINGS
 ===================================================== */
 
 #advancedSettings {
@@ -7695,7 +7695,7 @@ body {
 }
 
 /* =====================================================
-   AP SYNAPSE — ULTIMATE CONTROL CENTER UI
+   AP SYNAPSE â€” ULTIMATE CONTROL CENTER UI
 ===================================================== */
 
 #ultimateSettings {
@@ -7884,7 +7884,7 @@ body {
 }
 
 /* ==========================================================
-   AP SYNAPSE — PROJECTS / DOCUMENTS / PROFILE UPGRADE
+   AP SYNAPSE â€” PROJECTS / DOCUMENTS / PROFILE UPGRADE
 ========================================================== */
 
 .project-dashboard-stats {
@@ -8101,7 +8101,7 @@ body {
 }
 
 /* =====================================================
-   AP SYNAPSE — DOCUMENT INTELLIGENCE
+   AP SYNAPSE â€” DOCUMENT INTELLIGENCE
 ===================================================== */
 
 .document-workspace {
@@ -8290,8 +8290,8 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL MOBILE RESPONSIVE SYSTEM
-   Mobile: 320px → 430px+
+   AP SYNAPSE â€” FINAL MOBILE RESPONSIVE SYSTEM
+   Mobile: 320px â†’ 430px+
    Desktop design remains untouched
    ========================================================= */
 
@@ -8638,7 +8638,7 @@ body {
 
 
 /* =========================================================
-   SMALL PHONES — 320px–380px
+   SMALL PHONES â€” 320pxâ€“380px
    ========================================================= */
 
 @media (max-width: 380px) {
@@ -8671,7 +8671,7 @@ body {
 
 
 /* =========================================================
-   STANDARD PHONES — 381px–430px
+   STANDARD PHONES â€” 381pxâ€“430px
    ========================================================= */
 
 @media (min-width: 381px) and (max-width: 430px) {
@@ -8720,7 +8720,7 @@ body {
 
 
 /* =========================================================
-   SAFE AREA — MODERN PHONES
+   SAFE AREA â€” MODERN PHONES
    ========================================================= */
 
 @supports (padding: env(safe-area-inset-bottom)) {
@@ -8756,7 +8756,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL MOBILE EXPERIENCE
+   AP SYNAPSE â€” FINAL MOBILE EXPERIENCE
    Premium mobile workspace
    ========================================================= */
 
@@ -9718,7 +9718,7 @@ body {
 
     @media (max-width: 430px) {
 
-    /* AP SYNAPSE — FULL MOBILE INTELLIGENCE BAR */
+    /* AP SYNAPSE â€” FULL MOBILE INTELLIGENCE BAR */
 
     #attachBtn,
     #imageGenBtn,
@@ -9921,8 +9921,8 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL MOBILE EXPERIENCE
-   Optimized for phones: 320px–600px
+   AP SYNAPSE â€” FINAL MOBILE EXPERIENCE
+   Optimized for phones: 320pxâ€“600px
    ========================================================= */
 
 @media (max-width: 800px) {
@@ -10580,7 +10580,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — MOBILE EXPERIENCE v3
+   AP SYNAPSE â€” MOBILE EXPERIENCE v3
    Desktop layout remains untouched.
    ========================================================= */
 
@@ -11204,7 +11204,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — PREMIUM MOBILE NAVIGATION
+   AP SYNAPSE â€” PREMIUM MOBILE NAVIGATION
    FINAL SINGLE SOURCE OF TRUTH
    ========================================================= */
 
@@ -11453,7 +11453,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL MOBILE NAVIGATION
+   AP SYNAPSE â€” FINAL MOBILE NAVIGATION
    SINGLE SOURCE OF TRUTH
    ========================================================= */
 
@@ -11982,7 +11982,7 @@ body {
 
 }
 /* =========================================================
-   AP SYNAPSE — FINAL MOBILE NAVIGATION SYSTEM
+   AP SYNAPSE â€” FINAL MOBILE NAVIGATION SYSTEM
    Single source of truth
    ========================================================= */
 
@@ -12544,8 +12544,8 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL MOBILE NAVIGATION / SIDEBAR
-   LAST OVERRIDE — DO NOT MODIFY
+   AP SYNAPSE â€” FINAL MOBILE NAVIGATION / SIDEBAR
+   LAST OVERRIDE â€” DO NOT MODIFY
    ========================================================= */
 
 @media (max-width: 767px) {
@@ -13069,7 +13069,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL MOBILE SIDEBAR VISIBILITY FIX
+   AP SYNAPSE â€” FINAL MOBILE SIDEBAR VISIBILITY FIX
    Put this at the VERY BOTTOM of the main CSS file.
    ========================================================= */
 
@@ -13539,7 +13539,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — MOBILE SIDEBAR FINAL OVERLAY FIX
+   AP SYNAPSE â€” MOBILE SIDEBAR FINAL OVERLAY FIX
    ========================================================= */
 
 @media (max-width: 767px) {
@@ -13625,7 +13625,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL MOBILE SIDEBAR VISIBILITY FIX
+   AP SYNAPSE â€” FINAL MOBILE SIDEBAR VISIBILITY FIX
    ========================================================= */
 
 @media (max-width: 767px) {
@@ -13674,7 +13674,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — MOBILE SIDEBAR LABELS
+   AP SYNAPSE â€” MOBILE SIDEBAR LABELS
    Keep icons + show full navigation names
    ========================================================= */
 
@@ -13787,7 +13787,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL MOBILE SIDEBAR NAVIGATION
+   AP SYNAPSE â€” FINAL MOBILE SIDEBAR NAVIGATION
    Exact navigation IDs from AP Synapse HTML
    ========================================================= */
 
@@ -13891,7 +13891,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL MOBILE SIDEBAR SCROLL
+   AP SYNAPSE â€” FINAL MOBILE SIDEBAR SCROLL
    ========================================================= */
 
 @media (max-width: 767px) {
@@ -13936,7 +13936,7 @@ body {
 }
 
 /* ============================================================
-   AP SYNAPSE — FINAL MOBILE SIDEBAR SCROLL FIX
+   AP SYNAPSE â€” FINAL MOBILE SIDEBAR SCROLL FIX
    Does not affect desktop layout.
    ============================================================ */
 
@@ -14061,7 +14061,7 @@ body {
 }
 
 /* =================================================
-   AP SYNAPSE — PREMIUM MOBILE SIDEBAR LAYER
+   AP SYNAPSE â€” PREMIUM MOBILE SIDEBAR LAYER
    Sidebar ALWAYS above backdrop
    ================================================= */
 
@@ -14095,7 +14095,7 @@ body {
 
 
 /* =================================================
-   SIDEBAR — ABOVE EVERYTHING
+   SIDEBAR â€” ABOVE EVERYTHING
    ================================================= */
 
 aside.sidebar {
@@ -14164,7 +14164,7 @@ aside.sidebar.ap-sidebar-open {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL MOBILE SIDEBAR TOUCH / SCROLL FIX
+   AP SYNAPSE â€” FINAL MOBILE SIDEBAR TOUCH / SCROLL FIX
    Put this AFTER every other mobile CSS rule
    ========================================================= */
 
@@ -14249,7 +14249,7 @@ aside.sidebar.ap-sidebar-open {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL MOBILE SIDEBAR
+   AP SYNAPSE â€” FINAL MOBILE SIDEBAR
    Permanent production layout
    Desktop remains untouched
    ========================================================= */
@@ -14580,7 +14580,7 @@ aside.sidebar.ap-sidebar-open {
 }
 
 /* =========================================================
-   AP SYNAPSE — SIDEBAR STRUCTURE FIX
+   AP SYNAPSE â€” SIDEBAR STRUCTURE FIX
    Keeps History and Navigation completely separated
    ========================================================= */
 
@@ -14818,7 +14818,7 @@ aside.sidebar.ap-sidebar-open {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL SIDEBAR / WORKSPACE LAYOUT FIX
+   AP SYNAPSE â€” FINAL SIDEBAR / WORKSPACE LAYOUT FIX
    Paste at the VERY BOTTOM of main.css
    ========================================================= */
 
@@ -15092,7 +15092,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL RESPONSIVE SIDEBAR SYSTEM
+   AP SYNAPSE â€” FINAL RESPONSIVE SIDEBAR SYSTEM
    DO NOT ADD ANOTHER SIDEBAR CSS SYSTEM BELOW THIS
    ========================================================= */
 
@@ -15365,7 +15365,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL MOBILE SIDEBAR CLICK FIX
+   AP SYNAPSE â€” FINAL MOBILE SIDEBAR CLICK FIX
    ========================================================= */
 
 @media (max-width: 767px) {
@@ -15405,7 +15405,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL MOBILE DRAWER
+   AP SYNAPSE â€” FINAL MOBILE DRAWER
    MOBILE ONLY
    DESKTOP IS COMPLETELY UNTOUCHED
    ========================================================= */
@@ -15413,7 +15413,7 @@ body {
 @media (max-width: 767px) {
 
     /* =====================================================
-       SIDEBAR — CLOSED
+       SIDEBAR â€” CLOSED
        ===================================================== */
 
     aside.sidebar,
@@ -15475,7 +15475,7 @@ body {
 
 
     /* =====================================================
-       SIDEBAR — OPEN
+       SIDEBAR â€” OPEN
        ===================================================== */
 
     aside.sidebar.ap-sidebar-open,
@@ -15530,7 +15530,7 @@ body {
 
 
     /* =====================================================
-       OVERLAY — CLOSED
+       OVERLAY â€” CLOSED
        ===================================================== */
 
     .mobile-sidebar-overlay {
@@ -15562,7 +15562,7 @@ body {
 
 
     /* =====================================================
-       OVERLAY — OPEN
+       OVERLAY â€” OPEN
        ===================================================== */
 
     .mobile-sidebar-overlay.ap-sidebar-visible {
@@ -15582,7 +15582,7 @@ body {
 
 
     /* =====================================================
-       SIDEBAR CONTENT — CLICKABLE
+       SIDEBAR CONTENT â€” CLICKABLE
        ===================================================== */
 
     aside.sidebar.ap-sidebar-open nav,
@@ -15654,8 +15654,8 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL MOBILE SIDEBAR FIX
-   MOBILE ONLY — DO NOT AFFECT DESKTOP
+   AP SYNAPSE â€” FINAL MOBILE SIDEBAR FIX
+   MOBILE ONLY â€” DO NOT AFFECT DESKTOP
    ========================================================= */
 
 @media (max-width: 767px) {
@@ -15837,7 +15837,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — MOBILE TOPBAR ACTIONS
+   AP SYNAPSE â€” MOBILE TOPBAR ACTIONS
    Final workspace polish
    ========================================================= */
 
@@ -15863,7 +15863,7 @@ body {
         z-index: 1000 !important;
     }
 
-    /* Notification — visible on mobile */
+    /* Notification â€” visible on mobile */
     .topbar-right #notificationBtn {
         display: flex !important;
         align-items: center !important;
@@ -15877,7 +15877,7 @@ body {
         border-radius: 10px !important;
     }
 
-    /* Profile — visible on mobile */
+    /* Profile â€” visible on mobile */
     .topbar-right #profileBtn {
         display: flex !important;
         align-items: center !important;
@@ -15914,7 +15914,7 @@ body {
 }
 
 /* =========================================
-   AP SYNAPSE — INTELLIGENCE FIELD CONTROL
+   AP SYNAPSE â€” INTELLIGENCE FIELD CONTROL
 ========================================= */
 
 .intelligence-field-control {
@@ -16166,7 +16166,7 @@ body {
 
 }
 
-/* AP SYNAPSE — KEEP ACTIVE ON ONE LINE */
+/* AP SYNAPSE â€” KEEP ACTIVE ON ONE LINE */
 .intelligence-field-state {
     white-space: nowrap !important;
     display: inline-block !important;
@@ -16175,7 +16175,7 @@ body {
     flex-shrink: 0 !important;
 }
 
-/* AP SYNAPSE — TRUE CENTER INTELLIGENCE FIELD */
+/* AP SYNAPSE â€” TRUE CENTER INTELLIGENCE FIELD */
 @media (max-width: 768px) {
 
     .topbar {
@@ -16201,7 +16201,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — PREMIUM WORKSPACE IDENTITY
+   AP SYNAPSE â€” PREMIUM WORKSPACE IDENTITY
    FINAL TOPBAR CONTROL
 ========================================================= */
 
@@ -16748,7 +16748,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — MOBILE COMMAND BAR
+   AP SYNAPSE â€” MOBILE COMMAND BAR
    FINAL VISIBILITY + USABILITY FIX
    ========================================================= */
 
@@ -16824,7 +16824,7 @@ body {
     /*
        Keep every useful command available on mobile.
        This includes:
-       Attach • Image • Voice • Speak • Web • Think • Send
+       Attach â€¢ Image â€¢ Voice â€¢ Speak â€¢ Web â€¢ Think â€¢ Send
     */
 
     .command-bar #attachBtn,
@@ -16955,8 +16955,8 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — PREMIUM PROFILE PANEL
-   Compact • Responsive • Account Controls Always Accessible
+   AP SYNAPSE â€” PREMIUM PROFILE PANEL
+   Compact â€¢ Responsive â€¢ Account Controls Always Accessible
 ========================================================= */
 
 #profileCard {
@@ -17132,7 +17132,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — PROFILE PANEL
+   AP SYNAPSE â€” PROFILE PANEL
    Premium responsive sizing
 ========================================================= */
 
@@ -17201,8 +17201,8 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — MOBILE COMMAND DOCK
-   Unified • Connected • Premium • Touch Optimized
+   AP SYNAPSE â€” MOBILE COMMAND DOCK
+   Unified â€¢ Connected â€¢ Premium â€¢ Touch Optimized
 ========================================================= */
 
 @media (max-width: 600px) {
@@ -17336,7 +17336,7 @@ body {
 
     /* =====================================================
        LOWER CONTROL RAIL
-       Attach • Image • Voice • Speak • Web • Think • Send
+       Attach â€¢ Image â€¢ Voice â€¢ Speak â€¢ Web â€¢ Think â€¢ Send
        The controls remain INSIDE the same command surface.
     ===================================================== */
 
@@ -17571,8 +17571,8 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL MOBILE COMMAND DOCK
-   ONE SURFACE • 2 ROWS • 7 CONTROL ICONS
+   AP SYNAPSE â€” FINAL MOBILE COMMAND DOCK
+   ONE SURFACE â€¢ 2 ROWS â€¢ 7 CONTROL ICONS
 ========================================================= */
 
 @media (max-width: 600px) {
@@ -17621,7 +17621,7 @@ body {
 
 
     /* =====================================================
-       INPUT — TOP ROW
+       INPUT â€” TOP ROW
     ===================================================== */
 
     .command-bar #userInput {
@@ -17657,7 +17657,7 @@ body {
 
 
     /* =====================================================
-       SEND — TOP RIGHT
+       SEND â€” TOP RIGHT
     ===================================================== */
 
     .command-bar #sendBtn {
@@ -17924,7 +17924,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — PROFILE PANEL
+   AP SYNAPSE â€” PROFILE PANEL
    SINGLE SOURCE OF TRUTH
 ========================================================= */
 
@@ -17937,7 +17937,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — PREMIUM MOBILE SIDEBAR TOGGLE
+   AP SYNAPSE â€” PREMIUM MOBILE SIDEBAR TOGGLE
 ========================================================= */
 
 .mobile-sidebar-btn {
@@ -17985,7 +17985,7 @@ body {
 }
 
 
-/* OPEN STATE — turns ☰ into × */
+/* OPEN STATE â€” turns â˜° into Ã— */
 
 .mobile-sidebar-btn.is-open span:nth-child(1) {
     transform: translateY(6.5px) rotate(45deg);
@@ -18026,7 +18026,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — MOBILE SIDEBAR
+   AP SYNAPSE â€” MOBILE SIDEBAR
    Full-height scrolling navigation
 ========================================================= */
 
@@ -18078,7 +18078,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — SIDEBAR FIRST-LOAD STABILITY
+   AP SYNAPSE â€” SIDEBAR FIRST-LOAD STABILITY
    Desktop: visible immediately.
    Mobile: existing mobile controller remains in charge.
    ========================================================= */
@@ -18095,7 +18095,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — MOBILE SIDEBAR SMOOTH SCROLL FIX
+   AP SYNAPSE â€” MOBILE SIDEBAR SMOOTH SCROLL FIX
    ========================================================= */
 
 @media (max-width: 768px) {
@@ -18132,7 +18132,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — PREMIUM IDENTITY PANEL
+   AP SYNAPSE â€” PREMIUM IDENTITY PANEL
    ========================================================= */
 
 .ap-profile-panel {
@@ -18396,7 +18396,7 @@ body {
 
 .ap-profile-panel
 .authenticated-status.authenticated::before {
-    content: "✓";
+    content: "âœ“";
 
     width: 16px;
     height: 16px;
@@ -18604,7 +18604,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — PERSONALIZED HERO GREETING
+   AP SYNAPSE â€” PERSONALIZED HERO GREETING
 ========================================================= */
 
 .personal-greeting {
@@ -18636,7 +18636,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — PREMIUM TOPBAR BRAND MARK
+   AP SYNAPSE â€” PREMIUM TOPBAR BRAND MARK
    ========================================================= */
 
 .ap-synapse-brand-mark {
@@ -18815,7 +18815,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — PREMIUM PROFILE POPOVER
+   AP SYNAPSE â€” PREMIUM PROFILE POPOVER
    Final compact override
    ========================================================= */
 
@@ -18867,7 +18867,7 @@ body {
 }
 
 
-/* Open state — matches your existing JS */
+/* Open state â€” matches your existing JS */
 
 #profileCard.active {
     opacity: 1 !important;
@@ -19079,7 +19079,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — PREMIUM PROFILE PANEL FIX
+   AP SYNAPSE â€” PREMIUM PROFILE PANEL FIX
    ========================================================= */
 
 #profileCard {
@@ -19178,7 +19178,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — SIDEBAR BRAND LOGO
+   AP SYNAPSE â€” SIDEBAR BRAND LOGO
    ========================================================= */
 
 .sidebar-brand-mark {
@@ -19221,7 +19221,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — ORIGINAL SIDEBAR BRAND LOGO
+   AP SYNAPSE â€” ORIGINAL SIDEBAR BRAND LOGO
    ========================================================= */
 
 .brand-mark {
@@ -19256,7 +19256,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — MOBILE CHAT BOTTOM CLEARANCE
+   AP SYNAPSE â€” MOBILE CHAT BOTTOM CLEARANCE
    Keeps final response lines above the fixed composer
    ========================================================= */
 
@@ -19274,7 +19274,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — LIVE TALK
+   AP SYNAPSE â€” LIVE TALK
    ========================================================= */
 
 .live-talk-btn {
@@ -19365,7 +19365,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — LIVE TALK VOICE SELECTOR
+   AP SYNAPSE â€” LIVE TALK VOICE SELECTOR
    ========================================================= */
 
 .live-talk-voice-selector {
@@ -19507,7 +19507,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — PREMIUM LIVE TALK CALL
+   AP SYNAPSE â€” PREMIUM LIVE TALK CALL
 ========================================================= */
 
 .live-talk-screen {
@@ -20071,7 +20071,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — LIVE TALK CALL SCREEN
+   AP SYNAPSE â€” LIVE TALK CALL SCREEN
    ========================================================= */
 
 .live-talk-screen {
@@ -20562,7 +20562,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — PREMIUM COMMAND BAR
+   AP SYNAPSE â€” PREMIUM COMMAND BAR
 ========================================================= */
 
 .command-section {
@@ -21218,7 +21218,7 @@ body {
 }
 
 /* ============================================================
-   AP SYNAPSE — SOURCES & FURTHER READING
+   AP SYNAPSE â€” SOURCES & FURTHER READING
 ============================================================ */
 
 .synapse-sources {
@@ -21385,7 +21385,7 @@ body {
 }
 
 /* ============================================================
-   AP SYNAPSE — PREMIUM WEB SOURCE LINKS
+   AP SYNAPSE â€” PREMIUM WEB SOURCE LINKS
    ============================================================ */
 
 .ap-source-link {
@@ -21447,7 +21447,7 @@ body {
 }
 
 /* ============================================================
-   AP SYNAPSE — SOURCE LINK OVERRIDE
+   AP SYNAPSE â€” SOURCE LINK OVERRIDE
    ============================================================ */
 
 .message-body a.ap-source-link,
@@ -21512,7 +21512,7 @@ body {
 
 .message-body a.ap-source-link::before {
 
-    content: "↗";
+    content: "â†—";
 
     display: inline-flex;
 
@@ -21537,7 +21537,7 @@ body {
 }
 
 /* ============================================================
-   AP SYNAPSE — PREMIUM WEB SOURCES
+   AP SYNAPSE â€” PREMIUM WEB SOURCES
    ============================================================ */
 
 .ap-sources-panel {
@@ -21694,10 +21694,10 @@ body {
 }
 
 /* ============================================================
-   AP SYNAPSE — PREMIUM INTELLIGENCE CONVERSATION
+   AP SYNAPSE â€” PREMIUM INTELLIGENCE CONVERSATION
    ============================================================ */
 
-/* USER MESSAGE — clean editorial text, no childish bubble */
+/* USER MESSAGE â€” clean editorial text, no childish bubble */
 .user-message {
     display: flex !important;
     justify-content: flex-end !important;
@@ -21732,7 +21732,7 @@ body {
 }
 
 
-/* SYNAPSE RESPONSE — no giant box */
+/* SYNAPSE RESPONSE â€” no giant box */
 .message.ai {
     display: flex !important;
     align-items: flex-start !important;
@@ -21951,7 +21951,7 @@ body {
 }
 
 
-/* SOURCE LINKS — PREMIUM GOLD */
+/* SOURCE LINKS â€” PREMIUM GOLD */
 .ap-source-link {
     display: inline-flex !important;
     align-items: center !important;
@@ -21985,7 +21985,7 @@ body {
 }
 
 .ap-source-link::after {
-    content: "↗";
+    content: "â†—";
 
     font-size: 12px;
     opacity: .7;
@@ -22002,7 +22002,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — PREMIUM CONVERSATION SYSTEM
+   AP SYNAPSE â€” PREMIUM CONVERSATION SYSTEM
    Clean / editorial / intelligence-workspace aesthetic
    ========================================================= */
 
@@ -22073,7 +22073,7 @@ body {
     padding: 0 !important;
 }
 
-/* AP avatar — understated, not a colorful square */
+/* AP avatar â€” understated, not a colorful square */
 .message.ai .avatar {
     flex: 0 0 34px;
     width: 34px;
@@ -22103,7 +22103,7 @@ body {
         0 5px 18px rgba(190,150,50,.15);
 }
 
-/* AP response body — NO box */
+/* AP response body â€” NO box */
 .message.ai .message-body {
     flex: 1;
     min-width: 0;
@@ -22210,7 +22210,7 @@ body {
 }
 
 .message.ai .message-body a.ap-source-link::before {
-    content: "↗";
+    content: "â†—";
     font-size: 12px;
     opacity: .9;
 }
@@ -22404,7 +22404,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — MESSAGE ACTIONS
+   AP SYNAPSE â€” MESSAGE ACTIONS
    ========================================================= */
 
 .ap-response-actions {
@@ -22619,7 +22619,7 @@ body {
 }
 
 /* ============================================================
-   AP SYNAPSE — FINAL CONVERSATION LAYOUT SAFETY OVERRIDE
+   AP SYNAPSE â€” FINAL CONVERSATION LAYOUT SAFETY OVERRIDE
    Paste at the VERY BOTTOM of CSS
    ============================================================ */
 
@@ -23126,11 +23126,11 @@ body {
 
 
 /* ============================================================
-   END — AP SYNAPSE CONVERSATION LAYOUT SAFETY OVERRIDE
+   END â€” AP SYNAPSE CONVERSATION LAYOUT SAFETY OVERRIDE
    ============================================================ */
 
 /* ============================================================
-   AP SYNAPSE — NORMAL CONVERSATION WIDTH
+   AP SYNAPSE â€” NORMAL CONVERSATION WIDTH
    Remove unnecessary right-side conversation column/space
    ============================================================ */
 
@@ -23198,7 +23198,7 @@ body {
 }
 
 /* ============================================================
-   AP SYNAPSE — FINAL CHAT WIDTH OVERRIDE
+   AP SYNAPSE â€” FINAL CHAT WIDTH OVERRIDE
    Remove right conversation navigator and restore full workspace
    ============================================================ */
 
@@ -23240,7 +23240,7 @@ body {
 }
 
 /* ============================================================
-   AP SYNAPSE — MOBILE COMPOSER
+   AP SYNAPSE â€” MOBILE COMPOSER
    FINAL PREMIUM MOBILE OVERRIDE
    ============================================================ */
 
@@ -23592,14 +23592,14 @@ body {
 }
 
 /* ============================================================
-   AP SYNAPSE — MOBILE COMMAND BAR
+   AP SYNAPSE â€” MOBILE COMMAND BAR
    PREMIUM TWO-ROW COMPOSER
    ============================================================ */
 
 @media (max-width: 700px) {
 
     /* --------------------------------------------------------
-       COMMAND BAR — MASTER CONTAINER
+       COMMAND BAR â€” MASTER CONTAINER
        -------------------------------------------------------- */
 
     .command-bar {
@@ -23645,7 +23645,7 @@ body {
 
 
     /* ========================================================
-       ROW 1 — ASK AP SYNAPSE
+       ROW 1 â€” ASK AP SYNAPSE
        ======================================================== */
 
     .command-input-wrap {
@@ -23730,7 +23730,7 @@ body {
 
 
     /* ========================================================
-       ROW 2 — ALL COMMAND BUTTONS
+       ROW 2 â€” ALL COMMAND BUTTONS
        ======================================================== */
 
     .command-bar > .command-action,
@@ -24015,7 +24015,7 @@ body {
 
 
 /* ============================================================
-   SMALL PHONES — 380px AND BELOW
+   SMALL PHONES â€” 380px AND BELOW
    ============================================================ */
 
 @media (max-width: 380px) {
@@ -24077,8 +24077,8 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — PREMIUM MOBILE COMMAND BAR
-   Input first • Tools below • Proper spacing
+   AP SYNAPSE â€” PREMIUM MOBILE COMMAND BAR
+   Input first â€¢ Tools below â€¢ Proper spacing
    ========================================================= */
 
 @media (max-width: 600px) {
@@ -24104,7 +24104,7 @@ body {
 
 
     /* =========================================
-       TOP — ASK AP SYNAPSE
+       TOP â€” ASK AP SYNAPSE
        ========================================= */
 
     .command-input-wrap {
@@ -24137,7 +24137,7 @@ body {
 
 
     /* =========================================
-       SECOND ROW — TOOL AREA
+       SECOND ROW â€” TOOL AREA
        ========================================= */
 
     .live-talk-btn {
@@ -24172,7 +24172,7 @@ body {
 
 
     /* =========================================
-       TOOLS — EVENLY SPACED
+       TOOLS â€” EVENLY SPACED
        ========================================= */
 
     .command-tools {
@@ -24286,7 +24286,7 @@ body {
 }
 
 /* ============================================================
-   AP SYNAPSE — PREMIUM SIDEBAR SYSTEM
+   AP SYNAPSE â€” PREMIUM SIDEBAR SYSTEM
    Desktop + Mobile
    ============================================================ */
 
@@ -24766,7 +24766,7 @@ body {
 }
 
 /* ============================================================
-   AP SYNAPSE — HISTORY CONTAINER FINAL VISIBILITY OVERRIDE
+   AP SYNAPSE â€” HISTORY CONTAINER FINAL VISIBILITY OVERRIDE
    ============================================================ */
 
 @media (min-width: 769px) {
@@ -24793,7 +24793,7 @@ body {
     }
 
     /* ========================================================
-       RECENT SECTION — FORCE IT TO EXIST
+       RECENT SECTION â€” FORCE IT TO EXIST
        ======================================================== */
 
     .sidebar > .sidebar-group.recent-group {
@@ -24816,7 +24816,7 @@ body {
     }
 
     /* ========================================================
-       HISTORY — TAKE ALL REMAINING SPACE
+       HISTORY â€” TAKE ALL REMAINING SPACE
        ======================================================== */
 
     .sidebar > .sidebar-group.recent-group > .history-list {
@@ -24863,7 +24863,7 @@ body {
 }
 
 /* ============================================================
-   AP SYNAPSE — SIDEBAR HISTORY VISIBILITY FIX
+   AP SYNAPSE â€” SIDEBAR HISTORY VISIBILITY FIX
    Keeps existing sidebar structure and behavior intact.
    ============================================================ */
 
@@ -24907,9 +24907,9 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — MOBILE SIDEBAR HISTORY
+   AP SYNAPSE â€” MOBILE SIDEBAR HISTORY
    FINAL LAYOUT FIX
-   Buttons → History → Footer
+   Buttons â†’ History â†’ Footer
    ========================================================= */
 
 @media (max-width: 768px) {
@@ -24946,7 +24946,7 @@ body {
         flex: 0 0 auto !important;
     }
 
-    /* HISTORY — ALWAYS AFTER BUTTONS */
+    /* HISTORY â€” ALWAYS AFTER BUTTONS */
     .sidebar > .recent-group {
         order: 4 !important;
 
@@ -24995,9 +24995,9 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — MOBILE SIDEBAR FINAL STABLE LAYOUT
-   History after navigation • native sidebar scrolling
-   No fixed-height history • no flex squeezing
+   AP SYNAPSE â€” MOBILE SIDEBAR FINAL STABLE LAYOUT
+   History after navigation â€¢ native sidebar scrolling
+   No fixed-height history â€¢ no flex squeezing
    ========================================================= */
 
 @media (max-width: 767px) {
@@ -25035,7 +25035,7 @@ body {
     }
 
     /* Correct visual order:
-       topbar → header → navigation → history → footer */
+       topbar â†’ header â†’ navigation â†’ history â†’ footer */
     aside.sidebar > .ap-sidebar-topbar {
         order: 0 !important;
     }
@@ -25156,7 +25156,7 @@ body {
     }
 
     /* ================================
-       HISTORY — DO NOT SHRINK
+       HISTORY â€” DO NOT SHRINK
        ================================ */
 
     aside.sidebar > .recent-group {
@@ -25220,7 +25220,7 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL MOBILE SIDEBAR HISTORY
+   AP SYNAPSE â€” FINAL MOBILE SIDEBAR HISTORY
    ========================================================= */
 
 @media (max-width: 768px) {
@@ -25287,9 +25287,9 @@ body {
 }
 
 /* =========================================================
-   AP SYNAPSE — PURE OBSIDIAN BLACK
-   Clean • Rich • Polished • Premium
-   Background only — no neuron changes
+   AP SYNAPSE â€” PURE OBSIDIAN BLACK
+   Clean â€¢ Rich â€¢ Polished â€¢ Premium
+   Background only â€” no neuron changes
    ========================================================= */
 
 html,
@@ -25325,17 +25325,17 @@ canvas {
 }
 
 /* ============================================================
-   AP SYNAPSE — PROFESSIONAL LIGHT / TITANIUM MODE
+   AP SYNAPSE â€” PROFESSIONAL LIGHT / TITANIUM MODE
    FINAL OVERRIDE
    Purpose:
-   • No blinding white
-   • Proper readable contrast
-   • Premium neutral titanium surface
-   • Sidebar belongs to the same visual system
-   • Cards / controls remain visible
-   • Profile panel follows light mode
-   • Intelligence Field remains visible
-   • Does NOT alter dark mode
+   â€¢ No blinding white
+   â€¢ Proper readable contrast
+   â€¢ Premium neutral titanium surface
+   â€¢ Sidebar belongs to the same visual system
+   â€¢ Cards / controls remain visible
+   â€¢ Profile panel follows light mode
+   â€¢ Intelligence Field remains visible
+   â€¢ Does NOT alter dark mode
    ============================================================ */
 
 
@@ -25439,7 +25439,7 @@ body[data-theme="light"] .main-container {
 
 
 /* ------------------------------------------------------------
-   5. SIDEBAR — SAME MATERIAL AS THE WHOLE APP
+   5. SIDEBAR â€” SAME MATERIAL AS THE WHOLE APP
    ------------------------------------------------------------ */
 
 body.light-mode aside,
@@ -25632,7 +25632,7 @@ body.light-mode button:hover {
 
 
 /* ------------------------------------------------------------
-   11. HERO TEXT — IMPORTANT
+   11. HERO TEXT â€” IMPORTANT
    ------------------------------------------------------------ */
 
 body.light-mode h1,
@@ -25871,7 +25871,7 @@ body.light-mode * {
 
 
 /* ------------------------------------------------------------
-   22. GOLD INTERACTION — VERY SUBTLE
+   22. GOLD INTERACTION â€” VERY SUBTLE
    ------------------------------------------------------------ */
 
 body.light-mode button:focus-visible,
@@ -25929,7 +25929,7 @@ body.light-mode textarea:focus {
 }
 
 /* =========================================================
-   AP SYNAPSE — LIGHT MODE MASTER SURFACE
+   AP SYNAPSE â€” LIGHT MODE MASTER SURFACE
    FINAL OVERRIDE
    body.light-mode = complete professional light theme
    ========================================================= */
@@ -25987,7 +25987,7 @@ body.light-mode .assistant-page {
 
 
 /* =========================================================
-   SIDEBAR — SAME MATERIAL AS WORKSPACE
+   SIDEBAR â€” SAME MATERIAL AS WORKSPACE
    ========================================================= */
 
 body.light-mode .sidebar {
@@ -26470,7 +26470,7 @@ body.light-mode .chat-composer button:hover {
 }
 
 
-/* SEND BUTTON — KEEP GOLD */
+/* SEND BUTTON â€” KEEP GOLD */
 
 body.light-mode #sendBtn {
 
@@ -26655,7 +26655,7 @@ body.light-mode ::-webkit-scrollbar-thumb:hover {
 
 
 /* =========================================================
-   NEURAL FIELD — TRANSPARENT
+   NEURAL FIELD â€” TRANSPARENT
    ========================================================= */
 
 body.light-mode canvas#intelligence-field,
@@ -26707,7 +26707,7 @@ body.light-mode .secondary {
 }
 
 /* =========================================================
-   AP SYNAPSE — FINAL PROFESSIONAL LIGHT MODE
+   AP SYNAPSE â€” FINAL PROFESSIONAL LIGHT MODE
    Complete light-surface normalization
    Paste at the VERY BOTTOM so it overrides old dark rules.
    ========================================================= */
@@ -27504,7 +27504,7 @@ body.light * {
 
 /* =========================================================
    INTELLIGENCE FIELD
-   Keep it subtle — NOT washed out.
+   Keep it subtle â€” NOT washed out.
    ========================================================= */
 
 html.light canvas,
@@ -27560,7 +27560,7 @@ body.light .content {
 }
 
 /* =========================================================
-   AP SYNAPSE — MOBILE THEME TOGGLE
+   AP SYNAPSE â€” MOBILE THEME TOGGLE
    Quiet / premium / minimal
 ========================================================= */
 
@@ -27656,7 +27656,7 @@ body.light-mode .ap-mobile-theme-toggle:hover {
 }
 
 
-/* DESKTOP — don't show this mobile control */
+/* DESKTOP â€” don't show this mobile control */
 
 @media (min-width: 769px) {
     .ap-mobile-theme-toggle {
@@ -27664,7 +27664,7 @@ body.light-mode .ap-mobile-theme-toggle:hover {
     }
 }
 /* =========================================================
-   AP SYNAPSE — MOBILE TOPBAR ACTIONS
+   AP SYNAPSE â€” MOBILE TOPBAR ACTIONS
    FINAL CLEAN / TOUCH-SAFE LAYOUT
 ========================================================= */
 
@@ -27819,7 +27819,7 @@ body.light-mode .ap-mobile-theme-toggle:hover {
 }
 
 /* =========================================================
-   AP SYNAPSE — MOBILE TOPBAR ACTIONS
+   AP SYNAPSE â€” MOBILE TOPBAR ACTIONS
    FINAL CLEAN / TOUCH-SAFE LAYOUT
 ========================================================= */
 
@@ -27974,7 +27974,7 @@ body.light-mode .ap-mobile-theme-toggle:hover {
 }
 
 /* =========================================================
-   AP SYNAPSE — MOBILE TOPBAR FINAL CONTROL LAYOUT
+   AP SYNAPSE â€” MOBILE TOPBAR FINAL CONTROL LAYOUT
    Clean / Sober / Premium / Non-Jumbled
 ========================================================= */
 
@@ -28048,7 +28048,7 @@ body.light-mode .ap-mobile-theme-toggle:hover {
         order: 5 !important;
     }
 
-    /* Theme button — deliberately quiet and premium */
+    /* Theme button â€” deliberately quiet and premium */
     #apMobileThemeToggle {
         border: 1px solid rgba(154,112,40,.18) !important;
 
@@ -28186,7 +28186,7 @@ body.light-mode .ap-mobile-theme-toggle:hover {
 }
 
 /* =========================================================
-   AP SYNAPSE — MOBILE TOPBAR CONTROL GROUP
+   AP SYNAPSE â€” MOBILE TOPBAR CONTROL GROUP
    FINAL CLEAN LAYOUT
    ========================================================= */
 
@@ -28362,7 +28362,7 @@ body.light-mode .ap-mobile-theme-toggle:hover {
 }
 
 /* =========================================================
-   AP SYNAPSE — PREMIUM WHITEBOARD
+   AP SYNAPSE â€” PREMIUM WHITEBOARD
 ========================================================= */
 
 .projects-page {
@@ -28444,7 +28444,7 @@ body.light-mode .ap-mobile-theme-toggle:hover {
 }
 
 /* =========================================================
-   AP SYNAPSE — CANVAS WHITEBOARD
+   AP SYNAPSE â€” CANVAS WHITEBOARD
 ========================================================= */
 
 .ap-whiteboard {
@@ -28529,7 +28529,7 @@ body.light-mode .ap-mobile-theme-toggle:hover {
 }
 
 /* =========================================================
-   AP SYNAPSE — READABILITY PRESERVATION LAYER
+   AP SYNAPSE â€” READABILITY PRESERVATION LAYER
    Targeted only. Does NOT redesign the interface.
 ========================================================= */
 
@@ -28667,7 +28667,7 @@ button {
 }
 
 /* =========================================================
-   AP SYNAPSE — GLOBAL DARK SURFACE READABILITY FIX
+   AP SYNAPSE â€” GLOBAL DARK SURFACE READABILITY FIX
    Do NOT alter layout, spacing, cards, or background.
    Only restores readable text contrast.
 ========================================================= */
@@ -28759,7 +28759,7 @@ body:not(.light-mode)
     color: #e8ebef !important;
 }
 
-/* Buttons remain premium — don't flatten their colors */
+/* Buttons remain premium â€” don't flatten their colors */
 body:not(.light-mode)
 .workspace-content button {
     color: inherit;
@@ -28809,7 +28809,7 @@ body:not(.light-mode)
 }
 
 /* =========================================================
-   AP SYNAPSE — MOBILE HISTORY VISIBILITY FIX
+   AP SYNAPSE â€” MOBILE HISTORY VISIBILITY FIX
    ========================================================= */
 
 @media (max-width: 768px) {
@@ -28847,7 +28847,7 @@ body:not(.light-mode)
 }
 
 /* =========================================================
-   AP SYNAPSE — GALAXY / NARROW MOBILE HISTORY
+   AP SYNAPSE â€” GALAXY / NARROW MOBILE HISTORY
    Permanent flex-layout correction
    ========================================================= */
 
@@ -28900,7 +28900,7 @@ body:not(.light-mode)
 }
 
 /* =========================================================
-   AP SYNAPSE — MOBILE HISTORY / RECENT CONVERSATIONS FIX
+   AP SYNAPSE â€” MOBILE HISTORY / RECENT CONVERSATIONS FIX
    ========================================================= */
 
 @media (max-width: 600px) {
@@ -28994,7 +28994,7 @@ body:not(.light-mode)
     background: rgba(212, 175, 55, 0.35);
 }
 
-/* AP SYNAPSE — WHITEBOARD */
+/* AP SYNAPSE â€” WHITEBOARD */
 #workspacePage.projects-page {
     position: fixed !important;
     inset: 0 !important;
@@ -29020,7 +29020,7 @@ body:not(.light-mode)
 }
 
 /* =========================================================
-   AP SYNAPSE — ULTRA-FAST WHITEBOARD
+   AP SYNAPSE â€” ULTRA-FAST WHITEBOARD
    ========================================================= */
 
 #canvasPage {
@@ -29045,7 +29045,7 @@ body:not(.light-mode)
 }
 
 /* =========================================================
-   AP SYNAPSE — WHITEBOARD VISIBILITY FIX
+   AP SYNAPSE â€” WHITEBOARD VISIBILITY FIX
    ========================================================= */
 
 #canvasPage {
@@ -29091,7 +29091,7 @@ body:not(.light-mode)
 /* =========================================================
 
 /* =========================================================
-   AP SYNAPSE � WHITEBOARD SYSTEM
+   AP SYNAPSE — WHITEBOARD SYSTEM
    SINGLE AUTHORITATIVE IMPLEMENTATION
    Desktop + Tablet + Mobile
 ========================================================= */
@@ -29454,8 +29454,8 @@ body:not(.light-mode)
     }
 }
 
-/* AP SYNAPSE — FINAL MOBILE COMMAND ROW
-   LIVE TALK SEPARATED — NO OVERLAP
+/* AP SYNAPSE â€” FINAL MOBILE COMMAND ROW
+   LIVE TALK SEPARATED â€” NO OVERLAP
    ============================================================ */
 
 @media (max-width: 767px) {
@@ -29468,7 +29468,7 @@ body:not(.light-mode)
         gap: 7px !important;
     }
 
-    /* INPUT — unchanged */
+    /* INPUT â€” unchanged */
     .command-input-wrap {
         grid-column: 1 !important;
         grid-row: 1 !important;
@@ -29506,7 +29506,7 @@ body:not(.light-mode)
     }
 
     /* ========================================================
-       LIVE TALK — SEPARATE, NEVER OVERLAPS
+       LIVE TALK â€” SEPARATE, NEVER OVERLAPS
     ======================================================== */
 
     .live-talk-btn {
@@ -29536,7 +29536,7 @@ body:not(.light-mode)
     }
 
     /* ========================================================
-       TOOLS — FIXED INDIVIDUAL SPACE
+       TOOLS â€” FIXED INDIVIDUAL SPACE
     ======================================================== */
 
     .command-tool {
@@ -29556,7 +29556,7 @@ body:not(.light-mode)
     }
 
     /* ========================================================
-       SEND — ALWAYS LAST
+       SEND â€” ALWAYS LAST
     ======================================================== */
 
     #sendBtn {
@@ -29687,7 +29687,7 @@ body:not(.light-mode)
         margin-left: 0 !important;
     }
 
-    /* LIVE TALK — ALWAYS LAST */
+    /* LIVE TALK â€” ALWAYS LAST */
     .live-talk-btn {
         position: relative !important;
         order: 999 !important;
@@ -29751,7 +29751,7 @@ body:not(.light-mode)
 }
 
 /* ============================================================
-   AP SYNAPSE — MOBILE COMMAND BAR
+   AP SYNAPSE â€” MOBILE COMMAND BAR
    FINAL HEIGHT COMPRESSION ONLY
    ============================================================ */
 
@@ -29842,7 +29842,7 @@ body:not(.light-mode)
 }
 
 /* ============================================================
-   AP SYNAPSE — MOBILE LIVE TALK
+   AP SYNAPSE â€” MOBILE LIVE TALK
    FULL LABEL VISIBILITY ONLY
    ============================================================ */
 
@@ -29899,7 +29899,7 @@ body:not(.light-mode)
 }
 
 /* ============================================================
-   AP SYNAPSE — PREMIUM UPLOADED FILE CARDS
+   AP SYNAPSE â€” PREMIUM UPLOADED FILE CARDS
    ============================================================ */
 
 .ap-upload-message {
@@ -30213,7 +30213,7 @@ body:not(.light-mode)
 }
 
 /* ============================================================
-   AP SYNAPSE — INITIAL PAGE STATE
+   AP SYNAPSE â€” INITIAL PAGE STATE
    Prevent canvas-page flash during startup
    ============================================================ */
 
@@ -30227,8 +30227,8 @@ body:not(.light-mode)
 }
 
 /* =========================================================
-   AP SYNAPSE � WHITEBOARD CANVAS FINAL OVERRIDE
-   LAST RULE � CANVAS MUST BE VISIBLE + DRAWABLE
+   AP SYNAPSE — WHITEBOARD CANVAS FINAL OVERRIDE
+   LAST RULE — CANVAS MUST BE VISIBLE + DRAWABLE
 ========================================================= */
 
 #canvasPage .whiteboard-shell {
@@ -30276,7 +30276,7 @@ body:not(.light-mode)
 
 
 /* =========================================================
-   AP SYNAPSE � WHITEBOARD CANVAS HEIGHT FINAL FIX
+   AP SYNAPSE — WHITEBOARD CANVAS HEIGHT FINAL FIX
    ========================================================= */
 
 #canvasPage .whiteboard-shell {
@@ -30332,7 +30332,7 @@ body:not(.light-mode)
 
 
 /* =========================================================
-   AP SYNAPSE � WHITEBOARD CANVAS HEIGHT FINAL FIX
+   AP SYNAPSE — WHITEBOARD CANVAS HEIGHT FINAL FIX
    ========================================================= */
 
 #canvasPage .whiteboard-shell {
@@ -30388,7 +30388,7 @@ body:not(.light-mode)
 
 
 /* =========================================================
-   AP SYNAPSE � WHITEBOARD FINAL LAYOUT OVERRIDE
+   AP SYNAPSE — WHITEBOARD FINAL LAYOUT OVERRIDE
    MUST REMAIN LAST
    ========================================================= */
 
@@ -30445,7 +30445,7 @@ body:not(.light-mode)
 
 
 /* =========================================================
-   AP SYNAPSE � WHITEBOARD HARD HEIGHT OVERRIDE
+   AP SYNAPSE — WHITEBOARD HARD HEIGHT OVERRIDE
    FINAL CANVAS VISIBILITY FIX
 ========================================================= */
 
@@ -30496,7 +30496,7 @@ body:not(.light-mode)
 
 
 /* =========================================================
-   AP SYNAPSE � WHITEBOARD FINAL GEOMETRY
+   AP SYNAPSE — WHITEBOARD FINAL GEOMETRY
 ========================================================= */
 
 #canvasPage {
@@ -30525,314 +30525,5 @@ body:not(.light-mode)
     border: 1px solid rgba(0,0,0,.15) !important;
     position: relative !important;
     z-index: 20 !important;
-}
-
-
-/* =========================================================
-   AP SYNAPSE � WHITEBOARD
-   PERMANENT STABLE LAYOUT
-========================================================= */
-
-#canvasPage {
-    display: block !important;
-    height: 620px !important;
-    min-height: 620px !important;
-    overflow: visible !important;
-}
-
-#canvasPage .whiteboard-shell {
-    display: block !important;
-    position: relative !important;
-    width: 100% !important;
-    height: 520px !important;
-    min-height: 520px !important;
-    max-height: 520px !important;
-    flex: none !important;
-    overflow: visible !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage .whiteboard-toolbar {
-    display: flex !important;
-    width: 100% !important;
-    height: 64px !important;
-    min-height: 64px !important;
-    max-height: 64px !important;
-    flex: none !important;
-    align-items: center !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage #apCanvas {
-    display: block !important;
-    position: absolute !important;
-    top: 80px !important;
-    left: 0 !important;
-    right: 0 !important;
-
-    width: 100% !important;
-    height: 440px !important;
-    min-height: 440px !important;
-    max-height: 440px !important;
-
-    flex: none !important;
-    box-sizing: border-box !important;
-
-    background: #ffffff !important;
-    border: 1px solid rgba(0, 0, 0, 0.16) !important;
-
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    touch-action: none !important;
-
-    z-index: 999 !important;
-}
-
-
-/* =========================================================
-   AP SYNAPSE � WHITEBOARD FINAL DIMENSION LOCK
-   Prevent all legacy flex/CSS rules from collapsing canvas
-========================================================= */
-
-#canvasPage {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    min-height: 620px !important;
-    height: auto !important;
-}
-
-#canvasPage .whiteboard-shell {
-    display: flex !important;
-    flex-direction: column !important;
-    width: 100% !important;
-    height: 520px !important;
-    min-height: 520px !important;
-    max-height: 520px !important;
-    flex: none !important;
-    overflow: hidden !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage .whiteboard-toolbar {
-    display: flex !important;
-    flex: none !important;
-    height: 64px !important;
-    min-height: 64px !important;
-    max-height: 64px !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage #apCanvas {
-    display: block !important;
-    position: relative !important;
-    width: 100% !important;
-    height: 440px !important;
-    min-height: 440px !important;
-    max-height: 440px !important;
-    flex: none !important;
-    box-sizing: border-box !important;
-    touch-action: none !important;
-    pointer-events: auto !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-@media (max-width: 700px) {
-
-    #canvasPage .whiteboard-shell {
-        height: 520px !important;
-        min-height: 520px !important;
-    }
-
-    #canvasPage #apCanvas {
-        height: 440px !important;
-        min-height: 440px !important;
-        max-height: 440px !important;
-    }
-
-}
-
-
-/* =========================================================
-   AP SYNAPSE � PREMIUM WHITEBOARD
-   FINAL AUTHORITATIVE LAYOUT
-========================================================= */
-
-#canvasPage {
-    width: 100% !important;
-    max-width: none !important;
-    min-width: 0 !important;
-    min-height: 620px !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage .projects-header {
-    flex: none !important;
-}
-
-#canvasPage .whiteboard-shell {
-    display: flex !important;
-    flex-direction: column !important;
-    width: 100% !important;
-    height: 520px !important;
-    min-height: 520px !important;
-    max-height: 520px !important;
-    max-width: none !important;
-    flex: none !important;
-    box-sizing: border-box !important;
-    overflow: hidden !important;
-}
-
-#canvasPage .whiteboard-toolbar {
-    display: flex !important;
-    align-items: center !important;
-    flex: none !important;
-    width: 100% !important;
-    height: 64px !important;
-    min-height: 64px !important;
-    max-height: 64px !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage #apCanvas {
-    display: block !important;
-    position: relative !important;
-    width: 100% !important;
-    height: 440px !important;
-    min-height: 440px !important;
-    max-height: 440px !important;
-    max-width: none !important;
-    flex: none !important;
-    box-sizing: border-box !important;
-    touch-action: none !important;
-    pointer-events: auto !important;
-    cursor: crosshair !important;
-}
-
-#canvasPage #canvasPen,
-#canvasPage #canvasErase,
-#canvasPage #canvasClear {
-    flex: 0 0 auto !important;
-    min-height: 42px !important;
-    cursor: pointer !important;
-}
-
-#canvasPage #canvasPen.active,
-#canvasPage #canvasErase.active {
-    transform: translateY(-1px);
-}
-
-@media (max-width: 700px) {
-
-    #canvasPage {
-        min-height: 560px !important;
-    }
-
-    #canvasPage .whiteboard-shell {
-        height: 460px !important;
-        min-height: 460px !important;
-        max-height: 460px !important;
-    }
-
-    #canvasPage #apCanvas {
-        height: 396px !important;
-        min-height: 396px !important;
-        max-height: 396px !important;
-    }
-
-}
-
-/* AP SYNAPSE WHITEBOARD � AUTHORITATIVE FINAL FIX */
-
-#canvasPage {
-    width: 100vw !important;
-    max-width: none !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage .whiteboard-shell {
-    display: block !important;
-    width: calc(100vw - 40px) !important;
-    height: 520px !important;
-    min-height: 520px !important;
-    max-height: 520px !important;
-    max-width: none !important;
-    flex: none !important;
-    overflow: hidden !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage .whiteboard-toolbar {
-    display: flex !important;
-    width: 100% !important;
-    height: 64px !important;
-    min-height: 64px !important;
-    max-height: 64px !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage #apCanvas {
-    display: block !important;
-    width: 100% !important;
-    height: 440px !important;
-    min-height: 440px !important;
-    max-height: 440px !important;
-    flex: none !important;
-    box-sizing: border-box !important;
-    pointer-events: auto !important;
-    touch-action: none !important;
-}
- 
-/* =========================================================
-   AP SYNAPSE � WHITEBOARD FINAL DIMENSION LOCK
-   Prevent canvas collapse / flex shrink
-========================================================= */
-
-#canvasPage .whiteboard-shell {
-    width: 100% !important;
-    min-height: 520px !important;
-    height: 520px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    overflow: hidden !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage .whiteboard-toolbar {
-    flex: 0 0 64px !important;
-    height: 64px !important;
-    min-height: 64px !important;
-    box-sizing: border-box !important;
-}
-
-#canvasPage #apCanvas {
-    display: block !important;
-    position: relative !important;
-    flex: 0 0 auto !important;
-    width: 100% !important;
-    height: 440px !important;
-    min-height: 440px !important;
-    max-height: 440px !important;
-    box-sizing: border-box !important;
-    touch-action: none !important;
-    pointer-events: auto !important;
-}
-
-@media (max-width: 600px) {
-    #canvasPage .whiteboard-shell {
-        height: 520px !important;
-        min-height: 520px !important;
-    }
-
-    #canvasPage #apCanvas {
-        height: 440px !important;
-        min-height: 440px !important;
-        max-height: 440px !important;
-    }
 }
 

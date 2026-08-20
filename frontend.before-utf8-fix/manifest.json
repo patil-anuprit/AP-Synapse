@@ -1,0 +1,20 @@
+{
+  "name": "AP Synapse",
+  "short_name": "AP Synapse",
+  "description": "The next generation of artificial intelligence.",
+  "start_url": "https://ap-synapse.vercel.app/",
+  "scope": "https://ap-synapse.vercel.app/",
+  "id": "https://ap-synapse.vercel.app/",
+  "display": "standalone",
+  "background_color": "#0b0b0c",
+  "theme_color": "#0b0b0c",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://ap-synapse.vercel.app/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

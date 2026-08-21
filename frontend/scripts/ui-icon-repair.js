@@ -651,21 +651,3 @@
 
 })();
 
-/*
- * AP Synapse responses can add the cursor AFTER
- * streaming has already begun.
- *
- * Keep removing corrupted standalone cursor marks
- * while the interface is active.
- */
-
-setInterval(
-    () => {
-
-        repairBrokenCursors(
-            document
-        );
-
-    },
-    250
-);

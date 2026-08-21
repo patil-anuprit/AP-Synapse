@@ -242,3 +242,54 @@ cursor:pointer;
 transform:scale(1.02);
 
 }
+
+/* ============================================================
+   AP SYNAPSE — REMOVE RESPONSE STREAMING CURSOR COMPLETELY
+   ============================================================ */
+
+/* Real cursor elements */
+.message.assistant [class*="cursor" i],
+.message.assistant [class*="typing" i],
+.message.assistant [class*="streaming" i],
+
+.assistant-message [class*="cursor" i],
+.assistant-message [class*="typing" i],
+.assistant-message [class*="streaming" i],
+
+.ap-assistant-message [class*="cursor" i],
+.ap-assistant-message [class*="typing" i],
+.ap-assistant-message [class*="streaming" i] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    animation: none !important;
+}
+
+
+/* Also kill cursor characters created through ::after / ::before */
+
+.message.assistant [class*="cursor" i]::after,
+.message.assistant [class*="cursor" i]::before,
+.message.assistant [class*="typing" i]::after,
+.message.assistant [class*="typing" i]::before,
+.message.assistant [class*="streaming" i]::after,
+.message.assistant [class*="streaming" i]::before,
+
+.assistant-message [class*="cursor" i]::after,
+.assistant-message [class*="cursor" i]::before,
+.assistant-message [class*="typing" i]::after,
+.assistant-message [class*="typing" i]::before,
+.assistant-message [class*="streaming" i]::after,
+.assistant-message [class*="streaming" i]::before {
+    content: none !important;
+    display: none !important;
+    animation: none !important;
+}
+
+
+/* Remove the repair cursor from our previous patch too */
+
+.ap-fixed-stream-cursor {
+    display: none !important;
+    animation: none !important;
+}

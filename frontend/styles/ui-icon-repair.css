@@ -1,0 +1,157 @@
+/* ============================================================
+   AP SYNAPSE — GLOBAL SVG ICON SYSTEM
+   ============================================================ */
+
+.ap-semantic-icon {
+    width: 16px;
+    height: 16px;
+
+    flex:
+        0 0
+        16px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    line-height: 0;
+}
+
+
+.ap-semantic-icon svg {
+    width: 16px;
+    height: 16px;
+
+    display: block;
+
+    fill: none;
+
+    stroke:
+        currentColor;
+
+    stroke-width: 1.7;
+
+    stroke-linecap:
+        round;
+
+    stroke-linejoin:
+        round;
+}
+
+
+/* User + assistant response actions */
+
+.ap-response-action,
+.ap-user-message-actions button,
+.message-actions button {
+
+    display:
+        inline-flex !important;
+
+    align-items:
+        center !important;
+
+    justify-content:
+        center !important;
+
+    gap: 6px !important;
+}
+
+
+/* ============================================================
+   STREAMING CURSOR
+   replaces corrupted blinking "?"
+   ============================================================ */
+
+.ap-fixed-stream-cursor {
+
+    display:
+        inline-block !important;
+
+    width: 6px !important;
+    height: 6px !important;
+
+    margin-left:
+        5px !important;
+
+    vertical-align:
+        middle !important;
+
+    border-radius:
+        50% !important;
+
+    background:
+        #d7a648 !important;
+
+    box-shadow:
+        0 0 10px
+        rgba(
+            215,
+            166,
+            72,
+            .42
+        ) !important;
+
+    animation:
+        apStreamPulse
+        1s
+        ease-in-out
+        infinite !important;
+}
+
+
+@keyframes apStreamPulse {
+
+    0%,
+    100% {
+        opacity: .32;
+        transform:
+            scale(.78);
+    }
+
+    50% {
+        opacity: 1;
+        transform:
+            scale(1);
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE — ABSOLUTE RESPONSE CURSOR REMOVAL
+   ============================================================ */
+
+.ap-remove-response-cursor::before,
+.ap-remove-response-cursor::after {
+
+    content: none !important;
+
+    display: none !important;
+
+    visibility: hidden !important;
+
+    opacity: 0 !important;
+
+    animation: none !important;
+
+    transition: none !important;
+}
+
+
+/* Previous replacement cursor is permanently disabled */
+
+.ap-fixed-stream-cursor {
+
+    display: none !important;
+
+    visibility: hidden !important;
+
+    opacity: 0 !important;
+
+    animation: none !important;
+}

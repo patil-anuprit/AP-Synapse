@@ -1,0 +1,1472 @@
+/* =========================================================
+   AP SYNAPSE — PROFESSIONAL WHITEBOARD TOOL SYSTEM
+   ========================================================= */
+
+.whiteboard-shell {
+    position: relative;
+}
+
+/* ---------- floating toolbar ---------- */
+
+.ap-wb-pro-toolbar {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    z-index: 120;
+
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    max-width: calc(100% - 28px);
+
+    padding: 7px;
+
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(31, 33, 38, 0.97),
+            rgba(15, 16, 20, 0.97)
+        );
+
+    box-shadow:
+        0 12px 38px rgba(0, 0, 0, 0.36),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* ---------- groups ---------- */
+
+.ap-wb-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    padding-right: 5px;
+
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ap-wb-group:last-child {
+    padding-right: 0;
+    border-right: 0;
+}
+
+/* ---------- buttons ---------- */
+
+.ap-wb-btn {
+    width: 35px;
+    height: 35px;
+
+    flex: 0 0 35px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    color: rgba(255, 255, 255, 0.76);
+
+    border: 1px solid transparent;
+    border-radius: 9px;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    transition:
+        background 140ms ease,
+        border-color 140ms ease,
+        color 140ms ease,
+        transform 120ms ease;
+}
+
+.ap-wb-btn svg {
+    width: 18px;
+    height: 18px;
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.ap-wb-btn:hover {
+    color: #ffffff;
+
+    background: rgba(255, 255, 255, 0.075);
+
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.ap-wb-btn:active {
+    transform: scale(0.94);
+}
+
+.ap-wb-btn.active {
+    color: #f1c66d;
+
+    border-color: rgba(217, 164, 65, 0.36);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(217, 164, 65, 0.17),
+            rgba(217, 164, 65, 0.08)
+        );
+
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 220, 145, 0.025);
+}
+
+.ap-wb-btn:disabled {
+    opacity: 0.28;
+    pointer-events: none;
+}
+
+/* ---------- drag handle ---------- */
+
+.ap-wb-drag {
+    cursor: grab;
+}
+
+.ap-wb-drag:active {
+    cursor: grabbing;
+}
+
+.ap-wb-drag svg {
+    width: 15px;
+}
+
+/* ---------- colors ---------- */
+
+.ap-wb-colors {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.ap-wb-color {
+    width: 21px;
+    height: 21px;
+
+    flex: 0 0 21px;
+
+    padding: 0;
+
+    border-radius: 999px;
+
+    border: 2px solid transparent;
+
+    background: var(--wb-color);
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.12);
+
+    transition:
+        transform 120ms ease,
+        box-shadow 120ms ease;
+}
+
+.ap-wb-color:hover {
+    transform: scale(1.12);
+}
+
+.ap-wb-color.active {
+    box-shadow:
+        0 0 0 2px #111318,
+        0 0 0 4px #e7b75c;
+}
+
+/* ---------- custom color ---------- */
+
+.ap-wb-custom-color {
+    position: relative;
+
+    width: 27px;
+    height: 27px;
+
+    flex: 0 0 27px;
+
+    border-radius: 8px;
+
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.13);
+
+    background:
+        conic-gradient(
+            #ff3b30,
+            #ffcc00,
+            #34c759,
+            #00c7be,
+            #007aff,
+            #af52de,
+            #ff2d55,
+            #ff3b30
+        );
+}
+
+.ap-wb-custom-color input {
+    position: absolute;
+    inset: -10px;
+
+    width: 50px;
+    height: 50px;
+
+    opacity: 0;
+
+    cursor: pointer;
+}
+
+/* ---------- brush size ---------- */
+
+.ap-wb-size-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 0 3px;
+}
+
+.ap-wb-size-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 999px;
+
+    background: #f1c66d;
+
+    box-shadow: 0 0 8px rgba(241, 198, 109, 0.3);
+}
+
+.ap-wb-size {
+    width: 70px;
+
+    accent-color: #d9a441;
+
+    cursor: pointer;
+}
+
+/* ---------- share ---------- */
+
+.ap-wb-share {
+    width: auto;
+
+    min-width: 82px;
+
+    padding: 0 12px;
+
+    gap: 7px;
+
+    color: #111214;
+
+    font-size: 12px;
+    font-weight: 650;
+
+    border-color: rgba(255, 221, 150, 0.6);
+
+    background:
+        linear-gradient(
+            135deg,
+            #f4d58b,
+            #d9a441
+        );
+}
+
+.ap-wb-share:hover {
+    color: #08090b;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffe7aa,
+            #e8b957
+        );
+}
+
+/* ---------- little notification ---------- */
+
+.ap-wb-toast {
+    position: absolute;
+
+    left: 50%;
+    bottom: 22px;
+
+    z-index: 150;
+
+    transform:
+        translate(-50%, 12px)
+        scale(0.98);
+
+    padding: 9px 13px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+
+    color: #f4f4f4;
+
+    background: rgba(14, 15, 18, 0.95);
+
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+
+    font-size: 12px;
+
+    opacity: 0;
+    pointer-events: none;
+
+    transition:
+        opacity 170ms ease,
+        transform 170ms ease;
+}
+
+.ap-wb-toast.visible {
+    opacity: 1;
+
+    transform:
+        translate(-50%, 0)
+        scale(1);
+}
+
+/* ---------- canvas behaviour ---------- */
+
+#apCanvas {
+    touch-action: none;
+
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 760px) {
+
+    .ap-wb-pro-toolbar {
+        top: auto;
+        bottom: max(10px, env(safe-area-inset-bottom));
+
+        left: 9px;
+        right: 9px;
+
+        transform: none;
+
+        width: auto;
+        max-width: none;
+
+        justify-content: flex-start;
+
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        scrollbar-width: none;
+
+        border-radius: 15px;
+
+        padding: 7px;
+    }
+
+    .ap-wb-pro-toolbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .ap-wb-drag {
+        display: none;
+    }
+
+    .ap-wb-colors {
+        gap: 5px;
+    }
+
+    .ap-wb-color {
+        width: 23px;
+        height: 23px;
+
+        flex-basis: 23px;
+    }
+
+    .ap-wb-size {
+        width: 62px;
+    }
+
+    .ap-wb-btn {
+        width: 38px;
+        height: 38px;
+
+        flex-basis: 38px;
+    }
+
+    .ap-wb-share {
+        width: auto;
+
+        flex-basis: auto;
+
+        min-width: 86px;
+    }
+
+    .ap-wb-toast {
+        bottom: 72px;
+
+        max-width: calc(100% - 30px);
+
+        white-space: nowrap;
+    }
+}
+
+/* =========================================================
+   AP SYNAPSE WHITEBOARD
+   DESKTOP FULL-WORKSPACE FIX
+   ========================================================= */
+
+@media (min-width: 761px) {
+
+    /* Canvas workspace itself fills all remaining screen space */
+    #canvasPage {
+        position: relative;
+
+        display: flex !important;
+        flex-direction: column;
+
+        width: 100% !important;
+        height: calc(100dvh - 178px) !important;
+        min-height: 520px;
+
+        padding: 0 12px 12px !important;
+
+        overflow: hidden !important;
+    }
+
+
+    /* Whiteboard becomes the remaining workspace */
+    #canvasPage .whiteboard-shell {
+        position: relative;
+
+        flex: 1 1 auto;
+
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 0 !important;
+
+        margin: 0 !important;
+
+        overflow: hidden !important;
+
+        border-radius: 0 0 18px 18px;
+    }
+
+
+    /* Canvas visually fills the shell */
+    #canvasPage #apCanvas {
+        display: block;
+
+        width: 100% !important;
+        height: 100% !important;
+
+        max-width: none !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+
+        border-radius: inherit;
+
+        touch-action: none;
+    }
+
+
+    /* Toolbar remains above the board */
+    #canvasPage .ap-wb-pro-toolbar {
+        z-index: 200;
+
+        top: 10px;
+    }
+}
+
+
+/* Very tall desktop screens */
+@media (min-width: 761px) and (min-height: 850px) {
+
+    #canvasPage {
+        height: calc(100dvh - 168px) !important;
+    }
+
+}
+
+
+/* Laptop / shorter desktop */
+@media (min-width: 761px) and (max-height: 720px) {
+
+    #canvasPage {
+        height: calc(100dvh - 160px) !important;
+        min-height: 420px;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE WHITEBOARD — FINAL STABLE LAYOUT
+   ============================================================ */
+
+#canvasPen,
+#canvasErase,
+#canvasClear {
+    display: none !important;
+}
+
+
+/* Canvas page */
+#canvasPage {
+    position: relative !important;
+
+    width: 100% !important;
+
+    margin: 0 !important;
+
+    padding: 0 12px 10px !important;
+
+    overflow: hidden !important;
+}
+
+
+/* ============================================================
+   DESKTOP
+   ============================================================ */
+
+@media (min-width: 761px) {
+
+    #canvasPage {
+        height: calc(100dvh - 181px) !important;
+        min-height: 520px !important;
+    }
+
+
+    #canvasPage .whiteboard-shell {
+        position: relative !important;
+
+        width: 100% !important;
+        height: 100% !important;
+
+        min-width: 0 !important;
+        min-height: 0 !important;
+
+        margin: 0 !important;
+
+        overflow: hidden !important;
+
+        border-radius: 0 0 18px 18px !important;
+
+        background: #ffffff;
+    }
+
+
+    #canvasPage #apCanvas {
+        display: block !important;
+
+        width: 100% !important;
+        height: 100% !important;
+
+        max-width: none !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+
+        touch-action: none;
+    }
+
+
+    /* PROFESSIONAL FLOATING TOOLBAR */
+
+    #canvasPage .ap-wb-pro-toolbar {
+        position: absolute !important;
+
+        top: 8px !important;
+        left: 50% !important;
+
+        right: auto !important;
+        bottom: auto !important;
+
+        transform: translateX(-50%) !important;
+
+        z-index: 9999 !important;
+
+        display: flex !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        width: max-content !important;
+        max-width: calc(100% - 28px) !important;
+    }
+
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    #canvasPage {
+        height: calc(100dvh - 138px) !important;
+
+        min-height: 430px !important;
+
+        padding:
+            6px
+            7px
+            max(7px, env(safe-area-inset-bottom))
+            !important;
+    }
+
+
+    #canvasPage .whiteboard-shell {
+        position: relative !important;
+
+        width: 100% !important;
+        height: 100% !important;
+
+        min-width: 0 !important;
+        min-height: 0 !important;
+
+        margin: 0 !important;
+
+        overflow: hidden !important;
+
+        border-radius: 16px !important;
+
+        background: #ffffff;
+    }
+
+
+    #canvasPage #apCanvas {
+        display: block !important;
+
+        width: 100% !important;
+        height: 100% !important;
+
+        min-width: 0 !important;
+        min-height: 0 !important;
+
+        max-width: none !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+    }
+
+
+    /*
+       Professional mobile bottom tool dock
+    */
+
+    #canvasPage .ap-wb-pro-toolbar {
+        position: absolute !important;
+
+        top: auto !important;
+
+        left: 8px !important;
+        right: 8px !important;
+
+        bottom:
+            max(
+                8px,
+                env(safe-area-inset-bottom)
+            ) !important;
+
+        transform: none !important;
+
+        z-index: 9999 !important;
+
+        display: flex !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        width: auto !important;
+        max-width: none !important;
+
+        padding: 6px !important;
+
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+
+        white-space: nowrap;
+
+        scrollbar-width: none;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+
+    #canvasPage
+    .ap-wb-pro-toolbar::-webkit-scrollbar {
+        display: none;
+    }
+
+
+    #canvasPage .ap-wb-group {
+        flex: 0 0 auto !important;
+    }
+
+
+    #canvasPage .ap-wb-drag {
+        display: none !important;
+    }
+
+}
+
+
+/* Small phones */
+
+@media (max-width: 390px) {
+
+    #canvasPage .ap-wb-btn {
+        width: 36px !important;
+        height: 36px !important;
+
+        flex: 0 0 36px !important;
+    }
+
+
+    #canvasPage .ap-wb-color {
+        width: 21px !important;
+        height: 21px !important;
+
+        flex: 0 0 21px !important;
+    }
+
+
+    #canvasPage .ap-wb-size {
+        width: 54px !important;
+    }
+
+
+    #canvasPage .ap-wb-share {
+        width: auto !important;
+        min-width: 78px !important;
+
+        flex-basis: auto !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE WHITEBOARD — DESKTOP HEIGHT FINAL FIX
+   MOBILE IS NOT TOUCHED
+   ============================================================ */
+
+@media (min-width: 761px) {
+
+    #canvasPage {
+        width: 100% !important;
+
+        height: var(
+            --ap-canvas-page-desktop-height,
+            auto
+        ) !important;
+
+        min-height: 0 !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+
+        padding:
+            0
+            12px
+            8px !important;
+
+        overflow: visible !important;
+    }
+
+
+    #canvasPage .whiteboard-shell {
+        position: relative !important;
+
+        width: 100% !important;
+
+        height: var(
+            --ap-whiteboard-desktop-height,
+            600px
+        ) !important;
+
+        min-height: 500px !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        overflow: hidden !important;
+
+        border-radius:
+            0
+            0
+            18px
+            18px !important;
+    }
+
+
+    #canvasPage #apCanvas {
+        display: block !important;
+
+        width: 100% !important;
+        height: 100% !important;
+
+        min-width: 0 !important;
+        min-height: 0 !important;
+
+        max-width: none !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+    }
+
+
+    /* Keep the already-good toolbar exactly where it is */
+
+    #canvasPage .ap-wb-pro-toolbar {
+        z-index: 9999 !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE WHITEBOARD
+   FINAL PROFESSIONAL MOBILE TOOL DOCK
+   DESKTOP IS COMPLETELY UNTOUCHED
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    /* --------------------------------------------------------
+       REMOVE ONLY THE OBSOLETE WHITEBOARD TOOLBAR
+
+       This removes those huge Pen / Eraser buttons visible
+       at the top of the screenshot.
+
+       It DOES NOT affect the AP Pro toolbar.
+       -------------------------------------------------------- */
+
+    #canvasPage .whiteboard-toolbar {
+        display: none !important;
+    }
+
+
+    #canvasPen,
+    #canvasErase,
+    #canvasClear {
+        display: none !important;
+    }
+
+
+    /* --------------------------------------------------------
+       PROFESSIONAL MOBILE DOCK
+       -------------------------------------------------------- */
+
+    #canvasPage .ap-wb-pro-toolbar {
+
+        position: absolute !important;
+
+        top: auto !important;
+
+        left: 8px !important;
+        right: 8px !important;
+
+        bottom:
+            max(
+                8px,
+                env(safe-area-inset-bottom)
+            ) !important;
+
+        transform: none !important;
+
+        z-index: 9999 !important;
+
+        width: auto !important;
+        max-width: none !important;
+
+        height: auto !important;
+
+        box-sizing: border-box !important;
+
+        display: grid !important;
+
+        grid-template-columns:
+            minmax(0, 1fr)
+            auto
+            auto;
+
+        grid-template-areas:
+
+            "tools tools tools"
+            "colors colors colors"
+            "size history share";
+
+        align-items: center !important;
+
+        gap: 6px 7px !important;
+
+        padding: 8px !important;
+
+        overflow: visible !important;
+
+        border-radius: 15px !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(25, 27, 32, 0.985),
+                rgba(12, 13, 16, 0.985)
+            ) !important;
+
+        border:
+            1px solid
+            rgba(255, 255, 255, 0.12) !important;
+
+        box-shadow:
+            0 14px 38px
+                rgba(0, 0, 0, 0.42),
+            inset 0 1px 0
+                rgba(255, 255, 255, 0.055) !important;
+
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+    }
+
+
+    /* ========================================================
+       ROW 1 — ALL DRAWING TOOLS
+       ======================================================== */
+
+    #canvasPage
+    .ap-wb-tools-group {
+
+        grid-area: tools;
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        justify-content:
+            space-between !important;
+
+        gap: 4px !important;
+
+        width: 100% !important;
+
+        min-width: 0 !important;
+
+        padding: 0 0 6px !important;
+
+        border-right: 0 !important;
+
+        border-bottom:
+            1px solid
+            rgba(255, 255, 255, 0.075) !important;
+
+        overflow: visible !important;
+    }
+
+
+    #canvasPage
+    .ap-wb-tools-group
+    .ap-wb-btn {
+
+        width: 34px !important;
+        height: 34px !important;
+
+        flex:
+            0 1
+            34px !important;
+
+        min-width: 31px !important;
+
+        border-radius: 9px !important;
+    }
+
+
+    #canvasPage
+    .ap-wb-tools-group
+    .ap-wb-btn svg {
+
+        width: 17px !important;
+        height: 17px !important;
+    }
+
+
+    /* ========================================================
+       ROW 2 — FULL COLOUR PALETTE
+       ======================================================== */
+
+    #canvasPage
+    .ap-wb-colors-group {
+
+        grid-area: colors;
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        justify-content:
+            space-between !important;
+
+        width: 100% !important;
+
+        min-width: 0 !important;
+
+        gap: 4px !important;
+
+        padding:
+            0
+            0
+            6px !important;
+
+        border-right: 0 !important;
+
+        border-bottom:
+            1px solid
+            rgba(255, 255, 255, 0.075) !important;
+
+        overflow: visible !important;
+    }
+
+
+    #canvasPage
+    .ap-wb-color {
+
+        display: block !important;
+
+        width: 19px !important;
+        height: 19px !important;
+
+        min-width: 19px !important;
+
+        flex:
+            0 0
+            19px !important;
+    }
+
+
+    #canvasPage
+    .ap-wb-custom-color {
+
+        display: block !important;
+
+        width: 24px !important;
+        height: 24px !important;
+
+        min-width: 24px !important;
+
+        flex:
+            0 0
+            24px !important;
+
+        border-radius: 7px !important;
+    }
+
+
+    /* ========================================================
+       ROW 3A — BRUSH SIZE
+       ======================================================== */
+
+    #canvasPage
+    .ap-wb-size-group {
+
+        grid-area: size;
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        min-width: 0 !important;
+
+        padding: 0 !important;
+
+        border-right: 0 !important;
+    }
+
+
+    #canvasPage
+    .ap-wb-size-wrap {
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        gap: 5px !important;
+
+        width: 82px !important;
+
+        padding: 0 !important;
+    }
+
+
+    #canvasPage
+    .ap-wb-size {
+
+        display: block !important;
+
+        width: 61px !important;
+
+        min-width: 0 !important;
+    }
+
+
+    #canvasPage
+    .ap-wb-size-dot {
+
+        display: block !important;
+
+        flex: 0 0 auto !important;
+    }
+
+
+    /* ========================================================
+       ROW 3B — UNDO / REDO / CLEAR
+       ======================================================== */
+
+    #canvasPage
+    .ap-wb-history-group {
+
+        grid-area: history;
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        gap: 2px !important;
+
+        padding: 0 !important;
+
+        border-right: 0 !important;
+    }
+
+
+    #canvasPage
+    .ap-wb-history-group
+    .ap-wb-btn {
+
+        display:
+            inline-flex !important;
+
+        width: 32px !important;
+        height: 32px !important;
+
+        flex:
+            0 0
+            32px !important;
+    }
+
+
+    #canvasPage
+    .ap-wb-history-group
+    .ap-wb-btn svg {
+
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+
+    /* ========================================================
+       ROW 3C — SHARE
+       ======================================================== */
+
+    #canvasPage
+    .ap-wb-share-group {
+
+        grid-area: share;
+
+        display: flex !important;
+
+        padding: 0 !important;
+
+        border-right: 0 !important;
+    }
+
+
+    #canvasPage
+    .ap-wb-share {
+
+        display:
+            inline-flex !important;
+
+        width: auto !important;
+
+        min-width: 69px !important;
+
+        height: 34px !important;
+
+        flex: 0 0 auto !important;
+
+        padding:
+            0
+            9px !important;
+
+        gap: 5px !important;
+
+        font-size: 11px !important;
+
+        border-radius: 9px !important;
+    }
+
+
+    #canvasPage
+    .ap-wb-share svg {
+
+        width: 15px !important;
+        height: 15px !important;
+    }
+
+
+    /* --------------------------------------------------------
+       Desktop move handle serves no purpose on phone
+       -------------------------------------------------------- */
+
+    #canvasPage
+    .ap-wb-drag-group,
+
+    #canvasPage
+    .ap-wb-drag {
+
+        display: none !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE CANVAS — MOBILE MINIMIZABLE TOOL DOCK
+   DESKTOP COMPLETELY UNTOUCHED
+   ============================================================ */
+
+.ap-wb-collapse-toggle {
+    display: none;
+}
+
+
+@media (max-width: 760px) {
+
+    /* --------------------------------------------------------
+       EXPANDED STATE
+       Small floating collapse control above the dock
+       -------------------------------------------------------- */
+
+    #canvasPage
+    .ap-wb-collapse-toggle {
+
+        position: absolute !important;
+
+        top: -39px !important;
+        right: 0 !important;
+
+        z-index: 10002 !important;
+
+        display: inline-flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        width: 34px !important;
+        height: 34px !important;
+
+        padding: 0 !important;
+
+        color:
+            rgba(
+                255,
+                255,
+                255,
+                0.78
+            ) !important;
+
+        border:
+            1px solid
+            rgba(
+                255,
+                255,
+                255,
+                0.11
+            ) !important;
+
+        border-radius:
+            10px !important;
+
+        background:
+            rgba(
+                18,
+                20,
+                24,
+                0.96
+            ) !important;
+
+        box-shadow:
+            0 7px 22px
+            rgba(
+                0,
+                0,
+                0,
+                0.34
+            ) !important;
+
+        backdrop-filter:
+            blur(18px);
+
+        -webkit-backdrop-filter:
+            blur(18px);
+
+        cursor: pointer;
+
+        touch-action: manipulation;
+
+        transition:
+            transform 150ms ease,
+            background 150ms ease,
+            border-color 150ms ease;
+    }
+
+
+    #canvasPage
+    .ap-wb-collapse-toggle svg {
+
+        width: 17px !important;
+        height: 17px !important;
+
+        fill: none;
+
+        stroke: currentColor;
+
+        stroke-width: 1.9;
+
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+
+    #canvasPage
+    .ap-wb-collapse-toggle:active {
+
+        transform:
+            scale(0.92);
+    }
+
+
+    /* ========================================================
+       COLLAPSED STATE
+       The giant dock becomes ONE tiny floating button.
+       ======================================================== */
+
+    #canvasPage
+    .ap-wb-pro-toolbar.ap-wb-collapsed {
+
+        left: auto !important;
+
+        right: 9px !important;
+
+        bottom:
+            max(
+                9px,
+                env(safe-area-inset-bottom)
+            ) !important;
+
+        top: auto !important;
+
+        width: 44px !important;
+        min-width: 44px !important;
+        max-width: 44px !important;
+
+        height: 44px !important;
+        min-height: 44px !important;
+        max-height: 44px !important;
+
+        display: block !important;
+
+        padding: 0 !important;
+
+        margin: 0 !important;
+
+        overflow: visible !important;
+
+        border-radius:
+            13px !important;
+
+        background:
+            rgba(
+                17,
+                19,
+                23,
+                0.97
+            ) !important;
+
+        border:
+            1px solid
+            rgba(
+                217,
+                164,
+                65,
+                0.30
+            ) !important;
+
+        box-shadow:
+            0 10px 28px
+            rgba(
+                0,
+                0,
+                0,
+                0.40
+            ) !important;
+    }
+
+
+    /* Hide every tool group */
+
+    #canvasPage
+    .ap-wb-pro-toolbar.ap-wb-collapsed
+    > .ap-wb-group {
+
+        display: none !important;
+    }
+
+
+    /* Restore button becomes the entire tiny dock */
+
+    #canvasPage
+    .ap-wb-pro-toolbar.ap-wb-collapsed
+    .ap-wb-collapse-toggle {
+
+        position: absolute !important;
+
+        inset: 0 !important;
+
+        top: 0 !important;
+        right: 0 !important;
+
+        width: 44px !important;
+        height: 44px !important;
+
+        border: 0 !important;
+
+        border-radius:
+            inherit !important;
+
+        color: #e7b75c !important;
+
+        background:
+            transparent !important;
+
+        box-shadow:
+            none !important;
+    }
+
+}

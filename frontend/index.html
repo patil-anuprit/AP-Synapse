@@ -3,6 +3,28 @@
 
 <head>
 
+    <!-- ======================================================
+     AP SYNAPSE — ZERO-FLASH STARTUP
+     Prevent internal workspace pages appearing during boot
+     ====================================================== -->
+
+<script>
+    document.documentElement.classList.add("ap-synapse-booting");
+</script>
+
+<style>
+    /*
+     * During initial startup Canvas must NEVER be painted.
+     * This prevents the 4–5 second Canvas flash.
+     */
+    html.ap-synapse-booting #canvasPage {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+</style>
+
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="favicon.png">
 
@@ -34,6 +56,21 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link
+    rel="stylesheet"
+    href="./styles/whiteboard-pro.css?v=1"
+/>
+
+<link
+    rel="stylesheet"
+    href="./styles/code-studio-pro.css?v=1"
+>
+
+<link
+    rel="stylesheet"
+    href="./styles/ui-icon-repair.css?v=3"
+>
 
 <script type="application/ld+json">
 {
@@ -6089,7 +6126,87 @@ button:active,
 })();
 </script>
 
+<script
+    src="./scripts/whiteboard-pro.js?v=1">
+</script>
 
+<script>
+(() => {
+    "use strict";
+
+    function finishAPSynapseBoot() {
+
+        /*
+         * Canvas must start closed.
+         * The normal AP Synapse navigation can open it later.
+         */
+        const canvasPage =
+            document.getElementById("canvasPage");
+
+        if (canvasPage) {
+
+            canvasPage.classList.remove(
+                "active",
+                "visible",
+                "open"
+            );
+
+            canvasPage.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+        }
+
+
+        /*
+         * Release the startup protection only after
+         * AP Synapse has had a chance to establish
+         * its proper initial Home state.
+         */
+        requestAnimationFrame(() => {
+
+            requestAnimationFrame(() => {
+
+                document.documentElement
+                    .classList.remove(
+                        "ap-synapse-booting"
+                    );
+
+                console.log(
+                    "⚡ AP SYNAPSE STARTUP READY — HOME FIRST"
+                );
+
+            });
+
+        });
+    }
+
+
+    if (document.readyState === "loading") {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            finishAPSynapseBoot,
+            {
+                once: true
+            }
+        );
+
+    } else {
+
+        finishAPSynapseBoot();
+    }
+
+})();
+</script>
+
+<script
+    src="./scripts/code-studio-pro.js?v=1"
+></script>
+
+<script
+    src="./scripts/ui-icon-repair.js?v=3"
+></script>
 
 </body>
 </html>

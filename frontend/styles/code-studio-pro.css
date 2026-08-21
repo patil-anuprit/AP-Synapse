@@ -1,0 +1,1608 @@
+/* ============================================================
+   AP SYNAPSE — CODE STUDIO PRO
+   Isolated IDE experience
+   ============================================================ */
+
+#codeStudioPage.ap-code-pro-ready {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    overflow: hidden !important;
+    background: transparent !important;
+}
+
+#codeStudioPage.ap-code-pro-ready
+> :not(.ap-code-pro) {
+    display: none !important;
+}
+
+
+/* ============================================================
+   ROOT
+   ============================================================ */
+
+.ap-code-pro {
+    --cs-bg: #08090b;
+    --cs-panel: #0d0f12;
+    --cs-panel-2: #111318;
+    --cs-panel-3: #15181d;
+
+    --cs-line: rgba(255,255,255,.075);
+    --cs-line-strong: rgba(255,255,255,.12);
+
+    --cs-text: #f2f2ef;
+    --cs-muted: #8f959e;
+
+    --cs-gold: #d7a648;
+    --cs-gold-soft: #efc76d;
+
+    position: relative !important;
+
+    width: 100% !important;
+    height: 650px;
+
+    display: grid !important;
+    grid-template-rows:
+        58px
+        minmax(0, 1fr)
+        28px;
+
+    overflow: hidden !important;
+
+    color: var(--cs-text);
+
+    background:
+        radial-gradient(
+            circle at 80% -10%,
+            rgba(215,166,72,.08),
+            transparent 35%
+        ),
+        linear-gradient(
+            180deg,
+            #0b0c0f,
+            #07080a
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.075);
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.32),
+        inset 0 1px 0 rgba(255,255,255,.035);
+
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.ap-code-header {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 0 14px 0 17px;
+
+    border-bottom:
+        1px solid var(--cs-line);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(19,21,25,.96),
+            rgba(12,14,17,.96)
+        );
+}
+
+.ap-code-brand {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-right: auto;
+}
+
+.ap-code-brand-mark {
+    width: 32px;
+    height: 32px;
+
+    flex: 0 0 32px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 10px;
+
+    color: var(--cs-gold-soft);
+
+    border:
+        1px solid
+        rgba(215,166,72,.27);
+
+    background:
+        rgba(215,166,72,.065);
+}
+
+.ap-code-brand-mark svg {
+    width: 17px;
+    height: 17px;
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+}
+
+.ap-code-brand-copy {
+    min-width: 0;
+}
+
+.ap-code-brand-title {
+    margin: 0;
+
+    font-size: 13px;
+    line-height: 1.1;
+
+    font-weight: 720;
+    letter-spacing: .04em;
+
+    white-space: nowrap;
+}
+
+.ap-code-brand-sub {
+    margin-top: 3px;
+
+    color: var(--cs-muted);
+
+    font-size: 9px;
+    font-weight: 650;
+
+    letter-spacing: .13em;
+    text-transform: uppercase;
+}
+
+
+/* ============================================================
+   HEADER BUTTONS
+   ============================================================ */
+
+.ap-code-actions {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+}
+
+.ap-code-action,
+.ap-code-analyze {
+    appearance: none !important;
+
+    min-width: 38px !important;
+    height: 36px !important;
+
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    gap: 7px !important;
+
+    padding: 0 12px !important;
+
+    margin: 0 !important;
+
+    border-radius: 10px !important;
+
+    border:
+        1px solid
+        var(--cs-line-strong) !important;
+
+    color: #dfe2e6 !important;
+
+    background:
+        rgba(255,255,255,.04) !important;
+
+    box-shadow: none !important;
+
+    font-family: inherit !important;
+    font-size: 11px !important;
+    font-weight: 670 !important;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition:
+        background .16s ease,
+        border-color .16s ease,
+        transform .16s ease !important;
+}
+
+.ap-code-action:hover,
+.ap-code-analyze:hover {
+    background:
+        rgba(255,255,255,.075) !important;
+
+    border-color:
+        rgba(255,255,255,.18) !important;
+}
+
+.ap-code-action:active,
+.ap-code-analyze:active {
+    transform:
+        scale(.96) !important;
+}
+
+.ap-code-action svg {
+    width: 15px;
+    height: 15px;
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+}
+
+.ap-code-analyze {
+    color: #17130a !important;
+
+    border-color:
+        rgba(231,185,94,.55) !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            #efc66c,
+            #d7a648
+        ) !important;
+
+    box-shadow:
+        0 7px 22px
+        rgba(215,166,72,.15) !important;
+}
+
+
+/* ============================================================
+   BODY
+   ============================================================ */
+
+.ap-code-body {
+    position: relative;
+
+    min-width: 0;
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        220px
+        minmax(0, 1fr)
+        310px;
+
+    overflow: hidden;
+}
+
+
+/* ============================================================
+   EXPLORER
+   ============================================================ */
+
+.ap-code-explorer {
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    background:
+        rgba(11,12,15,.95);
+
+    border-right:
+        1px solid var(--cs-line);
+}
+
+.ap-code-section-head {
+    height: 39px;
+
+    flex: 0 0 39px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 12px;
+
+    border-bottom:
+        1px solid var(--cs-line);
+
+    color: #a4a9b0;
+
+    font-size: 9px;
+    font-weight: 750;
+
+    letter-spacing: .15em;
+    text-transform: uppercase;
+}
+
+.ap-code-project {
+    padding: 9px 7px;
+
+    overflow: auto;
+}
+
+.ap-code-project-name {
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 0 7px;
+
+    color: #d8dade;
+
+    font-size: 11px;
+    font-weight: 670;
+
+    white-space: nowrap;
+}
+
+.ap-code-project-name svg {
+    width: 14px;
+    height: 14px;
+
+    color: var(--cs-gold);
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+}
+
+.ap-code-file {
+    width: 100%;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 0 9px 0 25px;
+
+    color: #9298a1;
+
+    background: transparent;
+
+    border: 0;
+    border-radius: 7px;
+
+    font: inherit;
+    font-size: 11px;
+
+    text-align: left;
+
+    cursor: pointer;
+}
+
+.ap-code-file:hover {
+    color: #e5e7e8;
+
+    background:
+        rgba(255,255,255,.045);
+}
+
+.ap-code-file.active {
+    color: #f1f1ed;
+
+    background:
+        rgba(215,166,72,.09);
+}
+
+.ap-file-dot {
+    width: 7px;
+    height: 7px;
+
+    flex: 0 0 7px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        rgba(215,166,72,.65);
+
+    background:
+        rgba(215,166,72,.15);
+}
+
+
+/* ============================================================
+   EDITOR
+   ============================================================ */
+
+.ap-code-editor-panel {
+    position: relative;
+
+    min-width: 0;
+    min-height: 0;
+
+    display: grid;
+    grid-template-rows:
+        40px
+        minmax(0, 1fr);
+
+    overflow: hidden;
+
+    background:
+        #090a0d;
+}
+
+.ap-code-tabs {
+    min-width: 0;
+
+    display: flex;
+    align-items: flex-end;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scrollbar-width: none;
+
+    border-bottom:
+        1px solid var(--cs-line);
+
+    background:
+        #0c0e11;
+}
+
+.ap-code-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.ap-code-tab {
+    height: 40px;
+
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 0 13px;
+
+    color: #7f858e;
+
+    border: 0;
+    border-right:
+        1px solid var(--cs-line);
+
+    border-bottom:
+        2px solid transparent;
+
+    background:
+        rgba(255,255,255,.012);
+
+    font: inherit;
+    font-size: 10px;
+
+    cursor: pointer;
+}
+
+.ap-code-tab.active {
+    color: #efefec;
+
+    border-bottom-color:
+        var(--cs-gold);
+
+    background:
+        #101216;
+}
+
+.ap-code-tab .ap-file-dot {
+    width: 6px;
+    height: 6px;
+}
+
+
+/* ============================================================
+   CODE AREA
+   ============================================================ */
+
+.ap-code-editor-host {
+    position: relative;
+
+    min-width: 0;
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        48px
+        minmax(0, 1fr);
+
+    overflow: hidden;
+}
+
+.ap-code-lines {
+    min-height: 0;
+
+    overflow: hidden;
+
+    padding:
+        17px
+        10px
+        30px
+        0;
+
+    color:
+        rgba(151,157,166,.48);
+
+    background:
+        #090a0d;
+
+    border-right:
+        1px solid
+        rgba(255,255,255,.035);
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        Menlo,
+        monospace;
+
+    font-size: 12px;
+    line-height: 1.65;
+
+    text-align: right;
+
+    user-select: none;
+}
+
+#codeStudioPage
+#codeStudioInput.ap-code-input-pro {
+
+    position: relative !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    min-width: 0 !important;
+    min-height: 0 !important;
+
+    resize: none !important;
+
+    margin: 0 !important;
+
+    padding:
+        16px
+        18px
+        40px !important;
+
+    overflow: auto !important;
+
+    border: 0 !important;
+    outline: none !important;
+    border-radius: 0 !important;
+
+    color: #dce0e5 !important;
+
+    background:
+        #090a0d !important;
+
+    box-shadow: none !important;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        Menlo,
+        monospace !important;
+
+    font-size: 12px !important;
+    line-height: 1.65 !important;
+
+    white-space: pre !important;
+    tab-size: 4;
+
+    caret-color:
+        var(--cs-gold-soft);
+}
+
+#codeStudioInput::selection {
+    background:
+        rgba(215,166,72,.25);
+}
+
+
+/* ============================================================
+   INTELLIGENCE PANEL
+   ============================================================ */
+
+.ap-code-ai {
+    min-width: 0;
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-rows:
+        40px
+        minmax(0, 1fr);
+
+    border-left:
+        1px solid var(--cs-line);
+
+    background:
+        #0c0e11;
+}
+
+.ap-code-ai-head {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 0 11px;
+
+    border-bottom:
+        1px solid var(--cs-line);
+
+    color: #d9dbde;
+
+    font-size: 10px;
+    font-weight: 670;
+}
+
+.ap-code-ai-star {
+    color: var(--cs-gold-soft);
+
+    font-size: 13px;
+}
+
+.ap-code-live {
+    width: 6px;
+    height: 6px;
+
+    margin-left: auto;
+
+    border-radius: 50%;
+
+    background: #83c996;
+
+    box-shadow:
+        0 0 10px
+        rgba(131,201,150,.45);
+}
+
+.ap-code-ai-content {
+    min-width: 0;
+    min-height: 0;
+
+    overflow: auto;
+
+    padding: 12px;
+}
+
+#codeStudioPage
+#codeStudioOutput.ap-code-output-pro {
+
+    display: block !important;
+
+    width: 100% !important;
+    height: auto !important;
+
+    min-width: 0 !important;
+    min-height: 100% !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border: 0 !important;
+    outline: 0 !important;
+
+    color: #b8bdc5 !important;
+
+    background: transparent !important;
+
+    box-shadow: none !important;
+
+    font-family:
+        Inter,
+        system-ui,
+        sans-serif !important;
+
+    font-size: 11px !important;
+    line-height: 1.65 !important;
+
+    white-space: pre-wrap !important;
+}
+
+
+/* ============================================================
+   STATUS BAR
+   ============================================================ */
+
+.ap-code-status {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 0 12px;
+
+    color: #777d86;
+
+    border-top:
+        1px solid var(--cs-line);
+
+    background:
+        #0a0b0e;
+
+    font-size: 9px;
+
+    white-space: nowrap;
+}
+
+.ap-code-status-file {
+    color: #bbbfc5;
+}
+
+.ap-code-status-live {
+    margin-left: auto;
+
+    color:
+        rgba(215,166,72,.85);
+}
+
+
+/* ============================================================
+   PREVIEW
+   ============================================================ */
+
+.ap-code-preview {
+    position: absolute;
+
+    inset:
+        40px
+        0
+        0;
+
+    z-index: 30;
+
+    display: none;
+
+    grid-template-rows:
+        40px
+        minmax(0, 1fr);
+
+    background: #0b0d10;
+}
+
+.ap-code-preview.open {
+    display: grid;
+}
+
+.ap-code-preview-head {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 0 11px;
+
+    border-bottom:
+        1px solid var(--cs-line);
+
+    background: #101216;
+
+    font-size: 10px;
+}
+
+.ap-code-preview-head span {
+    color: #cfd2d6;
+}
+
+.ap-code-preview-close {
+    width: 29px;
+    height: 29px;
+
+    margin-left: auto;
+
+    color: #aaaeb5;
+
+    border: 0;
+    border-radius: 8px;
+
+    background:
+        rgba(255,255,255,.05);
+
+    cursor: pointer;
+}
+
+.ap-code-preview iframe {
+    width: 100%;
+    height: 100%;
+
+    border: 0;
+
+    background: white;
+}
+
+
+/* ============================================================
+   MOBILE BACKDROP
+   ============================================================ */
+
+.ap-code-backdrop {
+    display: none;
+}
+
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 1100px)
+and (min-width: 761px) {
+
+    .ap-code-body {
+        grid-template-columns:
+            205px
+            minmax(0, 1fr);
+
+        grid-template-rows:
+            minmax(0, 1fr)
+            175px;
+    }
+
+    .ap-code-ai {
+        grid-column: 1 / 3;
+
+        border-left: 0;
+
+        border-top:
+            1px solid var(--cs-line);
+    }
+}
+
+
+/* ============================================================
+   MOBILE — REAL IDE, NOT DESKTOP SQUEEZED INTO PHONE
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    #codeStudioPage.ap-code-pro-ready {
+        width: 100% !important;
+
+        padding:
+            0
+            8px
+            8px !important;
+
+        overflow: hidden !important;
+    }
+
+
+    .ap-code-pro {
+        width: 100% !important;
+
+        grid-template-rows:
+            52px
+            minmax(0, 1fr)
+            27px;
+
+        border-radius: 14px;
+    }
+
+
+    .ap-code-header {
+        gap: 7px;
+
+        padding:
+            0
+            8px
+            0
+            10px;
+    }
+
+
+    .ap-code-brand {
+        gap: 7px;
+    }
+
+
+    .ap-code-brand-mark {
+        width: 30px;
+        height: 30px;
+
+        flex-basis: 30px;
+
+        border-radius: 9px;
+    }
+
+
+    .ap-code-brand-title {
+        font-size: 11px;
+    }
+
+
+    .ap-code-brand-sub {
+        display: none;
+    }
+
+
+    .ap-code-actions {
+        gap: 4px;
+    }
+
+
+    .ap-code-action,
+    .ap-code-analyze {
+        width: 34px !important;
+        min-width: 34px !important;
+        height: 34px !important;
+
+        padding: 0 !important;
+
+        border-radius: 9px !important;
+    }
+
+
+    .ap-code-action span,
+    .ap-code-analyze span {
+        display: none !important;
+    }
+
+
+    .ap-code-body {
+        grid-template-columns:
+            minmax(0, 1fr);
+
+        grid-template-rows:
+            minmax(0, 1fr)
+            145px;
+    }
+
+
+    /* Explorer becomes drawer */
+
+    .ap-code-explorer {
+        position: absolute;
+
+        z-index: 60;
+
+        top: 0;
+        bottom: 0;
+        left: 0;
+
+        width:
+            min(
+                82vw,
+                285px
+            );
+
+        border:
+            1px solid
+            rgba(255,255,255,.10);
+
+        border-left: 0;
+
+        box-shadow:
+            20px 0 45px
+            rgba(0,0,0,.45);
+
+        transform:
+            translateX(-105%);
+
+        transition:
+            transform .2s ease;
+    }
+
+
+    .ap-code-pro.ap-explorer-open
+    .ap-code-explorer {
+
+        transform:
+            translateX(0);
+    }
+
+
+    .ap-code-backdrop {
+        position: absolute;
+
+        z-index: 55;
+
+        inset: 0;
+
+        background:
+            rgba(0,0,0,.52);
+
+        backdrop-filter:
+            blur(2px);
+    }
+
+
+    .ap-code-pro.ap-explorer-open
+    .ap-code-backdrop {
+
+        display: block;
+    }
+
+
+    .ap-code-editor-panel {
+        grid-column: 1;
+
+        min-width: 0;
+    }
+
+
+    .ap-code-ai {
+        grid-column: 1;
+
+        border-left: 0;
+
+        border-top:
+            1px solid var(--cs-line);
+    }
+
+
+    .ap-code-editor-host {
+        grid-template-columns:
+            37px
+            minmax(0,1fr);
+    }
+
+
+    .ap-code-lines {
+        padding:
+            13px
+            7px
+            25px
+            0;
+
+        font-size: 11px;
+        line-height: 1.65;
+    }
+
+
+    #codeStudioPage
+    #codeStudioInput.ap-code-input-pro {
+
+        padding:
+            12px
+            12px
+            32px !important;
+
+        font-size:
+            11px !important;
+
+        line-height:
+            1.65 !important;
+    }
+
+
+    .ap-code-tab {
+        height: 40px;
+
+        padding:
+            0
+            11px;
+
+        font-size:
+            10px;
+    }
+
+
+    .ap-code-status {
+        gap: 9px;
+
+        padding:
+            0
+            8px;
+
+        font-size:
+            8px;
+    }
+
+
+    .ap-code-status-chars {
+        display: none;
+    }
+
+
+    /* AI can collapse to leave nearly whole phone for editor */
+
+    .ap-code-pro.ap-ai-collapsed
+    .ap-code-body {
+
+        grid-template-rows:
+            minmax(0, 1fr)
+            39px;
+    }
+
+
+    .ap-code-pro.ap-ai-collapsed
+    .ap-code-ai {
+
+        grid-template-rows:
+            39px;
+    }
+
+
+    .ap-code-pro.ap-ai-collapsed
+    .ap-code-ai-content {
+
+        display: none;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE CODE STUDIO
+   PREVIEW + INTELLIGENCE FINAL FUNCTION FIX
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   PREVIEW — full Code Studio workspace overlay
+   ------------------------------------------------------------ */
+
+.ap-code-preview {
+    position: absolute !important;
+
+    inset: 0 !important;
+
+    z-index: 500 !important;
+
+    display: none !important;
+
+    grid-template-rows:
+        44px
+        minmax(0, 1fr) !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    visibility: hidden !important;
+    opacity: 0 !important;
+
+    pointer-events: none !important;
+
+    background:
+        #0a0c0f !important;
+}
+
+
+.ap-code-preview.open {
+
+    display: grid !important;
+
+    visibility: visible !important;
+
+    opacity: 1 !important;
+
+    pointer-events: auto !important;
+}
+
+
+.ap-code-preview-head {
+
+    height: 44px !important;
+
+    display: flex !important;
+    align-items: center !important;
+
+    padding:
+        0
+        12px !important;
+
+    color:
+        #e8e8e5 !important;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.08) !important;
+
+    background:
+        #101216 !important;
+}
+
+
+.ap-code-preview iframe {
+
+    display: block !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    min-width: 0 !important;
+    min-height: 0 !important;
+
+    border: 0 !important;
+
+    background:
+        #ffffff !important;
+}
+
+
+.ap-code-preview-close {
+
+    margin-left:
+        auto !important;
+
+    width: 32px !important;
+    height: 32px !important;
+
+    display:
+        grid !important;
+
+    place-items:
+        center !important;
+
+    border:
+        1px solid
+        rgba(255,255,255,.09) !important;
+
+    border-radius:
+        8px !important;
+
+    color:
+        #d5d7da !important;
+
+    background:
+        rgba(255,255,255,.045) !important;
+
+    font-size:
+        19px !important;
+
+    cursor:
+        pointer !important;
+}
+
+
+/* ------------------------------------------------------------
+   DESKTOP INTELLIGENCE COLLAPSE
+   ------------------------------------------------------------ */
+
+@media (min-width: 1101px) {
+
+    .ap-code-pro.ap-ai-collapsed
+    .ap-code-body {
+
+        grid-template-columns:
+            220px
+            minmax(0, 1fr)
+            0 !important;
+    }
+
+
+    .ap-code-pro.ap-ai-collapsed
+    .ap-code-ai {
+
+        width: 0 !important;
+        min-width: 0 !important;
+
+        overflow:
+            hidden !important;
+
+        border-left:
+            0 !important;
+
+        opacity: 0;
+
+        pointer-events:
+            none;
+    }
+
+}
+
+
+/* ------------------------------------------------------------
+   TABLET INTELLIGENCE COLLAPSE
+   ------------------------------------------------------------ */
+
+@media (max-width: 1100px)
+and (min-width: 761px) {
+
+    .ap-code-pro.ap-ai-collapsed
+    .ap-code-body {
+
+        grid-template-rows:
+            minmax(0, 1fr)
+            0 !important;
+    }
+
+
+    .ap-code-pro.ap-ai-collapsed
+    .ap-code-ai {
+
+        height: 0 !important;
+
+        overflow:
+            hidden !important;
+
+        border-top:
+            0 !important;
+
+        opacity: 0;
+
+        pointer-events:
+            none;
+    }
+
+}
+
+
+/* ------------------------------------------------------------
+   BUTTON ACTIVE STATE
+   ------------------------------------------------------------ */
+
+.ap-code-ai-toggle.active {
+
+    color:
+        #efc66c !important;
+
+    border-color:
+        rgba(
+            215,
+            166,
+            72,
+            .36
+        ) !important;
+
+    background:
+        rgba(
+            215,
+            166,
+            72,
+            .10
+        ) !important;
+}
+
+
+.ap-code-preview-btn.active {
+
+    color:
+        #efc66c !important;
+
+    border-color:
+        rgba(
+            215,
+            166,
+            72,
+            .36
+        ) !important;
+}
+
+/* ============================================================
+   AP SYNAPSE — TRUE FULL CODE STUDIO PREVIEW
+   ============================================================ */
+
+.ap-code-pro {
+    position: relative !important;
+}
+
+
+/* Preview covers the complete working area,
+   while keeping Code Studio's own top header/status visible. */
+
+.ap-code-pro > .ap-code-preview {
+
+    position: absolute !important;
+
+    top: 58px !important;
+    right: 0 !important;
+    bottom: 28px !important;
+    left: 0 !important;
+
+    z-index: 99999 !important;
+
+    width: auto !important;
+    height: auto !important;
+
+    min-width: 0 !important;
+    min-height: 0 !important;
+
+    display: none !important;
+
+    grid-template-rows:
+        44px
+        minmax(0, 1fr) !important;
+
+    overflow: hidden !important;
+
+    visibility: hidden !important;
+    opacity: 0 !important;
+
+    pointer-events: none !important;
+
+    border-radius:
+        0 !important;
+
+    background:
+        #0a0b0e !important;
+}
+
+
+.ap-code-pro > .ap-code-preview.open {
+
+    display: grid !important;
+
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    pointer-events: auto !important;
+}
+
+
+/* Preview toolbar */
+
+.ap-code-pro
+.ap-code-preview-head {
+
+    position: relative !important;
+
+    width: 100% !important;
+    height: 44px !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+
+    box-sizing:
+        border-box !important;
+
+    padding:
+        0 12px !important;
+
+    color:
+        #e8eaed !important;
+
+    background:
+        linear-gradient(
+            180deg,
+            #15171b,
+            #101216
+        ) !important;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.08) !important;
+}
+
+
+/* Actual result */
+
+.ap-code-pro
+.ap-code-preview iframe {
+
+    position: relative !important;
+
+    display: block !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    min-width: 100% !important;
+    min-height: 100% !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border: 0 !important;
+
+    background:
+        #ffffff !important;
+}
+
+
+/* Proper close button */
+
+.ap-code-pro
+.ap-code-preview-close {
+
+    margin-left:
+        auto !important;
+
+    width: 32px !important;
+    height: 32px !important;
+
+    flex:
+        0 0 32px !important;
+
+    display:
+        inline-flex !important;
+
+    align-items:
+        center !important;
+
+    justify-content:
+        center !important;
+
+    padding: 0 !important;
+
+    color:
+        #e4e6e8 !important;
+
+    background:
+        rgba(255,255,255,.06) !important;
+
+    border:
+        1px solid
+        rgba(255,255,255,.09) !important;
+
+    border-radius:
+        8px !important;
+
+    font-size:
+        20px !important;
+
+    line-height: 1 !important;
+
+    cursor:
+        pointer !important;
+}
+
+
+/* ============================================================
+   MOBILE PREVIEW
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    .ap-code-pro > .ap-code-preview {
+
+        top: 52px !important;
+
+        right: 0 !important;
+
+        bottom: 27px !important;
+
+        left: 0 !important;
+
+        border-radius:
+            0 !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE — DESTROY CORRUPTED RESPONSE CURSOR PSEUDOS
+   ============================================================ */
+
+.ap-kill-before-mark::before,
+.ap-kill-after-mark::after {
+    content: none !important;
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    animation: none !important;
+}
+
+
+/* Any former custom cursor is disabled */
+
+.ap-fixed-stream-cursor {
+    display: none !important;
+}

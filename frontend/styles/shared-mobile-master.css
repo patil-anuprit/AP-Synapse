@@ -1,0 +1,1377 @@
+﻿/* ============================================================
+   AP SYNAPSE — SHARED MOBILE MASTER
+   Dedicated recipient experience
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    html.ap-shared-mobile-active,
+    html.ap-shared-mobile-active body {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        height: 100% !important;
+        min-height: 100% !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        overflow: hidden !important;
+
+        background: #0b0c0e !important;
+    }
+
+
+    body.ap-shared-mobile-focus {
+        position: fixed !important;
+        inset: 0 !important;
+
+        width: 100vw !important;
+
+        height:
+            var(
+                --ap-shared-mobile-height,
+                100dvh
+            ) !important;
+
+        max-width: 100vw !important;
+
+        overflow: hidden !important;
+
+        background:
+            radial-gradient(
+                circle at 50% -10%,
+                rgba(210,172,85,.08),
+                transparent 34%
+            ),
+            #0b0c0e !important;
+    }
+
+
+    /*
+     * The dedicated shared shell is the ONLY visual workspace.
+     * Normal AP Synapse desktop/mobile geometry cannot interfere.
+     */
+
+    body.ap-shared-mobile-focus
+    > *:not(#apSharedMobileShell):not(script):not(style) {
+        display: none !important;
+    }
+
+
+    #apSharedMobileShell {
+        position: fixed !important;
+        inset: 0 !important;
+
+        z-index: 2147483000 !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        width: 100vw !important;
+
+        height:
+            var(
+                --ap-shared-mobile-height,
+                100dvh
+            ) !important;
+
+        min-width: 0 !important;
+        max-width: 100vw !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        overflow: hidden !important;
+
+        box-sizing: border-box !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                #101113 0%,
+                #0b0c0e 18%,
+                #0b0c0e 100%
+            ) !important;
+
+        color: #f5f2eb;
+    }
+
+
+    /* ========================================================
+       HEADER
+       ======================================================== */
+
+    .ap-shared-mobile-header {
+        position: relative !important;
+
+        flex: 0 0 auto !important;
+
+        width: 100% !important;
+
+        min-height:
+            calc(
+                58px +
+                env(safe-area-inset-top)
+            ) !important;
+
+        box-sizing: border-box !important;
+
+        display: flex !important;
+        align-items: flex-end !important;
+
+        padding:
+            env(safe-area-inset-top)
+            13px
+            10px !important;
+
+        border-bottom:
+            1px solid rgba(255,255,255,.065) !important;
+
+        background:
+            rgba(13,14,16,.96) !important;
+
+        backdrop-filter:
+            blur(20px) !important;
+
+        -webkit-backdrop-filter:
+            blur(20px) !important;
+    }
+
+
+    .ap-shared-mobile-header-inner {
+        width: 100% !important;
+
+        min-width: 0 !important;
+
+        display: flex !important;
+        align-items: center !important;
+
+        gap: 10px !important;
+    }
+
+
+    .ap-shared-mobile-logo {
+        width: 32px !important;
+        height: 32px !important;
+
+        min-width: 32px !important;
+
+        display: grid !important;
+        place-items: center !important;
+
+        border:
+            1px solid rgba(222,184,97,.28) !important;
+
+        border-radius: 9px !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(218,177,86,.14),
+                rgba(255,255,255,.025)
+            ) !important;
+
+        color: #e2bd6d !important;
+
+        font-size: 9px !important;
+        font-weight: 800 !important;
+
+        letter-spacing: .07em !important;
+    }
+
+
+    .ap-shared-mobile-title-area {
+        min-width: 0 !important;
+        flex: 1 !important;
+    }
+
+
+    .ap-shared-mobile-title-row {
+        min-width: 0 !important;
+
+        display: flex !important;
+        align-items: center !important;
+
+        gap: 7px !important;
+    }
+
+
+    #apSharedMobileTitle {
+        min-width: 0 !important;
+
+        overflow: hidden !important;
+
+        color:
+            rgba(248,246,239,.95) !important;
+
+        font-size: 12px !important;
+        font-weight: 650 !important;
+
+        line-height: 1.2 !important;
+
+        white-space: nowrap !important;
+        text-overflow: ellipsis !important;
+    }
+
+
+    .ap-shared-mobile-live {
+        flex: 0 0 auto !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+
+        gap: 4px !important;
+
+        padding:
+            2px 6px !important;
+
+        border:
+            1px solid rgba(218,178,87,.17) !important;
+
+        border-radius:
+            999px !important;
+
+        background:
+            rgba(218,178,87,.055) !important;
+
+        color:
+            rgba(230,197,120,.94) !important;
+
+        font-size: 6.8px !important;
+        font-weight: 800 !important;
+
+        letter-spacing: .11em !important;
+    }
+
+
+    .ap-shared-mobile-live-dot {
+        width: 4px !important;
+        height: 4px !important;
+
+        border-radius: 50% !important;
+
+        background:
+            #ddb55e !important;
+
+        box-shadow:
+            0 0 8px
+            rgba(221,181,94,.65) !important;
+    }
+
+
+    .ap-shared-mobile-subtitle {
+        margin-top: 3px !important;
+
+        color:
+            rgba(239,236,228,.40) !important;
+
+        font-size: 8px !important;
+        font-weight: 500 !important;
+
+        white-space: nowrap !important;
+
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+
+    .ap-shared-mobile-menu {
+        width: 30px !important;
+        height: 30px !important;
+
+        min-width: 30px !important;
+
+        display: grid !important;
+        place-items: center !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        border:
+            1px solid rgba(255,255,255,.07) !important;
+
+        border-radius: 9px !important;
+
+        outline: none !important;
+
+        background:
+            rgba(255,255,255,.025) !important;
+
+        color:
+            rgba(246,243,235,.72) !important;
+
+        font-size: 16px !important;
+
+        cursor: pointer !important;
+    }
+
+
+    /* ========================================================
+       REAL CHAT HOST
+       ======================================================== */
+
+    #apSharedMobileMain {
+        position: relative !important;
+
+        flex: 1 1 auto !important;
+
+        min-width: 0 !important;
+        min-height: 0 !important;
+
+        width: 100% !important;
+
+        overflow: hidden !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /*
+     * This is the ACTUAL #chatWindow moved into the shell.
+     */
+
+    body.ap-shared-mobile-focus
+    #apSharedMobileMain
+    #chatWindow {
+        position: absolute !important;
+
+        inset: 0 !important;
+
+        display: block !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        height: 100% !important;
+        max-height: none !important;
+
+        min-width: 0 !important;
+        min-height: 0 !important;
+
+        margin: 0 !important;
+
+        padding:
+            17px
+            12px
+            22px !important;
+
+        box-sizing: border-box !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        overscroll-behavior:
+            contain !important;
+
+        -webkit-overflow-scrolling:
+            touch !important;
+
+        scroll-behavior:
+            auto !important;
+
+        background:
+            transparent !important;
+
+        visibility:
+            visible !important;
+
+        opacity:
+            1 !important;
+
+        transform:
+            none !important;
+
+        flex:
+            none !important;
+    }
+
+
+    /*
+     * Nothing inside a message may enlarge the viewport.
+     */
+
+    body.ap-shared-mobile-focus
+    #chatWindow *,
+    body.ap-shared-mobile-focus
+    #chatWindow *::before,
+    body.ap-shared-mobile-focus
+    #chatWindow *::after {
+        box-sizing:
+            border-box !important;
+    }
+
+
+    body.ap-shared-mobile-focus
+    #chatWindow > * {
+        min-width:
+            0 !important;
+
+        max-width:
+            100% !important;
+    }
+
+
+    /* ========================================================
+       MESSAGE FOUNDATION
+       ======================================================== */
+
+    body.ap-shared-mobile-focus
+    #chatWindow
+    :is(
+        .message,
+        .user-message,
+        .assistant-message,
+        .ai-message,
+        .bot-message
+    ) {
+        position:
+            relative !important;
+
+        width:
+            100% !important;
+
+        max-width:
+            100% !important;
+
+        min-width:
+            0 !important;
+
+        margin-left:
+            0 !important;
+
+        margin-right:
+            0 !important;
+
+        padding-left:
+            0 !important;
+
+        padding-right:
+            0 !important;
+
+        transform:
+            none !important;
+    }
+
+
+    /* ========================================================
+       USER MESSAGE
+       ======================================================== */
+
+    body.ap-shared-mobile-focus
+    #chatWindow
+    :is(
+        .message.user,
+        .user-message,
+        [data-role="user"]
+    ) {
+        display:
+            flex !important;
+
+        justify-content:
+            flex-end !important;
+
+        align-items:
+            flex-start !important;
+
+        gap:
+            0 !important;
+
+        margin:
+            3px 0 19px !important;
+    }
+
+
+    body.ap-shared-mobile-focus
+    #chatWindow
+    :is(
+        .message.user,
+        .user-message,
+        [data-role="user"]
+    )
+    > .avatar {
+        display:
+            none !important;
+    }
+
+
+    body.ap-shared-mobile-focus
+    #chatWindow
+    :is(
+        .message.user,
+        .user-message,
+        [data-role="user"]
+    )
+    :is(
+        .message-body,
+        .message-content,
+        .response-content
+    ) {
+        display:
+            block !important;
+
+        width:
+            auto !important;
+
+        max-width:
+            min(
+                88%,
+                620px
+            ) !important;
+
+        min-width:
+            0 !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            10px 13px !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.065)
+            !important;
+
+        border-radius:
+            15px 15px 4px 15px
+            !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(38,39,42,.96),
+                rgba(29,30,33,.97)
+            ) !important;
+
+        box-shadow:
+            0 7px 20px
+            rgba(0,0,0,.13)
+            !important;
+
+        color:
+            rgba(249,247,242,.94)
+            !important;
+
+        font-size:
+            13px !important;
+
+        line-height:
+            1.55 !important;
+
+        overflow-wrap:
+            anywhere !important;
+
+        word-break:
+            normal !important;
+    }
+
+
+    /* ========================================================
+       AP RESPONSE
+       ======================================================== */
+
+    body.ap-shared-mobile-focus
+    #chatWindow
+    :is(
+        .message.ai,
+        .message.assistant,
+        .assistant-message,
+        .ai-message,
+        .bot-message,
+        [data-role="assistant"]
+    ) {
+        display:
+            grid !important;
+
+        grid-template-columns:
+            28px
+            minmax(0,1fr) !important;
+
+        align-items:
+            start !important;
+
+        column-gap:
+            9px !important;
+
+        margin:
+            0 0 23px !important;
+    }
+
+
+    body.ap-shared-mobile-focus
+    #chatWindow
+    :is(
+        .message.ai,
+        .message.assistant,
+        .assistant-message,
+        .ai-message,
+        .bot-message,
+        [data-role="assistant"]
+    )
+    > .avatar {
+        position:
+            static !important;
+
+        width:
+            27px !important;
+
+        height:
+            27px !important;
+
+        min-width:
+            27px !important;
+
+        margin:
+            1px 0 0 !important;
+
+        display:
+            grid !important;
+
+        place-items:
+            center !important;
+
+        border:
+            1px solid
+            rgba(216,177,89,.18)
+            !important;
+
+        border-radius:
+            8px !important;
+
+        background:
+            rgba(211,173,87,.055)
+            !important;
+
+        color:
+            #dcb665 !important;
+
+        font-size:
+            7.5px !important;
+
+        font-weight:
+            780 !important;
+
+        line-height:
+            1 !important;
+    }
+
+
+    body.ap-shared-mobile-focus
+    #chatWindow
+    :is(
+        .message.ai,
+        .message.assistant,
+        .assistant-message,
+        .ai-message,
+        .bot-message,
+        [data-role="assistant"]
+    )
+    :is(
+        .message-body,
+        .message-content,
+        .response-content,
+        .ap-response-body
+    ) {
+        grid-column:
+            2 !important;
+
+        width:
+            100% !important;
+
+        max-width:
+            100% !important;
+
+        min-width:
+            0 !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+        background:
+            transparent !important;
+
+        border:
+            0 !important;
+
+        border-radius:
+            0 !important;
+
+        box-shadow:
+            none !important;
+
+        color:
+            rgba(244,242,236,.92)
+            !important;
+
+        font-size:
+            13.25px !important;
+
+        line-height:
+            1.67 !important;
+
+        overflow:
+            visible !important;
+
+        overflow-wrap:
+            anywhere !important;
+    }
+
+
+    /* ========================================================
+       RESPONSE TYPOGRAPHY
+       ======================================================== */
+
+    body.ap-shared-mobile-focus
+    #chatWindow p {
+        max-width:
+            100% !important;
+
+        margin:
+            0 0 .88em !important;
+
+        overflow-wrap:
+            anywhere !important;
+    }
+
+
+    body.ap-shared-mobile-focus
+    #chatWindow
+    :is(
+        h1,h2,h3,h4,h5,h6
+    ) {
+        max-width:
+            100% !important;
+
+        margin-left:
+            0 !important;
+
+        margin-right:
+            0 !important;
+
+        overflow-wrap:
+            anywhere !important;
+    }
+
+
+    body.ap-shared-mobile-focus
+    #chatWindow h1 {
+        font-size:
+            20px !important;
+    }
+
+
+    body.ap-shared-mobile-focus
+    #chatWindow h2 {
+        font-size:
+            17px !important;
+    }
+
+
+    body.ap-shared-mobile-focus
+    #chatWindow h3 {
+        font-size:
+            15px !important;
+    }
+
+
+    body.ap-shared-mobile-focus
+    #chatWindow
+    :is(
+        ul,ol
+    ) {
+        max-width:
+            100% !important;
+
+        padding-left:
+            20px !important;
+    }
+
+
+    body.ap-shared-mobile-focus
+    #chatWindow li {
+        max-width:
+            100% !important;
+
+        overflow-wrap:
+            anywhere !important;
+    }
+
+
+    /* ========================================================
+       LINKS
+       ======================================================== */
+
+    body.ap-shared-mobile-focus
+    #chatWindow a {
+        max-width:
+            100% !important;
+
+        color:
+            #dfbd72 !important;
+
+        overflow-wrap:
+            anywhere !important;
+
+        word-break:
+            break-word !important;
+
+        text-underline-offset:
+            3px !important;
+    }
+
+
+    /* ========================================================
+       TABLES — EACH TABLE GETS OWN HORIZONTAL SCROLL
+       ======================================================== */
+
+    body.ap-shared-mobile-focus
+    .ap-shared-table-scroll {
+        display:
+            block !important;
+
+        width:
+            100% !important;
+
+        max-width:
+            100% !important;
+
+        min-width:
+            0 !important;
+
+        margin:
+            12px 0 !important;
+
+        overflow-x:
+            auto !important;
+
+        overflow-y:
+            hidden !important;
+
+        -webkit-overflow-scrolling:
+            touch !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.07)
+            !important;
+
+        border-radius:
+            11px !important;
+
+        background:
+            rgba(255,255,255,.015)
+            !important;
+    }
+
+
+    body.ap-shared-mobile-focus
+    .ap-shared-table-scroll table {
+        width:
+            max-content !important;
+
+        min-width:
+            100% !important;
+
+        max-width:
+            none !important;
+
+        margin:
+            0 !important;
+    }
+
+
+    body.ap-shared-mobile-focus
+    #chatWindow
+    :is(
+        th,td
+    ) {
+        min-width:
+            100px !important;
+
+        max-width:
+            260px !important;
+
+        padding:
+            8px 9px !important;
+
+        font-size:
+            11.5px !important;
+
+        line-height:
+            1.45 !important;
+
+        white-space:
+            normal !important;
+
+        overflow-wrap:
+            anywhere !important;
+    }
+
+
+    /* ========================================================
+       CODE
+       ======================================================== */
+
+    body.ap-shared-mobile-focus
+    #chatWindow pre {
+        display:
+            block !important;
+
+        width:
+            100% !important;
+
+        max-width:
+            100% !important;
+
+        min-width:
+            0 !important;
+
+        margin:
+            12px 0 !important;
+
+        padding:
+            12px !important;
+
+        overflow-x:
+            auto !important;
+
+        overflow-y:
+            hidden !important;
+
+        -webkit-overflow-scrolling:
+            touch !important;
+
+        border-radius:
+            11px !important;
+
+        font-size:
+            11.5px !important;
+    }
+
+
+    body.ap-shared-mobile-focus
+    #chatWindow pre code {
+        display:
+            block !important;
+
+        width:
+            max-content !important;
+
+        min-width:
+            100% !important;
+
+        white-space:
+            pre !important;
+
+        word-break:
+            normal !important;
+
+        overflow-wrap:
+            normal !important;
+    }
+
+
+    /* ========================================================
+       MEDIA
+       ======================================================== */
+
+    body.ap-shared-mobile-focus
+    #chatWindow
+    :is(
+        img,
+        video,
+        canvas,
+        svg,
+        iframe
+    ) {
+        display:
+            block !important;
+
+        max-width:
+            100% !important;
+
+        height:
+            auto !important;
+
+        margin-left:
+            auto !important;
+
+        margin-right:
+            auto !important;
+
+        object-fit:
+            contain !important;
+    }
+
+
+    /* ========================================================
+       RESPONSE ACTIONS
+       ======================================================== */
+
+    body.ap-shared-mobile-focus
+    #chatWindow
+    :is(
+        .ap-response-actions,
+        .ap-final-response-actions,
+        .message-actions
+    ) {
+        width:
+            100% !important;
+
+        max-width:
+            100% !important;
+
+        display:
+            flex !important;
+
+        flex-wrap:
+            wrap !important;
+
+        gap:
+            6px !important;
+
+        margin-top:
+            7px !important;
+    }
+
+
+    /* ========================================================
+       FOOTER / REAL COMPOSER
+       ======================================================== */
+
+    #apSharedMobileFooter {
+        position:
+            relative !important;
+
+        flex:
+            0 0 auto !important;
+
+        width:
+            100% !important;
+
+        max-width:
+            100% !important;
+
+        box-sizing:
+            border-box !important;
+
+        padding:
+            8px
+            10px
+            calc(
+                8px +
+                env(safe-area-inset-bottom)
+            )
+            !important;
+
+        border-top:
+            1px solid
+            rgba(255,255,255,.055)
+            !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(12,13,15,.94),
+                rgba(9,10,12,.99)
+            )
+            !important;
+
+        box-shadow:
+            0 -14px 30px
+            rgba(0,0,0,.18)
+            !important;
+    }
+
+
+    /*
+     * REAL existing composer is re-parented here.
+     * Remove ALL normal mobile fixed geometry.
+     */
+
+    body.ap-shared-mobile-focus
+    #apSharedMobileFooter
+    .ap-shared-real-composer {
+        position:
+            relative !important;
+
+        inset:
+            auto !important;
+
+        top:
+            auto !important;
+
+        right:
+            auto !important;
+
+        bottom:
+            auto !important;
+
+        left:
+            auto !important;
+
+        transform:
+            none !important;
+
+        width:
+            100% !important;
+
+        max-width:
+            100% !important;
+
+        min-width:
+            0 !important;
+
+        min-height:
+            48px !important;
+
+        margin:
+            0 !important;
+
+        box-sizing:
+            border-box !important;
+    }
+
+
+    body.ap-shared-mobile-focus
+    #apSharedMobileFooter
+    #userInput {
+        min-width:
+            0 !important;
+
+        max-width:
+            100% !important;
+    }
+
+
+    /* ========================================================
+       MANUAL JUMP BUTTON ONLY
+       ======================================================== */
+
+    body.ap-shared-mobile-focus
+    #jumpToLatestBtn {
+        position:
+            absolute !important;
+
+        right:
+            12px !important;
+
+        bottom:
+            calc(
+                78px +
+                env(safe-area-inset-bottom)
+            ) !important;
+
+        z-index:
+            20 !important;
+    }
+
+
+    /* ========================================================
+       SHARE MOBILE MENU
+       ======================================================== */
+
+    #apSharedMobileMenuPanel {
+        position:
+            fixed !important;
+
+        top:
+            calc(
+                58px +
+                env(safe-area-inset-top)
+            ) !important;
+
+        right:
+            10px !important;
+
+        z-index:
+            2147483640 !important;
+
+        display:
+            none !important;
+
+        width:
+            min(
+                245px,
+                calc(100vw - 20px)
+            ) !important;
+
+        padding:
+            7px !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.08)
+            !important;
+
+        border-radius:
+            13px !important;
+
+        background:
+            rgba(20,21,23,.985)
+            !important;
+
+        box-shadow:
+            0 20px 50px
+            rgba(0,0,0,.42)
+            !important;
+
+        backdrop-filter:
+            blur(18px) !important;
+
+        -webkit-backdrop-filter:
+            blur(18px) !important;
+    }
+
+
+    #apSharedMobileMenuPanel.ap-open {
+        display:
+            block !important;
+    }
+
+
+    .ap-shared-mobile-menu-row {
+        width:
+            100% !important;
+
+        min-height:
+            39px !important;
+
+        display:
+            flex !important;
+
+        align-items:
+            center !important;
+
+        padding:
+            0 11px !important;
+
+        border:
+            0 !important;
+
+        border-radius:
+            9px !important;
+
+        background:
+            transparent !important;
+
+        color:
+            rgba(246,244,238,.82)
+            !important;
+
+        font:
+            inherit !important;
+
+        font-size:
+            10.5px !important;
+
+        text-align:
+            left !important;
+
+        cursor:
+            pointer !important;
+    }
+
+
+    .ap-shared-mobile-menu-row:active {
+        background:
+            rgba(255,255,255,.045)
+            !important;
+    }
+
+
+    /* ========================================================
+       THINKING
+       ======================================================== */
+
+    body.ap-shared-mobile-focus
+    #thinking {
+        position:
+            absolute !important;
+
+        left:
+            42px !important;
+
+        right:
+            auto !important;
+
+        bottom:
+            9px !important;
+
+        transform:
+            none !important;
+
+        max-width:
+            calc(100% - 56px)
+            !important;
+
+        z-index:
+            15 !important;
+    }
+
+}
+
+
+/* ============================================================
+   EXTRA NARROW PHONES
+   ============================================================ */
+
+@media (max-width: 380px) {
+
+    body.ap-shared-mobile-focus
+    #apSharedMobileMain
+    #chatWindow {
+        padding-left:
+            10px !important;
+
+        padding-right:
+            10px !important;
+    }
+
+
+    body.ap-shared-mobile-focus
+    #chatWindow
+    :is(
+        .message.ai,
+        .message.assistant,
+        .assistant-message,
+        .ai-message,
+        .bot-message,
+        [data-role="assistant"]
+    ) {
+        grid-template-columns:
+            25px
+            minmax(0,1fr)
+            !important;
+
+        column-gap:
+            7px !important;
+    }
+
+
+    body.ap-shared-mobile-focus
+    #chatWindow
+    :is(
+        .message.ai,
+        .message.assistant,
+        .assistant-message,
+        .ai-message,
+        .bot-message,
+        [data-role="assistant"]
+    )
+    > .avatar {
+        width:
+            24px !important;
+
+        height:
+            24px !important;
+
+        min-width:
+            24px !important;
+    }
+
+}

@@ -27,3 +27,16 @@ node_modules/
 .DS_Store
 backend/node_modules/
 frontend/node_modules/
+
+# AP Synapse local / generated files
+*.bak
+*.before-*
+**/*.bak
+**/*.before-*
+*.keystore
+*.jks
+*.p12
+*.pem
+*.key
+*.apk
+*.aab

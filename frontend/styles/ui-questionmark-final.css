@@ -1,0 +1,47 @@
+﻿/* ============================================================
+   AP SYNAPSE — GLOBAL DESIGN ICON REPAIR
+   ============================================================ */
+
+.ap-ui-repaired-icon {
+
+    width: 17px !important;
+    height: 17px !important;
+
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    flex: 0 0 17px !important;
+
+    color: currentColor !important;
+
+    line-height: 1 !important;
+}
+
+
+.ap-ui-repaired-icon svg {
+
+    width: 100% !important;
+    height: 100% !important;
+
+    display: block !important;
+
+    fill: none !important;
+
+    stroke: currentColor !important;
+    stroke-width: 1.7 !important;
+
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+}
+
+
+button.ap-questionmark-repaired,
+[role="button"].ap-questionmark-repaired {
+
+    display: inline-flex !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+}
+

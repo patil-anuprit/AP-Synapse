@@ -1,0 +1,54 @@
+﻿/* ============================================================
+   AP SYNAPSE — RESPONSE FORMAT FINAL
+   ============================================================ */
+
+.ap-response-link-final {
+
+    color:
+        rgba(218,177,91,.96) !important;
+
+    text-decoration:none !important;
+
+    border-bottom:
+        1px solid
+        rgba(218,177,91,.34) !important;
+
+    overflow-wrap:anywhere !important;
+
+    word-break:break-word !important;
+
+    cursor:pointer !important;
+}
+
+
+.ap-response-link-final:hover {
+
+    color:#efd08a !important;
+
+    border-bottom-color:
+        rgba(239,208,138,.75) !important;
+}
+
+
+.ap-response-link-final::after {
+
+    content:" ↗";
+
+    font-size:.78em;
+
+    opacity:.62;
+}
+
+
+@media (max-width:760px) {
+
+    .ap-response-link-final {
+
+        max-width:100% !important;
+
+        overflow-wrap:anywhere !important;
+
+        word-break:break-word !important;
+    }
+
+}

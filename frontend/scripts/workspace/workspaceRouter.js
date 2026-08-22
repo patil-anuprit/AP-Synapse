@@ -1,4 +1,4 @@
-const pages = {};
+﻿const pages = {};
 
 export function registerPage(name, id, display = "block") {
 
@@ -108,15 +108,88 @@ export function openPage(name) {
     );
 
 
-    console.log(
-        "OPENED:",
+
+    // ======================================================
+    // AP SYNAPSE — RESTORED CHAT WINS
+    // ======================================================
+
+    if (name === "assistant") {
+
+        const hero =
+            document.getElementById("heroScreen");
+
+        const chat =
+            document.getElementById("chatWindow");
+
+        const hasRestoredConversation =
+            chat &&
+            chat.children.length > 0 &&
+            chat.textContent.trim().length > 0;
+
+        if (hasRestoredConversation) {
+
+            document.body.classList.add(
+                "chat-active"
+            );
+
+            if (hero) {
+
+                hero.style.setProperty(
+                    "display",
+                    "none",
+                    "important"
+                );
+
+                hero.style.setProperty(
+                    "visibility",
+                    "hidden",
+                    "important"
+                );
+
+                hero.style.setProperty(
+                    "opacity",
+                    "0",
+                    "important"
+                );
+
+                hero.style.setProperty(
+                    "pointer-events",
+                    "none",
+                    "important"
+                );
+            }
+
+            chat.style.setProperty(
+                "display",
+                "flex",
+                "important"
+            );
+
+            chat.style.setProperty(
+                "visibility",
+                "visible",
+                "important"
+            );
+
+            chat.style.setProperty(
+                "opacity",
+                "1",
+                "important"
+            );
+
+            console.log(
+                "✅ AP SYNAPSE — RESTORED CHAT OWNS ASSISTANT"
+            );
+        }
+    }
+    console.log("OPENED:",
         page.element.id
     );
 
 }
 
 // ======================================================
-// AP SYNAPSE — HERO ACTION BUTTONS
+// AP SYNAPSE â€” HERO ACTION BUTTONS
 // ======================================================
 
 export function setupHeroActions() {
@@ -137,7 +210,7 @@ export function setupHeroActions() {
             console.log("HERO ACTION:", mode);
 
             // ==========================================
-            // CODE → CODE STUDIO
+            // CODE â†’ CODE STUDIO
             // ==========================================
 
             if (mode === "code") {
@@ -149,7 +222,7 @@ export function setupHeroActions() {
 
 
             // ==========================================
-            // ALL OTHER MODES → ASSISTANT
+            // ALL OTHER MODES â†’ ASSISTANT
             // ==========================================
 
             openPage("assistant");
@@ -208,8 +281,21 @@ export function setupHeroActions() {
     });
 
     console.log(
-        `✅ ${buttons.length} hero action buttons connected`
+        `âœ… ${buttons.length} hero action buttons connected`
     );
 }
 
 setupHeroActions();
+
+
+/* ============================================================
+   AP SYNAPSE â€” NATIVE WORKSPACE ROUTER BRIDGE
+   Allows History to open Assistant through the official router.
+   ============================================================ */
+
+window.APWorkspaceOpenPage = openPage;
+
+console.log(
+    "âœ… AP SYNAPSE â€” WORKSPACE ROUTER BRIDGE READY"
+);
+

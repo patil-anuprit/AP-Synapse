@@ -1,0 +1,1361 @@
+/* ============================================================
+   AP SYNAPSE — MOBILE RESPONSE TABLE MASTER
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    /* ========================================================
+       1. CHAT ITSELF MUST NEVER MOVE SIDEWAYS
+       ======================================================== */
+
+    html,
+    body {
+        overflow-x: hidden !important;
+    }
+
+    #assistantPage {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        overflow-x: hidden !important;
+    }
+
+
+    /* ========================================================
+       2. ANY RESPONSE CONTAINING A TABLE GETS FULL CHAT WIDTH
+       ======================================================== */
+
+    #assistantPage .ap-table-content-owner {
+
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+
+        box-sizing: border-box !important;
+
+        transform: none !important;
+        translate: none !important;
+
+        overflow: visible !important;
+    }
+
+
+    #assistantPage :is(
+        .message,
+        .assistant-message,
+        .ai-message,
+        .bot-message,
+        .message-body,
+        .message-content,
+        .response-content,
+        .assistant-response,
+        .markdown-body
+    ):has(.ap-mobile-table-shell) {
+
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        align-self: stretch !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* ========================================================
+       3. TABLE SHELL
+       ======================================================== */
+
+    #assistantPage .ap-mobile-table-shell {
+
+        position: relative !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        margin:
+            14px 0 18px !important;
+
+        padding:
+            0 !important;
+
+        box-sizing:
+            border-box !important;
+
+        overflow-x:
+            auto !important;
+
+        overflow-y:
+            hidden !important;
+
+        -webkit-overflow-scrolling:
+            touch !important;
+
+        overscroll-behavior-x:
+            contain !important;
+
+        touch-action:
+            pan-x pan-y !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(20,21,24,.99),
+                rgba(10,11,13,.995)
+            ) !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.085) !important;
+
+        border-radius:
+            14px !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.035),
+            0 10px 28px
+            rgba(0,0,0,.16) !important;
+
+        scrollbar-width:
+            thin !important;
+
+        scrollbar-color:
+            rgba(213,170,82,.42)
+            rgba(255,255,255,.025) !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell::-webkit-scrollbar {
+
+        height:
+            4px !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell::-webkit-scrollbar-track {
+
+        background:
+            rgba(255,255,255,.022) !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell::-webkit-scrollbar-thumb {
+
+        background:
+            rgba(213,170,82,.44) !important;
+
+        border-radius:
+            999px !important;
+    }
+
+
+    /* ========================================================
+       4. SWIPE HINT
+       ======================================================== */
+
+    #assistantPage .ap-mobile-table-hint {
+
+        position:
+            sticky !important;
+
+        left:
+            0 !important;
+
+        top:
+            0 !important;
+
+        z-index:
+            8 !important;
+
+        width:
+            max-content !important;
+
+        max-width:
+            calc(100vw - 48px) !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            7px 11px !important;
+
+        display:
+            none !important;
+
+        align-items:
+            center !important;
+
+        gap:
+            6px !important;
+
+        color:
+            rgba(220,177,89,.78) !important;
+
+        font-size:
+            8px !important;
+
+        line-height:
+            1 !important;
+
+        font-weight:
+            650 !important;
+
+        letter-spacing:
+            .035em !important;
+
+        background:
+            rgba(14,15,17,.96) !important;
+
+        border-bottom:
+            1px solid
+            rgba(255,255,255,.055) !important;
+
+        border-right:
+            1px solid
+            rgba(255,255,255,.055) !important;
+
+        border-bottom-right-radius:
+            9px !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell.ap-table-wide
+    .ap-mobile-table-hint {
+
+        display:
+            inline-flex !important;
+    }
+
+
+    /* ========================================================
+       5. TABLE CORE
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell table {
+
+        width:
+            max-content !important;
+
+        min-width:
+            var(--ap-table-width, 100%) !important;
+
+        max-width:
+            none !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+        border:
+            0 !important;
+
+        border-collapse:
+            separate !important;
+
+        border-spacing:
+            0 !important;
+
+        table-layout:
+            auto !important;
+
+        background:
+            transparent !important;
+    }
+
+
+    /* ========================================================
+       6. HEADER CELLS
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell th {
+
+        min-width:
+            126px !important;
+
+        max-width:
+            230px !important;
+
+        padding:
+            11px 12px !important;
+
+        color:
+            #dcb25d !important;
+
+        -webkit-text-fill-color:
+            #dcb25d !important;
+
+        font-size:
+            10.5px !important;
+
+        line-height:
+            1.35 !important;
+
+        font-weight:
+            700 !important;
+
+        letter-spacing:
+            .01em !important;
+
+        text-align:
+            left !important;
+
+        vertical-align:
+            top !important;
+
+        white-space:
+            normal !important;
+
+        overflow-wrap:
+            anywhere !important;
+
+        word-break:
+            normal !important;
+
+        background:
+            rgba(216,172,82,.055) !important;
+
+        border-right:
+            1px solid
+            rgba(255,255,255,.055) !important;
+
+        border-bottom:
+            1px solid
+            rgba(216,172,82,.15) !important;
+    }
+
+
+    /* ========================================================
+       7. BODY CELLS
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell td {
+
+        min-width:
+            126px !important;
+
+        max-width:
+            230px !important;
+
+        padding:
+            11px 12px !important;
+
+        color:
+            rgba(239,239,234,.84) !important;
+
+        -webkit-text-fill-color:
+            rgba(239,239,234,.84) !important;
+
+        font-size:
+            10.5px !important;
+
+        line-height:
+            1.48 !important;
+
+        font-weight:
+            430 !important;
+
+        text-align:
+            left !important;
+
+        vertical-align:
+            top !important;
+
+        white-space:
+            normal !important;
+
+        overflow-wrap:
+            anywhere !important;
+
+        word-break:
+            normal !important;
+
+        background:
+            rgba(255,255,255,.008) !important;
+
+        border-right:
+            1px solid
+            rgba(255,255,255,.05) !important;
+
+        border-bottom:
+            1px solid
+            rgba(255,255,255,.05) !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell
+    tbody tr:nth-child(even) td {
+
+        background:
+            rgba(255,255,255,.015) !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell
+    tr:last-child td {
+
+        border-bottom:
+            0 !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell
+    th:last-child,
+
+    #assistantPage
+    .ap-mobile-table-shell
+    td:last-child {
+
+        border-right:
+            0 !important;
+    }
+
+
+    /* ========================================================
+       8. STICKY FIRST COLUMN
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell
+    th:first-child {
+
+        position:
+            sticky !important;
+
+        left:
+            0 !important;
+
+        z-index:
+            6 !important;
+
+        min-width:
+            112px !important;
+
+        max-width:
+            145px !important;
+
+        background:
+            #171719 !important;
+
+        box-shadow:
+            5px 0 12px
+            rgba(0,0,0,.20) !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell
+    td:first-child {
+
+        position:
+            sticky !important;
+
+        left:
+            0 !important;
+
+        z-index:
+            5 !important;
+
+        min-width:
+            112px !important;
+
+        max-width:
+            145px !important;
+
+        color:
+            #dcb25d !important;
+
+        -webkit-text-fill-color:
+            #dcb25d !important;
+
+        font-weight:
+            650 !important;
+
+        background:
+            #111214 !important;
+
+        box-shadow:
+            5px 0 12px
+            rgba(0,0,0,.18) !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell
+    tbody tr:nth-child(even)
+    td:first-child {
+
+        background:
+            #141517 !important;
+    }
+
+
+    /* ========================================================
+       9. TWO-COLUMN TABLES CAN FIT NATURALLY
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell.ap-columns-2 table {
+
+        width:
+            100% !important;
+
+        min-width:
+            100% !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell.ap-columns-2 th,
+
+    #assistantPage
+    .ap-mobile-table-shell.ap-columns-2 td {
+
+        width:
+            50% !important;
+
+        min-width:
+            0 !important;
+
+        max-width:
+            none !important;
+    }
+
+
+    /* ========================================================
+       10. RESPONSE TEXT AROUND TABLE
+       ======================================================== */
+
+    #assistantPage p,
+    #assistantPage li,
+    #assistantPage blockquote {
+
+        max-width:
+            100% !important;
+
+        overflow-wrap:
+            anywhere !important;
+
+        word-break:
+            normal !important;
+    }
+
+
+    /* ========================================================
+       11. CODE BLOCKS
+       ======================================================== */
+
+    #assistantPage pre {
+
+        width:
+            100% !important;
+
+        max-width:
+            100% !important;
+
+        overflow-x:
+            auto !important;
+
+        box-sizing:
+            border-box !important;
+
+        -webkit-overflow-scrolling:
+            touch !important;
+    }
+
+
+    #assistantPage pre code {
+
+        white-space:
+            pre !important;
+
+        overflow-wrap:
+            normal !important;
+
+        word-break:
+            normal !important;
+    }
+
+
+    /* ========================================================
+       12. MEDIA / LINKS
+       ======================================================== */
+
+    #assistantPage img,
+    #assistantPage video {
+
+        max-width:
+            100% !important;
+
+        height:
+            auto !important;
+    }
+
+
+    #assistantPage a {
+
+        overflow-wrap:
+            anywhere !important;
+
+        word-break:
+            break-word !important;
+    }
+
+}
+
+
+/* AP SYNAPSE MOBILE TABLE BORDER MASTER START */
+
+@media (max-width: 760px) {
+
+    /* ========================================================
+       OUTER TABLE FRAME
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell {
+
+        overflow:
+            auto hidden !important;
+
+        border:
+            1px solid
+            rgba(218,174,86,.22) !important;
+
+        border-radius:
+            14px !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(20,21,24,.995),
+                rgba(9,10,12,.998)
+            ) !important;
+
+        box-shadow:
+            0 12px 32px
+            rgba(0,0,0,.22),
+
+            inset 0 1px 0
+            rgba(255,255,255,.045),
+
+            inset 0 0 0 1px
+            rgba(255,255,255,.012) !important;
+    }
+
+
+    /* ========================================================
+       SWIPE STRIP
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-hint {
+
+        min-height:
+            28px !important;
+
+        padding:
+            0 11px !important;
+
+        display:
+            none !important;
+
+        align-items:
+            center !important;
+
+        color:
+            rgba(222,181,94,.68) !important;
+
+        background:
+            linear-gradient(
+                90deg,
+                rgba(218,174,86,.055),
+                rgba(255,255,255,.012)
+            ) !important;
+
+        border-right:
+            1px solid
+            rgba(218,174,86,.10) !important;
+
+        border-bottom:
+            1px solid
+            rgba(218,174,86,.13) !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell.ap-table-wide
+    .ap-mobile-table-hint {
+
+        display:
+            inline-flex !important;
+    }
+
+
+    /* ========================================================
+       TABLE BASE
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell table {
+
+        border-collapse:
+            separate !important;
+
+        border-spacing:
+            0 !important;
+
+        border:
+            0 !important;
+
+        background:
+            rgba(13,14,16,.96) !important;
+    }
+
+
+    /* ========================================================
+       COLUMN HEADERS
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell th {
+
+        position:
+            relative !important;
+
+        padding:
+            12px 13px !important;
+
+        color:
+            #dfb55f !important;
+
+        -webkit-text-fill-color:
+            #dfb55f !important;
+
+        font-size:
+            10.5px !important;
+
+        font-weight:
+            720 !important;
+
+        line-height:
+            1.35 !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(218,174,86,.085),
+                rgba(218,174,86,.038)
+            ) !important;
+
+        border-top:
+            0 !important;
+
+        border-left:
+            0 !important;
+
+        border-right:
+            1px solid
+            rgba(255,255,255,.075) !important;
+
+        border-bottom:
+            1px solid
+            rgba(218,174,86,.26) !important;
+    }
+
+
+    /* ========================================================
+       BODY CELLS
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell td {
+
+        padding:
+            12px 13px !important;
+
+        color:
+            rgba(242,241,236,.84) !important;
+
+        -webkit-text-fill-color:
+            rgba(242,241,236,.84) !important;
+
+        background:
+            rgba(255,255,255,.008) !important;
+
+        border-top:
+            0 !important;
+
+        border-left:
+            0 !important;
+
+        border-right:
+            1px solid
+            rgba(255,255,255,.065) !important;
+
+        border-bottom:
+            1px solid
+            rgba(255,255,255,.070) !important;
+    }
+
+
+    /* ========================================================
+       SUBTLE ALTERNATING ROWS
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell
+    tbody tr:nth-child(even) td {
+
+        background:
+            rgba(255,255,255,.018) !important;
+    }
+
+
+    /* ========================================================
+       FIRST / STICKY COLUMN
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell
+    th:first-child {
+
+        color:
+            #e2b762 !important;
+
+        -webkit-text-fill-color:
+            #e2b762 !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                #1c1b18,
+                #171715
+            ) !important;
+
+        border-right:
+            1px solid
+            rgba(218,174,86,.26) !important;
+
+        box-shadow:
+            7px 0 16px
+            rgba(0,0,0,.22) !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell
+    td:first-child {
+
+        color:
+            #ddb159 !important;
+
+        -webkit-text-fill-color:
+            #ddb159 !important;
+
+        font-weight:
+            680 !important;
+
+        background:
+            linear-gradient(
+                90deg,
+                rgba(218,174,86,.045),
+                rgba(17,18,20,.99)
+            ) !important;
+
+        border-right:
+            1px solid
+            rgba(218,174,86,.19) !important;
+
+        box-shadow:
+            7px 0 16px
+            rgba(0,0,0,.18) !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell
+    tbody tr:nth-child(even)
+    td:first-child {
+
+        background:
+            linear-gradient(
+                90deg,
+                rgba(218,174,86,.055),
+                rgba(20,21,23,.99)
+            ) !important;
+    }
+
+
+    /* ========================================================
+       REMOVE EXCESS BORDER FROM OUTER EDGES
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell
+    th:last-child,
+
+    #assistantPage
+    .ap-mobile-table-shell
+    td:last-child {
+
+        border-right:
+            0 !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell
+    tbody tr:last-child td {
+
+        border-bottom:
+            0 !important;
+    }
+
+
+    /* ========================================================
+       STRONGER HEADER / BODY SEPARATION
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell thead {
+
+        position:
+            relative !important;
+
+        z-index:
+            4 !important;
+    }
+
+
+    /* ========================================================
+       CELL TEXT
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell th,
+
+    #assistantPage
+    .ap-mobile-table-shell td {
+
+        white-space:
+            normal !important;
+
+        overflow-wrap:
+            break-word !important;
+
+        word-break:
+            normal !important;
+
+        hyphens:
+            auto !important;
+    }
+
+
+    /* ========================================================
+       SCROLLBAR
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell::-webkit-scrollbar {
+
+        height:
+            4px !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell::-webkit-scrollbar-track {
+
+        background:
+            rgba(255,255,255,.018) !important;
+
+        border-top:
+            1px solid
+            rgba(255,255,255,.035) !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell::-webkit-scrollbar-thumb {
+
+        background:
+            linear-gradient(
+                90deg,
+                rgba(196,151,65,.42),
+                rgba(227,188,103,.58)
+            ) !important;
+
+        border-radius:
+            999px !important;
+    }
+
+
+    /* ========================================================
+       TWO-COLUMN TABLES
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell.ap-columns-2 {
+
+        overflow-x:
+            hidden !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell.ap-columns-2 table {
+
+        width:
+            100% !important;
+
+        min-width:
+            100% !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell.ap-columns-2 th,
+
+    #assistantPage
+    .ap-mobile-table-shell.ap-columns-2 td {
+
+        width:
+            50% !important;
+
+        min-width:
+            0 !important;
+    }
+
+}
+
+/* AP SYNAPSE MOBILE TABLE BORDER MASTER END */
+
+
+/* AP SYNAPSE TABLE FULL MOBILE WIDTH START */
+
+@media (max-width: 760px) {
+
+    /* ========================================================
+       TABLE GETS ALMOST ENTIRE PHONE WIDTH
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell {
+
+        width:
+            calc(100dvw - 20px) !important;
+
+        min-width:
+            calc(100dvw - 20px) !important;
+
+        max-width:
+            calc(100dvw - 20px) !important;
+
+
+        /*
+         * Break safely out of a narrow response column
+         * and centre against the phone viewport.
+         */
+
+        margin-left:
+            calc(
+                (
+                    100% -
+                    (100dvw - 20px)
+                ) / 2
+            ) !important;
+
+        margin-right:
+            calc(
+                (
+                    100% -
+                    (100dvw - 20px)
+                ) / 2
+            ) !important;
+
+
+        box-sizing:
+            border-box !important;
+
+        overflow-x:
+            auto !important;
+
+        overflow-y:
+            hidden !important;
+
+        -webkit-overflow-scrolling:
+            touch !important;
+
+        overscroll-behavior-x:
+            contain !important;
+
+        touch-action:
+            pan-x pan-y !important;
+    }
+
+
+    /* ========================================================
+       KEEP IT INSIDE MOBILE SCREEN
+       ======================================================== */
+
+    #assistantPage {
+
+        overflow-x:
+            hidden !important;
+    }
+
+
+    #assistantPage
+    .ap-table-content-owner {
+
+        overflow:
+            visible !important;
+
+        min-width:
+            0 !important;
+    }
+
+
+    /* ========================================================
+       SWIPE BAR USES FULL TABLE WIDTH
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-hint {
+
+        width:
+            100% !important;
+
+        max-width:
+            none !important;
+
+        min-height:
+            27px !important;
+
+        padding:
+            0 12px !important;
+
+        box-sizing:
+            border-box !important;
+
+        justify-content:
+            flex-start !important;
+
+        border-right:
+            0 !important;
+    }
+
+
+    /* ========================================================
+       2-COLUMN TABLE — PERFECTLY FIT SCREEN
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell.ap-columns-2 {
+
+        overflow-x:
+            hidden !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell.ap-columns-2 table {
+
+        width:
+            100% !important;
+
+        min-width:
+            100% !important;
+
+        max-width:
+            100% !important;
+
+        table-layout:
+            fixed !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell.ap-columns-2 th,
+
+    #assistantPage
+    .ap-mobile-table-shell.ap-columns-2 td {
+
+        width:
+            50% !important;
+
+        min-width:
+            0 !important;
+
+        max-width:
+            none !important;
+
+        padding:
+            12px 11px !important;
+    }
+
+
+    /* ========================================================
+       3+ COLUMNS — FULL SCREEN WINDOW + SWIPE
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell:not(.ap-columns-2)
+    table {
+
+        width:
+            max-content !important;
+
+        max-width:
+            none !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell.ap-columns-3
+    table {
+
+        min-width:
+            460px !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell.ap-columns-4
+    table {
+
+        min-width:
+            600px !important;
+    }
+
+
+    #assistantPage
+    .ap-mobile-table-shell.ap-columns-5
+    table {
+
+        min-width:
+            740px !important;
+    }
+
+
+    /* ========================================================
+       CELLS — BROADER AND MORE READABLE
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell:not(.ap-columns-2)
+    th,
+
+    #assistantPage
+    .ap-mobile-table-shell:not(.ap-columns-2)
+    td {
+
+        min-width:
+            140px !important;
+
+        max-width:
+            230px !important;
+    }
+
+
+    /* First comparison label column */
+
+    #assistantPage
+    .ap-mobile-table-shell:not(.ap-columns-2)
+    th:first-child,
+
+    #assistantPage
+    .ap-mobile-table-shell:not(.ap-columns-2)
+    td:first-child {
+
+        min-width:
+            126px !important;
+
+        max-width:
+            150px !important;
+    }
+
+
+    /* ========================================================
+       TEXT QUALITY
+       ======================================================== */
+
+    #assistantPage
+    .ap-mobile-table-shell th,
+
+    #assistantPage
+    .ap-mobile-table-shell td {
+
+        overflow-wrap:
+            break-word !important;
+
+        word-break:
+            normal !important;
+
+        white-space:
+            normal !important;
+
+        hyphens:
+            auto !important;
+    }
+
+
+    /* ========================================================
+       SMALL PHONES
+       ======================================================== */
+
+    @media (max-width: 380px) {
+
+        #assistantPage
+        .ap-mobile-table-shell {
+
+            width:
+                calc(100dvw - 16px) !important;
+
+            min-width:
+                calc(100dvw - 16px) !important;
+
+            max-width:
+                calc(100dvw - 16px) !important;
+
+
+            margin-left:
+                calc(
+                    (
+                        100% -
+                        (100dvw - 16px)
+                    ) / 2
+                ) !important;
+
+            margin-right:
+                calc(
+                    (
+                        100% -
+                        (100dvw - 16px)
+                    ) / 2
+                ) !important;
+        }
+    }
+
+}
+
+/* AP SYNAPSE TABLE FULL MOBILE WIDTH END */

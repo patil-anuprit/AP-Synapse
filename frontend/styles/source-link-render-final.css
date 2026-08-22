@@ -1,0 +1,197 @@
+﻿/* ============================================================
+   AP SYNAPSE — SOURCE LINK FINAL
+   ============================================================ */
+
+.ap-source-repaired-line {
+
+    width:100% !important;
+
+    margin:10px 0 !important;
+
+    display:flex !important;
+
+    flex-wrap:wrap !important;
+
+    align-items:center !important;
+
+    gap:7px !important;
+
+    white-space:normal !important;
+
+    overflow:visible !important;
+
+    background:transparent !important;
+
+    border:0 !important;
+
+    font-family:inherit !important;
+
+    box-sizing:border-box !important;
+}
+
+
+.ap-source-final-card {
+
+    max-width:100% !important;
+
+    min-height:38px !important;
+
+    padding:8px 11px !important;
+
+    display:inline-flex !important;
+
+    align-items:center !important;
+
+    gap:8px !important;
+
+    box-sizing:border-box !important;
+
+    color:
+        rgba(239,237,230,.90) !important;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(211,170,82,.065),
+            rgba(255,255,255,.018)
+        ) !important;
+
+    border:
+        1px solid
+        rgba(211,170,82,.20) !important;
+
+    border-radius:10px !important;
+
+    text-decoration:none !important;
+
+    font-size:11px !important;
+
+    line-height:1.25 !important;
+
+    overflow:hidden !important;
+
+    cursor:pointer !important;
+
+    transition:
+        border-color .15s ease,
+        background .15s ease,
+        transform .15s ease !important;
+}
+
+
+.ap-source-final-card:hover {
+
+    border-color:
+        rgba(211,170,82,.40) !important;
+
+    background:
+        rgba(211,170,82,.085) !important;
+}
+
+
+.ap-source-final-card:active {
+
+    transform:
+        scale(.985) !important;
+}
+
+
+.ap-source-final-icon {
+
+    width:20px !important;
+    height:20px !important;
+
+    flex:0 0 20px !important;
+
+    display:grid !important;
+    place-items:center !important;
+
+    border-radius:6px !important;
+
+    color:
+        rgba(224,181,91,.90) !important;
+
+    background:
+        rgba(211,170,82,.075) !important;
+}
+
+
+.ap-source-final-icon svg {
+
+    width:12px !important;
+    height:12px !important;
+
+    fill:none !important;
+
+    stroke:currentColor !important;
+
+    stroke-width:1.7 !important;
+
+    stroke-linecap:round !important;
+    stroke-linejoin:round !important;
+}
+
+
+.ap-source-final-copy {
+
+    min-width:0 !important;
+
+    display:flex !important;
+
+    flex-direction:column !important;
+
+    gap:1px !important;
+}
+
+
+.ap-source-final-label {
+
+    color:
+        rgba(224,181,91,.72) !important;
+
+    font-size:8px !important;
+
+    font-weight:700 !important;
+
+    letter-spacing:.09em !important;
+
+    text-transform:uppercase !important;
+}
+
+
+.ap-source-final-domain {
+
+    max-width:230px !important;
+
+    overflow:hidden !important;
+
+    text-overflow:ellipsis !important;
+
+    white-space:nowrap !important;
+
+    color:
+        rgba(245,243,237,.90) !important;
+
+    font-size:10px !important;
+
+    font-weight:560 !important;
+}
+
+
+@media (max-width:760px) {
+
+    .ap-source-final-card {
+
+        width:100% !important;
+
+        min-width:0 !important;
+    }
+
+
+    .ap-source-final-domain {
+
+        max-width:
+            calc(100vw - 125px) !important;
+    }
+
+}

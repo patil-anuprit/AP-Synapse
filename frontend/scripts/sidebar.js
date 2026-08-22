@@ -479,6 +479,12 @@ requestAnimationFrame(() => {
             conversation.title
         );
 
+        if (
+            typeof window.APAfterHistoryRestore === "function"
+        ) {
+            window.APAfterHistoryRestore(); // AP HISTORY ONE SHOT
+        }
+
     });
 
 });

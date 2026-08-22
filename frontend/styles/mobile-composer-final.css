@@ -1,0 +1,157 @@
+﻿/* ============================================================
+   AP SYNAPSE — MOBILE COMPOSER FINAL
+
+   - Send arrow always visible
+   - iPhone safe-area aware
+   - Does NOT alter desktop
+   ============================================================ */
+
+@media (max-width:760px) {
+
+    /* actual composer located by JS */
+
+    .ap-mobile-composer-final {
+
+        position:relative !important;
+
+        overflow:visible !important;
+
+        box-sizing:border-box !important;
+    }
+
+
+    /* --------------------------------------------------------
+       TEXT INPUT
+       reserve space for send arrow
+       -------------------------------------------------------- */
+
+    .ap-mobile-chat-input-final {
+
+        box-sizing:border-box !important;
+
+        padding-right:58px !important;
+
+        min-width:0 !important;
+
+        max-width:100% !important;
+    }
+
+
+    /* --------------------------------------------------------
+       SEND ARROW
+       -------------------------------------------------------- */
+
+    .ap-mobile-send-final {
+
+        position:absolute !important;
+
+        top:7px !important;
+
+        right:
+            max(
+                7px,
+                env(safe-area-inset-right)
+            ) !important;
+
+        left:auto !important;
+        bottom:auto !important;
+
+        width:42px !important;
+        min-width:42px !important;
+        max-width:42px !important;
+
+        height:42px !important;
+        min-height:42px !important;
+        max-height:42px !important;
+
+        margin:0 !important;
+        padding:0 !important;
+
+        display:grid !important;
+        place-items:center !important;
+
+        flex:0 0 42px !important;
+
+        visibility:visible !important;
+        opacity:1 !important;
+
+        pointer-events:auto !important;
+
+        transform:none !important;
+
+        z-index:100 !important;
+
+        box-sizing:border-box !important;
+
+        touch-action:manipulation !important;
+
+        -webkit-tap-highlight-color:
+            transparent !important;
+    }
+
+
+    .ap-mobile-send-final svg {
+
+        width:18px !important;
+        height:18px !important;
+
+        display:block !important;
+
+        pointer-events:none !important;
+    }
+
+
+    /* --------------------------------------------------------
+       IPHONE / SAFARI
+       -------------------------------------------------------- */
+
+    @supports (-webkit-touch-callout:none) {
+
+        .ap-mobile-composer-final {
+
+            padding-right:
+                env(safe-area-inset-right) !important;
+        }
+
+
+        .ap-mobile-send-final {
+
+            right:
+                max(
+                    8px,
+                    env(safe-area-inset-right)
+                ) !important;
+
+            visibility:visible !important;
+            opacity:1 !important;
+
+            -webkit-transform:
+                translateZ(0) !important;
+
+            transform:
+                translateZ(0) !important;
+        }
+    }
+
+}
+
+
+/* Landscape iPhone safe areas */
+
+@media (
+    max-width:932px
+)
+and (
+    orientation:landscape
+) {
+
+    .ap-mobile-send-final {
+
+        right:
+            max(
+                8px,
+                env(safe-area-inset-right)
+            ) !important;
+    }
+
+}

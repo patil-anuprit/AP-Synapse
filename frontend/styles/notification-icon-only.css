@@ -1,0 +1,335 @@
+﻿/* ============================================================
+   AP SYNAPSE — STABLE NOTIFICATION CONTROL
+   ============================================================ */
+
+.ap-notification-icon-only {
+
+    width: 40px !important;
+    height: 40px !important;
+
+    padding: 0 !important;
+
+    display: inline-grid !important;
+    place-items: center !important;
+
+    flex: 0 0 40px !important;
+
+    color: rgba(222,177,87,.92) !important;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.035),
+            rgba(255,255,255,.012)
+        ) !important;
+
+    border:
+        1px solid rgba(216,172,82,.22) !important;
+
+    border-radius: 12px !important;
+
+    cursor: pointer !important;
+
+    pointer-events: auto !important;
+
+    z-index: 50 !important;
+}
+
+
+.ap-notification-icon-only svg {
+
+    width: 17px !important;
+    height: 17px !important;
+
+    fill: none !important;
+    stroke: currentColor !important;
+
+    stroke-width: 1.7 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+}
+
+
+.ap-notification-icon-only:hover {
+
+    background:
+        rgba(216,172,82,.07) !important;
+
+    border-color:
+        rgba(216,172,82,.36) !important;
+}
+
+
+.ap-notification-icon-only:active {
+
+    transform: scale(.94) !important;
+}
+
+
+/* ============================================================
+   OLD DEMO NOTIFICATION SYSTEM REMAINS DEAD
+   ============================================================ */
+
+#apSynapseNotificationCenter {
+
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+
+/* ============================================================
+   NEW STABLE NOTIFICATION PANEL
+   ============================================================ */
+
+#apStableNotificationPanel {
+
+    position: fixed !important;
+
+    top: 76px !important;
+    right: 14px !important;
+
+    width: min(340px, calc(100vw - 28px)) !important;
+
+    max-height: calc(100dvh - 92px) !important;
+
+    display: none !important;
+
+    overflow: hidden !important;
+
+    color: #f5f4ef !important;
+
+    background:
+        linear-gradient(
+            155deg,
+            rgba(20,21,24,.99),
+            rgba(8,9,11,.995)
+        ) !important;
+
+    border:
+        1px solid rgba(255,255,255,.085) !important;
+
+    border-radius: 18px !important;
+
+    box-shadow:
+        0 28px 80px rgba(0,0,0,.58),
+        inset 0 1px 0 rgba(255,255,255,.04) !important;
+
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+
+    z-index: 60000 !important;
+}
+
+
+#apStableNotificationPanel.ap-open {
+
+    display: block !important;
+}
+
+
+.ap-stable-notification-header {
+
+    position: relative !important;
+
+    padding:
+        17px 56px 15px 16px !important;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.06) !important;
+}
+
+
+.ap-stable-notification-kicker {
+
+    display: block !important;
+
+    margin-bottom: 5px !important;
+
+    color: #d9ad56 !important;
+
+    font-size: 7.5px !important;
+    font-weight: 780 !important;
+
+    letter-spacing: .18em !important;
+
+    text-transform: uppercase !important;
+}
+
+
+.ap-stable-notification-title {
+
+    margin: 0 !important;
+
+    color: #f7f6f1 !important;
+
+    font-size: 21px !important;
+    line-height: 1.06 !important;
+
+    font-weight: 730 !important;
+
+    letter-spacing: -.03em !important;
+}
+
+
+.ap-stable-notification-subtitle {
+
+    margin: 6px 0 0 !important;
+
+    color: rgba(230,230,224,.48) !important;
+
+    font-size: 10px !important;
+    line-height: 1.4 !important;
+}
+
+
+.ap-stable-notification-close {
+
+    position: absolute !important;
+
+    top: 13px !important;
+    right: 13px !important;
+
+    width: 34px !important;
+    height: 34px !important;
+
+    padding: 0 !important;
+
+    display: grid !important;
+    place-items: center !important;
+
+    color: rgba(245,245,240,.72) !important;
+
+    background:
+        rgba(255,255,255,.045) !important;
+
+    border:
+        1px solid rgba(255,255,255,.085) !important;
+
+    border-radius: 10px !important;
+
+    cursor: pointer !important;
+}
+
+
+.ap-stable-notification-close svg {
+
+    width: 15px !important;
+    height: 15px !important;
+
+    fill: none !important;
+    stroke: currentColor !important;
+
+    stroke-width: 1.8 !important;
+    stroke-linecap: round !important;
+}
+
+
+.ap-stable-notification-body {
+
+    min-height: 250px !important;
+
+    padding: 34px 22px !important;
+
+    display: flex !important;
+
+    flex-direction: column !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    text-align: center !important;
+}
+
+
+.ap-stable-notification-check {
+
+    width: 50px !important;
+    height: 50px !important;
+
+    margin-bottom: 15px !important;
+
+    display: grid !important;
+    place-items: center !important;
+
+    color: #ddb159 !important;
+
+    font-size: 19px !important;
+
+    border:
+        1px solid rgba(221,177,89,.27) !important;
+
+    border-radius: 50% !important;
+
+    background:
+        rgba(221,177,89,.045) !important;
+}
+
+
+.ap-stable-notification-empty-title {
+
+    color: #f2f1ec !important;
+
+    font-size: 13px !important;
+    font-weight: 680 !important;
+}
+
+
+.ap-stable-notification-empty-copy {
+
+    max-width: 225px !important;
+
+    margin-top: 7px !important;
+
+    color: rgba(227,227,221,.44) !important;
+
+    font-size: 10px !important;
+    line-height: 1.5 !important;
+}
+
+
+.ap-stable-notification-footer {
+
+    padding: 13px 16px !important;
+
+    border-top:
+        1px solid rgba(255,255,255,.055) !important;
+
+    background:
+        rgba(255,255,255,.01) !important;
+}
+
+
+.ap-stable-notification-preferences {
+
+    padding: 0 !important;
+
+    color: #d6a94f !important;
+
+    font-size: 9px !important;
+    font-weight: 600 !important;
+
+    background: transparent !important;
+
+    border: 0 !important;
+
+    cursor: pointer !important;
+}
+
+
+@media (max-width:760px) {
+
+    #apStableNotificationPanel {
+
+        top: 72px !important;
+
+        left: 10px !important;
+        right: 10px !important;
+
+        width: auto !important;
+
+        max-height:
+            calc(100dvh - 82px) !important;
+    }
+
+}

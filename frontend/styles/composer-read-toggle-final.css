@@ -1,0 +1,36 @@
+﻿/* ============================================================
+   AP SYNAPSE — COMPOSER READ / STOP TOGGLE
+   ============================================================ */
+
+.ap-composer-read-toggle.ap-reading-active {
+
+    color:
+        rgba(219,178,91,.96) !important;
+
+    background:
+        rgba(219,178,91,.07) !important;
+
+    border-color:
+        rgba(219,178,91,.24) !important;
+}
+
+
+.ap-composer-read-toggle.ap-reading-active svg {
+
+    stroke:
+        currentColor !important;
+}
+
+
+/* subtle stop square */
+
+.ap-composer-read-stop-icon {
+
+    width:13px !important;
+    height:13px !important;
+
+    display:block !important;
+
+    pointer-events:none !important;
+}
+

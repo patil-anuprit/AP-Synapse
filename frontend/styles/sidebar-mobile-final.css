@@ -1,0 +1,779 @@
+/* ============================================================
+   AP SYNAPSE — REAL MOBILE SIDEBAR FINAL
+   Exact native structure:
+   .sidebar
+   .recent-group
+   .sidebar-footer
+   ============================================================ */
+
+@media (max-width:760px) {
+
+    /* ========================================================
+       SIDEBAR = FIXED HEIGHT FLEX SHELL
+       ======================================================== */
+
+    .sidebar {
+
+        height:100dvh !important;
+        max-height:100dvh !important;
+
+        display:flex !important;
+        flex-direction:column !important;
+
+        overflow:hidden !important;
+
+        box-sizing:border-box !important;
+    }
+
+
+    /* ========================================================
+       WORKSPACE NAVIGATION
+       ======================================================== */
+
+    .sidebar
+    .sidebar-group:not(.recent-group) {
+
+        flex:0 0 auto !important;
+
+        min-height:0 !important;
+
+        overflow:visible !important;
+    }
+
+
+    /* ========================================================
+       HISTORY / RECENT
+       THIS IS THE REAL SCROLLER
+       ======================================================== */
+
+    .sidebar
+    .recent-group {
+
+        flex:1 1 0 !important;
+
+        min-height:125px !important;
+        max-height:none !important;
+
+        margin-top:8px !important;
+        margin-bottom:0 !important;
+
+        padding:
+            4px 5px 12px !important;
+
+        overflow-y:auto !important;
+        overflow-x:hidden !important;
+
+        -webkit-overflow-scrolling:touch !important;
+
+        overscroll-behavior-y:contain !important;
+
+        touch-action:pan-y !important;
+
+        scrollbar-width:thin !important;
+
+        scrollbar-color:
+            rgba(211,170,82,.42)
+            transparent !important;
+
+        box-sizing:border-box !important;
+
+        position:relative !important;
+
+        z-index:2 !important;
+    }
+
+
+    .sidebar
+    .recent-group::-webkit-scrollbar {
+
+        width:3px !important;
+    }
+
+
+    .sidebar
+    .recent-group::-webkit-scrollbar-track {
+
+        background:transparent !important;
+    }
+
+
+    .sidebar
+    .recent-group::-webkit-scrollbar-thumb {
+
+        background:
+            rgba(211,170,82,.42) !important;
+
+        border-radius:999px !important;
+    }
+
+
+    /* ========================================================
+       HISTORY CARDS
+       ======================================================== */
+
+    .sidebar
+    .recent-group
+    :is(
+        .history-item,
+        .history-entry,
+        .conversation-item,
+        [data-conversation-id],
+        [data-history-id]
+    ) {
+
+        width:100% !important;
+
+        min-height:58px !important;
+
+        margin:
+            0 0 7px !important;
+
+        padding:
+            9px 32px 9px 11px !important;
+
+        overflow:hidden !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.07) !important;
+
+        border-radius:
+            10px !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(255,255,255,.026),
+                rgba(255,255,255,.010)
+            ) !important;
+
+        box-sizing:border-box !important;
+
+        cursor:pointer !important;
+    }
+
+
+    .sidebar
+    .recent-group
+    :is(
+        .history-item,
+        .history-entry,
+        .conversation-item,
+        [data-conversation-id],
+        [data-history-id]
+    ):active {
+
+        border-color:
+            rgba(216,174,86,.26) !important;
+
+        background:
+            rgba(216,174,86,.035) !important;
+
+        transform:
+            scale(.988) !important;
+    }
+
+
+    /* ========================================================
+       FOOTER
+       SETTINGS + PROFILE ALWAYS REMAIN ACCESSIBLE
+       ======================================================== */
+
+    .sidebar
+    .sidebar-footer {
+
+        flex:0 0 auto !important;
+
+        position:relative !important;
+
+        left:auto !important;
+        right:auto !important;
+        top:auto !important;
+        bottom:auto !important;
+
+        width:100% !important;
+
+        margin:0 !important;
+
+        padding:
+            8px 8px 10px !important;
+
+        display:flex !important;
+
+        flex-direction:column !important;
+
+        gap:3px !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(10,11,13,.98),
+                rgba(8,9,11,1)
+            ) !important;
+
+        border-top:
+            1px solid
+            rgba(255,255,255,.06) !important;
+
+        box-sizing:border-box !important;
+
+        z-index:20 !important;
+    }
+
+
+    /* ========================================================
+       SETTINGS ROW
+       ======================================================== */
+
+    .sidebar
+    .sidebar-footer
+    .ap-real-settings-row {
+
+        width:100% !important;
+
+        min-height:42px !important;
+
+        margin:0 !important;
+
+        padding:
+            0 11px !important;
+
+        display:flex !important;
+
+        align-items:center !important;
+
+        justify-content:flex-start !important;
+
+        gap:11px !important;
+
+        color:
+            rgba(242,241,236,.90) !important;
+
+        background:
+            transparent !important;
+
+        border:
+            1px solid
+            transparent !important;
+
+        border-radius:
+            10px !important;
+
+        box-sizing:
+            border-box !important;
+
+        cursor:pointer !important;
+    }
+
+
+    .sidebar
+    .sidebar-footer
+    .ap-real-settings-row:hover {
+
+        background:
+            rgba(255,255,255,.025) !important;
+
+        border-color:
+            rgba(255,255,255,.05) !important;
+    }
+
+
+    .sidebar
+    .sidebar-footer
+    .ap-real-settings-label {
+
+        display:inline-flex !important;
+
+        align-items:center !important;
+
+        color:
+            #f0efe9 !important;
+
+        font-size:
+            12px !important;
+
+        line-height:
+            1 !important;
+
+        font-weight:
+            590 !important;
+
+        white-space:
+            nowrap !important;
+    }
+
+
+    /* ========================================================
+       PROFILE ROW SAME PROFESSIONAL WIDTH
+       ======================================================== */
+
+    .sidebar
+    .sidebar-footer
+    :is(
+        [data-action="profile"],
+        .profile-btn,
+        .profile-button
+    ) {
+
+        width:100% !important;
+
+        min-height:42px !important;
+
+        justify-content:flex-start !important;
+
+        padding:
+            0 11px !important;
+
+        border-radius:
+            10px !important;
+    }
+
+}
+
+
+/* AP SYNAPSE SIDEBAR LAST VISUAL FIX START */
+
+@media (max-width:760px) {
+
+    /* ========================================================
+       SIDEBAR MASTER LAYOUT
+       ======================================================== */
+
+    .sidebar {
+
+        height:100dvh !important;
+        max-height:100dvh !important;
+
+        display:flex !important;
+        flex-direction:column !important;
+
+        overflow:hidden !important;
+    }
+
+
+    /* ========================================================
+       WORKSPACE NAV — DO NOT STEAL HISTORY SPACE
+       ======================================================== */
+
+    .sidebar
+    .sidebar-group:not(.recent-group) {
+
+        flex:0 0 auto !important;
+
+        margin-bottom:4px !important;
+    }
+
+
+    /* ========================================================
+       HISTORY — REAL SCROLLABLE REGION
+       ======================================================== */
+
+    .sidebar
+    .recent-group {
+
+        flex:1 1 0 !important;
+
+        width:100% !important;
+
+        min-height:145px !important;
+        max-height:none !important;
+
+        margin:
+            4px 0 0 !important;
+
+        padding:
+            5px 5px 10px !important;
+
+        overflow-y:auto !important;
+        overflow-x:hidden !important;
+
+        -webkit-overflow-scrolling:touch !important;
+
+        overscroll-behavior-y:contain !important;
+
+        touch-action:pan-y !important;
+
+        box-sizing:border-box !important;
+
+        scrollbar-width:thin !important;
+
+        scrollbar-color:
+            rgba(215,173,85,.45)
+            transparent !important;
+    }
+
+
+    .sidebar
+    .recent-group::-webkit-scrollbar {
+
+        width:3px !important;
+    }
+
+
+    .sidebar
+    .recent-group::-webkit-scrollbar-thumb {
+
+        background:
+            rgba(215,173,85,.45) !important;
+
+        border-radius:999px !important;
+    }
+
+
+    /* ========================================================
+       HISTORY CARDS
+       ======================================================== */
+
+    .sidebar
+    .recent-group
+    > * {
+
+        max-width:100% !important;
+
+        box-sizing:border-box !important;
+    }
+
+
+    .sidebar
+    .recent-group
+    :is(
+        .history-item,
+        .history-entry,
+        .conversation-item,
+        [data-conversation-id],
+        [data-history-id]
+    ) {
+
+        width:100% !important;
+
+        margin:
+            0 0 7px !important;
+
+        padding:
+            9px 32px 9px 11px !important;
+
+        border-radius:
+            10px !important;
+
+        overflow:hidden !important;
+    }
+
+
+    /* ========================================================
+       FOOTER
+       ======================================================== */
+
+    .sidebar
+    .sidebar-footer {
+
+        flex:0 0 auto !important;
+
+        width:100% !important;
+
+        min-width:0 !important;
+        max-width:none !important;
+
+        height:auto !important;
+        min-height:92px !important;
+
+        margin:0 !important;
+
+        padding:
+            7px 8px 10px !important;
+
+        overflow:visible !important;
+
+        display:flex !important;
+        flex-direction:column !important;
+
+        align-items:stretch !important;
+
+        gap:3px !important;
+
+        box-sizing:border-box !important;
+
+        border-top:
+            1px solid
+            rgba(255,255,255,.06) !important;
+
+        background:
+            rgba(8,9,11,.985) !important;
+    }
+
+
+    /* ========================================================
+       REAL SETTINGS BUTTON
+       Exact element confirmed by console:
+       #sidebarSettingsBtn
+       ======================================================== */
+
+    .sidebar
+    #sidebarSettingsBtn {
+
+        position:relative !important;
+
+        left:auto !important;
+        right:auto !important;
+        top:auto !important;
+        bottom:auto !important;
+
+        width:100% !important;
+        min-width:100% !important;
+        max-width:100% !important;
+
+        height:42px !important;
+        min-height:42px !important;
+        max-height:42px !important;
+
+        margin:0 !important;
+
+        padding:
+            0 12px !important;
+
+        display:flex !important;
+
+        align-items:center !important;
+
+        justify-content:flex-start !important;
+
+        flex:0 0 42px !important;
+
+        gap:11px !important;
+
+        overflow:visible !important;
+
+        white-space:nowrap !important;
+
+        box-sizing:border-box !important;
+
+        border:
+            1px solid
+            transparent !important;
+
+        border-radius:
+            10px !important;
+
+        background:
+            transparent !important;
+
+        color:
+            rgba(244,243,238,.90) !important;
+
+        cursor:pointer !important;
+    }
+
+
+    .sidebar
+    #sidebarSettingsBtn:hover {
+
+        background:
+            rgba(255,255,255,.026) !important;
+
+        border-color:
+            rgba(255,255,255,.055) !important;
+    }
+
+
+    /* Settings icon */
+
+    .sidebar
+    #sidebarSettingsBtn
+    :is(
+        svg,
+        .icon,
+        i
+    ) {
+
+        flex:
+            0 0 17px !important;
+
+        width:
+            17px !important;
+
+        height:
+            17px !important;
+
+        min-width:
+            17px !important;
+
+        max-width:
+            17px !important;
+    }
+
+
+    /* THIS fixes the currently clipped "s" */
+
+    .sidebar
+    #sidebarSettingsBtn
+    .ap-real-settings-label {
+
+        position:static !important;
+
+        display:inline-flex !important;
+
+        align-items:center !important;
+
+        flex:
+            1 1 auto !important;
+
+        width:auto !important;
+        min-width:0 !important;
+        max-width:none !important;
+
+        height:auto !important;
+
+        margin:0 !important;
+        padding:0 !important;
+
+        overflow:visible !important;
+
+        opacity:1 !important;
+
+        visibility:visible !important;
+
+        white-space:nowrap !important;
+
+        text-indent:0 !important;
+
+        transform:none !important;
+
+        color:
+            #f2f1ec !important;
+
+        -webkit-text-fill-color:
+            #f2f1ec !important;
+
+        font-size:
+            12px !important;
+
+        line-height:
+            1 !important;
+
+        font-weight:
+            590 !important;
+
+        letter-spacing:
+            -.01em !important;
+    }
+
+
+    /* ========================================================
+       PROFILE — MATCH SETTINGS
+       ======================================================== */
+
+    .sidebar
+    .sidebar-footer
+    :is(
+        [data-action="profile"],
+        .profile-btn,
+        .profile-button
+    ) {
+
+        width:100% !important;
+
+        min-width:100% !important;
+
+        min-height:42px !important;
+
+        margin:0 !important;
+
+        padding:
+            0 12px !important;
+
+        display:flex !important;
+
+        align-items:center !important;
+
+        justify-content:flex-start !important;
+
+        gap:11px !important;
+
+        overflow:visible !important;
+
+        border-radius:
+            10px !important;
+
+        box-sizing:
+            border-box !important;
+    }
+
+}
+
+/* AP SYNAPSE SIDEBAR LAST VISUAL FIX END */
+
+/* ============================================================
+   AP SYNAPSE — HISTORY SCROLL GUIDANCE
+   ============================================================ */
+
+@media (max-width:760px) {
+
+    .sidebar .recent-group::before {
+
+        content:
+            "Scroll to view previous history  ↓";
+
+        position:
+            sticky !important;
+
+        top:
+            0 !important;
+
+        z-index:
+            15 !important;
+
+        display:
+            block !important;
+
+        width:
+            100% !important;
+
+        margin:
+            0 0 7px !important;
+
+        padding:
+            7px 10px !important;
+
+        box-sizing:
+            border-box !important;
+
+        color:
+            rgba(214, 179, 108, .60) !important;
+
+        font-size:
+            8px !important;
+
+        line-height:
+            1.2 !important;
+
+        font-weight:
+            560 !important;
+
+        letter-spacing:
+            .045em !important;
+
+        text-align:
+            left !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(13,14,16,.98),
+                rgba(13,14,16,.93)
+            ) !important;
+
+        border-bottom:
+            1px solid
+            rgba(255,255,255,.045) !important;
+
+        backdrop-filter:
+            blur(10px) !important;
+
+        -webkit-backdrop-filter:
+            blur(10px) !important;
+
+        pointer-events:
+            none !important;
+    }
+
+}
+

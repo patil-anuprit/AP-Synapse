@@ -1,0 +1,96 @@
+/* ============================================================
+   AP SYNAPSE — ONE MOBILE SCROLLBAR
+   Visual layer only. Does NOT disable scrolling.
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    /*
+     * Hide ALL native scrollbar visuals while Assistant/Home
+     * is active. Scrolling itself continues normally.
+     */
+
+    html.ap-one-mobile-scrollbar,
+    html.ap-one-mobile-scrollbar body,
+    html.ap-one-mobile-scrollbar body * {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+
+
+    html.ap-one-mobile-scrollbar::-webkit-scrollbar,
+    html.ap-one-mobile-scrollbar body::-webkit-scrollbar,
+    html.ap-one-mobile-scrollbar body *::-webkit-scrollbar {
+        width: 0 !important;
+        height: 0 !important;
+        display: none !important;
+    }
+
+
+    /*
+     * Hide any old DOM-based custom scrollbar that AP Synapse
+     * might already have.
+     */
+
+    html.ap-one-mobile-scrollbar
+    .ap-old-scroll-visual-hidden {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+    }
+
+
+    /* ========================================================
+       THE ONLY VISIBLE SCROLL INDICATOR
+       ======================================================== */
+
+    .ap-mobile-single-scrollbar {
+        position: fixed !important;
+
+        z-index: 999999 !important;
+
+        top: 72px !important;
+        right: 5px !important;
+        bottom: 10px !important;
+
+        width: 3px !important;
+
+        pointer-events: none !important;
+
+        opacity: 1;
+
+        background: transparent;
+    }
+
+
+    .ap-mobile-single-scrollbar-thumb {
+        position: absolute !important;
+
+        top: 0;
+        right: 0;
+
+        width: 3px !important;
+
+        min-height: 28px;
+
+        border-radius: 999px;
+
+        background:
+            rgba(255, 255, 255, 0.24);
+
+        box-shadow:
+            0 0 8px
+            rgba(0, 0, 0, 0.25);
+
+        transition:
+            opacity 140ms ease;
+
+        opacity: .72;
+    }
+
+
+    .ap-mobile-single-scrollbar.no-scroll {
+        opacity: 0 !important;
+    }
+
+}

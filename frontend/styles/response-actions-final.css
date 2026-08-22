@@ -1,0 +1,174 @@
+﻿/* ============================================================
+   AP SYNAPSE — RESPONSE ACTIONS FINAL
+   Copy + Read
+   ============================================================ */
+
+.ap-final-response-actions {
+
+    width:100% !important;
+
+    margin:
+        14px 0 3px !important;
+
+    padding-top:
+        9px !important;
+
+    display:flex !important;
+
+    align-items:center !important;
+
+    gap:7px !important;
+
+    box-sizing:border-box !important;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.055) !important;
+}
+
+
+.ap-final-response-action {
+
+    min-width:74px !important;
+    height:34px !important;
+
+    padding:
+        0 11px !important;
+
+    display:inline-flex !important;
+
+    align-items:center !important;
+    justify-content:center !important;
+
+    gap:7px !important;
+
+    color:
+        rgba(232,231,226,.68) !important;
+
+    background:
+        rgba(255,255,255,.018) !important;
+
+    border:
+        1px solid
+        rgba(255,255,255,.06) !important;
+
+    border-radius:
+        9px !important;
+
+    font:inherit !important;
+
+    font-size:
+        10px !important;
+
+    line-height:1 !important;
+
+    font-weight:
+        560 !important;
+
+    cursor:pointer !important;
+
+    box-sizing:border-box !important;
+
+    transition:
+        color .14s ease,
+        background .14s ease,
+        border-color .14s ease,
+        transform .14s ease !important;
+
+    -webkit-tap-highlight-color:
+        transparent !important;
+}
+
+
+.ap-final-response-action:hover {
+
+    color:
+        rgba(246,244,238,.94) !important;
+
+    background:
+        rgba(255,255,255,.035) !important;
+
+    border-color:
+        rgba(211,170,82,.20) !important;
+}
+
+
+.ap-final-response-action:active {
+
+    transform:
+        scale(.97) !important;
+}
+
+
+.ap-final-response-action svg {
+
+    width:14px !important;
+    height:14px !important;
+
+    flex:
+        0 0 14px !important;
+
+    display:block !important;
+
+    fill:none !important;
+
+    stroke:currentColor !important;
+
+    stroke-width:1.7 !important;
+
+    stroke-linecap:round !important;
+    stroke-linejoin:round !important;
+}
+
+
+.ap-final-response-action.ap-copied {
+
+    color:
+        rgba(220,181,96,.95) !important;
+
+    border-color:
+        rgba(220,181,96,.25) !important;
+}
+
+
+.ap-final-response-action.ap-reading {
+
+    color:
+        rgba(220,181,96,.96) !important;
+
+    background:
+        rgba(220,181,96,.055) !important;
+
+    border-color:
+        rgba(220,181,96,.26) !important;
+}
+
+
+@media (max-width:760px) {
+
+    .ap-final-response-actions {
+
+        margin-top:
+            12px !important;
+
+        padding-top:
+            8px !important;
+    }
+
+
+    .ap-final-response-action {
+
+        min-width:
+            68px !important;
+
+        height:
+            33px !important;
+
+        padding:
+            0 10px !important;
+
+        font-size:
+            9.5px !important;
+    }
+
+}

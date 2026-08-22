@@ -1,44 +1,83 @@
 ﻿(() => {
     "use strict";
 
-    const API =
-        ["localhost", "127.0.0.1"].includes(location.hostname)
-            ? "http://localhost:5000/chat"
-            : "https://api.ap-synapse.com/chat";
-
-    const WAKE_PHRASES = [
-        "hey aprisha",
-        "hi aprisha",
-        "aprisha"
-    ];
+    /* =========================================================
+       AP SYNAPSE
+       APRISHA INSTANT PRESENCE MASTER
+       ========================================================= */
 
     const SpeechRecognition =
         window.SpeechRecognition ||
         window.webkitSpeechRecognition;
 
+    const LOCAL =
+        ["localhost", "127.0.0.1"]
+            .includes(location.hostname);
+
+    const API =
+        LOCAL
+            ? "http://localhost:5000/chat"
+            : "https://api.ap-synapse.com/chat";
+
+
+    const randomId = () => {
+
+        try {
+            return crypto.randomUUID();
+        }
+        catch {
+            return (
+                Date.now().toString(36) +
+                Math.random()
+                    .toString(36)
+                    .slice(2)
+            );
+        }
+    };
+
+
     const state = {
+
         enabled:
-            localStorage.getItem("apAprishaEnabled") === "true",
+            localStorage.getItem(
+                "apAprishaEnabled"
+            ) !== "false",
 
-        wakeListening: false,
-        commandListening: false,
-        awake: false,
-        thinking: false,
+        wakeActive:
+            false,
 
-        stayUntil: 0,
+        commandActive:
+            false,
 
-        wakeRecognizer: null,
-        commandRecognizer: null,
+        awake:
+            false,
+
+        thinking:
+            false,
+
+        wakeRecognition:
+            null,
+
+        commandRecognition:
+            null,
+
+        stayUntil:
+            0,
+
+        restarting:
+            false,
 
         sessionId:
-            localStorage.getItem("apAprishaSessionId") ||
+            localStorage.getItem(
+                "apAprishaSessionId"
+            )
+            ||
             (
-                "aprisha-web-" +
-                crypto.randomUUID()
-            ),
-
-        lastTranscript: ""
+                "aprisha-" +
+                randomId()
+            )
     };
+
 
     localStorage.setItem(
         "apAprishaSessionId",
@@ -46,9 +85,18 @@
     );
 
 
-    /* ========================================================
-       UI
-       ======================================================== */
+    const WAKE_FORMS = [
+        "hey aprisha",
+        "hey a prisha",
+        "hey aprisa",
+        "hey apreesha",
+        "hey aprisha."
+    ];
+
+
+    /* =========================================================
+       CREATE UI
+       ========================================================= */
 
     function createUI() {
 
@@ -60,34 +108,73 @@
             return;
         }
 
+
         const root =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         root.id =
             "apAprishaUniversal";
 
+
         root.innerHTML = `
+
+            <!-- ONE-TIME MICROPHONE ACTIVATION -->
+
+            <div
+                id="apAprishaPermission"
+                class="ap-aprisha-permission"
+                hidden
+            >
+                <div class="ap-aprisha-permission-mark">
+                    AP
+                </div>
+
+                <div class="ap-aprisha-permission-copy">
+                    <strong>
+                        Enable Hey Aprisha
+                    </strong>
+
+                    <span>
+                        One-time microphone permission
+                    </span>
+                </div>
+
+                <button
+                    id="apAprishaPermissionEnable"
+                    type="button"
+                >
+                    Enable
+                </button>
+            </div>
+
+
+            <!-- SMALL ALWAYS-AVAILABLE ORB -->
+
             <button
                 id="apAprishaOrb"
+                class="ap-aprisha-orb"
                 type="button"
-                aria-label="Aprisha"
+                aria-label="Open Aprisha"
                 title="Aprisha"
             >
-                <span class="ap-aprisha-orb-mark">AP</span>
-                <span class="ap-aprisha-orb-pulse"></span>
+                <span>AP</span>
+                <i></i>
             </button>
+
+
+            <!-- EXISTING COMPATIBILITY PANEL -->
 
             <section
                 id="apAprishaPanel"
                 class="ap-aprisha-panel"
-                aria-live="polite"
             >
-                <header class="ap-aprisha-header">
+                <header class="ap-aprisha-panel-head">
 
-                    <div class="ap-aprisha-brand">
-                        <div class="ap-aprisha-mark">
-                            AP
-                        </div>
+                    <div class="ap-aprisha-mini-brand">
+                        <b>AP</b>
 
                         <div>
                             <strong>Aprisha</strong>
@@ -105,31 +192,18 @@
 
                 </header>
 
-                <div class="ap-aprisha-intelligence">
+                <div
+                    id="apAprishaState"
+                    class="ap-aprisha-state"
+                >
+                    Aprisha ready
+                </div>
 
-                    <div
-                        id="apAprishaField"
-                        class="ap-aprisha-field"
-                    >
-                        <i></i>
-                        <i></i>
-                        <i></i>
-                    </div>
-
-                    <div
-                        id="apAprishaState"
-                        class="ap-aprisha-state"
-                    >
-                        Aprisha ready
-                    </div>
-
-                    <div
-                        id="apAprishaText"
-                        class="ap-aprisha-text"
-                    >
-                        Say “Hey Aprisha”
-                    </div>
-
+                <div
+                    id="apAprishaText"
+                    class="ap-aprisha-text"
+                >
+                    Say “Hey Aprisha”
                 </div>
 
                 <div class="ap-aprisha-actions">
@@ -138,7 +212,7 @@
                         id="apAprishaEnable"
                         type="button"
                     >
-                        Enable Aprisha
+                        Enable
                     </button>
 
                     <button
@@ -152,604 +226,1482 @@
                         id="apAprishaStop"
                         type="button"
                     >
-                        Stop
+                        Pause
                     </button>
 
                 </div>
+            </section>
 
-                <div class="ap-aprisha-foot">
-                    Voice activation works while AP Synapse is open.
+
+            <!-- SIRI-LIKE INSTANT PRESENCE -->
+
+            <section
+                id="apAprishaSiri"
+                class="ap-aprisha-siri"
+                aria-hidden="true"
+                aria-live="polite"
+            >
+
+                <div
+                    class="ap-aprisha-siri-backdrop"
+                    data-aprisha-close
+                ></div>
+
+                <div class="ap-aprisha-siri-card">
+
+                    <div class="ap-aprisha-siri-top">
+
+                        <div class="ap-aprisha-siri-name">
+                            Aprisha
+                        </div>
+
+                        <button
+                            id="apAprishaSiriClose"
+                            type="button"
+                            aria-label="Close Aprisha"
+                        >
+                            ×
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        id="apAprishaSiriCore"
+                        class="ap-aprisha-siri-core"
+                        data-mode="ready"
+                    >
+                        <span class="r r1"></span>
+                        <span class="r r2"></span>
+                        <span class="r r3"></span>
+
+                        <strong>
+                            AP
+                        </strong>
+                    </div>
+
+
+                    <div
+                        id="apAprishaSiriStatus"
+                        class="ap-aprisha-siri-status"
+                    >
+                        Aprisha
+                    </div>
+
+
+                    <div
+                        id="apAprishaSiriText"
+                        class="ap-aprisha-siri-text"
+                    >
+                        How can I help?
+                    </div>
+
+
+                    <div
+                        id="apAprishaLiveTranscript"
+                        class="ap-aprisha-live-transcript"
+                    ></div>
+
+
+                    <div class="ap-aprisha-siri-foot">
+
+                        <button
+                            id="apAprishaSiriMic"
+                            type="button"
+                        >
+                            Speak
+                        </button>
+
+                        <button
+                            id="apAprishaSiriPresence"
+                            type="button"
+                        >
+                            Presence
+                        </button>
+
+                        <button
+                            id="apAprishaSiriVision"
+                            type="button"
+                        >
+                            Vision
+                        </button>
+
+                    </div>
+
                 </div>
 
             </section>
         `;
 
-        document.body.appendChild(root);
+
+        document.body.appendChild(
+            root
+        );
+
+
+        bindUI();
+    }
+
+
+    /* =========================================================
+       UI BINDINGS
+       ========================================================= */
+
+    function bindUI() {
 
         document
-            .getElementById("apAprishaOrb")
-            .addEventListener(
+            .getElementById(
+                "apAprishaOrb"
+            )
+            ?.addEventListener(
                 "click",
                 openPanel
             );
 
+
         document
-            .getElementById("apAprishaClose")
-            .addEventListener(
+            .getElementById(
+                "apAprishaClose"
+            )
+            ?.addEventListener(
                 "click",
                 closePanel
             );
 
+
         document
-            .getElementById("apAprishaEnable")
-            .addEventListener(
+            .getElementById(
+                "apAprishaEnable"
+            )
+            ?.addEventListener(
                 "click",
                 enableAprisha
             );
 
-        document
-            .getElementById("apAprishaSpeak")
-            .addEventListener(
-                "click",
-                beginCommandListening
-            );
 
         document
-            .getElementById("apAprishaStop")
-            .addEventListener(
+            .getElementById(
+                "apAprishaPermissionEnable"
+            )
+            ?.addEventListener(
                 "click",
-                stopEverything
+                enableAprisha
             );
 
-        refreshUI();
+
+        document
+            .getElementById(
+                "apAprishaSpeak"
+            )
+            ?.addEventListener(
+                "click",
+                manualSpeak
+            );
+
+
+        document
+            .getElementById(
+                "apAprishaStop"
+            )
+            ?.addEventListener(
+                "click",
+                pauseAprisha
+            );
+
+
+        document
+            .getElementById(
+                "apAprishaSiriClose"
+            )
+            ?.addEventListener(
+                "click",
+                endPresence
+            );
+
+
+        document
+            .querySelector(
+                "[data-aprisha-close]"
+            )
+            ?.addEventListener(
+                "click",
+                endPresence
+            );
+
+
+        document
+            .getElementById(
+                "apAprishaSiriMic"
+            )
+            ?.addEventListener(
+                "click",
+                startCommandListening
+            );
+
+
+        document
+            .getElementById(
+                "apAprishaSiriPresence"
+            )
+            ?.addEventListener(
+                "click",
+                () => {
+
+                    closeSiri();
+
+                    window
+                        .APAprishaPresence
+                        ?.open?.();
+                }
+            );
+
+
+        document
+            .getElementById(
+                "apAprishaSiriVision"
+            )
+            ?.addEventListener(
+                "click",
+                () => {
+
+                    closeSiri();
+
+                    window
+                        .APAprishaVision
+                        ?.open?.();
+                }
+            );
     }
 
+
+    /* =========================================================
+       DISPLAY
+       ========================================================= */
 
     function openPanel() {
 
         document
-            .getElementById("apAprishaPanel")
-            ?.classList.add("ap-open");
+            .getElementById(
+                "apAprishaPanel"
+            )
+            ?.classList.add(
+                "ap-open"
+            );
     }
 
 
     function closePanel() {
 
         document
-            .getElementById("apAprishaPanel")
-            ?.classList.remove("ap-open");
+            .getElementById(
+                "apAprishaPanel"
+            )
+            ?.classList.remove(
+                "ap-open"
+            );
+    }
+
+
+    function openSiri() {
+
+        const siri =
+            document.getElementById(
+                "apAprishaSiri"
+            );
+
+
+        siri?.classList.add(
+            "ap-open"
+        );
+
+
+        siri?.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+    }
+
+
+    function closeSiri() {
+
+        const siri =
+            document.getElementById(
+                "apAprishaSiri"
+            );
+
+
+        siri?.classList.remove(
+            "ap-open"
+        );
+
+
+        siri?.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+    }
+
+
+    function modeFromState(
+        label
+    ) {
+
+        const value =
+            String(label || "")
+                .toLowerCase();
+
+
+        if (
+            value.includes("listening")
+        ) return "listening";
+
+
+        if (
+            value.includes("thinking")
+        ) return "thinking";
+
+
+        if (
+            value.includes("speaking")
+        ) return "speaking";
+
+
+        if (
+            value.includes("error") ||
+            value.includes("permission") ||
+            value.includes("unavailable")
+        ) return "error";
+
+
+        if (
+            state.awake
+        ) return "awake";
+
+
+        return "ready";
     }
 
 
     function setState(
         label,
-        text,
-        mode = "ready"
+        text
     ) {
 
-        const stateEl =
+        const stateNode =
             document.getElementById(
                 "apAprishaState"
             );
 
-        const textEl =
+
+        const textNode =
             document.getElementById(
                 "apAprishaText"
             );
 
-        const field =
+
+        const siriStatus =
             document.getElementById(
-                "apAprishaField"
+                "apAprishaSiriStatus"
             );
 
-        if (stateEl) {
-            stateEl.textContent = label;
+
+        const siriText =
+            document.getElementById(
+                "apAprishaSiriText"
+            );
+
+
+        const core =
+            document.getElementById(
+                "apAprishaSiriCore"
+            );
+
+
+        if (stateNode) {
+
+            stateNode.textContent =
+                label;
         }
 
-        if (textEl) {
-            textEl.textContent = text;
+
+        if (textNode) {
+
+            textNode.textContent =
+                text;
         }
 
-        if (field) {
 
-            field.dataset.mode =
-                mode;
+        if (siriStatus) {
+
+            siriStatus.textContent =
+                label;
+        }
+
+
+        if (siriText) {
+
+            siriText.textContent =
+                text;
+        }
+
+
+        if (core) {
+
+            core.dataset.mode =
+                modeFromState(
+                    label
+                );
         }
     }
 
 
-    function refreshUI() {
+    function setTranscript(
+        text = ""
+    ) {
 
-        const enable =
+        const node =
             document.getElementById(
-                "apAprishaEnable"
+                "apAprishaLiveTranscript"
             );
 
-        if (enable) {
 
-            enable.textContent =
-                state.enabled
-                    ? "Aprisha Enabled"
-                    : "Enable Aprisha";
+        if (node) {
 
-            enable.classList.toggle(
-                "ap-active",
-                state.enabled
-            );
+            node.textContent =
+                text;
         }
     }
 
 
-    /* ========================================================
-       ENABLE
-       ======================================================== */
+    /* =========================================================
+       MICROPHONE PERMISSION
+       ========================================================= */
+
+    async function permissionState() {
+
+        try {
+
+            if (
+                !navigator.permissions
+            ) {
+                return "unknown";
+            }
+
+
+            const result =
+                await navigator.permissions
+                    .query({
+                        name:
+                            "microphone"
+                    });
+
+
+            return result.state;
+
+        }
+        catch {
+
+            return "unknown";
+        }
+    }
+
+
+    function showPermissionPrompt(
+        show
+    ) {
+
+        const prompt =
+            document.getElementById(
+                "apAprishaPermission"
+            );
+
+
+        if (prompt) {
+
+            prompt.hidden =
+                !show;
+        }
+    }
+
 
     async function enableAprisha() {
-
-        openPanel();
 
         if (!SpeechRecognition) {
 
             setState(
-                "Voice unavailable",
-                "This browser does not expose Android speech recognition.",
-                "error"
+                "Voice wake unavailable",
+                "Use a supported browser or the microphone button."
             );
+
+            openPanel();
 
             return;
         }
 
-        /*
-         * Start recognition from the user's click.
-         * This also triggers microphone permission where needed.
-         */
 
-        state.enabled = true;
+        try {
 
-        localStorage.setItem(
-            "apAprishaEnabled",
-            "true"
-        );
+            /*
+             * Explicitly request microphone once.
+             */
 
-        refreshUI();
+            const stream =
+                await navigator.mediaDevices
+                    .getUserMedia({
+                        audio:
+                            true,
 
-        setState(
-            "Aprisha enabled",
-            "Say “Hey Aprisha”",
-            "waiting"
-        );
+                        video:
+                            false
+                    });
 
-        startWakeListening();
+
+            stream
+                .getTracks()
+                .forEach(
+                    track =>
+                        track.stop()
+                );
+
+
+            state.enabled =
+                true;
+
+
+            localStorage.setItem(
+                "apAprishaEnabled",
+                "true"
+            );
+
+
+            showPermissionPrompt(
+                false
+            );
+
+
+            setState(
+                "Aprisha ready",
+                "Say “Hey Aprisha”"
+            );
+
+
+            startWakeListening();
+
+        }
+        catch (error) {
+
+            console.warn(
+                "Aprisha microphone:",
+                error
+            );
+
+
+            setState(
+                "Microphone permission needed",
+                "Allow microphone access to enable Hey Aprisha."
+            );
+
+
+            showPermissionPrompt(
+                true
+            );
+
+
+            openPanel();
+        }
     }
 
 
-    /* ========================================================
-       WAKE WORD
-       ======================================================== */
+    /* =========================================================
+       WAKE DETECTION
+       ========================================================= */
+
+    function normalize(
+        value
+    ) {
+
+        return String(
+            value || ""
+        )
+            .toLowerCase()
+            .replace(
+                /[^\p{L}\p{N}\s]/gu,
+                " "
+            )
+            .replace(
+                /\s+/g,
+                " "
+            )
+            .trim();
+    }
+
+
+    function detectWake(
+        transcript
+    ) {
+
+        const value =
+            normalize(
+                transcript
+            );
+
+
+        for (
+            const phrase of
+            WAKE_FORMS
+        ) {
+
+            const normalizedPhrase =
+                normalize(
+                    phrase
+                );
+
+
+            const index =
+                value.indexOf(
+                    normalizedPhrase
+                );
+
+
+            if (
+                index !== -1
+            ) {
+
+                const after =
+                    value
+                        .slice(
+                            index +
+                            normalizedPhrase.length
+                        )
+                        .trim();
+
+
+                return {
+                    detected:
+                        true,
+
+                    command:
+                        after
+                };
+            }
+        }
+
+
+        return {
+            detected:
+                false,
+
+            command:
+                ""
+        };
+    }
+
+
+    function stopWakeListening() {
+
+        const recognition =
+            state.wakeRecognition;
+
+
+        state.wakeRecognition =
+            null;
+
+
+        state.wakeActive =
+            false;
+
+
+        if (!recognition) {
+            return;
+        }
+
+
+        recognition.onend =
+            null;
+
+
+        recognition.onerror =
+            null;
+
+
+        try {
+            recognition.stop();
+        }
+        catch {}
+
+
+        try {
+            recognition.abort();
+        }
+        catch {}
+    }
+
 
     function startWakeListening() {
 
         if (
-            !state.enabled ||
             !SpeechRecognition ||
+            !state.enabled ||
+            state.awake ||
+            state.commandActive ||
             state.thinking ||
-            state.commandListening
+            document.hidden ||
+            state.wakeActive
         ) {
+
             return;
         }
 
-        stopWakeRecognizer();
+
+        stopWakeListening();
+
 
         const recognition =
             new SpeechRecognition();
 
-        state.wakeRecognizer =
+
+        state.wakeRecognition =
             recognition;
+
 
         recognition.continuous =
             true;
 
+
         recognition.interimResults =
             true;
 
+
         recognition.maxAlternatives =
             3;
+
 
         recognition.lang =
             navigator.language ||
             "en-IN";
 
-        recognition.onstart = () => {
 
-            state.wakeListening =
-                true;
+        recognition.onstart =
+            () => {
 
-            setState(
-                "Aprisha ready",
-                "Say “Hey Aprisha”",
-                "waiting"
-            );
-        };
+                state.wakeActive =
+                    true;
 
-
-        recognition.onresult = event => {
-
-            let transcript = "";
-
-            for (
-                let i = event.resultIndex;
-                i < event.results.length;
-                i++
-            ) {
-
-                transcript +=
-                    event.results[i][0]
-                        .transcript +
-                    " ";
-            }
-
-            transcript =
-                transcript
-                    .toLowerCase()
-                    .trim();
-
-            if (!transcript) {
-                return;
-            }
-
-            state.lastTranscript =
-                transcript;
-
-            const detected =
-                WAKE_PHRASES.some(
-                    phrase =>
-                        transcript.includes(
-                            phrase
-                        )
-                );
-
-            if (detected) {
-
-                wakeDetected();
-            }
-        };
-
-
-        recognition.onerror = event => {
-
-            state.wakeListening =
-                false;
-
-            if (
-                event.error ===
-                "not-allowed"
-            ) {
 
                 setState(
-                    "Microphone permission needed",
-                    "Allow microphone access to use Aprisha.",
-                    "error"
+                    "Aprisha ready",
+                    "Say “Hey Aprisha”"
                 );
-
-                return;
-            }
-
-            restartWakeLater();
-        };
+            };
 
 
-        recognition.onend = () => {
+        recognition.onresult =
+            event => {
 
-            state.wakeListening =
-                false;
+                let combined =
+                    "";
 
-            restartWakeLater();
-        };
+
+                for (
+                    let index =
+                        event.resultIndex;
+
+                    index <
+                    event.results.length;
+
+                    index++
+                ) {
+
+                    combined +=
+                        " " +
+                        event.results[index][0]
+                            .transcript;
+                }
+
+
+                const result =
+                    detectWake(
+                        combined
+                    );
+
+
+                if (
+                    result.detected
+                ) {
+
+                    wakeAprisha(
+                        result.command
+                    );
+                }
+            };
+
+
+        recognition.onerror =
+            event => {
+
+                state.wakeActive =
+                    false;
+
+
+                if (
+                    event.error ===
+                    "not-allowed" ||
+                    event.error ===
+                    "service-not-allowed"
+                ) {
+
+                    showPermissionPrompt(
+                        true
+                    );
+
+
+                    setState(
+                        "Enable Hey Aprisha",
+                        "Microphone permission is required once."
+                    );
+
+
+                    return;
+                }
+
+
+                restartWake();
+            };
+
+
+        recognition.onend =
+            () => {
+
+                state.wakeActive =
+                    false;
+
+
+                restartWake();
+            };
 
 
         try {
 
             recognition.start();
 
-        } catch {
+        }
+        catch {
 
-            restartWakeLater();
+            restartWake();
         }
     }
 
 
-    function stopWakeRecognizer() {
-
-        const recognition =
-            state.wakeRecognizer;
-
-        state.wakeRecognizer =
-            null;
-
-        state.wakeListening =
-            false;
-
-        if (!recognition) {
-            return;
-        }
-
-        recognition.onend = null;
-        recognition.onerror = null;
-
-        try {
-            recognition.stop();
-        } catch {}
-
-        try {
-            recognition.abort();
-        } catch {}
-    }
-
-
-    function restartWakeLater() {
+    function restartWake() {
 
         if (
+            state.restarting ||
             !state.enabled ||
             state.awake ||
-            state.commandListening ||
+            state.commandActive ||
             state.thinking ||
             document.hidden
         ) {
             return;
         }
 
+
+        state.restarting =
+            true;
+
+
         setTimeout(
-            startWakeListening,
-            650
+            () => {
+
+                state.restarting =
+                    false;
+
+                startWakeListening();
+
+            },
+            450
         );
     }
 
 
-    function wakeDetected() {
+    /* =========================================================
+       WAKE RESPONSE
+       ========================================================= */
+
+    async function wakeAprisha(
+        immediateCommand = ""
+    ) {
 
         if (state.awake) {
             return;
         }
 
-        state.awake = true;
+
+        stopWakeListening();
+
+
+        state.awake =
+            true;
+
 
         state.stayUntil =
             Date.now() +
             45000;
 
-        stopWakeRecognizer();
 
-        openPanel();
+        openSiri();
+
+
+        setTranscript("");
+
 
         setState(
-            "Hey Aprisha",
-            "I'm listening.",
-            "awake"
+            "Aprisha",
+            "How can I help?"
         );
 
-        vibrate();
 
-        playWakeTone();
+        feedback();
+
+
+        if (
+            immediateCommand &&
+            immediateCommand.length > 2
+        ) {
+
+            await speak(
+                "I'm listening."
+            );
+
+
+            executeCommand(
+                immediateCommand
+            );
+
+
+            return;
+        }
+
+
+        await speak(
+            "How can I help?"
+        );
+
 
         setTimeout(
-            beginCommandListening,
-            300
+            startCommandListening,
+            180
         );
     }
 
 
-    /* ========================================================
-       COMMAND RECOGNITION
-       ======================================================== */
+    /* =========================================================
+       COMMAND LISTENER
+       ========================================================= */
 
-    function beginCommandListening() {
+    function stopCommandListening() {
+
+        const recognition =
+            state.commandRecognition;
+
+
+        state.commandRecognition =
+            null;
+
+
+        state.commandActive =
+            false;
+
+
+        if (!recognition) {
+            return;
+        }
+
+
+        recognition.onend =
+            null;
+
+
+        try {
+            recognition.stop();
+        }
+        catch {}
+
+
+        try {
+            recognition.abort();
+        }
+        catch {}
+    }
+
+
+    function startCommandListening() {
 
         if (
             !SpeechRecognition ||
-            state.commandListening ||
+            state.commandActive ||
             state.thinking
         ) {
             return;
         }
 
-        stopWakeRecognizer();
-        stopCommandRecognizer();
 
-        state.awake = true;
+        stopWakeListening();
+        stopCommandListening();
 
-        if (
-            Date.now() >
-            state.stayUntil
-        ) {
 
-            state.stayUntil =
+        openSiri();
+
+
+        state.awake =
+            true;
+
+
+        state.stayUntil =
+            Math.max(
+                state.stayUntil,
                 Date.now() +
-                45000;
-        }
+                45000
+            );
+
 
         const recognition =
             new SpeechRecognition();
 
-        state.commandRecognizer =
+
+        state.commandRecognition =
             recognition;
+
 
         recognition.continuous =
             false;
 
+
         recognition.interimResults =
             true;
 
+
         recognition.maxAlternatives =
             3;
+
 
         recognition.lang =
             navigator.language ||
             "en-IN";
 
 
-        recognition.onstart = () => {
+        recognition.onstart =
+            () => {
 
-            state.commandListening =
-                true;
+                state.commandActive =
+                    true;
 
-            setState(
-                "Listening",
-                "Speak naturally…",
-                "listening"
-            );
-        };
-
-
-        recognition.onresult = event => {
-
-            let transcript = "";
-
-            for (
-                let i = event.resultIndex;
-                i < event.results.length;
-                i++
-            ) {
-
-                transcript +=
-                    event.results[i][0]
-                        .transcript +
-                    " ";
-            }
-
-            transcript =
-                transcript.trim();
-
-            if (transcript) {
 
                 setState(
                     "Listening",
-                    transcript,
-                    "listening"
+                    "Go ahead…"
                 );
-            }
 
-            const finalResult =
-                Array
-                    .from(event.results)
-                    .some(
-                        result =>
-                            result.isFinal
+
+                setTranscript("");
+            };
+
+
+        recognition.onresult =
+            event => {
+
+                let text =
+                    "";
+
+                let final =
+                    false;
+
+
+                for (
+                    let index =
+                        event.resultIndex;
+
+                    index <
+                    event.results.length;
+
+                    index++
+                ) {
+
+                    text +=
+                        " " +
+                        event.results[index][0]
+                            .transcript;
+
+
+                    if (
+                        event.results[index]
+                            .isFinal
+                    ) {
+
+                        final =
+                            true;
+                    }
+                }
+
+
+                text =
+                    text.trim();
+
+
+                setTranscript(
+                    text
+                );
+
+
+                if (
+                    final &&
+                    text
+                ) {
+
+                    stopCommandListening();
+
+                    executeCommand(
+                        text
                     );
-
-            if (
-                finalResult &&
-                transcript
-            ) {
-
-                stopCommandRecognizer();
-
-                processCommand(
-                    transcript
-                );
-            }
-        };
+                }
+            };
 
 
-        recognition.onerror = event => {
+        recognition.onerror =
+            event => {
 
-            state.commandListening =
-                false;
+                state.commandActive =
+                    false;
 
-            if (
-                event.error ===
+
+                if (
+                    event.error ===
                     "no-speech" ||
-                event.error ===
+                    event.error ===
                     "aborted"
-            ) {
+                ) {
 
-                resumeAfterInteraction();
+                    continueOrSleep();
 
-                return;
-            }
-
-            setState(
-                "Aprisha",
-                "I couldn't hear that clearly.",
-                "ready"
-            );
-
-            resumeAfterInteraction();
-        };
+                    return;
+                }
 
 
-        recognition.onend = () => {
+                setState(
+                    "Aprisha",
+                    "I didn't catch that."
+                );
 
-            state.commandListening =
-                false;
-        };
+
+                continueOrSleep();
+            };
+
+
+        recognition.onend =
+            () => {
+
+                state.commandActive =
+                    false;
+            };
 
 
         try {
 
             recognition.start();
 
-        } catch {
+        }
+        catch {
 
-            state.commandListening =
-                false;
+            continueOrSleep();
         }
     }
 
 
-    function stopCommandRecognizer() {
+    function manualSpeak() {
 
-        const recognition =
-            state.commandRecognizer;
+        state.awake =
+            true;
 
-        state.commandRecognizer =
-            null;
 
-        state.commandListening =
-            false;
+        openSiri();
 
-        if (!recognition) {
-            return;
-        }
 
-        recognition.onend = null;
-
-        try {
-            recognition.stop();
-        } catch {}
-
-        try {
-            recognition.abort();
-        } catch {}
+        startCommandListening();
     }
 
 
-    /* ========================================================
-       COMMANDS
-       ======================================================== */
+    /* =========================================================
+       AP SYNAPSE ACTION ENGINE
+       ========================================================= */
 
-    async function processCommand(
-        command
+    function visibleControls() {
+
+        return [
+            ...document.querySelectorAll(
+                `
+                button,
+                a,
+                [role="button"],
+                [data-page],
+                [data-route],
+                [data-workspace]
+                `
+            )
+        ].filter(
+            element => {
+
+                if (
+                    element.closest(
+                        "#apAprishaUniversal"
+                    )
+                ) {
+
+                    return false;
+                }
+
+
+                const style =
+                    getComputedStyle(
+                        element
+                    );
+
+
+                return (
+                    style.display !==
+                    "none"
+                    &&
+                    style.visibility !==
+                    "hidden"
+                );
+            }
+        );
+    }
+
+
+    function clickByText(
+        possibilities
     ) {
 
-        const normalized =
-            command
-                .toLowerCase()
-                .trim();
+        const wanted =
+            possibilities.map(
+                value =>
+                    normalize(value)
+            );
+
+
+        const controls =
+            visibleControls();
+
+
+        /*
+         * Exact label first.
+         */
+
+        for (
+            const control of
+            controls
+        ) {
+
+            const text =
+                normalize(
+                    control.innerText ||
+                    control.textContent ||
+                    control.getAttribute(
+                        "aria-label"
+                    ) ||
+                    control.getAttribute(
+                        "title"
+                    ) ||
+                    ""
+                );
+
+
+            if (
+                wanted.includes(
+                    text
+                )
+            ) {
+
+                control.click();
+
+                return true;
+            }
+        }
+
+
+        /*
+         * Then partial label.
+         */
+
+        for (
+            const control of
+            controls
+        ) {
+
+            const text =
+                normalize(
+                    control.innerText ||
+                    control.textContent ||
+                    control.getAttribute(
+                        "aria-label"
+                    ) ||
+                    control.getAttribute(
+                        "title"
+                    ) ||
+                    ""
+                );
+
+
+            if (
+                wanted.some(
+                    item =>
+                        text.includes(item)
+                )
+            ) {
+
+                control.click();
+
+                return true;
+            }
+        }
+
+
+        return false;
+    }
+
+
+    function sendToMainChat(
+        text
+    ) {
+
+        const input =
+            document.getElementById(
+                "userInput"
+            );
+
+
+        const send =
+            document.getElementById(
+                "sendBtn"
+            );
 
 
         if (
-            ["stop", "cancel", "goodbye", "close aprisha"]
-                .includes(normalized)
+            !input ||
+            !send
         ) {
 
-            stopPresenceSession();
+            return false;
+        }
+
+
+        if (
+            "value" in input
+        ) {
+
+            input.value =
+                text;
+        }
+        else {
+
+            input.textContent =
+                text;
+        }
+
+
+        input.dispatchEvent(
+            new Event(
+                "input",
+                {
+                    bubbles:
+                        true
+                }
+            )
+        );
+
+
+        send.click();
+
+
+        return true;
+    }
+
+
+    function latestAssistantText() {
+
+        const messages =
+            [
+                ...document.querySelectorAll(
+                    `
+                    .message.ai,
+                    .message.assistant,
+                    .assistant-message,
+                    .ai-message,
+                    .bot-message,
+                    [data-role="assistant"]
+                    `
+                )
+            ];
+
+
+        const last =
+            messages[
+                messages.length - 1
+            ];
+
+
+        return String(
+            last?.innerText || ""
+        )
+            .replace(
+                /\bCopy\b/gi,
+                ""
+            )
+            .replace(
+                /\bRead\b/gi,
+                ""
+            )
+            .trim();
+    }
+
+
+    async function executeCommand(
+        raw
+    ) {
+
+        const command =
+            normalize(
+                raw
+            );
+
+
+        setTranscript(
+            raw
+        );
+
+
+        /* STOP */
+
+        if (
+            /^(stop|cancel|goodbye|bye|close aprisha)$/
+                .test(command)
+        ) {
+
+            await speak(
+                "Okay."
+            );
+
+
+            endPresence();
 
             return;
         }
 
 
+        /* STAY WITH ME */
+
         if (
-            normalized.includes(
+            command.includes(
                 "stay with me"
             )
         ) {
@@ -758,55 +1710,530 @@
                 Date.now() +
                 120000;
 
+
+            setState(
+                "Aprisha",
+                "I'm here."
+            );
+
+
             await speak(
                 "I'm here. You can keep talking."
             );
 
-            resumeAfterInteraction();
+
+            continueOrSleep();
+
+            return;
+        }
+
+
+        /* APRISHA VISION */
+
+        if (
+            command.includes(
+                "vision"
+            )
+            ||
+            command.includes(
+                "what am i looking at"
+            )
+            ||
+            command.includes(
+                "use camera"
+            )
+        ) {
+
+            await speak(
+                "Opening Vision."
+            );
+
+
+            closeSiri();
+
+
+            window
+                .APAprishaVision
+                ?.open?.();
+
+
+            resetPresenceState();
+
+            return;
+        }
+
+
+        /* FULL PRESENCE */
+
+        if (
+            command.includes(
+                "open presence"
+            )
+            ||
+            command.includes(
+                "presence mode"
+            )
+        ) {
+
+            await speak(
+                "Opening Presence."
+            );
+
+
+            closeSiri();
+
+
+            window
+                .APAprishaPresence
+                ?.open?.();
+
+
+            resetPresenceState();
+
+            return;
+        }
+
+
+        /* NEW CHAT */
+
+        if (
+            /new (chat|conversation)/
+                .test(command)
+        ) {
+
+            const success =
+                document.querySelector(
+                    ".new-chat-btn"
+                )
+                    ?.click?.();
+
+
+            await speak(
+                "Starting a new conversation."
+            );
+
+
+            endPresence();
+
+            return;
+        }
+
+
+        /* CODE STUDIO */
+
+        if (
+            command.includes(
+                "code studio"
+            )
+            ||
+            command === "coding"
+        ) {
+
+            const success =
+                clickByText([
+                    "Code Studio",
+                    "Code"
+                ]);
+
+
+            await speak(
+                success
+                    ? "Opening Code Studio."
+                    : "I couldn't locate Code Studio."
+            );
+
+
+            endPresence();
+
+            return;
+        }
+
+
+        /* DOCUMENTS */
+
+        if (
+            command.includes(
+                "documents"
+            )
+            ||
+            command.includes(
+                "document intelligence"
+            )
+        ) {
+
+            const success =
+                clickByText([
+                    "Documents",
+                    "Document Intelligence"
+                ]);
+
+
+            await speak(
+                success
+                    ? "Opening Documents."
+                    : "I couldn't locate Documents."
+            );
+
+
+            endPresence();
+
+            return;
+        }
+
+
+        /* WHITEBOARD / CANVAS */
+
+        if (
+            command.includes(
+                "whiteboard"
+            )
+            ||
+            command === "canvas"
+            ||
+            command.includes(
+                "open canvas"
+            )
+        ) {
+
+            const success =
+                clickByText([
+                    "Whiteboard",
+                    "Canvas"
+                ]);
+
+
+            await speak(
+                success
+                    ? "Opening the canvas."
+                    : "I couldn't locate the canvas."
+            );
+
+
+            endPresence();
+
+            return;
+        }
+
+
+        /* PROJECTS */
+
+        if (
+            command.includes(
+                "projects"
+            )
+            ||
+            command.includes(
+                "open project"
+            )
+        ) {
+
+            const success =
+                clickByText([
+                    "Projects",
+                    "Project"
+                ]);
+
+
+            await speak(
+                success
+                    ? "Opening Projects."
+                    : "I couldn't locate Projects."
+            );
+
+
+            endPresence();
+
+            return;
+        }
+
+
+        /* SETTINGS */
+
+        if (
+            command.includes(
+                "settings"
+            )
+        ) {
+
+            const success =
+                clickByText([
+                    "Settings"
+                ]);
+
+
+            await speak(
+                success
+                    ? "Opening Settings."
+                    : "I couldn't locate Settings."
+            );
+
+
+            endPresence();
+
+            return;
+        }
+
+
+        /* WEB SEARCH */
+
+        if (
+            command.includes(
+                "turn on web"
+            )
+            ||
+            command.includes(
+                "enable web"
+            )
+            ||
+            command ===
+                "web search"
+        ) {
+
+            const button =
+                document.getElementById(
+                    "webBtn"
+                );
+
+
+            if (
+                button &&
+                !button.classList
+                    .contains("active")
+            ) {
+
+                button.click();
+            }
+
+
+            await speak(
+                "Web search is enabled."
+            );
+
+
+            continueOrSleep();
 
             return;
         }
 
 
         if (
-            normalized.includes(
-                "open ap synapse"
+            command.includes(
+                "turn off web"
+            )
+            ||
+            command.includes(
+                "disable web"
             )
         ) {
 
+            const button =
+                document.getElementById(
+                    "webBtn"
+                );
+
+
+            if (
+                button &&
+                button.classList
+                    .contains("active")
+            ) {
+
+                button.click();
+            }
+
+
             await speak(
-                "Opening AP Synapse."
+                "Web search is off."
             );
 
-            location.href =
-                "/";
+
+            continueOrSleep();
 
             return;
         }
 
 
-        await askAP(command);
+        /* DEEP THINK */
+
+        if (
+            command.includes(
+                "enable deep think"
+            )
+            ||
+            command.includes(
+                "turn on deep think"
+            )
+        ) {
+
+            const button =
+                document.getElementById(
+                    "deepThinkBtn"
+                );
+
+
+            if (
+                button &&
+                !button.classList
+                    .contains("active")
+            ) {
+
+                button.click();
+            }
+
+
+            await speak(
+                "Deep Think is enabled."
+            );
+
+
+            continueOrSleep();
+
+            return;
+        }
+
+
+        /* READ LATEST RESPONSE */
+
+        if (
+            command.includes(
+                "read this"
+            )
+            ||
+            command.includes(
+                "read the answer"
+            )
+            ||
+            command.includes(
+                "read latest"
+            )
+        ) {
+
+            const text =
+                latestAssistantText();
+
+
+            if (text) {
+
+                setState(
+                    "Speaking",
+                    text
+                );
+
+
+                await speak(
+                    text
+                );
+            }
+            else {
+
+                await speak(
+                    "There isn't an answer to read yet."
+                );
+            }
+
+
+            continueOrSleep();
+
+            return;
+        }
+
+
+        /* STOP SPEAKING */
+
+        if (
+            command.includes(
+                "stop reading"
+            )
+            ||
+            command.includes(
+                "stop speaking"
+            )
+        ) {
+
+            window.speechSynthesis
+                ?.cancel();
+
+
+            continueOrSleep();
+
+            return;
+        }
+
+
+        /* IMAGE GENERATION -> NORMAL CHAT UI */
+
+        if (
+            /\b(create|generate|draw|make)\b.*\b(image|picture|photo|illustration)\b/
+                .test(command)
+        ) {
+
+            const success =
+                sendToMainChat(
+                    raw
+                );
+
+
+            await speak(
+                success
+                    ? "I'll create that in AP Synapse."
+                    : "I couldn't open the image request."
+            );
+
+
+            endPresence();
+
+            return;
+        }
+
+
+        /*
+         * EVERYTHING ELSE:
+         * AP Synapse intelligence.
+         */
+
+        await askAP(
+            raw
+        );
     }
 
 
-    /* ========================================================
-       AP SYNAPSE INTELLIGENCE
-       ======================================================== */
+    /* =========================================================
+       AP INTELLIGENCE
+       ========================================================= */
 
     async function askAP(
-        command
+        message
     ) {
 
-        state.thinking = true;
+        state.thinking =
+            true;
+
 
         setState(
-            "Aprisha is thinking",
-            command,
-            "thinking"
+            "Thinking",
+            message
         );
 
 
         try {
+
+            const web =
+                document
+                    .getElementById(
+                        "webBtn"
+                    )
+                    ?.classList
+                    .contains(
+                        "active"
+                    )
+                ||
+                /\b(search|look up|latest|current|today)\b/
+                    .test(
+                        normalize(
+                            message
+                        )
+                    );
+
 
             const response =
                 await fetch(
@@ -816,6 +2243,7 @@
                             "POST",
 
                         headers: {
+
                             "Content-Type":
                                 "application/json",
 
@@ -825,17 +2253,18 @@
 
                         body:
                             JSON.stringify({
-                                message:
-                                    command,
-
+                                message,
+                                web,
                                 source:
-                                    "aprisha-universal"
+                                    "aprisha-instant-presence"
                             })
                     }
                 );
 
 
-            if (!response.ok) {
+            if (
+                !response.ok
+            ) {
 
                 throw new Error(
                     `HTTP ${response.status}`
@@ -843,8 +2272,8 @@
             }
 
 
-            const reply =
-                await readAPResponse(
+            const result =
+                await readResponse(
                     response
                 );
 
@@ -853,24 +2282,59 @@
                 false;
 
 
-            const finalReply =
-                cleanReply(reply) ||
+            /*
+             * Image response.
+             */
+
+            if (
+                result.type ===
+                "image"
+                &&
+                result.url
+            ) {
+
+                setState(
+                    "Aprisha",
+                    "Your image is ready in AP Synapse."
+                );
+
+
+                sendToMainChat(
+                    message
+                );
+
+
+                await speak(
+                    "Your image request is ready in AP Synapse."
+                );
+
+
+                endPresence();
+
+                return;
+            }
+
+
+            const answer =
+                cleanForSpeech(
+                    result.text
+                )
+                ||
                 "I couldn't create a response for that.";
 
 
             setState(
                 "Aprisha",
-                finalReply,
-                "speaking"
+                answer
             );
 
 
             await speak(
-                finalReply
+                answer
             );
 
 
-            resumeAfterInteraction();
+            continueOrSleep();
 
         }
         catch (error) {
@@ -880,13 +2344,14 @@
                 error
             );
 
+
             state.thinking =
                 false;
 
+
             setState(
                 "Connection issue",
-                "I couldn't reach AP Synapse right now.",
-                "error"
+                "I couldn't reach AP Synapse right now."
             );
 
 
@@ -895,28 +2360,40 @@
             );
 
 
-            resumeAfterInteraction();
+            continueOrSleep();
         }
     }
 
 
-    async function readAPResponse(
+    async function readResponse(
         response
     ) {
 
-        if (!response.body) {
+        if (
+            !response.body
+        ) {
 
-            return await response.text();
+            const raw =
+                await response.text();
+
+
+            return parseRaw(
+                raw
+            );
         }
 
 
         const reader =
-            response.body.getReader();
+            response.body
+                .getReader();
+
 
         const decoder =
             new TextDecoder();
 
-        let raw = "";
+
+        let raw =
+            "";
 
 
         while (true) {
@@ -948,54 +2425,90 @@
             decoder.decode();
 
 
-        return parsePossibleStream(
+        return parseRaw(
             raw
         );
     }
 
 
-    function parsePossibleStream(
+    function parseRaw(
         raw
     ) {
 
-        const trimmed =
+        const value =
             String(raw || "")
                 .trim();
 
 
-        if (!trimmed) {
-            return "";
+        if (!value) {
+
+            return {
+                type:
+                    "text",
+
+                text:
+                    ""
+            };
         }
 
 
         try {
 
             const json =
-                JSON.parse(trimmed);
-
-            return (
-                json.reply ||
-                json.response ||
-                json.answer ||
-                json.content ||
-                json.text ||
-                json.message?.content ||
-                ""
-            );
-
-        } catch {}
+                JSON.parse(
+                    value
+                );
 
 
-        const lines =
-            trimmed.split(
-                /\r?\n/
-            );
+            if (
+                json.type ===
+                "image"
+                &&
+                json.url
+            ) {
 
-        let result = "";
+                return {
+                    type:
+                        "image",
+
+                    url:
+                        json.url,
+
+                    text:
+                        ""
+                };
+            }
+
+
+            return {
+                type:
+                    "text",
+
+                text:
+                    (
+                        json.reply ||
+                        json.response ||
+                        json.answer ||
+                        json.content ||
+                        json.text ||
+                        json.message?.content ||
+                        ""
+                    )
+            };
+
+        }
+        catch {}
+
+
+        let output =
+            "";
 
 
         for (
-            let line of lines
+            let line of
+            value.split(
+                /\r?\n/
+            )
         ) {
 
             line =
@@ -1020,8 +2533,10 @@
 
 
             if (
-                line === "[DONE]"
+                line ===
+                "[DONE]"
             ) {
+
                 continue;
             }
 
@@ -1029,36 +2544,52 @@
             try {
 
                 const json =
-                    JSON.parse(line);
+                    JSON.parse(
+                        line
+                    );
 
 
-                result +=
-                    json.delta?.content ||
-                    json.content ||
-                    json.text ||
-                    json.response ||
-                    json.reply ||
-                    "";
-
-            } catch {
-
-                result +=
+                output +=
                     (
-                        result
+                        json.delta?.content ||
+                        json.content ||
+                        json.text ||
+                        json.response ||
+                        json.reply ||
+                        ""
+                    );
+
+            }
+            catch {
+
+                output +=
+                    (
+                        output
                             ? "\n"
                             : ""
-                    ) +
+                    )
+                    +
                     line;
             }
         }
 
 
-        return result ||
-            trimmed;
+        return {
+            type:
+                "text",
+
+            text:
+                output ||
+                value
+        };
     }
 
 
-    function cleanReply(
+    /* =========================================================
+       SPEECH
+       ========================================================= */
+
+    function cleanForSpeech(
         text
     ) {
 
@@ -1085,10 +2616,6 @@
     }
 
 
-    /* ========================================================
-       VOICE OUTPUT
-       ======================================================== */
-
     function speak(
         text
     ) {
@@ -1097,55 +2624,69 @@
             resolve => {
 
                 if (
-                    !("speechSynthesis" in window)
+                    !(
+                        "speechSynthesis"
+                        in window
+                    )
                 ) {
 
                     resolve();
+
                     return;
                 }
 
 
-                speechSynthesis.cancel();
+                window.speechSynthesis
+                    .cancel();
 
 
-                const utterance =
+                const speech =
                     new SpeechSynthesisUtterance(
-                        text
+                        cleanForSpeech(
+                            text
+                        )
                     );
 
 
-                utterance.rate =
-                    1.02;
-
-                utterance.pitch =
-                    1.0;
-
-                utterance.lang =
+                speech.lang =
                     navigator.language ||
                     "en-IN";
 
 
-                utterance.onend =
+                speech.rate =
+                    1.02;
+
+
+                speech.pitch =
+                    1;
+
+
+                speech.volume =
+                    1;
+
+
+                speech.onend =
                     resolve;
 
 
-                utterance.onerror =
+                speech.onerror =
                     resolve;
 
 
-                speechSynthesis.speak(
-                    utterance
-                );
+                window.speechSynthesis
+                    .speak(
+                        speech
+                    );
             }
         );
     }
 
 
-    /* ========================================================
-       CONTINUITY
-       ======================================================== */
+    /* =========================================================
+       FOLLOW-UP MODE
+       ========================================================= */
 
-    function resumeAfterInteraction() {
+    function continueOrSleep() {
 
         state.thinking =
             false;
@@ -1161,39 +2702,30 @@
 
 
             setState(
-                "Aprisha is here",
-                "Go ahead…",
-                "awake"
+                "Listening",
+                "Anything else?"
             );
 
 
             setTimeout(
-                beginCommandListening,
-                500
+                startCommandListening,
+                420
             );
 
+            return;
         }
-        else {
-
-            state.awake =
-                false;
 
 
-            setState(
-                "Aprisha ready",
-                "Say “Hey Aprisha”",
-                "waiting"
-            );
-
-
-            restartWakeLater();
-        }
+        endPresence();
     }
 
 
-    function stopPresenceSession() {
+    function resetPresenceState() {
 
         state.awake =
+            false;
+
+        state.commandActive =
             false;
 
         state.thinking =
@@ -1202,32 +2734,36 @@
         state.stayUntil =
             0;
 
-        stopCommandRecognizer();
-
-        speechSynthesis
-            ?.cancel();
-
 
         setState(
             "Aprisha ready",
-            "Say “Hey Aprisha”",
-            "waiting"
+            "Say “Hey Aprisha”"
         );
 
 
-        restartWakeLater();
+        restartWake();
     }
 
 
-    function stopEverything() {
+    function endPresence() {
+
+        stopCommandListening();
+
+
+        window.speechSynthesis
+            ?.cancel();
+
+
+        closeSiri();
+
+
+        resetPresenceState();
+    }
+
+
+    function pauseAprisha() {
 
         state.enabled =
-            false;
-
-        state.awake =
-            false;
-
-        state.thinking =
             false;
 
 
@@ -1237,41 +2773,39 @@
         );
 
 
-        stopWakeRecognizer();
-        stopCommandRecognizer();
+        stopWakeListening();
+        stopCommandListening();
 
-        speechSynthesis
+
+        window.speechSynthesis
             ?.cancel();
+
+
+        closeSiri();
 
 
         setState(
             "Aprisha paused",
-            "Tap Enable Aprisha when you want her again.",
-            "ready"
+            "Tap Enable to reactivate Hey Aprisha."
         );
-
-
-        refreshUI();
     }
 
 
-    /* ========================================================
-       SMALL FEEDBACK
-       ======================================================== */
+    /* =========================================================
+       FEEDBACK
+       ========================================================= */
 
-    function vibrate() {
+    function feedback() {
 
         try {
 
             navigator.vibrate?.(
-                [18, 25, 34]
+                [20, 25, 38]
             );
 
-        } catch {}
-    }
+        }
+        catch {}
 
-
-    function playWakeTone() {
 
         try {
 
@@ -1306,56 +2840,208 @@
 
             oscillator.frequency
                 .exponentialRampToValueAtTime(
-                    720,
+                    760,
                     context.currentTime +
-                    0.12
+                    .13
                 );
 
 
             gain.gain
                 .setValueAtTime(
-                    0.045,
+                    .035,
                     context.currentTime
                 );
 
 
             gain.gain
                 .exponentialRampToValueAtTime(
-                    0.0001,
+                    .0001,
                     context.currentTime +
-                    0.18
+                    .18
                 );
 
 
-            oscillator.connect(gain);
-            gain.connect(context.destination);
-
-            oscillator.start();
-            oscillator.stop(
-                context.currentTime +
-                0.18
+            oscillator.connect(
+                gain
             );
 
-        } catch {}
+
+            gain.connect(
+                context.destination
+            );
+
+
+            oscillator.start();
+
+
+            oscillator.stop(
+                context.currentTime +
+                .18
+            );
+        }
+        catch {}
     }
 
 
-    /* ========================================================
-       LIFECYCLE
-       ======================================================== */
+    /* =========================================================
+       AUTO-ARM FROM WEBSITE OPEN
+       ========================================================= */
+
+    async function autoArm() {
+
+        if (
+            !state.enabled
+        ) {
+
+            setState(
+                "Aprisha paused",
+                "Tap Enable to reactivate."
+            );
+
+            return;
+        }
+
+
+        if (
+            !SpeechRecognition
+        ) {
+
+            setState(
+                "Voice wake unavailable",
+                "Use the Aprisha microphone button."
+            );
+
+            return;
+        }
+
+
+        const permission =
+            await permissionState();
+
+
+        if (
+            permission ===
+            "granted"
+        ) {
+
+            showPermissionPrompt(
+                false
+            );
+
+
+            startWakeListening();
+
+            return;
+        }
+
+
+        /*
+         * First device visit:
+         * browsers require microphone permission.
+         */
+
+        showPermissionPrompt(
+            true
+        );
+
+
+        setState(
+            "Enable Hey Aprisha",
+            "Allow microphone once. Future visits will arm automatically."
+        );
+
+
+        /*
+         * After any normal interaction, try to resume
+         * automatically if permission changed.
+         */
+
+        document.addEventListener(
+            "pointerdown",
+            async () => {
+
+                const result =
+                    await permissionState();
+
+
+                if (
+                    result ===
+                    "granted"
+                ) {
+
+                    showPermissionPrompt(
+                        false
+                    );
+
+
+                    startWakeListening();
+                }
+            },
+            {
+                once:
+                    true,
+
+                capture:
+                    true
+            }
+        );
+    }
+
+
+    /* =========================================================
+       PAGE LIFECYCLE
+       ========================================================= */
 
     document.addEventListener(
         "visibilitychange",
         () => {
 
-            if (document.hidden) {
+            if (
+                document.hidden
+            ) {
 
-                stopWakeRecognizer();
-                stopCommandRecognizer();
+                stopWakeListening();
+                stopCommandListening();
 
                 return;
             }
 
+
+            if (
+                state.enabled &&
+                !state.awake
+            ) {
+
+                setTimeout(
+                    startWakeListening,
+                    350
+                );
+            }
+        }
+    );
+
+
+    window.addEventListener(
+        "focus",
+        () => {
+
+            if (
+                state.enabled &&
+                !state.awake
+            ) {
+
+                setTimeout(
+                    startWakeListening,
+                    300
+                );
+            }
+        }
+    );
+
+
+    window.addEventListener(
+        "pageshow",
+        () => {
 
             if (
                 state.enabled &&
@@ -1371,50 +3057,59 @@
     );
 
 
-    window.addEventListener(
-        "pageshow",
-        () => {
+    /* =========================================================
+       PUBLIC APRISHA API
+       ========================================================= */
 
-            if (
-                state.enabled
-            ) {
+    window.APAprisha = {
 
-                setTimeout(
-                    startWakeListening,
-                    700
-                );
-            }
-        }
-    );
+        wake:
+            () =>
+                wakeAprisha(),
 
+        listen:
+            startCommandListening,
+
+        ask:
+            askAP,
+
+        execute:
+            executeCommand,
+
+        enable:
+            enableAprisha,
+
+        pause:
+            pauseAprisha,
+
+        open:
+            openSiri,
+
+        close:
+            endPresence
+    };
+
+
+    /* =========================================================
+       BOOT
+       ========================================================= */
 
     function boot() {
 
         createUI();
 
 
-        if (state.enabled) {
-
-            setState(
-                "Aprisha ready",
-                "Say “Hey Aprisha”",
-                "waiting"
-            );
+        setState(
+            "Aprisha ready",
+            "Say “Hey Aprisha”"
+        );
 
 
-            /*
-             * Browsers may still require one interaction after
-             * reopening the PWA before microphone access resumes.
-             */
-            setTimeout(
-                startWakeListening,
-                900
-            );
-        }
+        autoArm();
 
 
         console.log(
-            "✅ AP SYNAPSE — APRISHA UNIVERSAL READY"
+            "✅ AP SYNAPSE — APRISHA INSTANT PRESENCE READY"
         );
     }
 

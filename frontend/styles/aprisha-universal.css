@@ -1,10 +1,12 @@
 ﻿/* ============================================================
-   AP SYNAPSE · APRISHA UNIVERSAL
+   AP SYNAPSE
+   APRISHA INSTANT PRESENCE MASTER
    ============================================================ */
 
 #apAprishaUniversal {
-    --ap-gold: #d8b261;
-    --ap-bg: rgba(15,16,18,.96);
+    --ap-gold: #deb86a;
+    --ap-gold-soft: rgba(222,184,106,.16);
+    --ap-panel: rgba(14,15,17,.94);
 
     font-family:
         Inter,
@@ -16,13 +18,150 @@
 }
 
 
-#apAprishaOrb {
+/* ============================================================
+   ONE-TIME PERMISSION
+   ============================================================ */
+
+.ap-aprisha-permission {
     position: fixed;
 
-    right: 18px;
+    left: 50%;
     bottom:
         calc(
-            20px +
+            18px +
+            env(safe-area-inset-bottom)
+        );
+
+    z-index: 2147483600;
+
+    width:
+        min(
+            430px,
+            calc(100vw - 24px)
+        );
+
+    min-height: 58px;
+
+    transform:
+        translateX(-50%);
+
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    padding:
+        9px 10px;
+
+    box-sizing: border-box;
+
+    border:
+        1px solid
+        rgba(222,184,106,.20);
+
+    border-radius: 16px;
+
+    background:
+        rgba(15,16,18,.97);
+
+    box-shadow:
+        0 22px 60px
+        rgba(0,0,0,.42);
+
+    backdrop-filter:
+        blur(22px);
+
+    -webkit-backdrop-filter:
+        blur(22px);
+
+    color: #f4f1ea;
+}
+
+
+.ap-aprisha-permission-mark {
+    width: 34px;
+    height: 34px;
+
+    flex: 0 0 34px;
+
+    display: grid;
+    place-items: center;
+
+    border:
+        1px solid
+        rgba(222,184,106,.20);
+
+    border-radius: 10px;
+
+    color: var(--ap-gold);
+
+    font-size: 9px;
+    font-weight: 800;
+}
+
+
+.ap-aprisha-permission-copy {
+    min-width: 0;
+
+    flex: 1;
+}
+
+
+.ap-aprisha-permission-copy strong {
+    display: block;
+
+    font-size: 11px;
+    font-weight: 650;
+}
+
+
+.ap-aprisha-permission-copy span {
+    display: block;
+
+    margin-top: 2px;
+
+    color:
+        rgba(243,240,232,.40);
+
+    font-size: 8px;
+}
+
+
+#apAprishaPermissionEnable {
+    min-height: 34px;
+
+    padding:
+        0 13px;
+
+    border:
+        1px solid
+        rgba(222,184,106,.22);
+
+    border-radius: 9px;
+
+    background:
+        rgba(222,184,106,.08);
+
+    color: #e4c27a;
+
+    font-size: 9px;
+
+    cursor: pointer;
+}
+
+
+/* ============================================================
+   ORB
+   ============================================================ */
+
+.ap-aprisha-orb {
+    position: fixed;
+
+    right: 17px;
+
+    bottom:
+        calc(
+            18px +
             env(safe-area-inset-bottom)
         );
 
@@ -31,18 +170,21 @@
     width: 48px;
     height: 48px;
 
+    display: grid;
+    place-items: center;
+
     padding: 0;
 
     border:
         1px solid
-        rgba(218,180,98,.30);
+        rgba(222,184,106,.28);
 
     border-radius: 50%;
 
     background:
         radial-gradient(
             circle at 35% 25%,
-            rgba(218,180,98,.19),
+            rgba(225,189,109,.18),
             transparent 45%
         ),
         linear-gradient(
@@ -52,187 +194,180 @@
         );
 
     box-shadow:
-        0 14px 38px rgba(0,0,0,.34),
-        inset 0 1px rgba(255,255,255,.055);
+        0 14px 40px
+        rgba(0,0,0,.34);
+
+    color: var(--ap-gold);
 
     cursor: pointer;
 }
 
 
-.ap-aprisha-orb-mark {
+.ap-aprisha-orb span {
     position: relative;
+
     z-index: 2;
 
-    color: var(--ap-gold);
-
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 800;
 
     letter-spacing: .08em;
 }
 
 
-.ap-aprisha-orb-pulse {
+.ap-aprisha-orb i {
     position: absolute;
+
     inset: 8px;
 
     border:
         1px solid
-        rgba(218,180,98,.16);
+        rgba(222,184,106,.12);
 
     border-radius: 50%;
+
+    animation:
+        apAprishaIdle
+        2.4s ease-in-out
+        infinite;
 }
 
+
+/* ============================================================
+   SMALL PANEL
+   ============================================================ */
 
 .ap-aprisha-panel {
     position: fixed;
 
-    right: 18px;
+    right: 17px;
 
     bottom:
         calc(
-            80px +
+            78px +
             env(safe-area-inset-bottom)
         );
 
-    z-index: 2147481100;
+    z-index: 2147481200;
 
     width:
         min(
-            370px,
+            340px,
             calc(100vw - 24px)
         );
 
-    padding: 15px;
+    padding: 14px;
 
     box-sizing: border-box;
 
     border:
         1px solid
-        rgba(255,255,255,.075);
+        rgba(255,255,255,.065);
 
-    border-radius: 22px;
+    border-radius: 18px;
 
     background:
-        radial-gradient(
-            circle at 50% 0%,
-            rgba(216,178,97,.085),
-            transparent 40%
-        ),
         rgba(14,15,17,.97);
 
     box-shadow:
-        0 28px 70px
-        rgba(0,0,0,.48);
+        0 24px 65px
+        rgba(0,0,0,.46);
 
     backdrop-filter:
-        blur(26px);
+        blur(24px);
 
     -webkit-backdrop-filter:
-        blur(26px);
+        blur(24px);
 
     color: #f5f2eb;
 
     opacity: 0;
+
     visibility: hidden;
 
     pointer-events: none;
 
     transform:
-        translateY(10px)
-        scale(.98);
+        translateY(8px)
+        scale(.985);
 
     transition:
-        opacity .18s ease,
-        transform .18s ease,
-        visibility .18s ease;
+        .18s ease;
 }
 
 
 .ap-aprisha-panel.ap-open {
     opacity: 1;
+
     visibility: visible;
 
     pointer-events: auto;
 
     transform:
-        translateY(0)
-        scale(1);
+        none;
 }
 
 
-.ap-aprisha-header {
+.ap-aprisha-panel-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
 
-.ap-aprisha-brand {
+.ap-aprisha-mini-brand {
     display: flex;
     align-items: center;
 
-    gap: 10px;
+    gap: 9px;
 }
 
 
-.ap-aprisha-mark {
-    width: 34px;
-    height: 34px;
+.ap-aprisha-mini-brand b {
+    width: 31px;
+    height: 31px;
 
     display: grid;
     place-items: center;
 
     border:
         1px solid
-        rgba(218,180,98,.22);
+        rgba(222,184,106,.18);
 
-    border-radius: 10px;
-
-    background:
-        rgba(218,180,98,.055);
+    border-radius: 9px;
 
     color: var(--ap-gold);
 
-    font-size: 9px;
-    font-weight: 800;
+    font-size: 8px;
 }
 
 
-.ap-aprisha-brand strong {
+.ap-aprisha-mini-brand strong {
     display: block;
 
-    font-size: 13px;
-    font-weight: 650;
+    font-size: 12px;
 }
 
 
-.ap-aprisha-brand span {
+.ap-aprisha-mini-brand span {
     display: block;
 
-    margin-top: 2px;
+    margin-top: 1px;
 
     color:
-        rgba(240,237,228,.42);
+        rgba(240,237,229,.36);
 
     font-size: 8px;
-
-    letter-spacing: .04em;
 }
 
 
 #apAprishaClose {
-    width: 30px;
-    height: 30px;
-
-    padding: 0;
-
     border: 0;
 
     background: transparent;
 
     color:
-        rgba(245,242,234,.54);
+        rgba(245,242,235,.55);
 
     font-size: 20px;
 
@@ -240,201 +375,459 @@
 }
 
 
-.ap-aprisha-intelligence {
-    padding:
-        25px
-        5px
-        20px;
-
-    text-align: center;
-}
-
-
-.ap-aprisha-field {
-    position: relative;
-
-    width: 70px;
-    height: 70px;
-
-    margin:
-        0 auto
-        15px;
-
-    display: grid;
-    place-items: center;
-}
-
-
-.ap-aprisha-field::before {
-    content: "";
-
-    position: absolute;
-
-    width: 18px;
-    height: 18px;
-
-    border-radius: 50%;
-
-    background:
-        radial-gradient(
-            circle,
-            #dfba69,
-            rgba(203,163,77,.35) 45%,
-            transparent 70%
-        );
-
-    box-shadow:
-        0 0 24px
-        rgba(215,177,94,.28);
-}
-
-
-.ap-aprisha-field i {
-    position: absolute;
-
-    border:
-        1px solid
-        rgba(215,177,94,.13);
-
-    border-radius: 50%;
-}
-
-
-.ap-aprisha-field i:nth-child(1) {
-    width: 32px;
-    height: 32px;
-}
-
-
-.ap-aprisha-field i:nth-child(2) {
-    width: 48px;
-    height: 48px;
-}
-
-
-.ap-aprisha-field i:nth-child(3) {
-    width: 66px;
-    height: 66px;
-}
-
-
-.ap-aprisha-field[data-mode="listening"] i,
-.ap-aprisha-field[data-mode="awake"] i {
-    animation:
-        aprishaPulse
-        1.4s ease-in-out
-        infinite;
-}
-
-
-.ap-aprisha-field[data-mode="thinking"] {
-    animation:
-        aprishaThink
-        1.8s linear
-        infinite;
-}
-
-
 .ap-aprisha-state {
-    color:
-        #dfbc70;
+    margin-top: 19px;
 
-    font-size: 10px;
+    color: #dfbb6b;
+
+    font-size: 9px;
     font-weight: 650;
-
-    letter-spacing: .035em;
 }
 
 
 .ap-aprisha-text {
-    max-height: 125px;
+    min-height: 38px;
 
-    margin-top: 8px;
-
-    overflow-y: auto;
+    margin-top: 6px;
 
     color:
-        rgba(244,242,236,.87);
+        rgba(244,241,234,.73);
 
-    font-size: 13px;
-    line-height: 1.55;
+    font-size: 12px;
+    line-height: 1.5;
 }
 
 
 .ap-aprisha-actions {
     display: flex;
+    gap: 6px;
 
-    gap: 7px;
+    margin-top: 13px;
 }
 
 
 .ap-aprisha-actions button {
     flex: 1;
 
-    min-height: 38px;
-
-    padding:
-        0 9px;
+    min-height: 35px;
 
     border:
         1px solid
-        rgba(255,255,255,.07);
+        rgba(255,255,255,.06);
 
-    border-radius: 10px;
+    border-radius: 9px;
 
     background:
-        rgba(255,255,255,.025);
+        rgba(255,255,255,.02);
 
     color:
-        rgba(245,242,235,.76);
+        rgba(244,241,234,.66);
 
-    font-size: 9px;
-    font-weight: 600;
+    font-size: 8px;
 
     cursor: pointer;
 }
 
 
-.ap-aprisha-actions button.ap-active {
-    border-color:
-        rgba(218,180,98,.23);
+/* ============================================================
+   SIRI-LIKE APRISHA POPUP
+   ============================================================ */
+
+.ap-aprisha-siri {
+    position: fixed;
+    inset: 0;
+
+    z-index: 2147483500;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+    padding:
+        22px;
+
+    box-sizing: border-box;
+
+    visibility: hidden;
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+        opacity .18s ease,
+        visibility .18s ease;
+}
+
+
+.ap-aprisha-siri.ap-open {
+    visibility: visible;
+    opacity: 1;
+
+    pointer-events: auto;
+}
+
+
+.ap-aprisha-siri-backdrop {
+    position: absolute;
+    inset: 0;
 
     background:
-        rgba(218,180,98,.06);
+        rgba(4,5,6,.28);
 
-    color:
-        #e3c078;
+    backdrop-filter:
+        blur(6px);
+
+    -webkit-backdrop-filter:
+        blur(6px);
 }
 
 
-.ap-aprisha-foot {
-    margin-top: 10px;
+.ap-aprisha-siri-card {
+    position: relative;
+
+    width:
+        min(
+            580px,
+            calc(100vw - 24px)
+        );
+
+    min-height: 260px;
+
+    padding:
+        15px
+        18px
+        17px;
+
+    box-sizing: border-box;
+
+    border:
+        1px solid
+        rgba(255,255,255,.075);
+
+    border-radius: 28px;
+
+    background:
+        radial-gradient(
+            circle at 50% 20%,
+            rgba(222,184,106,.095),
+            transparent 35%
+        ),
+        linear-gradient(
+            160deg,
+            rgba(24,25,28,.97),
+            rgba(12,13,15,.98)
+        );
+
+    box-shadow:
+        0 35px 100px
+        rgba(0,0,0,.55);
+
+    backdrop-filter:
+        blur(30px);
+
+    -webkit-backdrop-filter:
+        blur(30px);
+
+    color: #f7f4ed;
+
+    transform:
+        translateY(18px)
+        scale(.985);
+
+    transition:
+        transform .22s ease;
+}
+
+
+.ap-aprisha-siri.ap-open
+.ap-aprisha-siri-card {
+    transform:
+        none;
+}
+
+
+.ap-aprisha-siri-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.ap-aprisha-siri-name {
+    color:
+        rgba(246,243,236,.72);
+
+    font-size: 10px;
+    font-weight: 650;
+
+    letter-spacing: .06em;
+}
+
+
+#apAprishaSiriClose {
+    width: 30px;
+    height: 30px;
+
+    padding: 0;
+
+    border:
+        1px solid
+        rgba(255,255,255,.055);
+
+    border-radius: 9px;
+
+    background:
+        rgba(255,255,255,.018);
 
     color:
-        rgba(235,232,224,.30);
+        rgba(245,242,235,.55);
 
-    font-size: 7.5px;
+    font-size: 18px;
+
+    cursor: pointer;
+}
+
+
+/* INTELLIGENCE CORE */
+
+.ap-aprisha-siri-core {
+    position: relative;
+
+    width: 92px;
+    height: 92px;
+
+    margin:
+        8px auto 10px;
+
+    display: grid;
+    place-items: center;
+}
+
+
+.ap-aprisha-siri-core strong {
+    position: relative;
+
+    z-index: 4;
+
+    width: 37px;
+    height: 37px;
+
+    display: grid;
+    place-items: center;
+
+    border:
+        1px solid
+        rgba(225,187,101,.30);
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle at 35% 25%,
+            rgba(225,188,107,.18),
+            #191a1c 70%
+        );
+
+    box-shadow:
+        0 0 30px
+        rgba(218,178,91,.13);
+
+    color: #e0ba68;
+
+    font-size: 8px;
+    font-weight: 800;
+
+    letter-spacing: .08em;
+}
+
+
+.ap-aprisha-siri-core .r {
+    position: absolute;
+
+    border:
+        1px solid
+        rgba(218,178,91,.11);
+
+    border-radius: 50%;
+}
+
+
+.ap-aprisha-siri-core .r1 {
+    width: 55px;
+    height: 55px;
+}
+
+
+.ap-aprisha-siri-core .r2 {
+    width: 73px;
+    height: 73px;
+}
+
+
+.ap-aprisha-siri-core .r3 {
+    width: 90px;
+    height: 90px;
+}
+
+
+.ap-aprisha-siri-core[data-mode="listening"]
+.r,
+.ap-aprisha-siri-core[data-mode="awake"]
+.r {
+    animation:
+        apAprishaListen
+        1.45s ease-in-out
+        infinite;
+}
+
+
+.ap-aprisha-siri-core[data-mode="listening"]
+.r2 {
+    animation-delay: .1s;
+}
+
+
+.ap-aprisha-siri-core[data-mode="listening"]
+.r3 {
+    animation-delay: .2s;
+}
+
+
+.ap-aprisha-siri-core[data-mode="thinking"] {
+    animation:
+        apAprishaThink
+        4s linear
+        infinite;
+}
+
+
+.ap-aprisha-siri-status {
+    text-align: center;
+
+    color: #dfba69;
+
+    font-size: 9px;
+    font-weight: 650;
+
+    letter-spacing: .06em;
+}
+
+
+.ap-aprisha-siri-text {
+    width:
+        min(
+            480px,
+            100%
+        );
+
+    max-height: 135px;
+
+    margin:
+        8px auto 0;
+
+    overflow-y: auto;
 
     text-align: center;
+
+    color:
+        rgba(248,245,238,.92);
+
+    font-size:
+        clamp(
+            17px,
+            2.4vw,
+            23px
+        );
+
+    font-weight: 450;
+
+    line-height: 1.42;
 }
 
 
-@keyframes aprishaPulse {
+.ap-aprisha-live-transcript {
+    min-height: 18px;
+
+    margin-top: 8px;
+
+    text-align: center;
+
+    color:
+        rgba(241,238,230,.36);
+
+    font-size: 9px;
+}
+
+
+.ap-aprisha-siri-foot {
+    display: flex;
+    justify-content: center;
+
+    gap: 7px;
+
+    margin-top: 13px;
+}
+
+
+.ap-aprisha-siri-foot button {
+    min-height: 34px;
+
+    padding:
+        0 13px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.06);
+
+    border-radius: 999px;
+
+    background:
+        rgba(255,255,255,.02);
+
+    color:
+        rgba(244,241,234,.62);
+
+    font-size: 8px;
+
+    cursor: pointer;
+}
+
+
+/* ============================================================
+   ANIMATION
+   ============================================================ */
+
+@keyframes apAprishaIdle {
+
+    0%,
+    100% {
+        transform: scale(.94);
+        opacity: .35;
+    }
+
+    50% {
+        transform: scale(1.06);
+        opacity: .75;
+    }
+}
+
+
+@keyframes apAprishaListen {
 
     0%,
     100% {
         transform: scale(.92);
-        opacity: .45;
+        opacity: .25;
     }
 
     50% {
         transform: scale(1.08);
-        opacity: 1;
+        opacity: .95;
     }
 }
 
 
-@keyframes aprishaThink {
+@keyframes apAprishaThink {
 
     from {
         transform: rotate(0);
@@ -452,8 +845,8 @@
 
 @media (max-width: 700px) {
 
-    #apAprishaOrb {
-        right: 13px;
+    .ap-aprisha-orb {
+        right: 12px;
 
         bottom:
             calc(
@@ -477,16 +870,53 @@
 
         width:
             calc(100vw - 16px);
+    }
 
-        max-height:
-            min(
-                520px,
-                calc(100dvh - 165px)
+
+    .ap-aprisha-siri {
+        padding:
+            8px
+            8px
+            calc(
+                9px +
+                env(safe-area-inset-bottom)
             );
+    }
 
-        overflow-y: auto;
 
-        border-radius: 19px;
+    .ap-aprisha-siri-card {
+        width: 100%;
+
+        min-height: 285px;
+
+        padding:
+            13px
+            13px
+            16px;
+
+        border-radius:
+            25px;
+    }
+
+
+    .ap-aprisha-siri-core {
+        margin-top: 4px;
+    }
+
+
+    .ap-aprisha-siri-text {
+        max-height: 120px;
+
+        font-size: 18px;
+    }
+
+
+    .ap-aprisha-permission {
+        bottom:
+            calc(
+                88px +
+                env(safe-area-inset-bottom)
+            );
     }
 
 }

@@ -1793,6 +1793,231 @@
         command
     ) {
 
+        // AP_APRISHA_WEB_DIRECT_ACTION_MASTER
+        /*
+         * Browser/PWA direct destinations.
+         *
+         * Native AP Presence handles installed Android apps.
+         * Browser Aprisha handles web destinations directly.
+         */
+
+        const apWebCommand =
+            String(
+                command || ""
+            )
+            .trim();
+
+
+        const apWebNormalized =
+            apWebCommand
+                .toLowerCase()
+                .replace(
+                    /\\s+/g,
+                    " "
+                )
+                .trim();
+
+
+        const apWebDestinations = {
+
+            "youtube":
+                "https://www.youtube.com",
+
+            "google":
+                "https://www.google.com",
+
+            "gmail":
+                "https://mail.google.com",
+
+            "google maps":
+                "https://maps.google.com",
+
+            "maps":
+                "https://maps.google.com",
+
+            "google drive":
+                "https://drive.google.com",
+
+            "drive":
+                "https://drive.google.com",
+
+            "github":
+                "https://github.com",
+
+            "wikipedia":
+                "https://www.wikipedia.org",
+
+            "reddit":
+                "https://www.reddit.com",
+
+            "amazon":
+                "https://www.amazon.in"
+        };
+
+
+        const apOpenMatch =
+            apWebNormalized.match(
+                /^(?:please\\s+)?(?:open|launch|start|visit|go to)\\s+(.+)$/
+            );
+
+
+        if (
+            apOpenMatch
+        ) {
+
+            let requested =
+                apOpenMatch[1]
+                    .replace(
+                        /\\s+(?:app|application|website|site)$/i,
+                        ""
+                    )
+                    .trim();
+
+
+            /*
+             * Example:
+             * "open the youtube app"
+             */
+
+            requested =
+                requested.replace(
+                    /^the\\s+/,
+                    ""
+                );
+
+
+            const destination =
+                apWebDestinations[
+                    requested
+                ];
+
+
+            if (
+                destination
+            ) {
+
+                const displayName =
+                    requested
+                        .replace(
+                            /\\b\\w/g,
+                            letter =>
+                                letter.toUpperCase()
+                        );
+
+
+                /*
+                 * Update Aprisha before leaving AP Synapse.
+                 */
+
+                try {
+
+                    setUI?.(
+                        "opening",
+                        "Opening " +
+                        displayName +
+                        "…"
+                    );
+
+                }
+                catch {}
+
+
+                try {
+
+                    const siriText =
+                        document.getElementById(
+                            "apAprishaSiriText"
+                        );
+
+                    const liveTranscript =
+                        document.getElementById(
+                            "apAprishaLiveTranscript"
+                        );
+
+                    if (siriText) {
+
+                        siriText.textContent =
+                            "Opening " +
+                            displayName +
+                            "…";
+                    }
+
+
+                    if (liveTranscript) {
+
+                        liveTranscript.textContent =
+                            apWebCommand;
+                    }
+
+                }
+                catch {}
+
+
+                /*
+                 * Same-tab navigation is intentional.
+                 *
+                 * Unlike window.open(), this does NOT depend
+                 * on popup permission after a voice command.
+                 *
+                 * On supported mobile systems, Android may
+                 * hand the HTTPS destination to its associated
+                 * installed application.
+                 */
+
+                window.location.assign(
+                    destination
+                );
+
+
+                return true;
+            }
+
+
+            /*
+             * Explicit URL:
+             *
+             * "open https://example.com"
+             */
+
+            if (
+                requested.startsWith(
+                    "https://"
+                )
+                ||
+                requested.startsWith(
+                    "http://"
+                )
+            ) {
+
+                try {
+
+                    const parsed =
+                        new URL(
+                            requested
+                        );
+
+
+                    if (
+                        parsed.protocol === "https:"
+                        ||
+                        parsed.protocol === "http:"
+                    ) {
+
+                        window.location.assign(
+                            parsed.href
+                        );
+
+
+                        return true;
+                    }
+
+                }
+                catch {}
+            }
+        }
+
+
+
         const c =
             normalize(command);
 

@@ -1,0 +1,698 @@
+﻿/* ============================================================
+   AP SYNAPSE — NOTIFICATION CENTER FINAL
+   Mobile notification authority
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    /* ========================================================
+       MAIN PANEL
+       ======================================================== */
+
+    #apSynapseNotificationCenter {
+
+        position: fixed !important;
+
+        top: 72px !important;
+        left: 10px !important;
+        right: 10px !important;
+        bottom: 10px !important;
+
+        width: auto !important;
+        height: auto !important;
+
+        max-width: none !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+
+        box-sizing: border-box !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        overscroll-behavior: contain !important;
+
+        color: #f4f3ee !important;
+
+        background:
+            linear-gradient(
+                155deg,
+                rgba(18,19,22,.992),
+                rgba(8,9,11,.997)
+            ) !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.08) !important;
+
+        border-radius: 20px !important;
+
+        box-shadow:
+            0 28px 80px rgba(0,0,0,.58),
+            inset 0 1px 0 rgba(255,255,255,.04) !important;
+
+        backdrop-filter: blur(24px) !important;
+        -webkit-backdrop-filter: blur(24px) !important;
+
+        scrollbar-width: none !important;
+
+        z-index: 50000 !important;
+    }
+
+
+    #apSynapseNotificationCenter::-webkit-scrollbar,
+    #apSynapseNotificationCenter *::-webkit-scrollbar {
+
+        display: none !important;
+
+        width: 0 !important;
+        height: 0 !important;
+    }
+
+
+    #apSynapseNotificationCenter,
+    #apSynapseNotificationCenter * {
+
+        box-sizing: border-box !important;
+
+        max-width: 100% !important;
+    }
+
+
+    /* ========================================================
+       HEADER
+       ======================================================== */
+
+    #apSynapseNotificationCenter
+    .ap-final-notification-header {
+
+        padding:
+            17px 16px 14px !important;
+
+        border-bottom:
+            1px solid
+            rgba(255,255,255,.055) !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(255,255,255,.018),
+                transparent
+            ) !important;
+    }
+
+
+    #apSynapseNotificationCenter
+    .ap-final-notification-kicker {
+
+        display: block !important;
+
+        margin:
+            0 0 5px !important;
+
+        color:
+            #d8ac55 !important;
+
+        -webkit-text-fill-color:
+            #d8ac55 !important;
+
+        font-size:
+            7.5px !important;
+
+        line-height:
+            1.2 !important;
+
+        font-weight:
+            780 !important;
+
+        letter-spacing:
+            .19em !important;
+
+        text-transform:
+            uppercase !important;
+    }
+
+
+    #apSynapseNotificationCenter
+    .ap-final-notification-title {
+
+        margin:
+            0 !important;
+
+        color:
+            #f7f6f1 !important;
+
+        -webkit-text-fill-color:
+            #f7f6f1 !important;
+
+        font-size:
+            22px !important;
+
+        line-height:
+            1.05 !important;
+
+        font-weight:
+            740 !important;
+
+        letter-spacing:
+            -.035em !important;
+    }
+
+
+    #apSynapseNotificationCenter
+    .ap-final-notification-subtitle {
+
+        margin:
+            7px 0 0 !important;
+
+        color:
+            rgba(229,229,223,.49) !important;
+
+        font-size:
+            10.5px !important;
+
+        line-height:
+            1.4 !important;
+
+        font-weight:
+            430 !important;
+    }
+
+
+    /* ========================================================
+       ACTION BAR
+       ======================================================== */
+
+    #apSynapseNotificationCenter
+    .ap-final-notification-actions {
+
+        min-height:
+            46px !important;
+
+        padding:
+            0 16px !important;
+
+        display:
+            flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            space-between !important;
+
+        gap:
+            12px !important;
+
+        border-bottom:
+            1px solid
+            rgba(255,255,255,.055) !important;
+
+        background:
+            rgba(255,255,255,.012) !important;
+    }
+
+
+    #apSynapseNotificationCenter
+    .ap-final-notification-action {
+
+        min-height:
+            32px !important;
+
+        padding:
+            0 4px !important;
+
+        display:
+            inline-flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        color:
+            rgba(231,231,226,.61) !important;
+
+        -webkit-text-fill-color:
+            rgba(231,231,226,.61) !important;
+
+        font-size:
+            10px !important;
+
+        line-height:
+            1 !important;
+
+        font-weight:
+            560 !important;
+
+        background:
+            transparent !important;
+
+        border:
+            0 !important;
+
+        box-shadow:
+            none !important;
+
+        cursor:
+            pointer !important;
+    }
+
+
+    #apSynapseNotificationCenter
+    .ap-final-notification-action:last-child {
+
+        color:
+            rgba(216,172,83,.76) !important;
+
+        -webkit-text-fill-color:
+            rgba(216,172,83,.76) !important;
+    }
+
+
+    #apSynapseNotificationCenter
+    .ap-final-notification-action.ap-final-action-disabled {
+
+        opacity:
+            .33 !important;
+
+        pointer-events:
+            none !important;
+
+        cursor:
+            default !important;
+    }
+
+
+    /* ========================================================
+       NOTIFICATION LIST
+       ======================================================== */
+
+    #apSynapseNotificationCenter
+    .notification-item,
+
+    #apSynapseNotificationCenter
+    .ap-notification-item,
+
+    #apSynapseNotificationCenter
+    [data-notification-item] {
+
+        position:
+            relative !important;
+
+        margin:
+            8px 12px !important;
+
+        padding:
+            12px 13px !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.065) !important;
+
+        border-radius:
+            13px !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(255,255,255,.026),
+                rgba(255,255,255,.012)
+            ) !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.025) !important;
+    }
+
+
+    #apSynapseNotificationCenter
+    .notification-item:hover,
+
+    #apSynapseNotificationCenter
+    .ap-notification-item:hover {
+
+        border-color:
+            rgba(216,172,83,.18) !important;
+
+        background:
+            rgba(216,172,83,.025) !important;
+    }
+
+
+    /* ========================================================
+       EMPTY STATE
+       ======================================================== */
+
+    #apSynapseNotificationCenter
+    .ap-final-empty-state {
+
+        min-height:
+            280px !important;
+
+        padding:
+            36px 24px 38px !important;
+
+        display:
+            flex !important;
+
+        flex-direction:
+            column !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        text-align:
+            center !important;
+    }
+
+
+    #apSynapseNotificationCenter
+    .ap-final-empty-icon {
+
+        width:
+            50px !important;
+
+        height:
+            50px !important;
+
+        margin:
+            0 auto 15px !important;
+
+        display:
+            grid !important;
+
+        place-items:
+            center !important;
+
+        color:
+            #ddb159 !important;
+
+        font-size:
+            20px !important;
+
+        border:
+            1px solid
+            rgba(221,177,89,.27) !important;
+
+        border-radius:
+            50% !important;
+
+        background:
+            radial-gradient(
+                circle,
+                rgba(221,177,89,.09),
+                rgba(221,177,89,.025)
+            ) !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.04),
+            0 12px 30px
+            rgba(0,0,0,.18) !important;
+    }
+
+
+    #apSynapseNotificationCenter
+    .ap-final-empty-title {
+
+        margin:
+            0 !important;
+
+        color:
+            #f1f0eb !important;
+
+        font-size:
+            13px !important;
+
+        line-height:
+            1.25 !important;
+
+        font-weight:
+            680 !important;
+
+        letter-spacing:
+            -.015em !important;
+    }
+
+
+    #apSynapseNotificationCenter
+    .ap-final-empty-copy {
+
+        width:
+            min(100%, 240px) !important;
+
+        margin:
+            7px auto 0 !important;
+
+        color:
+            rgba(227,227,221,.45) !important;
+
+        font-size:
+            10px !important;
+
+        line-height:
+            1.48 !important;
+
+        font-weight:
+            430 !important;
+    }
+
+
+    /*
+     * If there are no notifications, kill any stale/ghost
+     * notification list that older code left behind.
+     */
+
+    #apSynapseNotificationCenter.ap-final-notification-empty
+    .notification-list,
+
+    #apSynapseNotificationCenter.ap-final-notification-empty
+    .notifications-list,
+
+    #apSynapseNotificationCenter.ap-final-notification-empty
+    .ap-notification-list {
+
+        display:
+            none !important;
+    }
+
+
+    /* ========================================================
+       FOOTER
+       ======================================================== */
+
+    #apSynapseNotificationCenter
+    .ap-final-notification-footer {
+
+        position:
+            sticky !important;
+
+        bottom:
+            0 !important;
+
+        margin-top:
+            auto !important;
+
+        padding:
+            13px 16px 15px !important;
+
+        border-top:
+            1px solid
+            rgba(255,255,255,.055) !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(10,11,13,.94),
+                rgba(8,9,11,.995)
+            ) !important;
+
+        backdrop-filter:
+            blur(16px) !important;
+
+        -webkit-backdrop-filter:
+            blur(16px) !important;
+    }
+
+
+    #apSynapseNotificationCenter
+    .ap-final-notification-footer-label {
+
+        display:
+            block !important;
+
+        margin:
+            0 0 7px !important;
+
+        color:
+            rgba(224,224,218,.32) !important;
+
+        font-size:
+            8px !important;
+
+        line-height:
+            1.3 !important;
+
+        font-weight:
+            500 !important;
+    }
+
+
+    #apSynapseNotificationCenter
+    .ap-final-notification-preferences {
+
+        display:
+            inline-flex !important;
+
+        align-items:
+            center !important;
+
+        color:
+            #d6a94f !important;
+
+        -webkit-text-fill-color:
+            #d6a94f !important;
+
+        font-size:
+            9px !important;
+
+        line-height:
+            1.3 !important;
+
+        font-weight:
+            600 !important;
+
+        text-decoration:
+            none !important;
+    }
+
+}
+
+
+/* ============================================================
+   AP SYNAPSE — NOTIFICATION CLOSE CONTROL
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    #apSynapseNotificationCenter {
+        position: fixed !important;
+    }
+
+
+    #apSynapseNotificationCenter
+    .ap-notification-close-final {
+
+        position: absolute !important;
+
+        top: 14px !important;
+        right: 14px !important;
+
+        width: 34px !important;
+        height: 34px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: grid !important;
+        place-items: center !important;
+
+        color:
+            rgba(244,244,239,.72) !important;
+
+        background:
+            rgba(255,255,255,.045) !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.085) !important;
+
+        border-radius:
+            10px !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.04),
+            0 6px 18px
+            rgba(0,0,0,.16) !important;
+
+        cursor: pointer !important;
+
+        z-index: 999 !important;
+
+        transition:
+            background .15s ease,
+            border-color .15s ease,
+            transform .15s ease !important;
+    }
+
+
+    #apSynapseNotificationCenter
+    .ap-notification-close-final svg {
+
+        width: 15px !important;
+        height: 15px !important;
+
+        display: block !important;
+
+        stroke: currentColor !important;
+
+        fill: none !important;
+
+        stroke-width: 1.8 !important;
+
+        stroke-linecap: round !important;
+    }
+
+
+    #apSynapseNotificationCenter
+    .ap-notification-close-final:hover {
+
+        color:
+            #f7f6f1 !important;
+
+        background:
+            rgba(255,255,255,.075) !important;
+
+        border-color:
+            rgba(255,255,255,.14) !important;
+    }
+
+
+    #apSynapseNotificationCenter
+    .ap-notification-close-final:active {
+
+        transform:
+            scale(.94) !important;
+    }
+
+
+    #apSynapseNotificationCenter
+    .ap-notification-close-final:focus-visible {
+
+        outline:
+            2px solid
+            rgba(218,174,86,.60) !important;
+
+        outline-offset:
+            2px !important;
+    }
+
+
+    /* leave room for close button */
+
+    #apSynapseNotificationCenter
+    .ap-final-notification-header {
+
+        padding-right:
+            60px !important;
+    }
+
+}
+

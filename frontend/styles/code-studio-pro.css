@@ -1606,3 +1606,1015 @@ and (min-width: 761px) {
 .ap-fixed-stream-cursor {
     display: none !important;
 }
+
+/* ============================================================
+   AP SYNAPSE — CODE STUDIO
+   FINAL MOBILE IDE FIT
+   MOBILE ONLY — DESKTOP UNTOUCHED
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    /* --------------------------------------------------------
+       PAGE
+       -------------------------------------------------------- */
+
+    #codeStudioPage.ap-code-pro-ready {
+        box-sizing: border-box !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        margin: 0 !important;
+
+        padding:
+            6px
+            6px
+            max(
+                6px,
+                env(safe-area-inset-bottom)
+            ) !important;
+
+        overflow: hidden !important;
+    }
+
+
+    /* --------------------------------------------------------
+       ENTIRE IDE
+       -------------------------------------------------------- */
+
+    #codeStudioPage
+    .ap-code-pro {
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        height: 100%;
+
+        display: grid !important;
+
+        grid-template-rows:
+            48px
+            minmax(0, 1fr)
+            24px !important;
+
+        overflow: hidden !important;
+
+        border-radius:
+            14px !important;
+
+        box-sizing:
+            border-box !important;
+    }
+
+
+    /* --------------------------------------------------------
+       MOBILE HEADER
+       -------------------------------------------------------- */
+
+    #codeStudioPage
+    .ap-code-header {
+
+        min-width: 0 !important;
+
+        height: 48px !important;
+
+        gap: 5px !important;
+
+        padding:
+            0
+            7px !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-brand {
+
+        min-width: 0 !important;
+
+        gap: 6px !important;
+
+        overflow: hidden !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-brand-mark {
+
+        width: 29px !important;
+        height: 29px !important;
+
+        flex:
+            0 0
+            29px !important;
+
+        border-radius:
+            8px !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-brand-title {
+
+        max-width:
+            105px !important;
+
+        overflow:
+            hidden !important;
+
+        text-overflow:
+            ellipsis !important;
+
+        white-space:
+            nowrap !important;
+
+        font-size:
+            11px !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-brand-sub {
+
+        display:
+            none !important;
+    }
+
+
+    /* --------------------------------------------------------
+       HEADER ACTIONS
+       ICON ONLY ON MOBILE
+       -------------------------------------------------------- */
+
+    #codeStudioPage
+    .ap-code-actions {
+
+        flex:
+            0 0
+            auto !important;
+
+        gap:
+            4px !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-action,
+    #codeStudioPage
+    .ap-code-analyze {
+
+        width:
+            32px !important;
+
+        min-width:
+            32px !important;
+
+        max-width:
+            32px !important;
+
+        height:
+            32px !important;
+
+        min-height:
+            32px !important;
+
+        padding:
+            0 !important;
+
+        display:
+            inline-flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        border-radius:
+            8px !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-action span,
+    #codeStudioPage
+    .ap-code-analyze span {
+
+        display:
+            none !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-action svg,
+    #codeStudioPage
+    .ap-code-analyze svg {
+
+        width:
+            15px !important;
+
+        height:
+            15px !important;
+    }
+
+
+    /* --------------------------------------------------------
+       BODY — EDITOR GETS MAXIMUM SPACE
+       -------------------------------------------------------- */
+
+    #codeStudioPage
+    .ap-code-body {
+
+        position:
+            relative !important;
+
+        min-width:
+            0 !important;
+
+        min-height:
+            0 !important;
+
+        display:
+            grid !important;
+
+        grid-template-columns:
+            minmax(0, 1fr) !important;
+
+        grid-template-rows:
+            minmax(0, 1fr)
+            38px !important;
+
+        overflow:
+            hidden !important;
+    }
+
+
+    /* --------------------------------------------------------
+       EXPLORER = MOBILE DRAWER
+       -------------------------------------------------------- */
+
+    #codeStudioPage
+    .ap-code-explorer {
+
+        position:
+            absolute !important;
+
+        z-index:
+            100 !important;
+
+        top:
+            0 !important;
+
+        bottom:
+            0 !important;
+
+        left:
+            0 !important;
+
+        width:
+            min(
+                82vw,
+                280px
+            ) !important;
+
+        height:
+            auto !important;
+
+        transform:
+            translateX(-105%) !important;
+
+        transition:
+            transform
+            180ms
+            ease !important;
+
+        border-right:
+            1px solid
+            rgba(
+                255,
+                255,
+                255,
+                0.11
+            ) !important;
+
+        background:
+            rgba(
+                10,
+                11,
+                14,
+                0.99
+            ) !important;
+
+        box-shadow:
+            18px
+            0
+            40px
+            rgba(
+                0,
+                0,
+                0,
+                0.48
+            ) !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-pro.ap-explorer-open
+    .ap-code-explorer {
+
+        transform:
+            translateX(0) !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-backdrop {
+
+        position:
+            absolute !important;
+
+        z-index:
+            90 !important;
+
+        inset:
+            0 !important;
+
+        display:
+            none;
+
+        background:
+            rgba(
+                0,
+                0,
+                0,
+                0.54
+            ) !important;
+
+        backdrop-filter:
+            blur(2px);
+    }
+
+
+    #codeStudioPage
+    .ap-code-pro.ap-explorer-open
+    .ap-code-backdrop {
+
+        display:
+            block !important;
+    }
+
+
+    /* --------------------------------------------------------
+       EDITOR PANEL
+       -------------------------------------------------------- */
+
+    #codeStudioPage
+    .ap-code-editor-panel {
+
+        min-width:
+            0 !important;
+
+        min-height:
+            0 !important;
+
+        width:
+            100% !important;
+
+        display:
+            grid !important;
+
+        grid-template-rows:
+            36px
+            minmax(0, 1fr) !important;
+
+        overflow:
+            hidden !important;
+    }
+
+
+    /* --------------------------------------------------------
+       TABS
+       -------------------------------------------------------- */
+
+    #codeStudioPage
+    .ap-code-tabs {
+
+        min-width:
+            0 !important;
+
+        height:
+            36px !important;
+
+        overflow-x:
+            auto !important;
+
+        overflow-y:
+            hidden !important;
+
+        overscroll-behavior-x:
+            contain;
+
+        -webkit-overflow-scrolling:
+            touch;
+
+        scrollbar-width:
+            none;
+    }
+
+
+    #codeStudioPage
+    .ap-code-tabs::-webkit-scrollbar {
+
+        display:
+            none;
+    }
+
+
+    #codeStudioPage
+    .ap-code-tab {
+
+        height:
+            36px !important;
+
+        flex:
+            0 0
+            auto !important;
+
+        padding:
+            0
+            10px !important;
+
+        font-size:
+            9px !important;
+    }
+
+
+    /* --------------------------------------------------------
+       EDITING AREA
+       -------------------------------------------------------- */
+
+    #codeStudioPage
+    .ap-code-editor-host {
+
+        min-width:
+            0 !important;
+
+        min-height:
+            0 !important;
+
+        width:
+            100% !important;
+
+        height:
+            100% !important;
+
+        display:
+            grid !important;
+
+        grid-template-columns:
+            34px
+            minmax(0, 1fr) !important;
+
+        overflow:
+            hidden !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-lines {
+
+        width:
+            34px !important;
+
+        padding:
+            11px
+            6px
+            25px
+            0 !important;
+
+        overflow:
+            hidden !important;
+
+        font-size:
+            10px !important;
+
+        line-height:
+            1.62 !important;
+    }
+
+
+    #codeStudioPage
+    #codeStudioInput.ap-code-input-pro {
+
+        width:
+            100% !important;
+
+        height:
+            100% !important;
+
+        min-width:
+            0 !important;
+
+        min-height:
+            0 !important;
+
+        box-sizing:
+            border-box !important;
+
+        padding:
+            10px
+            11px
+            30px !important;
+
+        overflow:
+            auto !important;
+
+        resize:
+            none !important;
+
+        font-size:
+            11px !important;
+
+        line-height:
+            1.62 !important;
+
+        -webkit-text-size-adjust:
+            100%;
+    }
+
+
+    /* --------------------------------------------------------
+       AP INTELLIGENCE
+       DEFAULT = COMPACT BAR
+       -------------------------------------------------------- */
+
+    #codeStudioPage
+    .ap-code-ai {
+
+        min-width:
+            0 !important;
+
+        min-height:
+            0 !important;
+
+        height:
+            38px !important;
+
+        display:
+            grid !important;
+
+        grid-template-rows:
+            38px !important;
+
+        overflow:
+            hidden !important;
+
+        border-left:
+            0 !important;
+
+        border-top:
+            1px solid
+            rgba(
+                255,
+                255,
+                255,
+                0.075
+            ) !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-ai-head {
+
+        height:
+            38px !important;
+
+        padding:
+            0
+            10px !important;
+
+        font-size:
+            9px !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-ai-content {
+
+        display:
+            none !important;
+    }
+
+
+    /* --------------------------------------------------------
+       INTELLIGENCE EXPANDED
+       -------------------------------------------------------- */
+
+    #codeStudioPage
+    .ap-code-pro.ap-mobile-ai-open
+    .ap-code-body {
+
+        grid-template-rows:
+            minmax(
+                180px,
+                58%
+            )
+            minmax(
+                145px,
+                42%
+            ) !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-pro.ap-mobile-ai-open
+    .ap-code-ai {
+
+        height:
+            auto !important;
+
+        min-height:
+            0 !important;
+
+        grid-template-rows:
+            38px
+            minmax(0, 1fr) !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-pro.ap-mobile-ai-open
+    .ap-code-ai-content {
+
+        display:
+            block !important;
+
+        min-height:
+            0 !important;
+
+        overflow:
+            auto !important;
+
+        padding:
+            9px
+            10px !important;
+    }
+
+
+    #codeStudioPage
+    #codeStudioOutput.ap-code-output-pro {
+
+        font-size:
+            10px !important;
+
+        line-height:
+            1.55 !important;
+    }
+
+
+    /* --------------------------------------------------------
+       STATUS BAR
+       -------------------------------------------------------- */
+
+    #codeStudioPage
+    .ap-code-status {
+
+        height:
+            24px !important;
+
+        min-width:
+            0 !important;
+
+        gap:
+            7px !important;
+
+        padding:
+            0
+            7px !important;
+
+        overflow:
+            hidden !important;
+
+        font-size:
+            8px !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-status-chars {
+
+        display:
+            none !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-status-live {
+
+        margin-left:
+            auto !important;
+
+        max-width:
+            100px !important;
+
+        overflow:
+            hidden !important;
+
+        text-overflow:
+            ellipsis !important;
+
+        white-space:
+            nowrap !important;
+    }
+
+
+    /* --------------------------------------------------------
+       PREVIEW = FULL MOBILE IDE AREA
+       -------------------------------------------------------- */
+
+    #codeStudioPage
+    .ap-code-pro
+    > .ap-code-preview {
+
+        top:
+            48px !important;
+
+        right:
+            0 !important;
+
+        bottom:
+            24px !important;
+
+        left:
+            0 !important;
+
+        border-radius:
+            0 !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-preview-head {
+
+        height:
+            38px !important;
+
+        padding:
+            0
+            9px !important;
+
+        font-size:
+            9px !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-preview-close {
+
+        width:
+            29px !important;
+
+        height:
+            29px !important;
+
+        min-width:
+            29px !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE CODE STUDIO
+   MOBILE HEADER — FINAL PRECISION FIT
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    #codeStudioPage .ap-code-header {
+        width: 100% !important;
+        min-width: 0 !important;
+
+        display: grid !important;
+
+        grid-template-columns:
+            32px
+            minmax(0, 1fr)
+            auto !important;
+
+        align-items: center !important;
+
+        gap: 5px !important;
+
+        padding:
+            0
+            6px !important;
+
+        box-sizing:
+            border-box !important;
+
+        overflow:
+            hidden !important;
+    }
+
+
+    /* Explorer button */
+
+    #codeStudioPage
+    .ap-code-explorer-toggle {
+
+        width: 32px !important;
+        min-width: 32px !important;
+        height: 32px !important;
+
+        padding: 0 !important;
+    }
+
+
+    /* Brand */
+
+    #codeStudioPage
+    .ap-code-brand {
+
+        min-width: 0 !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        gap: 6px !important;
+
+        overflow: hidden !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-brand-mark {
+
+        width: 29px !important;
+        height: 29px !important;
+
+        min-width: 29px !important;
+
+        flex:
+            0 0
+            29px !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-brand-copy {
+
+        min-width: 0 !important;
+
+        overflow: hidden !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-brand-title {
+
+        display: block !important;
+
+        max-width: 82px !important;
+
+        overflow: hidden !important;
+
+        text-overflow:
+            ellipsis !important;
+
+        white-space:
+            nowrap !important;
+
+        font-size:
+            10px !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-brand-sub {
+
+        display:
+            none !important;
+    }
+
+
+    /* ========================================================
+       THREE ACTIONS
+       Preview / Intelligence / Analyze
+       ======================================================== */
+
+    #codeStudioPage
+    .ap-code-actions {
+
+        min-width: 0 !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        justify-content: flex-end !important;
+
+        gap: 4px !important;
+
+        overflow: visible !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-actions
+    .ap-code-action,
+
+    #codeStudioPage
+    .ap-code-actions
+    .ap-code-analyze {
+
+        width: 31px !important;
+        min-width: 31px !important;
+        max-width: 31px !important;
+
+        height: 31px !important;
+        min-height: 31px !important;
+
+        flex:
+            0 0
+            31px !important;
+
+        padding: 0 !important;
+
+        margin: 0 !important;
+
+        display:
+            inline-flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        gap: 0 !important;
+
+        overflow: hidden !important;
+
+        border-radius:
+            8px !important;
+    }
+
+
+    /* Hide words; icons remain */
+
+    #codeStudioPage
+    .ap-code-actions
+    .ap-code-action > span,
+
+    #codeStudioPage
+    .ap-code-actions
+    .ap-code-analyze > span {
+
+        display:
+            none !important;
+    }
+
+
+    #codeStudioPage
+    .ap-code-actions svg {
+
+        display:
+            block !important;
+
+        width: 15px !important;
+        height: 15px !important;
+
+        flex:
+            0 0
+            15px !important;
+
+        fill: none;
+
+        stroke:
+            currentColor;
+
+        stroke-width:
+            1.8;
+
+        stroke-linecap:
+            round;
+
+        stroke-linejoin:
+            round;
+    }
+
+
+    #codeStudioPage
+    .ap-code-analyze svg {
+
+        fill:
+            currentColor !important;
+
+        stroke:
+            none !important;
+    }
+
+}

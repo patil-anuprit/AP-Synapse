@@ -1,7 +1,49 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
+
+<script>
+/* ============================================================
+   AP SYNAPSE EARLY LEGACY ALERT GUARD
+   Must execute before every application script.
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    const browserAlert =
+        window.alert.bind(window);
+
+    window.alert = function(message) {
+
+        const text =
+            String(message ?? "")
+                .replace(/\s+/g, " ")
+                .trim()
+                .toLowerCase();
+
+        /*
+         * Block ONLY the obsolete creator/version/status dialog.
+         */
+        if (
+            text.includes("ap synapse") &&
+            text.includes("creator") &&
+            text.includes("anuprit patil")
+        ) {
+            console.log(
+                "✅ AP SYNAPSE — LEGACY CREATOR DIALOG BLOCKED"
+            );
+
+            return;
+        }
+
+        return browserAlert(message);
+    };
+
+})();
+</script>
+
 
     <!-- ======================================================
      AP SYNAPSE — ZERO-FLASH STARTUP
@@ -547,6 +589,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AP Synapse">
 
+<link rel="stylesheet" href="./styles/notification-final.css?v=1">
 </head>
 
 <body>
@@ -6208,6 +6251,1421 @@ button:active,
     src="./scripts/ui-icon-repair.js?v=3"
 ></script>
 
+<script
+    src="./scripts/ui-accessibility-fix.js?v=1"
+></script>
+
+
+
+
+<!-- ==========================================================
+     AP SYNAPSE FINAL PROFILE AUTH HEADER V1
+     ========================================================== -->
+
+<style>
+
+@media (max-width: 760px) {
+
+    /* -------------------------------------------------------
+       PRIMARY AUTH AREA — DIRECTLY BELOW "YOUR PROFILE"
+       ------------------------------------------------------- */
+
+    #profileCard .ap-profile-auth-primary {
+
+        width: 100% !important;
+
+        margin:
+            13px 0 18px !important;
+
+        padding: 0 !important;
+
+        display:
+            flex !important;
+
+        flex-direction:
+            column !important;
+
+        box-sizing:
+            border-box !important;
+
+        position:
+            relative !important;
+
+        z-index:
+            100 !important;
+    }
+
+
+    #profileCard .ap-profile-auth-primary[hidden] {
+
+        display:
+            none !important;
+    }
+
+
+    /* -------------------------------------------------------
+       AP SYNAPSE GOOGLE BUTTON
+       ------------------------------------------------------- */
+
+    #profileCard .ap-profile-google-main {
+
+        width:
+            100% !important;
+
+        height:
+            46px !important;
+
+        min-height:
+            46px !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 15px !important;
+
+        display:
+            flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        gap:
+            11px !important;
+
+        box-sizing:
+            border-box !important;
+
+        cursor:
+            pointer !important;
+
+        color:
+            #f4f3ef !important;
+
+        -webkit-text-fill-color:
+            #f4f3ef !important;
+
+        font-family:
+            inherit !important;
+
+        font-size:
+            11.5px !important;
+
+        font-weight:
+            650 !important;
+
+        letter-spacing:
+            -.01em !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(31,32,35,.98),
+                rgba(16,17,20,.98)
+            ) !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.11) !important;
+
+        border-radius:
+            13px !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.045),
+            0 8px 24px
+            rgba(0,0,0,.18) !important;
+    }
+
+
+    #profileCard
+    .ap-profile-google-main:active {
+
+        transform:
+            scale(.985) !important;
+    }
+
+
+    #profileCard .ap-profile-google-g {
+
+        width:
+            25px !important;
+
+        height:
+            25px !important;
+
+        flex:
+            0 0 25px !important;
+
+        display:
+            grid !important;
+
+        place-items:
+            center !important;
+
+        color:
+            #ddb159 !important;
+
+        -webkit-text-fill-color:
+            #ddb159 !important;
+
+        font-size:
+            13px !important;
+
+        font-weight:
+            800 !important;
+
+        border:
+            1px solid
+            rgba(221,177,89,.27) !important;
+
+        border-radius:
+            7px !important;
+
+        background:
+            rgba(221,177,89,.055) !important;
+    }
+
+
+    /* Kill previous experimental empty auth mounts */
+
+    #profileCard
+    .ap-profile-google-primary,
+
+    #profileCard
+    .ap-profile-google-top,
+
+    #profileCard
+    .ap-google-signin-top-zone,
+
+    #profileCard
+    .ap-google-final-top,
+
+    #profileCard
+    .ap-profile-auth-header {
+
+        display:
+            none !important;
+    }
+
+}
+
+</style>
+
+
+<script>
+
+(() => {
+
+    "use strict";
+
+    let repairing = false;
+
+
+    function profileIsVisible(profile) {
+
+        if (!profile) return false;
+
+        const style =
+            getComputedStyle(profile);
+
+        return (
+            style.display !== "none" &&
+            style.visibility !== "hidden"
+        );
+    }
+
+
+    function findProfileTitle(profile) {
+
+        return [...profile.querySelectorAll("h1,h2,h3")]
+            .find(element => {
+
+                const text =
+                    (element.textContent || "")
+                        .replace(/\s+/g, " ")
+                        .trim()
+                        .toLowerCase();
+
+                return text.includes(
+                    "your profile"
+                );
+
+            }) ||
+            profile.querySelector("h1,h2,h3");
+    }
+
+
+    function userIsSignedOut(profile) {
+
+        const text =
+            (profile.innerText || "")
+                .toLowerCase();
+
+        return (
+            text.includes("not signed in") ||
+            text.includes("not authenticated")
+        );
+    }
+
+
+    function ensurePrimaryAuth(profile) {
+
+        const title =
+            findProfileTitle(profile);
+
+        if (!title) return;
+
+
+        let auth =
+            profile.querySelector(
+                ".ap-profile-auth-primary"
+            );
+
+
+        if (!auth) {
+
+            auth =
+                document.createElement("div");
+
+            auth.className =
+                "ap-profile-auth-primary";
+
+
+            const button =
+                document.createElement("button");
+
+            button.type =
+                "button";
+
+            button.className =
+                "ap-profile-google-main";
+
+
+            button.innerHTML = `
+                <span class="ap-profile-google-g">G</span>
+                <span>Sign in with Google</span>
+            `;
+
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    /*
+                     * Use the already-loaded Google
+                     * Identity Services system.
+                     */
+                    if (
+                        window.google &&
+                        google.accounts &&
+                        google.accounts.id &&
+                        typeof google.accounts.id.prompt ===
+                        "function"
+                    ) {
+
+                        google.accounts.id.prompt();
+
+                        return;
+                    }
+
+
+                    /*
+                     * If AP Synapse already rendered a real
+                     * Google button elsewhere, expose it.
+                     */
+                    const existing =
+                        document.querySelector(
+                            ".g_id_signin"
+                        );
+
+
+                    if (existing) {
+
+                        existing.style.removeProperty(
+                            "display"
+                        );
+
+                        existing.scrollIntoView({
+                            block: "center",
+                            behavior: "smooth"
+                        });
+
+                        return;
+                    }
+
+
+                    console.warn(
+                        "AP Synapse: Google Identity is not available."
+                    );
+                }
+            );
+
+
+            auth.appendChild(
+                button
+            );
+        }
+
+
+        /*
+         * THIS IS THE IMPORTANT PART:
+         *
+         * AP SYNAPSE IDENTITY
+         * Your Profile
+         * [SIGN IN WITH GOOGLE]
+         * avatar / account information...
+         */
+
+        if (
+            title.nextElementSibling !==
+            auth
+        ) {
+
+            title.insertAdjacentElement(
+                "afterend",
+                auth
+            );
+        }
+
+
+        if (
+            userIsSignedOut(profile)
+        ) {
+
+            auth.hidden = false;
+
+            profile.classList.add(
+                "ap-profile-signed-out"
+            );
+
+            profile.classList.remove(
+                "ap-profile-signed-in"
+            );
+
+        } else {
+
+            /*
+             * Signed in:
+             *
+             * hide Sign in with Google.
+             * Existing Google user photo/name/email/details
+             * become the primary profile information.
+             */
+
+            auth.hidden = true;
+
+            profile.classList.add(
+                "ap-profile-signed-in"
+            );
+
+            profile.classList.remove(
+                "ap-profile-signed-out"
+            );
+        }
+    }
+
+
+    function repair() {
+
+        if (
+            repairing ||
+            window.innerWidth > 760
+        ) {
+            return;
+        }
+
+
+        const profile =
+            document.getElementById(
+                "profileCard"
+            );
+
+
+        if (!profileIsVisible(profile)) {
+            return;
+        }
+
+
+        repairing = true;
+
+        ensurePrimaryAuth(profile);
+
+        repairing = false;
+    }
+
+
+    function schedule() {
+
+        requestAnimationFrame(() => {
+
+            requestAnimationFrame(
+                repair
+            );
+
+        });
+    }
+
+
+    /*
+     * Profile icon click.
+     */
+
+    document.addEventListener(
+        "click",
+        () => {
+
+            schedule();
+
+            setTimeout(schedule, 50);
+            setTimeout(schedule, 180);
+            setTimeout(schedule, 450);
+
+        },
+        true
+    );
+
+
+    /*
+     * Account/login state changes.
+     */
+
+    new MutationObserver(() => {
+
+        if (!repairing) {
+            schedule();
+        }
+
+    }).observe(
+        document.body,
+        {
+            subtree: true,
+            childList: true,
+            attributes: true,
+            attributeFilter: [
+                "style",
+                "class",
+                "aria-hidden"
+            ]
+        }
+    );
+
+
+    schedule();
+
+
+    console.log(
+        "✅ AP SYNAPSE — FINAL PROFILE AUTH HEADER ACTIVE"
+    );
+
+})();
+
+</script>
+
+
+
+
+
+<style>
+/* ============================================================
+   AP SYNAPSE PROFILE MASTER FINAL V5
+   ============================================================ */
+
+@media (max-width:760px) {
+
+    /* --------------------------------------------------------
+       FINAL PROFILE SHEET
+       -------------------------------------------------------- */
+
+    #profileCard {
+        position: fixed !important;
+
+        top: 72px !important;
+        left: 10px !important;
+        right: 10px !important;
+        bottom: 10px !important;
+
+        width: auto !important;
+        height: auto !important;
+
+        margin: 0 !important;
+
+        padding: 17px 14px 22px !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        box-sizing: border-box !important;
+
+        scrollbar-width: none !important;
+
+        color: #f5f4ef !important;
+
+        background:
+            linear-gradient(
+                155deg,
+                rgba(18,19,22,.99),
+                rgba(8,9,11,.995)
+            ) !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.08) !important;
+
+        border-radius: 20px !important;
+
+        box-shadow:
+            0 28px 80px rgba(0,0,0,.55),
+            inset 0 1px 0 rgba(255,255,255,.04) !important;
+
+        backdrop-filter: blur(24px) !important;
+        -webkit-backdrop-filter: blur(24px) !important;
+    }
+
+    #profileCard::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+    }
+
+
+    /* --------------------------------------------------------
+       HEADER
+       -------------------------------------------------------- */
+
+    #profileCard .synapse-identity-panel-kicker,
+    #profileCard .popup-kicker {
+        margin: 1px 44px 5px 0 !important;
+
+        color: #d9ad56 !important;
+
+        font-size: 7.5px !important;
+        font-weight: 780 !important;
+
+        letter-spacing: .18em !important;
+
+        text-transform: uppercase !important;
+    }
+
+    #profileCard h1,
+    #profileCard h2 {
+        margin: 0 44px 0 0 !important;
+
+        color: #f7f6f1 !important;
+
+        font-size: 22px !important;
+        line-height: 1.06 !important;
+
+        font-weight: 740 !important;
+
+        letter-spacing: -.035em !important;
+    }
+
+
+    /* --------------------------------------------------------
+       CLOSE
+       -------------------------------------------------------- */
+
+    #profileCard #closeProfile,
+    #profileCard .popup-close {
+        position: absolute !important;
+
+        top: 14px !important;
+        right: 14px !important;
+
+        width: 34px !important;
+        height: 34px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: grid !important;
+        place-items: center !important;
+
+        color: rgba(245,245,240,.72) !important;
+
+        background: rgba(255,255,255,.045) !important;
+
+        border:
+            1px solid rgba(255,255,255,.08) !important;
+
+        border-radius: 10px !important;
+
+        z-index: 100 !important;
+    }
+
+
+    /* --------------------------------------------------------
+       ONLY AUTH AREA
+       -------------------------------------------------------- */
+
+    #profileCard .ap-profile-master-auth {
+        width: 100% !important;
+
+        margin: 16px 0 18px !important;
+
+        padding: 10px !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        box-sizing: border-box !important;
+
+        border:
+            1px solid rgba(255,255,255,.075) !important;
+
+        border-radius: 14px !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(255,255,255,.03),
+                rgba(255,255,255,.012)
+            ) !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.03) !important;
+    }
+
+    #profileCard
+    .ap-profile-master-auth[hidden] {
+        display: none !important;
+    }
+
+
+    /* Real official Google control */
+
+    #profileCard
+    .ap-profile-master-auth
+    .g_id_signin {
+        width: 100% !important;
+
+        display: flex !important;
+
+        justify-content: center !important;
+    }
+
+    #profileCard
+    .ap-profile-master-auth iframe {
+        max-width: 100% !important;
+    }
+
+
+    /* Temporary fallback only until GIS renders */
+
+    #profileCard .ap-profile-master-fallback {
+        width: 100% !important;
+        height: 44px !important;
+
+        margin: 0 !important;
+        padding: 0 14px !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: flex-start !important;
+
+        gap: 11px !important;
+
+        color: #f4f3ee !important;
+
+        font-size: 11px !important;
+        font-weight: 650 !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(29,30,33,.98),
+                rgba(16,17,19,.98)
+            ) !important;
+
+        border:
+            1px solid rgba(255,255,255,.09) !important;
+
+        border-radius: 11px !important;
+    }
+
+    #profileCard .ap-profile-master-g {
+        width: 24px !important;
+        height: 24px !important;
+
+        display: grid !important;
+        place-items: center !important;
+
+        flex: 0 0 24px !important;
+
+        color: #ddb159 !important;
+
+        font-weight: 800 !important;
+
+        border:
+            1px solid rgba(221,177,89,.28) !important;
+
+        border-radius: 7px !important;
+
+        background:
+            rgba(221,177,89,.05) !important;
+    }
+
+
+    /* --------------------------------------------------------
+       REMOVE ALL OLD DUPLICATE GOOGLE MOUNTS
+       -------------------------------------------------------- */
+
+    #profileCard
+    .ap-profile-google-primary,
+
+    #profileCard
+    .ap-profile-google-top,
+
+    #profileCard
+    .ap-google-signin-top-zone,
+
+    #profileCard
+    .ap-google-final-top,
+
+    #profileCard
+    .ap-profile-auth-header,
+
+    #profileCard
+    .ap-profile-auth-primary {
+
+        display: none !important;
+    }
+
+
+    /* --------------------------------------------------------
+       SIGNED OUT CLEANUP
+       -------------------------------------------------------- */
+
+    #profileCard .ap-profile-master-hidden {
+        display: none !important;
+    }
+
+
+    /* --------------------------------------------------------
+       CARDS
+       -------------------------------------------------------- */
+
+    #profileCard [class*="identity-card"],
+    #profileCard [class*="identity-meta"] {
+        border:
+            1px solid rgba(255,255,255,.065) !important;
+
+        border-radius: 13px !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(255,255,255,.028),
+                rgba(255,255,255,.012)
+            ) !important;
+    }
+
+
+    /* --------------------------------------------------------
+       REAL SIGNED-IN IDENTITY
+       -------------------------------------------------------- */
+
+    #profileCard .synapse-identity-name {
+        color: #f5f4ef !important;
+
+        font-size: 18px !important;
+        line-height: 1.15 !important;
+
+        font-weight: 720 !important;
+
+        letter-spacing: -.025em !important;
+    }
+
+
+    /* --------------------------------------------------------
+       ACCOUNT ACTIONS
+       -------------------------------------------------------- */
+
+    #profileCard button:not(
+        #closeProfile
+    ):not(
+        .popup-close
+    ):not(
+        .ap-profile-master-fallback
+    ) {
+        border-radius: 11px !important;
+    }
+
+}
+
+</style>
+
+
+<script>
+/* ============================================================
+   AP SYNAPSE PROFILE MASTER FINAL V5
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    let busy = false;
+
+
+    const norm = value =>
+        String(value || "")
+            .replace(/\s+/g," ")
+            .trim()
+            .toLowerCase();
+
+
+    function profileVisible(profile) {
+
+        if (!profile) return false;
+
+        const s = getComputedStyle(profile);
+
+        return (
+            s.display !== "none" &&
+            s.visibility !== "hidden"
+        );
+    }
+
+
+    function findTitle(profile) {
+
+        return [...profile.querySelectorAll("h1,h2,h3")]
+            .find(el =>
+                norm(el.textContent)
+                    .includes("your profile")
+            ) ||
+            profile.querySelector("h1,h2,h3");
+    }
+
+
+    function signedOut(profile) {
+
+        const text =
+            norm(profile.innerText);
+
+        return (
+            text.includes("not signed in") ||
+            text.includes("not authenticated")
+        );
+    }
+
+
+    /* ========================================================
+       MASTER AUTH SLOT
+       ======================================================== */
+
+    function getAuthSlot(profile) {
+
+        const title =
+            findTitle(profile);
+
+        if (!title) return null;
+
+
+        let slot =
+            profile.querySelector(
+                ".ap-profile-master-auth"
+            );
+
+
+        if (!slot) {
+
+            slot =
+                document.createElement("div");
+
+            slot.className =
+                "ap-profile-master-auth";
+        }
+
+
+        if (
+            title.nextElementSibling !== slot
+        ) {
+
+            title.insertAdjacentElement(
+                "afterend",
+                slot
+            );
+        }
+
+
+        return slot;
+    }
+
+
+    /* ========================================================
+       FIND THE REAL GOOGLE CONTROL
+       ======================================================== */
+
+    function findRealGoogle(profile,slot) {
+
+        /*
+         * Standard GIS element.
+         */
+
+        const gis =
+            [...profile.querySelectorAll(
+                ".g_id_signin"
+            )]
+            .find(el =>
+                !slot.contains(el)
+            );
+
+        if (gis) {
+            return gis;
+        }
+
+
+        /*
+         * Google iframe.
+         */
+
+        const iframe =
+            [...profile.querySelectorAll(
+                "iframe"
+            )]
+            .find(frame => {
+
+                const src =
+                    frame.getAttribute("src") || "";
+
+                return (
+                    src.includes(
+                        "accounts.google.com"
+                    ) ||
+                    src.includes("/gsi/")
+                );
+            });
+
+
+        if (iframe) {
+
+            let node =
+                iframe.parentElement;
+
+
+            while (
+                node?.parentElement &&
+                node.parentElement !== profile
+            ) {
+
+                const parent =
+                    node.parentElement;
+
+                const r =
+                    parent.getBoundingClientRect();
+
+                if (
+                    r.height > 90 ||
+                    r.width > 330
+                ) {
+                    break;
+                }
+
+                node =
+                    parent;
+            }
+
+
+            return node || iframe;
+        }
+
+
+        /*
+         * Visible Google button fallback discovery.
+         * Excludes every button we generated ourselves.
+         */
+
+        return [...profile.querySelectorAll(
+            "button,a,div"
+        )]
+        .find(el => {
+
+            if (
+                slot.contains(el) ||
+                el.closest(
+                    ".ap-profile-auth-primary"
+                ) ||
+                el.matches(
+                    ".ap-profile-master-fallback"
+                )
+            ) {
+                return false;
+            }
+
+            return (
+                norm(el.innerText) ===
+                "sign in with google"
+            );
+
+        }) || null;
+    }
+
+
+    function ensureFallback(slot) {
+
+        let button =
+            slot.querySelector(
+                ".ap-profile-master-fallback"
+            );
+
+
+        if (button) {
+            return;
+        }
+
+
+        button =
+            document.createElement("button");
+
+        button.type =
+            "button";
+
+        button.className =
+            "ap-profile-master-fallback";
+
+
+        button.innerHTML = `
+            <span class="ap-profile-master-g">G</span>
+            <span>Sign in with Google</span>
+        `;
+
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                if (
+                    window.google?.accounts?.id?.prompt
+                ) {
+
+                    window.google.accounts.id.prompt();
+
+                    return;
+                }
+
+
+                console.warn(
+                    "AP Synapse: Google Identity is unavailable."
+                );
+            }
+        );
+
+
+        slot.appendChild(button);
+    }
+
+
+    /* ========================================================
+       REMOVE RAW SIGNED-OUT CONTENT
+       ======================================================== */
+
+    function cleanSignedOut(profile) {
+
+        const hideTexts =
+            new Set([
+                "anuprit patil",
+                "not signed in",
+                "not authenticated",
+                "g",
+                "google identity",
+                "connected account",
+                "your google identity is securely connected to ap synapse.",
+                "not connected google authentication",
+                "verified",
+                "ap synapse intelligence · online"
+            ]);
+
+
+        [...profile.querySelectorAll("*")]
+            .forEach(el => {
+
+                if (el.children.length) {
+                    return;
+                }
+
+
+                if (
+                    hideTexts.has(
+                        norm(el.textContent)
+                    )
+                ) {
+
+                    el.classList.add(
+                        "ap-profile-master-hidden"
+                    );
+                }
+            });
+
+
+        /*
+         * Placeholder avatar/name.
+         */
+
+        profile.querySelectorAll(`
+            .profile-avatar,
+            .user-avatar,
+            .synapse-identity-name,
+            [class*="identity-avatar"]
+        `)
+        .forEach(el => {
+
+            el.classList.add(
+                "ap-profile-master-hidden"
+            );
+
+        });
+
+
+        /*
+         * No account exit controls when signed out.
+         */
+
+        [...profile.querySelectorAll("button")]
+            .forEach(button => {
+
+                const text =
+                    norm(button.textContent);
+
+
+                if (
+                    text === "sign out" ||
+                    text === "switch account"
+                ) {
+
+                    button.classList.add(
+                        "ap-profile-master-hidden"
+                    );
+                }
+            });
+
+
+        /*
+         * Hide standalone ACCOUNT heading while signed out.
+         */
+
+        [...profile.querySelectorAll(
+            "h1,h2,h3,h4,div,span"
+        )]
+        .forEach(el => {
+
+            if (
+                el.children.length === 0 &&
+                norm(el.textContent) ===
+                "account"
+            ) {
+
+                el.classList.add(
+                    "ap-profile-master-hidden"
+                );
+            }
+        });
+    }
+
+
+    /* ========================================================
+       MASTER REPAIR
+       ======================================================== */
+
+    function repair() {
+
+        if (
+            busy ||
+            window.innerWidth > 760
+        ) {
+            return;
+        }
+
+
+        const profile =
+            document.getElementById(
+                "profileCard"
+            );
+
+
+        if (!profileVisible(profile)) {
+            return;
+        }
+
+
+        busy = true;
+
+
+        /*
+         * Restore our own state first.
+         */
+
+        profile
+            .querySelectorAll(
+                ".ap-profile-master-hidden"
+            )
+            .forEach(el => {
+
+                el.classList.remove(
+                    "ap-profile-master-hidden"
+                );
+            });
+
+
+        const slot =
+            getAuthSlot(profile);
+
+
+        if (!slot) {
+
+            busy = false;
+
+            return;
+        }
+
+
+        const out =
+            signedOut(profile);
+
+
+        if (out) {
+
+            slot.hidden = false;
+
+
+            /*
+             * Move REAL Google button to the top.
+             */
+
+            const real =
+                findRealGoogle(
+                    profile,
+                    slot
+                );
+
+
+            if (real) {
+
+                slot.appendChild(real);
+
+
+                slot
+                    .querySelector(
+                        ".ap-profile-master-fallback"
+                    )
+                    ?.remove();
+
+            } else {
+
+                ensureFallback(slot);
+            }
+
+
+            cleanSignedOut(profile);
+
+
+            profile.classList.add(
+                "ap-profile-signed-out"
+            );
+
+            profile.classList.remove(
+                "ap-profile-signed-in"
+            );
+
+        } else {
+
+            /*
+             * Signed-in user:
+             * no sign-in CTA.
+             * Real user photo/name/email/details remain.
+             */
+
+            slot.hidden = true;
+
+
+            profile.classList.add(
+                "ap-profile-signed-in"
+            );
+
+            profile.classList.remove(
+                "ap-profile-signed-out"
+            );
+        }
+
+
+        busy = false;
+    }
+
+
+    function schedule() {
+
+        requestAnimationFrame(() => {
+
+            requestAnimationFrame(
+                repair
+            );
+
+        });
+    }
+
+
+    document.addEventListener(
+        "click",
+        () => {
+
+            schedule();
+
+            setTimeout(schedule,80);
+            setTimeout(schedule,250);
+            setTimeout(schedule,600);
+
+        },
+        true
+    );
+
+
+    new MutationObserver(() => {
+
+        if (!busy) {
+            schedule();
+        }
+
+    }).observe(
+        document.body,
+        {
+            subtree: true,
+            childList: true,
+            attributes: true,
+            attributeFilter: [
+                "style",
+                "class",
+                "aria-hidden"
+            ]
+        }
+    );
+
+
+    window.addEventListener(
+        "resize",
+        schedule,
+        { passive:true }
+    );
+
+
+    schedule();
+
+
+    console.log(
+        "✅ AP SYNAPSE — PROFILE MASTER FINAL V5 ACTIVE"
+    );
+
+})();
+</script>
+
+<script src="./scripts/notification-final.js?v=1"></script>
 </body>
 </html>
 

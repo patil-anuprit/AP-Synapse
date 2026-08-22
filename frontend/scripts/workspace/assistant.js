@@ -1398,3 +1398,630 @@ function updateLiveTalkStatus(
 
 })();
 
+/* ============================================================
+   AP SYNAPSE — MOBILE ASSISTANT
+   AUTO-DETECT + KEEP EXACTLY ONE VISIBLE SCROLLBAR
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    function getScrollableElements() {
+
+        const page =
+            document.getElementById("assistantPage");
+
+        if (!page) return [];
+
+
+        const elements = [
+            document.documentElement,
+            document.body
+        ];
+
+
+        /*
+         * Include Assistant page + every descendant.
+         */
+        elements.push(page);
+
+        page
+            .querySelectorAll("*")
+            .forEach(el => {
+                elements.push(el);
+            });
+
+
+        /*
+         * Also include ancestors because the second scrollbar
+         * may belong to the workspace shell.
+         */
+        let parent =
+            page.parentElement;
+
+        while (
+            parent &&
+            parent !== document.body
+        ) {
+            elements.push(parent);
+            parent = parent.parentElement;
+        }
+
+
+        return [
+            ...new Set(elements)
+        ]
+        .filter(el => {
+
+            if (!(el instanceof HTMLElement)) {
+                return false;
+            }
+
+            const style =
+                getComputedStyle(el);
+
+            const overflowY =
+                style.overflowY;
+
+            const canScroll =
+                (
+                    overflowY === "auto" ||
+                    overflowY === "scroll" ||
+                    overflowY === "overlay"
+                );
+
+            const actuallyScrollable =
+                el.scrollHeight >
+                el.clientHeight + 3;
+
+
+            return (
+                canScroll &&
+                actuallyScrollable
+            );
+        });
+    }
+
+
+    function applyOneScrollbar() {
+
+        if (
+            window.innerWidth > 760 ||
+            document.body.dataset.page !== "assistant"
+        ) {
+            return;
+        }
+
+
+        const scrollables =
+            getScrollableElements();
+
+
+        if (!scrollables.length) {
+            return;
+        }
+
+
+        /*
+         * Clear previous state.
+         */
+        document
+            .querySelectorAll(
+                ".ap-hide-native-scrollbar, .ap-main-scrollbar"
+            )
+            .forEach(el => {
+
+                el.classList.remove(
+                    "ap-hide-native-scrollbar",
+                    "ap-main-scrollbar"
+                );
+
+            });
+
+
+        /*
+         * The proper scrollbar is the scroll container whose
+         * right edge is furthest to the right.
+         */
+        const ranked =
+            scrollables
+                .map(el => {
+
+                    const rect =
+                        el.getBoundingClientRect();
+
+                    return {
+                        el,
+                        right: rect.right,
+                        height: rect.height,
+                        width: rect.width,
+                        id: el.id,
+                        cls:
+                            typeof el.className === "string"
+                                ? el.className
+                                : ""
+                    };
+                })
+                .filter(item =>
+                    item.height > 120 &&
+                    item.width > 100
+                )
+                .sort(
+                    (a, b) =>
+                        b.right - a.right
+                );
+
+
+        if (!ranked.length) {
+            return;
+        }
+
+
+        const keeper =
+            ranked[0].el;
+
+
+        /*
+         * Hide scrollbar VISUALS on every competing scroller.
+         * Their scrolling still works.
+         */
+        ranked.forEach(item => {
+
+            if (item.el === keeper) {
+
+                item.el.classList.add(
+                    "ap-main-scrollbar"
+                );
+
+            } else {
+
+                item.el.classList.add(
+                    "ap-hide-native-scrollbar"
+                );
+            }
+
+        });
+
+
+        /*
+         * Also remove old fake/custom scrollbar tracks
+         * contained inside Assistant.
+         */
+        const page =
+            document.getElementById(
+                "assistantPage"
+            );
+
+
+        page
+            ?.querySelectorAll(`
+                .scrollbar,
+                .custom-scrollbar,
+                .scroll-track,
+                .scroll-thumb,
+                .scroll-indicator,
+                [class*="scrollbar-track"],
+                [class*="scrollbar-thumb"]
+            `)
+            .forEach(el => {
+
+                el.classList.add(
+                    "ap-hide-custom-scrollbar"
+                );
+
+            });
+
+
+        console.log(
+            "✅ AP SYNAPSE — ONE SCROLLBAR SELECTED:",
+            {
+                keeper:
+                    keeper.id ||
+                    keeper.className ||
+                    keeper.tagName,
+
+                detected:
+                    ranked.map(item => ({
+                        element:
+                            item.id ||
+                            item.cls ||
+                            item.el.tagName,
+
+                        right:
+                            Math.round(
+                                item.right
+                            )
+                    }))
+            }
+        );
+    }
+
+
+    function schedule() {
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(
+                applyOneScrollbar
+            );
+        });
+    }
+
+
+    schedule();
+
+    setTimeout(schedule, 100);
+    setTimeout(schedule, 400);
+    setTimeout(schedule, 900);
+
+
+    window.addEventListener(
+        "resize",
+        schedule,
+        {
+            passive: true
+        }
+    );
+
+
+    const observer =
+        new MutationObserver(
+            schedule
+        );
+
+
+    observer.observe(
+        document.body,
+        {
+            attributes: true,
+            attributeFilter: [
+                "data-page"
+            ]
+        }
+    );
+
+})();
+
+/* ============================================================
+   AP SYNAPSE — MOBILE HOME EXACT SINGLE SCROLL FIX
+   #assistantPage scrolls
+   #heroScreen NEVER scrolls
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    function fixAPMobileHomeScroll() {
+
+        if (
+            window.innerWidth > 760 ||
+            document.body.dataset.page !== "assistant"
+        ) {
+            return;
+        }
+
+        const page =
+            document.getElementById("assistantPage");
+
+        const hero =
+            document.getElementById("heroScreen");
+
+        if (!page || !hero) {
+            return;
+        }
+
+
+        /* ==============================================
+           OUTER PAGE = ONLY SCROLL OWNER
+           ============================================== */
+
+        page.style.setProperty(
+            "overflow-x",
+            "hidden",
+            "important"
+        );
+
+        page.style.setProperty(
+            "overflow-y",
+            "auto",
+            "important"
+        );
+
+
+        /* ==============================================
+           HERO = CONTENT ONLY, NEVER A SCROLLER
+           ============================================== */
+
+        hero.style.setProperty(
+            "height",
+            "auto",
+            "important"
+        );
+
+        hero.style.setProperty(
+            "min-height",
+            "0",
+            "important"
+        );
+
+        hero.style.setProperty(
+            "max-height",
+            "none",
+            "important"
+        );
+
+        hero.style.setProperty(
+            "overflow",
+            "visible",
+            "important"
+        );
+
+        hero.style.setProperty(
+            "overflow-x",
+            "visible",
+            "important"
+        );
+
+        hero.style.setProperty(
+            "overflow-y",
+            "visible",
+            "important"
+        );
+
+
+        console.log(
+            "✅ AP SYNAPSE — HERO SCROLL REMOVED",
+            {
+                assistantOverflow:
+                    getComputedStyle(page).overflowY,
+
+                heroOverflow:
+                    getComputedStyle(hero).overflowY,
+
+                heroHeight:
+                    hero.clientHeight,
+
+                heroScrollHeight:
+                    hero.scrollHeight
+            }
+        );
+    }
+
+
+    function scheduleFix() {
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(
+                fixAPMobileHomeScroll
+            );
+        });
+    }
+
+
+    scheduleFix();
+
+    setTimeout(scheduleFix, 100);
+    setTimeout(scheduleFix, 400);
+    setTimeout(scheduleFix, 800);
+
+
+    window.addEventListener(
+        "resize",
+        scheduleFix,
+        {
+            passive: true
+        }
+    );
+
+
+    new MutationObserver(
+        scheduleFix
+    ).observe(
+        document.body,
+        {
+            attributes: true,
+            attributeFilter: [
+                "data-page"
+            ]
+        }
+    );
+
+})();
+
+/* ============================================================
+   AP SYNAPSE — REMOVE OLD DUPLICATE MOBILE SCROLL SYSTEMS
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    function cleanupAPMobileScrollbars() {
+
+        if (window.innerWidth > 760) {
+            return;
+        }
+
+        /*
+         * Remove the artificial scrollbar we previously created.
+         */
+        document
+            .querySelectorAll(
+                ".ap-mobile-single-scrollbar"
+            )
+            .forEach(element => {
+                element.remove();
+            });
+
+
+        /*
+         * Remove classes left behind by older scrollbar patches.
+         */
+        document
+            .querySelectorAll(`
+                .ap-hide-native-scrollbar,
+                .ap-main-scrollbar,
+                .ap-home-hide-scrollbar,
+                .ap-hide-custom-scrollbar,
+                .ap-old-scroll-visual-hidden,
+                .ap-assistant-scroll-parent-lock
+            `)
+            .forEach(element => {
+
+                element.classList.remove(
+                    "ap-hide-native-scrollbar",
+                    "ap-main-scrollbar",
+                    "ap-home-hide-scrollbar",
+                    "ap-hide-custom-scrollbar",
+                    "ap-old-scroll-visual-hidden",
+                    "ap-assistant-scroll-parent-lock"
+                );
+
+            });
+
+
+        document.documentElement.classList.remove(
+            "ap-one-mobile-scrollbar"
+        );
+
+
+        const page =
+            document.getElementById(
+                "assistantPage"
+            );
+
+        const hero =
+            document.getElementById(
+                "heroScreen"
+            );
+
+
+        if (!page || !hero) {
+            return;
+        }
+
+
+        /*
+         * ONE REAL SCROLL OWNER
+         */
+
+        page.style.setProperty(
+            "overflow-y",
+            "auto",
+            "important"
+        );
+
+        page.style.setProperty(
+            "overflow-x",
+            "hidden",
+            "important"
+        );
+
+
+        /*
+         * Hero itself is ordinary expanding content.
+         */
+
+        hero.style.setProperty(
+            "height",
+            "auto",
+            "important"
+        );
+
+        hero.style.setProperty(
+            "max-height",
+            "none",
+            "important"
+        );
+
+        hero.style.setProperty(
+            "overflow-y",
+            "visible",
+            "important"
+        );
+
+        hero.style.setProperty(
+            "overflow-x",
+            "hidden",
+            "important"
+        );
+
+
+        console.log(
+            "✅ AP SYNAPSE — OLD DUPLICATE SCROLL SYSTEM REMOVED"
+        );
+    }
+
+
+    cleanupAPMobileScrollbars();
+
+})();
+
+
+/* ============================================================
+   AP SYNAPSE — MOBILE HOME PERMANENT FINAL POSITION
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    function applyFinalMobileHomePosition() {
+
+        if (window.innerWidth > 760) return;
+
+        const container =
+            document.querySelector(
+                "#heroScreen .hero-container"
+            );
+
+        if (!container) return;
+
+        container.style.setProperty(
+            "position",
+            "relative",
+            "important"
+        );
+
+        container.style.setProperty(
+            "top",
+            "-72px",
+            "important"
+        );
+
+        container.style.setProperty(
+            "transform",
+            "none",
+            "important"
+        );
+
+        container.style.setProperty(
+            "translate",
+            "none",
+            "important"
+        );
+    }
+
+
+    /* Apply immediately */
+    applyFinalMobileHomePosition();
+
+
+    /* Apply whenever Home becomes active */
+    new MutationObserver(() => {
+        applyFinalMobileHomePosition();
+    }).observe(
+        document.body,
+        {
+            attributes: true,
+            attributeFilter: ["data-page"]
+        }
+    );
+
+
+    /* Keep correct on mobile resize/orientation */
+    window.addEventListener(
+        "resize",
+        applyFinalMobileHomePosition,
+        { passive: true }
+    );
+
+})();
+

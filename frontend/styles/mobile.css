@@ -1,4 +1,4 @@
-﻿/* =========================================================
+/* =========================================================
    AP SYNAPSE — MOBILE EXPERIENCE SYSTEM
    Dedicated mobile visual + responsive layer
    Version: 1.0
@@ -1122,3 +1122,4233 @@
         padding: 9px 12px !important;
     }
 }
+
+/* ============================================================
+   AP SYNAPSE — MOBILE HOME / ASSISTANT
+   FINAL PREMIUM OPERATING SYSTEM EXPERIENCE
+   MOBILE ONLY
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    /* ========================================================
+       PAGE
+       ======================================================== */
+
+    body[data-page="assistant"]
+    #assistantPage {
+
+        position: relative !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        min-height:
+            calc(
+                100dvh - 66px
+            ) !important;
+
+        padding:
+            0
+            10px
+            112px !important;
+
+        box-sizing:
+            border-box !important;
+
+        overflow-x:
+            hidden !important;
+
+        overflow-y:
+            auto !important;
+
+        scroll-behavior:
+            smooth;
+    }
+
+
+    /* ========================================================
+       HERO — COMPACT, STRONG, PREMIUM
+       ======================================================== */
+
+    body[data-page="assistant"]
+    #heroScreen {
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        min-height:
+            0 !important;
+
+        margin:
+            0
+            auto !important;
+
+        padding:
+            92px
+            18px
+            26px !important;
+
+        box-sizing:
+            border-box !important;
+
+        text-align:
+            center !important;
+    }
+
+
+    /* AP SYNAPSE eyebrow */
+
+    body[data-page="assistant"]
+    #heroScreen
+    .hero-badge,
+
+    body[data-page="assistant"]
+    #heroScreen
+    .hero-label,
+
+    body[data-page="assistant"]
+    #heroScreen
+    .hero-eyebrow {
+
+        display:
+            inline-flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        min-height:
+            21px !important;
+
+        margin:
+            0
+            auto
+            17px !important;
+
+        padding:
+            0
+            11px !important;
+
+        border:
+            1px solid
+            rgba(
+                214,
+                167,
+                72,
+                .28
+            ) !important;
+
+        border-radius:
+            999px !important;
+
+        color:
+            rgba(
+                226,
+                184,
+                95,
+                .92
+            ) !important;
+
+        background:
+            rgba(
+                215,
+                166,
+                72,
+                .045
+            ) !important;
+
+        font-size:
+            8px !important;
+
+        font-weight:
+            760 !important;
+
+        letter-spacing:
+            .20em !important;
+
+        text-transform:
+            uppercase !important;
+    }
+
+
+    /* ========================================================
+       MAIN STATEMENT
+       ======================================================== */
+
+    body[data-page="assistant"]
+    #heroScreen h1 {
+
+        max-width:
+            320px !important;
+
+        margin:
+            0
+            auto !important;
+
+        color:
+            #f5f4f0 !important;
+
+        font-size:
+            clamp(
+                29px,
+                9vw,
+                37px
+            ) !important;
+
+        line-height:
+            .96 !important;
+
+        font-weight:
+            760 !important;
+
+        letter-spacing:
+            -.055em !important;
+
+        text-wrap:
+            balance !important;
+
+        text-shadow:
+            0
+            8px
+            34px
+            rgba(
+                0,
+                0,
+                0,
+                .28
+            );
+    }
+
+
+    body[data-page="assistant"]
+    #heroScreen p {
+
+        max-width:
+            265px !important;
+
+        margin:
+            17px
+            auto
+            0 !important;
+
+        color:
+            rgba(
+                222,
+                224,
+                226,
+                .64
+            ) !important;
+
+        font-size:
+            12px !important;
+
+        line-height:
+            1.52 !important;
+
+        letter-spacing:
+            -.01em !important;
+
+        text-wrap:
+            balance !important;
+    }
+
+
+    /* ========================================================
+       CAPABILITY GRID
+       ======================================================== */
+
+    body[data-page="assistant"]
+    #heroScreen
+    .hero-actions,
+
+    body[data-page="assistant"]
+    #heroScreen
+    .hero-action-grid,
+
+    body[data-page="assistant"]
+    #heroScreen
+    .quick-actions {
+
+        width:
+            min(
+                100%,
+                286px
+            ) !important;
+
+        margin:
+            28px
+            auto
+            0 !important;
+
+        display:
+            grid !important;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
+
+        gap:
+            7px !important;
+    }
+
+
+    body[data-page="assistant"]
+    #heroScreen
+    .hero-action-btn {
+
+        position:
+            relative !important;
+
+        width:
+            100% !important;
+
+        min-width:
+            0 !important;
+
+        height:
+            44px !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0
+            13px !important;
+
+        display:
+            flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        overflow:
+            hidden !important;
+
+        color:
+            rgba(
+                239,
+                239,
+                236,
+                .88
+            ) !important;
+
+        border:
+            1px solid
+            rgba(
+                255,
+                255,
+                255,
+                .085
+            ) !important;
+
+        border-radius:
+            12px !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(
+                    21,
+                    23,
+                    27,
+                    .88
+                ),
+                rgba(
+                    11,
+                    12,
+                    15,
+                    .90
+                )
+            ) !important;
+
+        box-shadow:
+            inset
+            0
+            1px
+            0
+            rgba(
+                255,
+                255,
+                255,
+                .035
+            ) !important;
+
+        font-size:
+            10px !important;
+
+        font-weight:
+            650 !important;
+
+        letter-spacing:
+            -.005em !important;
+
+        transition:
+            transform
+            140ms
+            ease,
+            border-color
+            140ms
+            ease,
+            background
+            140ms
+            ease !important;
+    }
+
+
+    body[data-page="assistant"]
+    #heroScreen
+    .hero-action-btn::before {
+
+        content:
+            "" !important;
+
+        position:
+            absolute !important;
+
+        top:
+            0 !important;
+
+        left:
+            22% !important;
+
+        right:
+            22% !important;
+
+        height:
+            1px !important;
+
+        opacity:
+            .65 !important;
+
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                rgba(
+                    222,
+                    175,
+                    79,
+                    .54
+                ),
+                transparent
+            ) !important;
+    }
+
+
+    body[data-page="assistant"]
+    #heroScreen
+    .hero-action-btn:active {
+
+        transform:
+            scale(.97) !important;
+
+        border-color:
+            rgba(
+                215,
+                166,
+                72,
+                .31
+            ) !important;
+
+        background:
+            rgba(
+                215,
+                166,
+                72,
+                .075
+            ) !important;
+    }
+
+
+    /* ========================================================
+       RECENT INTELLIGENCE
+       ======================================================== */
+
+    body[data-page="assistant"]
+    #heroScreen
+    .recent-intelligence,
+
+    body[data-page="assistant"]
+    #heroScreen
+    .recent-card,
+
+    body[data-page="assistant"]
+    #heroScreen
+    .recent-section {
+
+        width:
+            min(
+                100%,
+                286px
+            ) !important;
+
+        margin:
+            32px
+            auto
+            0 !important;
+
+        padding:
+            17px
+            18px !important;
+
+        box-sizing:
+            border-box !important;
+
+        text-align:
+            left !important;
+
+        border:
+            1px solid
+            rgba(
+                255,
+                255,
+                255,
+                .075
+            ) !important;
+
+        border-radius:
+            17px !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(
+                    18,
+                    20,
+                    24,
+                    .78
+                ),
+                rgba(
+                    9,
+                    10,
+                    13,
+                    .84
+                )
+            ) !important;
+
+        box-shadow:
+            inset
+            0
+            1px
+            0
+            rgba(
+                255,
+                255,
+                255,
+                .035
+            ),
+            0
+            18px
+            42px
+            rgba(
+                0,
+                0,
+                0,
+                .16
+            ) !important;
+
+        backdrop-filter:
+            blur(16px);
+
+        -webkit-backdrop-filter:
+            blur(16px);
+    }
+
+
+    /* ========================================================
+       COMPOSER — PERMANENT MOBILE COMMAND DOCK
+       ======================================================== */
+
+    body[data-page="assistant"]
+    .chat-input-container,
+
+    body[data-page="assistant"]
+    .composer-container,
+
+    body[data-page="assistant"]
+    .input-area {
+
+        position:
+            fixed !important;
+
+        z-index:
+            400 !important;
+
+        left:
+            10px !important;
+
+        right:
+            10px !important;
+
+        bottom:
+            max(
+                8px,
+                env(
+                    safe-area-inset-bottom
+                )
+            ) !important;
+
+        width:
+            auto !important;
+
+        max-width:
+            none !important;
+
+        margin:
+            0 !important;
+
+        box-sizing:
+            border-box !important;
+    }
+
+
+    body[data-page="assistant"]
+    .chat-input-box,
+
+    body[data-page="assistant"]
+    .composer,
+
+    body[data-page="assistant"]
+    .input-wrapper {
+
+        border-radius:
+            18px !important;
+
+        border:
+            1px solid
+            rgba(
+                215,
+                166,
+                72,
+                .27
+            ) !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(
+                    25,
+                    27,
+                    31,
+                    .96
+                ),
+                rgba(
+                    14,
+                    15,
+                    18,
+                    .98
+                )
+            ) !important;
+
+        box-shadow:
+            0
+            18px
+            48px
+            rgba(
+                0,
+                0,
+                0,
+                .46
+            ),
+            inset
+            0
+            1px
+            0
+            rgba(
+                255,
+                255,
+                255,
+                .055
+            ) !important;
+
+        backdrop-filter:
+            blur(24px);
+
+        -webkit-backdrop-filter:
+            blur(24px);
+    }
+
+
+    /* ========================================================
+       INPUT
+       ======================================================== */
+
+    body[data-page="assistant"]
+    #messageInput,
+
+    body[data-page="assistant"]
+    #chatInput,
+
+    body[data-page="assistant"]
+    textarea {
+
+        font-size:
+            12px !important;
+
+        line-height:
+            1.45 !important;
+
+        color:
+            #eeefec !important;
+
+        caret-color:
+            #dfb45e !important;
+    }
+
+
+    /* ========================================================
+       SEND BUTTON
+       ======================================================== */
+
+    body[data-page="assistant"]
+    #sendBtn,
+
+    body[data-page="assistant"]
+    .send-button,
+
+    body[data-page="assistant"]
+    .send-btn {
+
+        width:
+            42px !important;
+
+        height:
+            42px !important;
+
+        min-width:
+            42px !important;
+
+        border-radius:
+            13px !important;
+
+        border:
+            1px solid
+            rgba(
+                238,
+                195,
+                105,
+                .33
+            ) !important;
+
+        color:
+            #15120b !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                #e9c16c,
+                #cfa047
+            ) !important;
+
+        box-shadow:
+            0
+            8px
+            20px
+            rgba(
+                215,
+                166,
+                72,
+                .16
+            ) !important;
+    }
+
+
+    /* ========================================================
+       SMALL PHONE
+       ======================================================== */
+
+    @media (max-width: 380px) {
+
+        body[data-page="assistant"]
+        #heroScreen {
+
+            padding-left:
+                11px !important;
+
+            padding-right:
+                11px !important;
+
+            padding-top:
+                86px !important;
+        }
+
+
+        body[data-page="assistant"]
+        #heroScreen h1 {
+
+            font-size:
+                30px !important;
+        }
+
+
+        body[data-page="assistant"]
+        #heroScreen
+        .hero-actions,
+
+        body[data-page="assistant"]
+        #heroScreen
+        .hero-action-grid,
+
+        body[data-page="assistant"]
+        #heroScreen
+        .quick-actions,
+
+        body[data-page="assistant"]
+        #heroScreen
+        .recent-intelligence,
+
+        body[data-page="assistant"]
+        #heroScreen
+        .recent-card,
+
+        body[data-page="assistant"]
+        #heroScreen
+        .recent-section {
+
+            width:
+                100% !important;
+        }
+
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE — MOBILE HOME HERO
+   START FROM TOP, NOT MIDDLE
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    body[data-page="assistant"]
+    #heroScreen {
+
+        /* Remove old middle-screen positioning */
+        justify-content: flex-start !important;
+        align-items: center !important;
+
+        min-height: 0 !important;
+        height: auto !important;
+
+        margin: 0 !important;
+
+        /* START NEAR TOP */
+        padding:
+            24px
+            16px
+            24px !important;
+
+        box-sizing: border-box !important;
+    }
+
+
+    /* AP SYNAPSE badge starts immediately */
+    body[data-page="assistant"]
+    #heroScreen
+    .hero-badge,
+
+    body[data-page="assistant"]
+    #heroScreen
+    .hero-label,
+
+    body[data-page="assistant"]
+    #heroScreen
+    .hero-eyebrow {
+
+        margin-top: 0 !important;
+
+        margin-bottom:
+            16px !important;
+    }
+
+
+    /* Main title follows naturally */
+    body[data-page="assistant"]
+    #heroScreen h1 {
+
+        margin-top: 0 !important;
+
+        margin-bottom:
+            0 !important;
+    }
+
+
+    body[data-page="assistant"]
+    #heroScreen p {
+
+        margin-top:
+            14px !important;
+    }
+
+
+    /* Bring capability buttons upward too */
+    body[data-page="assistant"]
+    #heroScreen
+    .hero-actions,
+
+    body[data-page="assistant"]
+    #heroScreen
+    .hero-action-grid,
+
+    body[data-page="assistant"]
+    #heroScreen
+    .quick-actions {
+
+        margin-top:
+            24px !important;
+    }
+
+
+    /* Recent Intelligence follows without huge gap */
+    body[data-page="assistant"]
+    #heroScreen
+    .recent-intelligence,
+
+    body[data-page="assistant"]
+    #heroScreen
+    .recent-card,
+
+    body[data-page="assistant"]
+    #heroScreen
+    .recent-section {
+
+        margin-top:
+            26px !important;
+    }
+
+}
+
+
+/* Extra-tight positioning on small phones like 360px */
+@media (max-width: 380px) {
+
+    body[data-page="assistant"]
+    #heroScreen {
+
+        padding-top:
+            18px !important;
+    }
+
+}
+
+/* ============================================================
+   MOBILE ASSISTANT — REMOVE OLD CENTERING
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    body[data-page="assistant"]
+    #heroScreen {
+
+        justify-content:
+            flex-start !important;
+
+        align-content:
+            flex-start !important;
+
+        place-content:
+            start center !important;
+
+        padding-top:
+            0 !important;
+
+        margin-top:
+            0 !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE — MOBILE ASSISTANT
+   DEFINITIVE SINGLE SCROLLBAR
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    /* --------------------------------------------------------
+       Browser/body must never create the second scrollbar
+       -------------------------------------------------------- */
+
+    html:has(body[data-page="assistant"]),
+    body[data-page="assistant"] {
+
+        height: 100dvh !important;
+
+        overflow-x: hidden !important;
+        overflow-y: hidden !important;
+
+        overscroll-behavior: none !important;
+    }
+
+
+    /* --------------------------------------------------------
+       ASSISTANT PAGE = THE ONE AND ONLY VERTICAL SCROLLER
+       -------------------------------------------------------- */
+
+    body[data-page="assistant"]
+    #assistantPage {
+
+        position: relative !important;
+
+        width: 100% !important;
+
+        height:
+            calc(
+                100dvh - 66px
+            ) !important;
+
+        min-height: 0 !important;
+
+        max-height:
+            calc(
+                100dvh - 66px
+            ) !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        overscroll-behavior-y:
+            contain !important;
+
+        -webkit-overflow-scrolling:
+            touch !important;
+
+        scrollbar-width:
+            thin !important;
+    }
+
+
+    /* Main single scrollbar */
+
+    body[data-page="assistant"]
+    #assistantPage::-webkit-scrollbar {
+
+        display: block !important;
+
+        width: 4px !important;
+    }
+
+
+    body[data-page="assistant"]
+    #assistantPage::-webkit-scrollbar-track {
+
+        background:
+            transparent !important;
+    }
+
+
+    body[data-page="assistant"]
+    #assistantPage::-webkit-scrollbar-thumb {
+
+        background:
+            rgba(
+                255,
+                255,
+                255,
+                0.18
+            ) !important;
+
+        border-radius:
+            999px !important;
+    }
+
+
+    /* ========================================================
+       IMPORTANT:
+       Every nested Assistant element may still scroll if its
+       functionality needs it, but it gets NO SECOND scrollbar.
+       ======================================================== */
+
+    body[data-page="assistant"]
+    #assistantPage * {
+
+        scrollbar-width:
+            none !important;
+    }
+
+
+    body[data-page="assistant"]
+    #assistantPage *::-webkit-scrollbar {
+
+        width: 0 !important;
+        height: 0 !important;
+
+        display: none !important;
+    }
+
+
+    /* Hero itself never creates another vertical track */
+
+    body[data-page="assistant"]
+    #heroScreen {
+
+        height: auto !important;
+
+        min-height: 0 !important;
+
+        max-height: none !important;
+
+        overflow: visible !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE — MOBILE HOME
+   REMOVE INNER SCROLLBAR, KEEP WORKSPACE SCROLLBAR
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    /*
+     * Assistant can still scroll normally,
+     * but its own scrollbar is invisible.
+     */
+
+    body[data-page="assistant"]
+    #assistantPage {
+
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+
+
+    body[data-page="assistant"]
+    #assistantPage::-webkit-scrollbar {
+
+        width: 0 !important;
+        height: 0 !important;
+
+        display: none !important;
+    }
+
+
+    /*
+     * No nested Assistant element may draw
+     * another scrollbar either.
+     */
+
+    body[data-page="assistant"]
+    #assistantPage * {
+
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+
+
+    body[data-page="assistant"]
+    #assistantPage *::-webkit-scrollbar {
+
+        width: 0 !important;
+        height: 0 !important;
+
+        display: none !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE — EXACTLY ONE MOBILE ASSISTANT SCROLLBAR
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    /*
+     * Competing scroll containers still work,
+     * but they draw NO scrollbar.
+     */
+
+    body[data-page="assistant"]
+    .ap-hide-native-scrollbar {
+
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+
+
+    body[data-page="assistant"]
+    .ap-hide-native-scrollbar::-webkit-scrollbar {
+
+        width: 0 !important;
+        height: 0 !important;
+
+        display: none !important;
+    }
+
+
+    /*
+     * Only selected outer scroll owner gets a track.
+     */
+
+    body[data-page="assistant"]
+    .ap-main-scrollbar {
+
+        scrollbar-width:
+            thin !important;
+
+        scrollbar-color:
+            rgba(255,255,255,.18)
+            transparent !important;
+    }
+
+
+    body[data-page="assistant"]
+    .ap-main-scrollbar::-webkit-scrollbar {
+
+        width: 3px !important;
+    }
+
+
+    body[data-page="assistant"]
+    .ap-main-scrollbar::-webkit-scrollbar-track {
+
+        background:
+            transparent !important;
+    }
+
+
+    body[data-page="assistant"]
+    .ap-main-scrollbar::-webkit-scrollbar-thumb {
+
+        background:
+            rgba(255,255,255,.18) !important;
+
+        border-radius:
+            999px !important;
+    }
+
+
+    /*
+     * Kill old artificial scrollbar elements.
+     */
+
+    body[data-page="assistant"]
+    .ap-hide-custom-scrollbar {
+
+        display: none !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE — EXACT MOBILE HOME SCROLL OWNERSHIP
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    body[data-page="assistant"]
+    #assistantPage {
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+    }
+
+
+    body[data-page="assistant"]
+    #heroScreen {
+
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+
+        overflow: visible !important;
+        overflow-x: visible !important;
+        overflow-y: visible !important;
+
+        scrollbar-width: none !important;
+    }
+
+
+    body[data-page="assistant"]
+    #heroScreen::-webkit-scrollbar {
+
+        display: none !important;
+
+        width: 0 !important;
+        height: 0 !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE — MOBILE HOME ONE REAL SCROLLBAR
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    body[data-page="assistant"]
+    #assistantPage {
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+    }
+
+
+    body[data-page="assistant"]
+    #heroScreen {
+
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+
+        overflow-x: hidden !important;
+        overflow-y: visible !important;
+
+        scrollbar-width: none !important;
+    }
+
+
+    body[data-page="assistant"]
+    #heroScreen::-webkit-scrollbar {
+
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE — MOBILE HOME
+   EXECUTIVE / OFFICIAL / PRODUCT-FIRST HERO
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    /* ========================================================
+       HERO CONTAINER
+       ======================================================== */
+
+    body[data-page="assistant"]
+    #heroScreen {
+
+        width: 100% !important;
+
+        margin: 0 !important;
+
+        padding:
+            0
+            14px
+            118px !important;
+
+        box-sizing: border-box !important;
+
+        text-align: center !important;
+
+        justify-content:
+            flex-start !important;
+
+        align-items:
+            center !important;
+    }
+
+
+    /* ========================================================
+       AP SYNAPSE BRAND BADGE
+       ======================================================== */
+
+    body[data-page="assistant"]
+    #heroScreen .hero-badge,
+
+    body[data-page="assistant"]
+    #heroScreen .hero-label,
+
+    body[data-page="assistant"]
+    #heroScreen .hero-eyebrow {
+
+        min-height:
+            22px !important;
+
+        margin:
+            0
+            auto
+            18px !important;
+
+        padding:
+            0
+            12px !important;
+
+        display:
+            inline-flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        border:
+            1px solid
+            rgba(215, 166, 72, .32) !important;
+
+        border-radius:
+            999px !important;
+
+        color:
+            #dfb35b !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(215,166,72,.07),
+                rgba(215,166,72,.025)
+            ) !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.035) !important;
+
+        font-size:
+            7.5px !important;
+
+        font-weight:
+            760 !important;
+
+        letter-spacing:
+            .25em !important;
+
+        text-transform:
+            uppercase !important;
+    }
+
+
+    /* ========================================================
+       MAIN PRODUCT STATEMENT
+       ======================================================== */
+
+    body[data-page="assistant"]
+    #heroScreen h1 {
+
+        width:
+            min(100%, 315px) !important;
+
+        margin:
+            0
+            auto !important;
+
+        color:
+            #f6f5f1 !important;
+
+        font-size:
+            clamp(
+                30px,
+                9vw,
+                36px
+            ) !important;
+
+        line-height:
+            .95 !important;
+
+        font-weight:
+            770 !important;
+
+        letter-spacing:
+            -.058em !important;
+
+        text-align:
+            center !important;
+
+        text-wrap:
+            balance !important;
+
+        text-shadow:
+            0 10px 36px
+            rgba(0,0,0,.34) !important;
+    }
+
+
+    /* ========================================================
+       SUBTITLE
+       ======================================================== */
+
+    body[data-page="assistant"]
+    #heroScreen h1 + p,
+
+    body[data-page="assistant"]
+    #heroScreen .hero-subtitle {
+
+        width:
+            min(100%, 265px) !important;
+
+        margin:
+            15px
+            auto
+            0 !important;
+
+        color:
+            rgba(225,226,224,.62) !important;
+
+        font-size:
+            11.5px !important;
+
+        line-height:
+            1.52 !important;
+
+        font-weight:
+            430 !important;
+
+        letter-spacing:
+            -.008em !important;
+
+        text-wrap:
+            balance !important;
+    }
+
+
+    /* ========================================================
+       CAPABILITY GRID
+       ======================================================== */
+
+    body[data-page="assistant"]
+    #heroScreen .hero-actions,
+
+    body[data-page="assistant"]
+    #heroScreen .hero-action-grid,
+
+    body[data-page="assistant"]
+    #heroScreen .quick-actions {
+
+        width:
+            min(100%, 286px) !important;
+
+        margin:
+            26px
+            auto
+            0 !important;
+
+        display:
+            grid !important;
+
+        grid-template-columns:
+            repeat(2, minmax(0,1fr)) !important;
+
+        gap:
+            7px !important;
+    }
+
+
+    body[data-page="assistant"]
+    #heroScreen .hero-action-btn {
+
+        position:
+            relative !important;
+
+        width:
+            100% !important;
+
+        height:
+            43px !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0
+            12px !important;
+
+        display:
+            flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        color:
+            rgba(244,244,240,.88) !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.085) !important;
+
+        border-radius:
+            11px !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(22,24,28,.90),
+                rgba(10,11,14,.94)
+            ) !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.035),
+            0 8px 22px
+            rgba(0,0,0,.12) !important;
+
+        font-size:
+            10px !important;
+
+        font-weight:
+            650 !important;
+
+        letter-spacing:
+            -.01em !important;
+
+        transition:
+            transform .13s ease,
+            border-color .13s ease,
+            background .13s ease !important;
+    }
+
+
+    body[data-page="assistant"]
+    #heroScreen .hero-action-btn::before {
+
+        content: "" !important;
+
+        position:
+            absolute !important;
+
+        top: 0 !important;
+
+        left: 27% !important;
+        right: 27% !important;
+
+        height:
+            1px !important;
+
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                rgba(220,174,78,.52),
+                transparent
+            ) !important;
+    }
+
+
+    body[data-page="assistant"]
+    #heroScreen .hero-action-btn:active {
+
+        transform:
+            scale(.97) !important;
+
+        border-color:
+            rgba(215,166,72,.34) !important;
+
+        background:
+            rgba(215,166,72,.065) !important;
+    }
+
+
+    /* ========================================================
+       RECENT INTELLIGENCE
+       ======================================================== */
+
+    body[data-page="assistant"]
+    #heroScreen .recent-intelligence,
+
+    body[data-page="assistant"]
+    #heroScreen .recent-card,
+
+    body[data-page="assistant"]
+    #heroScreen .recent-section {
+
+        width:
+            min(100%, 286px) !important;
+
+        margin:
+            31px
+            auto
+            0 !important;
+
+        padding:
+            17px !important;
+
+        box-sizing:
+            border-box !important;
+
+        text-align:
+            left !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.075) !important;
+
+        border-radius:
+            17px !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(18,20,24,.86),
+                rgba(8,9,12,.91)
+            ) !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.035),
+            0 16px 38px
+            rgba(0,0,0,.18) !important;
+
+        backdrop-filter:
+            blur(18px);
+
+        -webkit-backdrop-filter:
+            blur(18px);
+    }
+
+
+    /* ========================================================
+       SMALL 360px PHONES
+       ======================================================== */
+
+    @media (max-width: 380px) {
+
+        body[data-page="assistant"]
+        #heroScreen {
+
+            padding-left:
+                11px !important;
+
+            padding-right:
+                11px !important;
+        }
+
+
+        body[data-page="assistant"]
+        #heroScreen h1 {
+
+            font-size:
+                30px !important;
+        }
+
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE — MOBILE HOME TOPBAR ALIGNMENT SUPPORT
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    body[data-page="assistant"]
+    #assistantPage {
+
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+
+
+    body[data-page="assistant"]
+    #heroScreen {
+
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+
+        justify-content:
+            flex-start !important;
+
+        align-content:
+            flex-start !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE — OFFICIAL MOBILE BRAND BADGE
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    body[data-page="assistant"]
+    .ap-mobile-official-badge {
+
+        width: fit-content !important;
+
+        height: 22px !important;
+        min-height: 22px !important;
+
+        margin:
+            0 auto 17px !important;
+
+        padding:
+            0 12px !important;
+
+        display:
+            inline-flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        color:
+            #ddb15a !important;
+
+        border:
+            1px solid
+            rgba(218, 171, 78, .34) !important;
+
+        border-radius:
+            999px !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(218,171,78,.075),
+                rgba(218,171,78,.025)
+            ) !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.04) !important;
+
+        font-size:
+            7.5px !important;
+
+        font-weight:
+            750 !important;
+
+        line-height:
+            1 !important;
+
+        letter-spacing:
+            .25em !important;
+
+        text-transform:
+            uppercase !important;
+
+        visibility:
+            visible !important;
+
+        opacity:
+            1 !important;
+
+        position:
+            relative !important;
+
+        z-index:
+            20 !important;
+
+        transform:
+            none !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE — MOBILE HOME BRAND MARK
+   Guaranteed directly above the visible headline
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    body[data-page="assistant"]
+    #heroScreen h1 {
+        overflow: visible !important;
+    }
+
+    body[data-page="assistant"]
+    #heroScreen h1::before {
+
+        content: "AP SYNAPSE" !important;
+
+        width: fit-content !important;
+        height: 22px !important;
+
+        margin:
+            0 auto 16px !important;
+
+        padding:
+            0 12px !important;
+
+        display:
+            flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        box-sizing:
+            border-box !important;
+
+        color:
+            #d9ad56 !important;
+
+        border:
+            1px solid
+            rgba(217, 173, 86, .34) !important;
+
+        border-radius:
+            999px !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(217,173,86,.075),
+                rgba(217,173,86,.02)
+            ) !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.04) !important;
+
+        font-family:
+            inherit !important;
+
+        font-size:
+            7.5px !important;
+
+        font-weight:
+            750 !important;
+
+        line-height:
+            1 !important;
+
+        letter-spacing:
+            .24em !important;
+
+        text-indent:
+            .24em !important;
+
+        text-transform:
+            uppercase !important;
+
+        opacity:
+            1 !important;
+
+        visibility:
+            visible !important;
+
+        position:
+            relative !important;
+
+        z-index:
+            50 !important;
+
+        transform:
+            none !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE — FINAL MOBILE HERO BRAND LOCK
+   Badge is physically attached to the headline.
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    /* Hide every old/separate AP SYNAPSE hero badge */
+    body[data-page="assistant"] #heroScreen .hero-badge,
+    body[data-page="assistant"] #heroScreen .hero-label,
+    body[data-page="assistant"] #heroScreen .hero-eyebrow,
+    body[data-page="assistant"] #heroScreen .ap-mobile-official-badge {
+        display: none !important;
+    }
+
+
+    body[data-page="assistant"] #heroScreen h1 {
+        overflow: visible !important;
+        position: relative !important;
+    }
+
+
+    /*
+     * Brand badge becomes PART OF THE H1 FLOW.
+     * all: unset removes any old ::before positioning,
+     * top/left/absolute rules, transforms, etc.
+     */
+    body[data-page="assistant"] #heroScreen h1::before {
+
+        all: unset !important;
+
+        content: "AP SYNAPSE" !important;
+
+        box-sizing: border-box !important;
+
+        width: fit-content !important;
+        height: 22px !important;
+
+        margin:
+            0 auto 14px auto !important;
+
+        padding:
+            0 12px !important;
+
+        display:
+            flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        position:
+            static !important;
+
+        inset:
+            auto !important;
+
+        transform:
+            none !important;
+
+        translate:
+            none !important;
+
+        visibility:
+            visible !important;
+
+        opacity:
+            1 !important;
+
+        color:
+            #dcb15a !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(220,177,90,.08),
+                rgba(220,177,90,.025)
+            ) !important;
+
+        border:
+            1px solid
+            rgba(220,177,90,.32) !important;
+
+        border-radius:
+            999px !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.045) !important;
+
+        font-family:
+            inherit !important;
+
+        font-size:
+            7.5px !important;
+
+        font-weight:
+            750 !important;
+
+        line-height:
+            1 !important;
+
+        letter-spacing:
+            .24em !important;
+
+        text-indent:
+            .24em !important;
+
+        text-transform:
+            uppercase !important;
+
+        white-space:
+            nowrap !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE — MOBILE HERO BADGE TEXT VISIBILITY FIX
+   Exact target confirmed: #heroScreen .hero-badge
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    body[data-page="assistant"]
+    #heroScreen .hero-badge {
+
+        display: inline-flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        width: fit-content !important;
+        min-width: 94px !important;
+
+        height: 21px !important;
+        min-height: 21px !important;
+
+        margin:
+            0 auto 12px !important;
+
+        padding:
+            0 11px !important;
+
+        box-sizing: border-box !important;
+
+
+        /* FORCE ACTUAL TEXT PAINTING */
+        color:
+            #dcb15a !important;
+
+        -webkit-text-fill-color:
+            #dcb15a !important;
+
+        opacity:
+            1 !important;
+
+        visibility:
+            visible !important;
+
+        font-size:
+            7.5px !important;
+
+        line-height:
+            21px !important;
+
+        font-weight:
+            750 !important;
+
+        font-family:
+            inherit !important;
+
+        letter-spacing:
+            .24em !important;
+
+        text-indent:
+            .24em !important;
+
+        text-transform:
+            uppercase !important;
+
+        white-space:
+            nowrap !important;
+
+
+        /* REMOVE ANY EFFECT HIDING THE TEXT */
+        filter:
+            none !important;
+
+        mix-blend-mode:
+            normal !important;
+
+        clip-path:
+            none !important;
+
+        -webkit-clip-path:
+            none !important;
+
+        mask:
+            none !important;
+
+        -webkit-mask:
+            none !important;
+
+        transform-style:
+            flat !important;
+
+
+        /* KEEP ABOVE NEURAL/BACKGROUND LAYERS */
+        position:
+            relative !important;
+
+        z-index:
+            999 !important;
+
+
+        border:
+            1px solid
+            rgba(220,177,90,.34) !important;
+
+        border-radius:
+            999px !important;
+
+        background:
+            rgba(218,171,78,.055) !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.04) !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE — REAL INLINE MOBILE HOME BRAND
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    body[data-page="assistant"]
+    #heroScreen .hero-title {
+
+        overflow: visible !important;
+    }
+
+
+    body[data-page="assistant"]
+    #heroScreen .ap-home-inline-brand {
+
+        /* independent from all old hero-badge CSS */
+
+        width: max-content !important;
+        height: 21px !important;
+
+        margin:
+            0 auto 14px !important;
+
+        padding:
+            0 11px !important;
+
+        display:
+            flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        box-sizing:
+            border-box !important;
+
+        position:
+            relative !important;
+
+        inset:
+            auto !important;
+
+        transform:
+            none !important;
+
+        opacity:
+            1 !important;
+
+        visibility:
+            visible !important;
+
+        z-index:
+            1000 !important;
+
+
+        /* typography */
+
+        color:
+            #DDB158 !important;
+
+        -webkit-text-fill-color:
+            #DDB158 !important;
+
+        font-family:
+            inherit !important;
+
+        font-size:
+            7.5px !important;
+
+        font-weight:
+            760 !important;
+
+        line-height:
+            1 !important;
+
+        letter-spacing:
+            .24em !important;
+
+        text-indent:
+            .24em !important;
+
+        text-transform:
+            uppercase !important;
+
+        white-space:
+            nowrap !important;
+
+
+        /* premium AP Synapse capsule */
+
+        border:
+            1px solid
+            rgba(221,177,88,.34) !important;
+
+        border-radius:
+            999px !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(221,177,88,.075),
+                rgba(221,177,88,.025)
+            ) !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.045) !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE — MOBILE HOME NATURAL TOP LAYOUT
+   No transforms. No clipping. No fake badge.
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    /* The Assistant page owns scrolling */
+    body[data-page="assistant"] #assistantPage {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+    }
+
+
+    /* Hero begins naturally at the top of the workspace */
+    body[data-page="assistant"] #heroScreen {
+        position: relative !important;
+
+        top: auto !important;
+        bottom: auto !important;
+        inset: auto !important;
+
+        width: 100% !important;
+
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+
+        padding:
+            10px
+            14px
+            118px !important;
+
+        box-sizing: border-box !important;
+
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        justify-content: flex-start !important;
+        align-items: center !important;
+
+        overflow-x: hidden !important;
+        overflow-y: visible !important;
+    }
+
+
+    /* THE IMPORTANT FIX:
+       stop the hero-container from being vertically centered */
+    body[data-page="assistant"]
+    #heroScreen .hero-container {
+
+        position: relative !important;
+
+        top: auto !important;
+        bottom: auto !important;
+        inset: auto !important;
+
+        transform: none !important;
+        translate: none !important;
+
+        margin:
+            0
+            auto !important;
+
+        padding:
+            0 !important;
+
+        width:
+            100% !important;
+
+        max-width:
+            330px !important;
+
+        height:
+            auto !important;
+
+        min-height:
+            0 !important;
+
+        display:
+            flex !important;
+
+        flex-direction:
+            column !important;
+
+        justify-content:
+            flex-start !important;
+
+        align-items:
+            center !important;
+    }
+
+
+    /* Restore the REAL existing AP SYNAPSE badge */
+    body[data-page="assistant"]
+    #heroScreen .hero-container > .hero-badge {
+
+        display:
+            inline-flex !important;
+
+        position:
+            relative !important;
+
+        inset:
+            auto !important;
+
+        transform:
+            none !important;
+
+        visibility:
+            visible !important;
+
+        opacity:
+            1 !important;
+
+        margin:
+            0 auto 16px !important;
+
+        z-index:
+            5 !important;
+    }
+
+
+    /* Headline follows naturally below badge */
+    body[data-page="assistant"]
+    #heroScreen .hero-title {
+
+        position:
+            relative !important;
+
+        top:
+            auto !important;
+
+        transform:
+            none !important;
+
+        margin:
+            0 auto !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE — MOBILE HOME SINGLE LAYOUT AUTHORITY
+   NO JS POSITIONING
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    body[data-page="assistant"] #assistantPage {
+        margin: 0 !important;
+        padding: 0 !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+    }
+
+
+    body[data-page="assistant"] #heroScreen {
+        position: relative !important;
+
+        inset: auto !important;
+        top: auto !important;
+
+        width: 100% !important;
+
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+
+        padding:
+            12px
+            14px
+            118px !important;
+
+        box-sizing: border-box !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        justify-content: flex-start !important;
+        align-items: center !important;
+
+        overflow-x: hidden !important;
+        overflow-y: visible !important;
+
+        transform: none !important;
+    }
+
+
+    body[data-page="assistant"]
+    #heroScreen .hero-container {
+
+        position: relative !important;
+
+        inset: auto !important;
+        top: auto !important;
+        bottom: auto !important;
+
+        transform: none !important;
+        translate: none !important;
+
+        width: 100% !important;
+        max-width: 330px !important;
+
+        height: auto !important;
+        min-height: 0 !important;
+
+        margin: 0 auto !important;
+        padding: 0 !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        justify-content: flex-start !important;
+        align-items: center !important;
+    }
+
+
+    body[data-page="assistant"]
+    #heroScreen .hero-badge {
+
+        display: inline-flex !important;
+
+        position: static !important;
+
+        transform: none !important;
+        translate: none !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        margin:
+            0 auto 16px !important;
+
+        color: #dcb15a !important;
+        -webkit-text-fill-color: #dcb15a !important;
+
+        z-index: auto !important;
+    }
+
+
+    body[data-page="assistant"]
+    #heroScreen .hero-title {
+
+        position: static !important;
+
+        transform: none !important;
+        translate: none !important;
+
+        margin: 0 auto !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE — MOBILE HOME FINAL POSITION
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    body[data-page="assistant"]
+    #heroScreen .hero-container {
+
+        position: relative !important;
+        top: -72px !important;
+
+        transform: none !important;
+        translate: none !important;
+    }
+
+}
+
+/* ============================================================
+   AP SYNAPSE — MOBILE PROFILE / IDENTITY SHEET
+   Final premium mobile treatment
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    /* --------------------------------------------------------
+       MAIN PROFILE SHEET
+       -------------------------------------------------------- */
+
+    #profileCard.popup-panel,
+    #profileCard {
+
+        position: fixed !important;
+
+        top: 72px !important;
+        left: 10px !important;
+        right: 10px !important;
+        bottom: 10px !important;
+
+        width: auto !important;
+        height: auto !important;
+
+        max-width: none !important;
+        max-height: none !important;
+
+        margin: 0 !important;
+
+        padding:
+            18px
+            14px
+            22px !important;
+
+        box-sizing: border-box !important;
+
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+
+        overscroll-behavior: contain !important;
+
+        color:
+            #f3f2ed !important;
+
+        background:
+            linear-gradient(
+                155deg,
+                rgba(20,21,24,.985),
+                rgba(9,10,12,.995)
+            ) !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.085) !important;
+
+        border-radius:
+            20px !important;
+
+        box-shadow:
+            0 24px 70px
+            rgba(0,0,0,.58),
+            inset 0 1px 0
+            rgba(255,255,255,.045) !important;
+
+        backdrop-filter:
+            blur(24px) !important;
+
+        -webkit-backdrop-filter:
+            blur(24px) !important;
+
+        z-index:
+            50000 !important;
+
+        scrollbar-width:
+            none !important;
+    }
+
+
+    #profileCard::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+
+
+    /* --------------------------------------------------------
+       CLOSE
+       -------------------------------------------------------- */
+
+    #profileCard #closeProfile,
+    #profileCard .popup-close {
+
+        position:
+            sticky !important;
+
+        top:
+            0 !important;
+
+        float:
+            right !important;
+
+        width:
+            34px !important;
+
+        height:
+            34px !important;
+
+        margin:
+            0 0 0 auto !important;
+
+        padding:
+            0 !important;
+
+        display:
+            grid !important;
+
+        place-items:
+            center !important;
+
+        color:
+            rgba(245,245,240,.75) !important;
+
+        background:
+            rgba(255,255,255,.045) !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.085) !important;
+
+        border-radius:
+            10px !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.035) !important;
+
+        z-index:
+            20 !important;
+    }
+
+
+    /* --------------------------------------------------------
+       IDENTITY KICKER
+       -------------------------------------------------------- */
+
+    #profileCard .synapse-identity-panel-kicker,
+    #profileCard .popup-kicker {
+
+        display:
+            block !important;
+
+        margin:
+            1px 42px 5px 0 !important;
+
+        color:
+            #d7ab56 !important;
+
+        -webkit-text-fill-color:
+            #d7ab56 !important;
+
+        font-size:
+            8px !important;
+
+        line-height:
+            1.2 !important;
+
+        font-weight:
+            760 !important;
+
+        letter-spacing:
+            .18em !important;
+
+        text-transform:
+            uppercase !important;
+    }
+
+
+    /* --------------------------------------------------------
+       TITLE
+       -------------------------------------------------------- */
+
+    #profileCard h1,
+    #profileCard h2 {
+
+        margin:
+            0 44px 16px 0 !important;
+
+        color:
+            #f5f4ef !important;
+
+        -webkit-text-fill-color:
+            #f5f4ef !important;
+
+        font-size:
+            23px !important;
+
+        line-height:
+            1.05 !important;
+
+        font-weight:
+            730 !important;
+
+        letter-spacing:
+            -.035em !important;
+    }
+
+
+    /* --------------------------------------------------------
+       AVATAR
+       -------------------------------------------------------- */
+
+    #profileCard .profile-avatar,
+    #profileCard .user-avatar,
+    #profileCard [class*="profile-avatar"],
+    #profileCard [class*="identity-avatar"] {
+
+        width:
+            58px !important;
+
+        height:
+            58px !important;
+
+        display:
+            grid !important;
+
+        place-items:
+            center !important;
+
+        margin:
+            3px 0 11px !important;
+
+        color:
+            #ddb45d !important;
+
+        font-size:
+            16px !important;
+
+        font-weight:
+            760 !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(216,171,82,.09),
+                rgba(255,255,255,.025)
+            ) !important;
+
+        border:
+            1px solid
+            rgba(216,171,82,.30) !important;
+
+        border-radius:
+            16px !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.04) !important;
+    }
+
+
+    /* --------------------------------------------------------
+       USER NAME / IDENTITY NAME
+       -------------------------------------------------------- */
+
+    #profileCard .synapse-identity-name {
+
+        display:
+            block !important;
+
+        margin:
+            0 0 4px !important;
+
+        color:
+            #f4f3ee !important;
+
+        -webkit-text-fill-color:
+            #f4f3ee !important;
+
+        font-size:
+            18px !important;
+
+        line-height:
+            1.15 !important;
+
+        font-weight:
+            720 !important;
+
+        letter-spacing:
+            -.025em !important;
+    }
+
+
+    /* --------------------------------------------------------
+       SUPPORTING TEXT
+       -------------------------------------------------------- */
+
+    #profileCard .synapse-identity-copy,
+    #profileCard p {
+
+        color:
+            rgba(230,230,225,.57) !important;
+
+        -webkit-text-fill-color:
+            rgba(230,230,225,.57) !important;
+
+        font-size:
+            11px !important;
+
+        line-height:
+            1.48 !important;
+
+        font-weight:
+            430 !important;
+    }
+
+
+    /* --------------------------------------------------------
+       STATUS / VERIFIED / CONNECTED LABELS
+       -------------------------------------------------------- */
+
+    #profileCard .synapse-identity-stat {
+
+        padding:
+            12px !important;
+
+        margin:
+            10px 0 !important;
+
+        box-sizing:
+            border-box !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(255,255,255,.035),
+                rgba(255,255,255,.015)
+            ) !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.07) !important;
+
+        border-radius:
+            13px !important;
+    }
+
+
+    #profileCard .synapse-identity-stat strong {
+
+        color:
+            #e0b75e !important;
+
+        -webkit-text-fill-color:
+            #e0b75e !important;
+
+        font-size:
+            11px !important;
+
+        font-weight:
+            700 !important;
+    }
+
+
+    /* --------------------------------------------------------
+       GENERAL LABELS
+       -------------------------------------------------------- */
+
+    #profileCard label,
+    #profileCard small {
+
+        color:
+            rgba(225,225,220,.47) !important;
+
+        font-size:
+            9px !important;
+
+        line-height:
+            1.35 !important;
+
+        letter-spacing:
+            .015em !important;
+    }
+
+
+    /* --------------------------------------------------------
+       WORKSPACE / LANGUAGE STYLE CARDS
+       -------------------------------------------------------- */
+
+    #profileCard [class*="meta"],
+    #profileCard [class*="detail"],
+    #profileCard [class*="workspace"],
+    #profileCard [class*="language"] {
+
+        box-sizing:
+            border-box !important;
+    }
+
+
+    /* --------------------------------------------------------
+       ACCOUNT ACTION BUTTONS
+       -------------------------------------------------------- */
+
+    #profileCard button:not(#closeProfile):not(.popup-close) {
+
+        width:
+            100% !important;
+
+        min-height:
+            44px !important;
+
+        margin:
+            7px 0 0 !important;
+
+        padding:
+            0 12px !important;
+
+        display:
+            flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            flex-start !important;
+
+        box-sizing:
+            border-box !important;
+
+        color:
+            rgba(244,244,240,.88) !important;
+
+        -webkit-text-fill-color:
+            rgba(244,244,240,.88) !important;
+
+        font-size:
+            11px !important;
+
+        font-weight:
+            610 !important;
+
+        text-align:
+            left !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(28,29,32,.94),
+                rgba(16,17,19,.96)
+            ) !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.075) !important;
+
+        border-radius:
+            12px !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.035) !important;
+    }
+
+
+    #profileCard button:not(#closeProfile):not(.popup-close):active {
+
+        transform:
+            scale(.985) !important;
+
+        border-color:
+            rgba(215,171,82,.30) !important;
+
+        background:
+            rgba(215,171,82,.06) !important;
+    }
+
+
+    /* --------------------------------------------------------
+       SECTION DIVIDERS
+       -------------------------------------------------------- */
+
+    #profileCard hr {
+
+        height:
+            1px !important;
+
+        margin:
+            16px 0 !important;
+
+        border:
+            0 !important;
+
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,.09),
+                transparent
+            ) !important;
+    }
+
+
+    /* --------------------------------------------------------
+       FOOTER
+       -------------------------------------------------------- */
+
+    #profileCard .synapse-identity-footer {
+
+        margin-top:
+            15px !important;
+
+        padding-top:
+            12px !important;
+
+        color:
+            rgba(225,225,220,.38) !important;
+
+        border-top:
+            1px solid
+            rgba(255,255,255,.055) !important;
+
+        font-size:
+            8px !important;
+
+        line-height:
+            1.4 !important;
+
+        letter-spacing:
+            .06em !important;
+    }
+
+
+    /* --------------------------------------------------------
+       REMOVE MOBILE HORIZONTAL BAR
+       -------------------------------------------------------- */
+
+    #profileCard,
+    #profileCard * {
+
+        max-width:
+            100% !important;
+    }
+
+}
+/* ============================================================
+   AP SYNAPSE — PROFILE GOOGLE PRIMARY ACTION
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    #profileCard .ap-profile-google-primary {
+
+        width: 100% !important;
+
+        margin:
+            12px 0 16px !important;
+
+        padding:
+            10px !important;
+
+        box-sizing:
+            border-box !important;
+
+        display:
+            none !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        overflow:
+            hidden !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.075) !important;
+
+        border-radius:
+            14px !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(255,255,255,.035),
+                rgba(255,255,255,.015)
+            ) !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.035) !important;
+    }
+
+
+    #profileCard
+    .ap-profile-google-primary.ap-google-ready {
+
+        display:
+            flex !important;
+    }
+
+
+    #profileCard
+    .ap-profile-google-primary
+    .g_id_signin {
+
+        width:
+            100% !important;
+
+        display:
+            flex !important;
+
+        justify-content:
+            center !important;
+    }
+
+
+    #profileCard
+    .ap-profile-google-primary iframe {
+
+        max-width:
+            100% !important;
+    }
+
+
+    /* Profile sheet starts at top and never scrolls sideways */
+
+    #profileCard {
+
+        overflow-x:
+            hidden !important;
+
+        overscroll-behavior:
+            contain !important;
+    }
+
+
+    #profileCard * {
+
+        box-sizing:
+            border-box !important;
+    }
+
+}
+
+
+/* ============================================================
+   AP SYNAPSE — PROFILE GOOGLE SIGN-IN TOP
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    #profileCard .ap-profile-google-top {
+
+        width: 100% !important;
+
+        margin:
+            12px 0 16px !important;
+
+        padding:
+            10px !important;
+
+        box-sizing:
+            border-box !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        overflow:
+            hidden !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.075) !important;
+
+        border-radius:
+            14px !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(255,255,255,.035),
+                rgba(255,255,255,.015)
+            ) !important;
+    }
+
+
+    #profileCard
+    .ap-profile-google-top
+    .g_id_signin {
+
+        width:
+            100% !important;
+
+        display:
+            flex !important;
+
+        justify-content:
+            center !important;
+    }
+
+
+    #profileCard
+    .ap-profile-google-top iframe {
+
+        max-width:
+            100% !important;
+    }
+
+}
+
+
+/* ============================================================
+   AP SYNAPSE — PROFILE GOOGLE SIGN-IN PRIMARY ACTION
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    #profileCard
+    .ap-google-signin-top-zone {
+
+        width:
+            100% !important;
+
+        margin:
+            13px 0 18px !important;
+
+        padding:
+            0 !important;
+
+        display:
+            flex !important;
+
+        flex-direction:
+            column !important;
+
+        align-items:
+            stretch !important;
+
+        justify-content:
+            center !important;
+
+        box-sizing:
+            border-box !important;
+    }
+
+
+    #profileCard
+    .ap-google-signin-top-zone
+    .g_id_signin {
+
+        width:
+            100% !important;
+
+        display:
+            flex !important;
+
+        justify-content:
+            center !important;
+    }
+
+
+    #profileCard
+    .ap-google-signin-top-zone
+    iframe {
+
+        max-width:
+            100% !important;
+    }
+
+
+    #profileCard
+    .ap-google-signin-fallback {
+
+        width:
+            100% !important;
+
+        height:
+            46px !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 14px !important;
+
+        display:
+            flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        gap:
+            10px !important;
+
+        color:
+            #f4f3ee !important;
+
+        -webkit-text-fill-color:
+            #f4f3ee !important;
+
+        font-size:
+            11px !important;
+
+        font-weight:
+            650 !important;
+
+        letter-spacing:
+            -.01em !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(31,32,35,.98),
+                rgba(17,18,20,.98)
+            ) !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.11) !important;
+
+        border-radius:
+            13px !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.045),
+            0 8px 24px
+            rgba(0,0,0,.18) !important;
+    }
+
+
+    #profileCard
+    .ap-google-signin-fallback:active {
+
+        transform:
+            scale(.985) !important;
+
+        border-color:
+            rgba(216,172,82,.34) !important;
+    }
+
+
+    #profileCard
+    .ap-google-g {
+
+        width:
+            23px !important;
+
+        height:
+            23px !important;
+
+        display:
+            grid !important;
+
+        place-items:
+            center !important;
+
+        flex:
+            0 0 23px !important;
+
+        color:
+            #ddb159 !important;
+
+        -webkit-text-fill-color:
+            #ddb159 !important;
+
+        font-size:
+            12px !important;
+
+        font-weight:
+            800 !important;
+
+        border:
+            1px solid
+            rgba(221,177,89,.28) !important;
+
+        border-radius:
+            7px !important;
+
+        background:
+            rgba(221,177,89,.055) !important;
+    }
+
+}
+
+
+/* ============================================================
+   AP SYNAPSE — FINAL MOBILE PROFILE AUTH HEADER
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    #profileCard
+    .ap-profile-auth-header {
+
+        width:
+            100% !important;
+
+        margin:
+            12px 0 17px !important;
+
+        padding:
+            0 !important;
+
+        display:
+            flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        box-sizing:
+            border-box !important;
+    }
+
+
+    #profileCard
+    .ap-profile-auth-header
+    .g_id_signin {
+
+        width:
+            100% !important;
+
+        display:
+            flex !important;
+
+        justify-content:
+            center !important;
+    }
+
+
+    #profileCard
+    .ap-profile-auth-header iframe {
+
+        max-width:
+            100% !important;
+    }
+
+
+    #profileCard
+    .ap-profile-google-button {
+
+        width:
+            100% !important;
+
+        height:
+            46px !important;
+
+        min-height:
+            46px !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 15px !important;
+
+        display:
+            flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        gap:
+            10px !important;
+
+        box-sizing:
+            border-box !important;
+
+        color:
+            #f4f3ef !important;
+
+        -webkit-text-fill-color:
+            #f4f3ef !important;
+
+        font-size:
+            11px !important;
+
+        font-weight:
+            650 !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(31,32,35,.98),
+                rgba(16,17,19,.98)
+            ) !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.11) !important;
+
+        border-radius:
+            13px !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.045),
+            0 8px 22px
+            rgba(0,0,0,.15) !important;
+    }
+
+
+    #profileCard
+    .ap-profile-google-mark {
+
+        width:
+            24px !important;
+
+        height:
+            24px !important;
+
+        flex:
+            0 0 24px !important;
+
+        display:
+            grid !important;
+
+        place-items:
+            center !important;
+
+        color:
+            #ddb159 !important;
+
+        -webkit-text-fill-color:
+            #ddb159 !important;
+
+        font-size:
+            12px !important;
+
+        font-weight:
+            800 !important;
+
+        border:
+            1px solid
+            rgba(221,177,89,.28) !important;
+
+        border-radius:
+            7px !important;
+
+        background:
+            rgba(221,177,89,.055) !important;
+    }
+
+
+    /*
+     * Signed-in account:
+     * auth button vanishes automatically.
+     */
+
+    #profileCard.ap-profile-signed-in
+    .ap-profile-auth-header {
+
+        display:
+            none !important;
+    }
+
+}
+
+
+/* AP SYNAPSE PROFILE FINAL VISUAL V4 START */
+
+@media (max-width: 760px) {
+
+    /* ========================================================
+       PROFILE SHEET
+       ======================================================== */
+
+    #profileCard {
+
+        position:
+            fixed !important;
+
+        top:
+            72px !important;
+
+        left:
+            10px !important;
+
+        right:
+            10px !important;
+
+        bottom:
+            10px !important;
+
+        width:
+            auto !important;
+
+        max-width:
+            none !important;
+
+        height:
+            auto !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            17px 14px 22px !important;
+
+        box-sizing:
+            border-box !important;
+
+        overflow-x:
+            hidden !important;
+
+        overflow-y:
+            auto !important;
+
+        overscroll-behavior:
+            contain !important;
+
+        scrollbar-width:
+            none !important;
+
+        color:
+            #f2f1ec !important;
+
+        background:
+            linear-gradient(
+                155deg,
+                rgba(19,20,23,.99),
+                rgba(8,9,11,.995)
+            ) !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.08) !important;
+
+        border-radius:
+            20px !important;
+
+        box-shadow:
+            0 28px 80px
+            rgba(0,0,0,.55),
+            inset 0 1px 0
+            rgba(255,255,255,.04) !important;
+
+        backdrop-filter:
+            blur(24px) !important;
+
+        -webkit-backdrop-filter:
+            blur(24px) !important;
+    }
+
+
+    #profileCard::-webkit-scrollbar {
+
+        width:
+            0 !important;
+
+        height:
+            0 !important;
+
+        display:
+            none !important;
+    }
+
+
+    #profileCard,
+    #profileCard * {
+
+        box-sizing:
+            border-box !important;
+
+        max-width:
+            100% !important;
+    }
+
+
+    /* ========================================================
+       KICKER
+       ======================================================== */
+
+    #profileCard .synapse-identity-panel-kicker,
+    #profileCard .popup-kicker {
+
+        display:
+            block !important;
+
+        margin:
+            1px 44px 5px 0 !important;
+
+        color:
+            #d8ac55 !important;
+
+        font-size:
+            7.5px !important;
+
+        font-weight:
+            780 !important;
+
+        line-height:
+            1.2 !important;
+
+        letter-spacing:
+            .18em !important;
+
+        text-transform:
+            uppercase !important;
+    }
+
+
+    /* ========================================================
+       YOUR PROFILE
+       ======================================================== */
+
+    #profileCard h1,
+    #profileCard h2 {
+
+        margin:
+            0 44px 0 0 !important;
+
+        color:
+            #f7f6f1 !important;
+
+        font-size:
+            22px !important;
+
+        line-height:
+            1.05 !important;
+
+        font-weight:
+            740 !important;
+
+        letter-spacing:
+            -.035em !important;
+    }
+
+
+    /* ========================================================
+       CLOSE
+       ======================================================== */
+
+    #profileCard #closeProfile,
+    #profileCard .popup-close {
+
+        position:
+            absolute !important;
+
+        top:
+            14px !important;
+
+        right:
+            14px !important;
+
+        width:
+            34px !important;
+
+        height:
+            34px !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+        display:
+            grid !important;
+
+        place-items:
+            center !important;
+
+        color:
+            rgba(245,245,240,.72) !important;
+
+        background:
+            rgba(255,255,255,.045) !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.08) !important;
+
+        border-radius:
+            10px !important;
+
+        z-index:
+            100 !important;
+    }
+
+
+    /* ========================================================
+       PRIMARY AUTH
+       ======================================================== */
+
+    #profileCard .ap-profile-auth-primary {
+
+        width:
+            100% !important;
+
+        margin:
+            15px 0 18px !important;
+
+        padding:
+            0 !important;
+
+        display:
+            flex !important;
+
+        flex-direction:
+            column !important;
+
+        gap:
+            8px !important;
+    }
+
+
+    #profileCard
+    .ap-profile-auth-primary[hidden] {
+
+        display:
+            none !important;
+    }
+
+
+    #profileCard
+    .ap-profile-google-main {
+
+        width:
+            100% !important;
+
+        min-height:
+            44px !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 14px !important;
+
+        display:
+            flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            flex-start !important;
+
+        gap:
+            11px !important;
+
+        color:
+            #f3f2ed !important;
+
+        font-size:
+            11px !important;
+
+        font-weight:
+            650 !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(28,29,32,.98),
+                rgba(15,16,18,.98)
+            ) !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.095) !important;
+
+        border-radius:
+            12px !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.04) !important;
+    }
+
+
+    #profileCard
+    .ap-profile-google-g {
+
+        width:
+            24px !important;
+
+        height:
+            24px !important;
+
+        flex:
+            0 0 24px !important;
+
+        display:
+            grid !important;
+
+        place-items:
+            center !important;
+
+        color:
+            #ddb15a !important;
+
+        font-size:
+            12px !important;
+
+        font-weight:
+            800 !important;
+
+        border:
+            1px solid
+            rgba(221,177,90,.30) !important;
+
+        border-radius:
+            7px !important;
+
+        background:
+            rgba(221,177,90,.055) !important;
+    }
+
+
+    #profileCard
+    .ap-profile-auth-note {
+
+        padding:
+            0 2px !important;
+
+        color:
+            rgba(226,226,220,.44) !important;
+
+        font-size:
+            9px !important;
+
+        line-height:
+            1.4 !important;
+    }
+
+
+    /* ========================================================
+       SIGNED-IN IDENTITY
+       ======================================================== */
+
+    #profileCard .profile-avatar,
+    #profileCard .user-avatar,
+    #profileCard [class*="identity-avatar"] {
+
+        width:
+            58px !important;
+
+        height:
+            58px !important;
+
+        margin:
+            4px 0 10px !important;
+
+        display:
+            grid !important;
+
+        place-items:
+            center !important;
+
+        border:
+            1px solid
+            rgba(217,173,84,.28) !important;
+
+        border-radius:
+            16px !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(217,173,84,.08),
+                rgba(255,255,255,.02)
+            ) !important;
+    }
+
+
+    #profileCard
+    .synapse-identity-name {
+
+        margin:
+            0 0 3px !important;
+
+        color:
+            #f5f4ef !important;
+
+        font-size:
+            18px !important;
+
+        font-weight:
+            720 !important;
+
+        line-height:
+            1.15 !important;
+
+        letter-spacing:
+            -.025em !important;
+    }
+
+
+    /* ========================================================
+       INFORMATION
+       ======================================================== */
+
+    #profileCard p,
+    #profileCard .synapse-identity-copy {
+
+        color:
+            rgba(228,228,222,.53) !important;
+
+        font-size:
+            10px !important;
+
+        line-height:
+            1.45 !important;
+    }
+
+
+    #profileCard .synapse-identity-stat {
+
+        padding:
+            11px 12px !important;
+
+        margin:
+            9px 0 !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.065) !important;
+
+        border-radius:
+            12px !important;
+
+        background:
+            rgba(255,255,255,.022) !important;
+    }
+
+
+    /* ========================================================
+       WORKSPACE / LANGUAGE / PROJECT / DOCUMENT CARDS
+       ======================================================== */
+
+    #profileCard [class*="identity-grid"] {
+
+        gap:
+            10px !important;
+    }
+
+
+    #profileCard [class*="identity-card"],
+    #profileCard [class*="identity-meta"] {
+
+        border:
+            1px solid
+            rgba(255,255,255,.065) !important;
+
+        border-radius:
+            13px !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(255,255,255,.03),
+                rgba(255,255,255,.015)
+            ) !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.025) !important;
+    }
+
+
+    /* ========================================================
+       CAPABILITY CHIPS
+       ======================================================== */
+
+    #profileCard [class*="chip"],
+    #profileCard [class*="capability"] button,
+    #profileCard [class*="capability"] span {
+
+        border-color:
+            rgba(215,170,79,.18) !important;
+
+        background:
+            rgba(215,170,79,.035) !important;
+    }
+
+
+    /* ========================================================
+       ACCOUNT SECTION
+       ======================================================== */
+
+    #profileCard button:not(
+        #closeProfile
+    ):not(
+        .popup-close
+    ):not(
+        .ap-profile-google-main
+    ) {
+
+        min-height:
+            42px !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.07) !important;
+
+        border-radius:
+            11px !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(28,29,32,.93),
+                rgba(16,17,19,.96)
+            ) !important;
+
+        color:
+            rgba(244,244,239,.86) !important;
+
+        font-size:
+            10.5px !important;
+
+        font-weight:
+            600 !important;
+    }
+
+
+    /* ========================================================
+       SIGNED OUT CLEANUP
+       ======================================================== */
+
+    #profileCard
+    .ap-profile-state-hidden {
+
+        display:
+            none !important;
+    }
+
+
+    /* ========================================================
+       SIGNED IN
+       ======================================================== */
+
+    #profileCard.ap-profile-signed-in
+    .ap-profile-auth-primary {
+
+        display:
+            none !important;
+    }
+
+
+    /* ========================================================
+       DIVIDERS
+       ======================================================== */
+
+    #profileCard hr {
+
+        height:
+            1px !important;
+
+        margin:
+            15px 0 !important;
+
+        border:
+            0 !important;
+
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,.085),
+                transparent
+            ) !important;
+    }
+
+}
+
+/* AP SYNAPSE PROFILE FINAL VISUAL V4 END */

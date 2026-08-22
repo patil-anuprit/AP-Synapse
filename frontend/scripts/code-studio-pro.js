@@ -398,6 +398,33 @@
                 "ap-code-analyze"
             );
 
+            /*
+ * Give Analyze a proper responsive icon + label.
+ * Existing click listener remains attached because
+ * this is still the SAME button element.
+ */
+
+analyzeButton.innerHTML = `
+    <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+    >
+        <path d="M13 2L5 14h6l-1 8 9-13h-6z"></path>
+    </svg>
+
+    <span>Analyze</span>
+`;
+
+analyzeButton.setAttribute(
+    "aria-label",
+    "Analyze code"
+);
+
+analyzeButton.setAttribute(
+    "title",
+    "Analyze code"
+);
+
 
             const actions =
                 root.querySelector(
@@ -1124,5 +1151,230 @@
 
         initAPCodeStudioPro();
     }
+
+})();
+
+/* ============================================================
+   AP SYNAPSE — MOBILE CODE STUDIO INTELLIGENCE CONTROLLER
+   Simple final override
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    document.addEventListener(
+        "click",
+        function (event) {
+
+            /*
+             * Desktop keeps its current working behaviour.
+             */
+            if (window.innerWidth > 760) {
+                return;
+            }
+
+
+            const button =
+                event.target.closest(
+                    ".ap-code-ai-toggle"
+                );
+
+
+            if (!button) {
+                return;
+            }
+
+
+            /*
+             * Prevent older Code Studio listeners
+             * from also firing on mobile.
+             */
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+
+
+            const root =
+                button.closest(
+                    ".ap-code-pro"
+                );
+
+
+            if (!root) {
+                return;
+            }
+
+
+            const opened =
+                root.classList.toggle(
+                    "ap-mobile-ai-open"
+                );
+
+
+            button.classList.toggle(
+                "active",
+                opened
+            );
+
+
+            button.setAttribute(
+                "aria-pressed",
+                String(opened)
+            );
+
+
+            button.title =
+                opened
+                    ? "Hide AP Intelligence"
+                    : "Show AP Intelligence";
+
+
+            console.log(
+                opened
+                    ? "✅ AP CODE STUDIO MOBILE INTELLIGENCE OPEN"
+                    : "✅ AP CODE STUDIO MOBILE INTELLIGENCE CLOSED"
+            );
+
+        },
+
+        /*
+         * Capture mode lets this mobile controller
+         * run BEFORE older listeners.
+         */
+        true
+    );
+
+
+    /*
+     * If phone orientation / browser width changes,
+     * return mobile Intelligence to compact mode.
+     */
+    window.addEventListener(
+        "resize",
+        function () {
+
+            if (window.innerWidth > 760) {
+                return;
+            }
+
+
+            document
+                .querySelectorAll(
+                    ".ap-code-pro"
+                )
+                .forEach(root => {
+
+                    root.classList.remove(
+                        "ap-mobile-ai-open"
+                    );
+
+                });
+
+
+            document
+                .querySelectorAll(
+                    ".ap-code-ai-toggle"
+                )
+                .forEach(button => {
+
+                    button.classList.remove(
+                        "active"
+                    );
+
+                    button.setAttribute(
+                        "aria-pressed",
+                        "false"
+                    );
+
+                });
+
+        },
+        {
+            passive: true
+        }
+    );
+
+
+    console.log(
+        "⚡ AP SYNAPSE MOBILE CODE STUDIO CONTROLLER READY"
+    );
+
+})();
+
+/* ============================================================
+   AP SYNAPSE — MOBILE ANALYZE RESULT REVEAL
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    document.addEventListener(
+        "click",
+        function (event) {
+
+            if (window.innerWidth > 760) {
+                return;
+            }
+
+            const analyzeButton =
+                event.target.closest(
+                    ".ap-code-analyze"
+                );
+
+            if (!analyzeButton) {
+                return;
+            }
+
+            const root =
+                analyzeButton.closest(
+                    ".ap-code-pro"
+                );
+
+            if (!root) {
+                return;
+            }
+
+            /*
+             * DO NOT stop the click.
+             * The original Analyze listener must continue.
+             */
+
+            root.classList.remove(
+                "ap-ai-collapsed"
+            );
+
+            root.classList.add(
+                "ap-mobile-ai-open"
+            );
+
+
+            const intelligenceButton =
+                root.querySelector(
+                    ".ap-code-ai-toggle"
+                );
+
+            if (intelligenceButton) {
+
+                intelligenceButton.classList.add(
+                    "active"
+                );
+
+                intelligenceButton.setAttribute(
+                    "aria-pressed",
+                    "true"
+                );
+
+                intelligenceButton.title =
+                    "Hide AP Intelligence";
+            }
+
+
+            console.log(
+                "⚡ AP CODE STUDIO — ANALYZE RESULT PANEL OPEN"
+            );
+
+        },
+        true
+    );
 
 })();

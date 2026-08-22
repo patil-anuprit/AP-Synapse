@@ -1,0 +1,492 @@
+﻿/* ============================================================
+   AP SYNAPSE · APRISHA UNIVERSAL
+   ============================================================ */
+
+#apAprishaUniversal {
+    --ap-gold: #d8b261;
+    --ap-bg: rgba(15,16,18,.96);
+
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+
+#apAprishaOrb {
+    position: fixed;
+
+    right: 18px;
+    bottom:
+        calc(
+            20px +
+            env(safe-area-inset-bottom)
+        );
+
+    z-index: 2147481000;
+
+    width: 48px;
+    height: 48px;
+
+    padding: 0;
+
+    border:
+        1px solid
+        rgba(218,180,98,.30);
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle at 35% 25%,
+            rgba(218,180,98,.19),
+            transparent 45%
+        ),
+        linear-gradient(
+            145deg,
+            #202124,
+            #101113
+        );
+
+    box-shadow:
+        0 14px 38px rgba(0,0,0,.34),
+        inset 0 1px rgba(255,255,255,.055);
+
+    cursor: pointer;
+}
+
+
+.ap-aprisha-orb-mark {
+    position: relative;
+    z-index: 2;
+
+    color: var(--ap-gold);
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: .08em;
+}
+
+
+.ap-aprisha-orb-pulse {
+    position: absolute;
+    inset: 8px;
+
+    border:
+        1px solid
+        rgba(218,180,98,.16);
+
+    border-radius: 50%;
+}
+
+
+.ap-aprisha-panel {
+    position: fixed;
+
+    right: 18px;
+
+    bottom:
+        calc(
+            80px +
+            env(safe-area-inset-bottom)
+        );
+
+    z-index: 2147481100;
+
+    width:
+        min(
+            370px,
+            calc(100vw - 24px)
+        );
+
+    padding: 15px;
+
+    box-sizing: border-box;
+
+    border:
+        1px solid
+        rgba(255,255,255,.075);
+
+    border-radius: 22px;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(216,178,97,.085),
+            transparent 40%
+        ),
+        rgba(14,15,17,.97);
+
+    box-shadow:
+        0 28px 70px
+        rgba(0,0,0,.48);
+
+    backdrop-filter:
+        blur(26px);
+
+    -webkit-backdrop-filter:
+        blur(26px);
+
+    color: #f5f2eb;
+
+    opacity: 0;
+    visibility: hidden;
+
+    pointer-events: none;
+
+    transform:
+        translateY(10px)
+        scale(.98);
+
+    transition:
+        opacity .18s ease,
+        transform .18s ease,
+        visibility .18s ease;
+}
+
+
+.ap-aprisha-panel.ap-open {
+    opacity: 1;
+    visibility: visible;
+
+    pointer-events: auto;
+
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+
+.ap-aprisha-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.ap-aprisha-brand {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.ap-aprisha-mark {
+    width: 34px;
+    height: 34px;
+
+    display: grid;
+    place-items: center;
+
+    border:
+        1px solid
+        rgba(218,180,98,.22);
+
+    border-radius: 10px;
+
+    background:
+        rgba(218,180,98,.055);
+
+    color: var(--ap-gold);
+
+    font-size: 9px;
+    font-weight: 800;
+}
+
+
+.ap-aprisha-brand strong {
+    display: block;
+
+    font-size: 13px;
+    font-weight: 650;
+}
+
+
+.ap-aprisha-brand span {
+    display: block;
+
+    margin-top: 2px;
+
+    color:
+        rgba(240,237,228,.42);
+
+    font-size: 8px;
+
+    letter-spacing: .04em;
+}
+
+
+#apAprishaClose {
+    width: 30px;
+    height: 30px;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    color:
+        rgba(245,242,234,.54);
+
+    font-size: 20px;
+
+    cursor: pointer;
+}
+
+
+.ap-aprisha-intelligence {
+    padding:
+        25px
+        5px
+        20px;
+
+    text-align: center;
+}
+
+
+.ap-aprisha-field {
+    position: relative;
+
+    width: 70px;
+    height: 70px;
+
+    margin:
+        0 auto
+        15px;
+
+    display: grid;
+    place-items: center;
+}
+
+
+.ap-aprisha-field::before {
+    content: "";
+
+    position: absolute;
+
+    width: 18px;
+    height: 18px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            #dfba69,
+            rgba(203,163,77,.35) 45%,
+            transparent 70%
+        );
+
+    box-shadow:
+        0 0 24px
+        rgba(215,177,94,.28);
+}
+
+
+.ap-aprisha-field i {
+    position: absolute;
+
+    border:
+        1px solid
+        rgba(215,177,94,.13);
+
+    border-radius: 50%;
+}
+
+
+.ap-aprisha-field i:nth-child(1) {
+    width: 32px;
+    height: 32px;
+}
+
+
+.ap-aprisha-field i:nth-child(2) {
+    width: 48px;
+    height: 48px;
+}
+
+
+.ap-aprisha-field i:nth-child(3) {
+    width: 66px;
+    height: 66px;
+}
+
+
+.ap-aprisha-field[data-mode="listening"] i,
+.ap-aprisha-field[data-mode="awake"] i {
+    animation:
+        aprishaPulse
+        1.4s ease-in-out
+        infinite;
+}
+
+
+.ap-aprisha-field[data-mode="thinking"] {
+    animation:
+        aprishaThink
+        1.8s linear
+        infinite;
+}
+
+
+.ap-aprisha-state {
+    color:
+        #dfbc70;
+
+    font-size: 10px;
+    font-weight: 650;
+
+    letter-spacing: .035em;
+}
+
+
+.ap-aprisha-text {
+    max-height: 125px;
+
+    margin-top: 8px;
+
+    overflow-y: auto;
+
+    color:
+        rgba(244,242,236,.87);
+
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+
+.ap-aprisha-actions {
+    display: flex;
+
+    gap: 7px;
+}
+
+
+.ap-aprisha-actions button {
+    flex: 1;
+
+    min-height: 38px;
+
+    padding:
+        0 9px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    border-radius: 10px;
+
+    background:
+        rgba(255,255,255,.025);
+
+    color:
+        rgba(245,242,235,.76);
+
+    font-size: 9px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+.ap-aprisha-actions button.ap-active {
+    border-color:
+        rgba(218,180,98,.23);
+
+    background:
+        rgba(218,180,98,.06);
+
+    color:
+        #e3c078;
+}
+
+
+.ap-aprisha-foot {
+    margin-top: 10px;
+
+    color:
+        rgba(235,232,224,.30);
+
+    font-size: 7.5px;
+
+    text-align: center;
+}
+
+
+@keyframes aprishaPulse {
+
+    0%,
+    100% {
+        transform: scale(.92);
+        opacity: .45;
+    }
+
+    50% {
+        transform: scale(1.08);
+        opacity: 1;
+    }
+}
+
+
+@keyframes aprishaThink {
+
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 700px) {
+
+    #apAprishaOrb {
+        right: 13px;
+
+        bottom:
+            calc(
+                84px +
+                env(safe-area-inset-bottom)
+            );
+
+        width: 44px;
+        height: 44px;
+    }
+
+
+    .ap-aprisha-panel {
+        right: 8px;
+
+        bottom:
+            calc(
+                138px +
+                env(safe-area-inset-bottom)
+            );
+
+        width:
+            calc(100vw - 16px);
+
+        max-height:
+            min(
+                520px,
+                calc(100dvh - 165px)
+            );
+
+        overflow-y: auto;
+
+        border-radius: 19px;
+    }
+
+}

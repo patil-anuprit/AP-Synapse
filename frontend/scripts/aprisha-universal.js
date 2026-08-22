@@ -1,23 +1,50 @@
-(() => {
+﻿(() => {
     "use strict";
 
-    /* =========================================================
-       AP SYNAPSE
-       APRISHA INSTANT PRESENCE MASTER
-       ========================================================= */
+    /*
+     * =========================================================
+     * AP SYNAPSE · APRISHA PRESENCE ENGINE V12
+     *
+     * ONE microphone owner.
+     * ONE wake engine.
+     * ONE command engine.
+     * ONE conversation lifecycle.
+     * =========================================================
+     */
 
-    const SpeechRecognition =
+    if (window.__AP_APRISHA_V12__) {
+        return;
+    }
+
+    window.__AP_APRISHA_V12__ = true;
+
+
+    const Recognition =
         window.SpeechRecognition ||
         window.webkitSpeechRecognition;
 
+
     const LOCAL =
-        ["localhost", "127.0.0.1"]
-            .includes(location.hostname);
+        location.hostname === "localhost" ||
+        location.hostname === "127.0.0.1";
+
 
     const API =
         LOCAL
             ? "http://localhost:5000/chat"
             : "https://api.ap-synapse.com/chat";
+
+
+    const SESSION_KEY =
+        "apAprishaSessionId";
+
+
+    const ENABLED_KEY =
+        "apAprishaEnabled";
+
+
+    const MIC_KEY =
+        "apAprishaMicGranted";
 
 
     const randomId = () => {
@@ -28,9 +55,7 @@
         catch {
             return (
                 Date.now().toString(36) +
-                Math.random()
-                    .toString(36)
-                    .slice(2)
+                Math.random().toString(36).slice(2)
             );
         }
     };
@@ -39,15 +64,19 @@
     const state = {
 
         enabled:
-            localStorage.getItem(
-                "apAprishaEnabled"
-            ) !== "false",
+            localStorage.getItem(ENABLED_KEY) !== "false",
 
-        wakeActive:
+        permission:
             false,
 
-        commandActive:
-            false,
+        mode:
+            "idle",
+
+        recognizer:
+            null,
+
+        recognizerToken:
+            0,
 
         awake:
             false,
@@ -55,23 +84,20 @@
         thinking:
             false,
 
-        wakeRecognition:
-            null,
-
-        commandRecognition:
-            null,
+        speaking:
+            false,
 
         stayUntil:
             0,
 
-        restarting:
-            false,
+        wakeRestartTimer:
+            null,
+
+        commandRestartTimer:
+            null,
 
         sessionId:
-            localStorage.getItem(
-                "apAprishaSessionId"
-            )
-            ||
+            localStorage.getItem(SESSION_KEY) ||
             (
                 "aprisha-" +
                 randomId()
@@ -80,39 +106,85 @@
 
 
     localStorage.setItem(
-        "apAprishaSessionId",
+        SESSION_KEY,
         state.sessionId
     );
 
 
-    const WAKE_FORMS = [
+    /*
+     * Different browsers can transcribe Aprisha differently.
+     */
+
+    const WAKE_PATTERNS = [
         "hey aprisha",
         "hey a prisha",
         "hey aprisa",
         "hey apreesha",
-        "hey aprisha."
+        "hi aprisha"
     ];
+
+
+    /* =========================================================
+       UTILITIES
+       ========================================================= */
+
+    function normalize(text) {
+
+        return String(text || "")
+            .toLowerCase()
+            .replace(/[^\p{L}\p{N}\s]/gu, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+    }
+
+
+    function sleep(ms) {
+
+        return new Promise(
+            resolve =>
+                setTimeout(
+                    resolve,
+                    ms
+                )
+        );
+    }
+
+
+    function isMobile() {
+
+        return (
+            matchMedia("(max-width: 760px)").matches ||
+            /Android|iPhone|iPad|Mobile/i.test(
+                navigator.userAgent
+            )
+        );
+    }
+
+
+    function vibrate(pattern = [18, 22, 30]) {
+
+        try {
+            navigator.vibrate?.(pattern);
+        }
+        catch {}
+    }
 
 
     /* =========================================================
        CREATE UI
        ========================================================= */
 
-    function createUI() {
+    function buildUI() {
 
-        if (
-            document.getElementById(
+        document
+            .getElementById(
                 "apAprishaUniversal"
             )
-        ) {
-            return;
-        }
+            ?.remove();
 
 
         const root =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
 
         root.id =
@@ -121,14 +193,12 @@
 
         root.innerHTML = `
 
-            <!-- ONE-TIME MICROPHONE ACTIVATION -->
-
             <div
                 id="apAprishaPermission"
                 class="ap-aprisha-permission"
                 hidden
             >
-                <div class="ap-aprisha-permission-mark">
+                <div class="ap-aprisha-permission-icon">
                     AP
                 </div>
 
@@ -138,7 +208,7 @@
                     </strong>
 
                     <span>
-                        One-time microphone permission
+                        Allow microphone once
                     </span>
                 </div>
 
@@ -151,29 +221,24 @@
             </div>
 
 
-            <!-- SMALL ALWAYS-AVAILABLE ORB -->
-
             <button
                 id="apAprishaOrb"
                 class="ap-aprisha-orb"
                 type="button"
-                aria-label="Open Aprisha"
-                title="Aprisha"
+                aria-label="Aprisha"
             >
                 <span>AP</span>
                 <i></i>
             </button>
 
 
-            <!-- EXISTING COMPATIBILITY PANEL -->
-
             <section
                 id="apAprishaPanel"
                 class="ap-aprisha-panel"
             >
-                <header class="ap-aprisha-panel-head">
+                <header>
 
-                    <div class="ap-aprisha-mini-brand">
+                    <div class="ap-aprisha-brand">
                         <b>AP</b>
 
                         <div>
@@ -185,12 +250,12 @@
                     <button
                         id="apAprishaClose"
                         type="button"
-                        aria-label="Close Aprisha"
                     >
                         ×
                     </button>
 
                 </header>
+
 
                 <div
                     id="apAprishaState"
@@ -199,12 +264,14 @@
                     Aprisha ready
                 </div>
 
+
                 <div
                     id="apAprishaText"
                     class="ap-aprisha-text"
                 >
                     Say “Hey Aprisha”
                 </div>
+
 
                 <div class="ap-aprisha-actions">
 
@@ -230,30 +297,33 @@
                     </button>
 
                 </div>
+
             </section>
 
-
-            <!-- SIRI-LIKE INSTANT PRESENCE -->
 
             <section
                 id="apAprishaSiri"
                 class="ap-aprisha-siri"
                 aria-hidden="true"
-                aria-live="polite"
             >
 
                 <div
-                    class="ap-aprisha-siri-backdrop"
-                    data-aprisha-close
+                    class="ap-aprisha-backdrop"
+                id="apAprishaBackdrop"
                 ></div>
 
-                <div class="ap-aprisha-siri-card">
 
-                    <div class="ap-aprisha-siri-top">
+                <article
+                    class="ap-aprisha-presence"
+                >
 
-                        <div class="ap-aprisha-siri-name">
+                    <header
+                        class="ap-aprisha-presence-header"
+                    >
+
+                        <span>
                             Aprisha
-                        </div>
+                        </span>
 
                         <button
                             id="apAprishaSiriClose"
@@ -263,27 +333,30 @@
                             ×
                         </button>
 
-                    </div>
+                    </header>
 
 
                     <div
                         id="apAprishaSiriCore"
-                        class="ap-aprisha-siri-core"
-                        data-mode="ready"
+                        class="ap-aprisha-core"
+                        data-mode="idle"
                     >
-                        <span class="r r1"></span>
-                        <span class="r r2"></span>
-                        <span class="r r3"></span>
 
-                        <strong>
+                        <i class="ring ring1"></i>
+                        <i class="ring ring2"></i>
+                        <i class="ring ring3"></i>
+                        <i class="ring ring4"></i>
+
+                        <b>
                             AP
-                        </strong>
+                        </b>
+
                     </div>
 
 
                     <div
                         id="apAprishaSiriStatus"
-                        class="ap-aprisha-siri-status"
+                        class="ap-aprisha-status"
                     >
                         Aprisha
                     </div>
@@ -291,7 +364,7 @@
 
                     <div
                         id="apAprishaSiriText"
-                        class="ap-aprisha-siri-text"
+                        class="ap-aprisha-main-text"
                     >
                         How can I help?
                     </div>
@@ -299,11 +372,13 @@
 
                     <div
                         id="apAprishaLiveTranscript"
-                        class="ap-aprisha-live-transcript"
+                        class="ap-aprisha-transcript"
                     ></div>
 
 
-                    <div class="ap-aprisha-siri-foot">
+                    <footer
+                        class="ap-aprisha-presence-actions"
+                    >
 
                         <button
                             id="apAprishaSiriMic"
@@ -313,22 +388,22 @@
                         </button>
 
                         <button
-                            id="apAprishaSiriPresence"
-                            type="button"
-                        >
-                            Presence
-                        </button>
-
-                        <button
                             id="apAprishaSiriVision"
                             type="button"
                         >
                             Vision
                         </button>
 
-                    </div>
+                        <button
+                            id="apAprishaSiriPresence"
+                            type="button"
+                        >
+                            Presence
+                        </button>
 
-                </div>
+                    </footer>
+
+                </article>
 
             </section>
         `;
@@ -344,141 +419,50 @@
 
 
     /* =========================================================
-       UI BINDINGS
+       UI
        ========================================================= */
 
-    function bindUI() {
+    function openPresence() {
 
-        document
-            .getElementById(
-                "apAprishaOrb"
-            )
-            ?.addEventListener(
-                "click",
-                openPanel
+        const panel =
+            document.getElementById(
+                "apAprishaSiri"
             );
 
 
-        document
-            .getElementById(
-                "apAprishaClose"
-            )
-            ?.addEventListener(
-                "click",
-                closePanel
-            );
+        panel?.classList.add(
+            "ap-open"
+        );
 
 
-        document
-            .getElementById(
-                "apAprishaEnable"
-            )
-            ?.addEventListener(
-                "click",
-                enableAprisha
-            );
-
-
-        document
-            .getElementById(
-                "apAprishaPermissionEnable"
-            )
-            ?.addEventListener(
-                "click",
-                enableAprisha
-            );
-
-
-        document
-            .getElementById(
-                "apAprishaSpeak"
-            )
-            ?.addEventListener(
-                "click",
-                manualSpeak
-            );
-
-
-        document
-            .getElementById(
-                "apAprishaStop"
-            )
-            ?.addEventListener(
-                "click",
-                pauseAprisha
-            );
-
-
-        document
-            .getElementById(
-                "apAprishaSiriClose"
-            )
-            ?.addEventListener(
-                "click",
-                endPresence
-            );
-
-
-        document
-            .querySelector(
-                "[data-aprisha-close]"
-            )
-            ?.addEventListener(
-                "click",
-                endPresence
-            );
-
-
-        document
-            .getElementById(
-                "apAprishaSiriMic"
-            )
-            ?.addEventListener(
-                "click",
-                startCommandListening
-            );
-
-
-        document
-            .getElementById(
-                "apAprishaSiriPresence"
-            )
-            ?.addEventListener(
-                "click",
-                () => {
-
-                    closeSiri();
-
-                    window
-                        .APAprishaPresence
-                        ?.open?.();
-                }
-            );
-
-
-        document
-            .getElementById(
-                "apAprishaSiriVision"
-            )
-            ?.addEventListener(
-                "click",
-                () => {
-
-                    closeSiri();
-
-                    window
-                        .APAprishaVision
-                        ?.open?.();
-                }
-            );
+        panel?.setAttribute(
+            "aria-hidden",
+            "false"
+        );
     }
 
 
-    /* =========================================================
-       DISPLAY
-       ========================================================= */
+    function closePresence() {
 
-    function openPanel() {
+        const panel =
+            document.getElementById(
+                "apAprishaSiri"
+            );
+
+
+        panel?.classList.remove(
+            "ap-open"
+        );
+
+
+        panel?.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+    }
+
+
+    function openMiniPanel() {
 
         document
             .getElementById(
@@ -490,7 +474,7 @@
     }
 
 
-    function closePanel() {
+    function closeMiniPanel() {
 
         document
             .getElementById(
@@ -502,110 +486,35 @@
     }
 
 
-    function openSiri() {
-
-        const siri =
-            document.getElementById(
-                "apAprishaSiri"
-            );
-
-
-        siri?.classList.add(
-            "ap-open"
-        );
-
-
-        siri?.setAttribute(
-            "aria-hidden",
-            "false"
-        );
-    }
-
-
-    function closeSiri() {
-
-        const siri =
-            document.getElementById(
-                "apAprishaSiri"
-            );
-
-
-        siri?.classList.remove(
-            "ap-open"
-        );
-
-
-        siri?.setAttribute(
-            "aria-hidden",
-            "true"
-        );
-    }
-
-
-    function modeFromState(
-        label
-    ) {
-
-        const value =
-            String(label || "")
-                .toLowerCase();
-
-
-        if (
-            value.includes("listening")
-        ) return "listening";
-
-
-        if (
-            value.includes("thinking")
-        ) return "thinking";
-
-
-        if (
-            value.includes("speaking")
-        ) return "speaking";
-
-
-        if (
-            value.includes("error") ||
-            value.includes("permission") ||
-            value.includes("unavailable")
-        ) return "error";
-
-
-        if (
-            state.awake
-        ) return "awake";
-
-
-        return "ready";
-    }
-
-
-    function setState(
-        label,
+    function setUI(
+        mode,
+        title,
         text
     ) {
 
-        const stateNode =
+        state.mode =
+            mode;
+
+
+        const miniState =
             document.getElementById(
                 "apAprishaState"
             );
 
 
-        const textNode =
+        const miniText =
             document.getElementById(
                 "apAprishaText"
             );
 
 
-        const siriStatus =
+        const status =
             document.getElementById(
                 "apAprishaSiriStatus"
             );
 
 
-        const siriText =
+        const main =
             document.getElementById(
                 "apAprishaSiriText"
             );
@@ -617,30 +526,30 @@
             );
 
 
-        if (stateNode) {
+        if (miniState) {
 
-            stateNode.textContent =
-                label;
+            miniState.textContent =
+                title;
         }
 
 
-        if (textNode) {
+        if (miniText) {
 
-            textNode.textContent =
+            miniText.textContent =
                 text;
         }
 
 
-        if (siriStatus) {
+        if (status) {
 
-            siriStatus.textContent =
-                label;
+            status.textContent =
+                title;
         }
 
 
-        if (siriText) {
+        if (main) {
 
-            siriText.textContent =
+            main.textContent =
                 text;
         }
 
@@ -648,16 +557,12 @@
         if (core) {
 
             core.dataset.mode =
-                modeFromState(
-                    label
-                );
+                mode;
         }
     }
 
 
-    function setTranscript(
-        text = ""
-    ) {
+    function transcript(text = "") {
 
         const node =
             document.getElementById(
@@ -673,299 +578,335 @@
     }
 
 
-    /* =========================================================
-       MICROPHONE PERMISSION
-       ========================================================= */
-
-    async function permissionState() {
-
-        try {
-
-            if (
-                !navigator.permissions
-            ) {
-                return "unknown";
-            }
-
-
-            const result =
-                await navigator.permissions
-                    .query({
-                        name:
-                            "microphone"
-                    });
-
-
-            return result.state;
-
-        }
-        catch {
-
-            return "unknown";
-        }
-    }
-
-
-    function showPermissionPrompt(
+    function showPermission(
         show
     ) {
 
-        const prompt =
+        const node =
             document.getElementById(
                 "apAprishaPermission"
             );
 
 
-        if (prompt) {
+        if (node) {
 
-            prompt.hidden =
+            node.hidden =
                 !show;
         }
     }
 
 
-    async function enableAprisha() {
+    /* =========================================================
+       EXACTLY ONE MICROPHONE OWNER
+       ========================================================= */
 
-        if (!SpeechRecognition) {
+    function destroyRecognizer() {
 
-            setState(
-                "Voice wake unavailable",
-                "Use a supported browser or the microphone button."
-            );
+        state.recognizerToken++;
 
-            openPanel();
 
+        clearTimeout(
+            state.wakeRestartTimer
+        );
+
+
+        clearTimeout(
+            state.commandRestartTimer
+        );
+
+
+        const recognizer =
+            state.recognizer;
+
+
+        state.recognizer =
+            null;
+
+
+        if (!recognizer) {
             return;
         }
 
 
+        recognizer.onstart =
+            null;
+
+        recognizer.onresult =
+            null;
+
+        recognizer.onend =
+            null;
+
+        recognizer.onerror =
+            null;
+
+        recognizer.onaudiostart =
+            null;
+
+        recognizer.onsoundstart =
+            null;
+
+        recognizer.onspeechstart =
+            null;
+
+
         try {
+            recognizer.stop();
+        }
+        catch {}
 
-            /*
-             * Explicitly request microphone once.
-             */
 
-            const stream =
-                await navigator.mediaDevices
-                    .getUserMedia({
-                        audio:
+        try {
+            recognizer.abort();
+        }
+        catch {}
+    }
+
+
+    /* =========================================================
+       MICROPHONE PERMISSION
+       ========================================================= */
+
+    async function requestPermission() {
+
+        if (
+            !navigator.mediaDevices?.getUserMedia
+        ) {
+
+            throw new Error(
+                "Microphone access is unavailable."
+            );
+        }
+
+
+        const stream =
+            await navigator.mediaDevices
+                .getUserMedia({
+                    audio: {
+                        echoCancellation:
                             true,
 
-                        video:
-                            false
-                    });
+                        noiseSuppression:
+                            true,
+
+                        autoGainControl:
+                            true
+                    },
+
+                    video:
+                        false
+                });
 
 
-            stream
-                .getTracks()
-                .forEach(
-                    track =>
-                        track.stop()
-                );
-
-
-            state.enabled =
-                true;
-
-
-            localStorage.setItem(
-                "apAprishaEnabled",
-                "true"
+        stream
+            .getTracks()
+            .forEach(
+                track =>
+                    track.stop()
             );
 
 
-            showPermissionPrompt(
-                false
+        state.permission =
+            true;
+
+
+        state.enabled =
+            true;
+
+
+        localStorage.setItem(
+            MIC_KEY,
+            "true"
+        );
+
+
+        localStorage.setItem(
+            ENABLED_KEY,
+            "true"
+        );
+
+
+        showPermission(
+            false
+        );
+    }
+
+
+    async function enable() {
+
+        try {
+
+            setUI(
+                "starting",
+                "Starting Aprisha",
+                "Allow microphone access…"
             );
 
 
-            setState(
+            await requestPermission();
+
+
+            setUI(
+                "idle",
                 "Aprisha ready",
                 "Say “Hey Aprisha”"
             );
 
 
-            startWakeListening();
+            await sleep(250);
+
+
+            armWake();
+
+
+            /*
+             * First activation shows the user immediately
+             * that Aprisha is operational.
+             */
+
+            if (
+                !sessionStorage.getItem(
+                    "apAprishaFirstDemo"
+                )
+            ) {
+
+                sessionStorage.setItem(
+                    "apAprishaFirstDemo",
+                    "true"
+                );
+
+
+                await sleep(350);
+
+
+                wake();
+            }
 
         }
         catch (error) {
 
-            console.warn(
-                "Aprisha microphone:",
+            console.error(
+                "Aprisha permission:",
                 error
             );
 
 
-            setState(
-                "Microphone permission needed",
-                "Allow microphone access to enable Hey Aprisha."
-            );
-
-
-            showPermissionPrompt(
+            showPermission(
                 true
             );
 
 
-            openPanel();
+            setUI(
+                "error",
+                "Microphone permission needed",
+                "Allow microphone access and try again."
+            );
         }
     }
 
 
     /* =========================================================
-       WAKE DETECTION
+       WAKE ENGINE
        ========================================================= */
 
-    function normalize(
-        value
-    ) {
-
-        return String(
-            value || ""
-        )
-            .toLowerCase()
-            .replace(
-                /[^\p{L}\p{N}\s]/gu,
-                " "
-            )
-            .replace(
-                /\s+/g,
-                " "
-            )
-            .trim();
-    }
-
-
-    function detectWake(
-        transcript
-    ) {
+    function detectWake(text) {
 
         const value =
-            normalize(
-                transcript
-            );
+            normalize(text);
 
 
         for (
-            const phrase of
-            WAKE_FORMS
+            const pattern of
+            WAKE_PATTERNS
         ) {
 
-            const normalizedPhrase =
-                normalize(
-                    phrase
-                );
+            const p =
+                normalize(pattern);
 
 
             const index =
-                value.indexOf(
-                    normalizedPhrase
-                );
+                value.indexOf(p);
 
 
             if (
-                index !== -1
+                index >= 0
             ) {
 
-                const after =
-                    value
-                        .slice(
-                            index +
-                            normalizedPhrase.length
-                        )
-                        .trim();
-
-
                 return {
-                    detected:
+
+                    found:
                         true,
 
-                    command:
-                        after
+                    after:
+                        value
+                            .slice(
+                                index +
+                                p.length
+                            )
+                            .trim()
                 };
             }
         }
 
 
         return {
-            detected:
+            found:
                 false,
 
-            command:
+            after:
                 ""
         };
     }
 
 
-    function stopWakeListening() {
-
-        const recognition =
-            state.wakeRecognition;
-
-
-        state.wakeRecognition =
-            null;
-
-
-        state.wakeActive =
-            false;
-
-
-        if (!recognition) {
-            return;
-        }
-
-
-        recognition.onend =
-            null;
-
-
-        recognition.onerror =
-            null;
-
-
-        try {
-            recognition.stop();
-        }
-        catch {}
-
-
-        try {
-            recognition.abort();
-        }
-        catch {}
-    }
-
-
-    function startWakeListening() {
+    function armWake() {
 
         if (
-            !SpeechRecognition ||
+            !Recognition ||
             !state.enabled ||
+            !state.permission ||
             state.awake ||
-            state.commandActive ||
             state.thinking ||
-            document.hidden ||
-            state.wakeActive
+            state.speaking ||
+            document.hidden
         ) {
+            return;
+        }
+
+
+        destroyRecognizer();
+
+
+        const token =
+            state.recognizerToken;
+
+
+        let recognition;
+
+
+        try {
+
+            recognition =
+                new Recognition();
+
+        }
+        catch {
 
             return;
         }
 
 
-        stopWakeListening();
-
-
-        const recognition =
-            new SpeechRecognition();
-
-
-        state.wakeRecognition =
+        state.recognizer =
             recognition;
 
 
+        recognition.lang =
+            navigator.language ||
+            "en-IN";
+
+
         recognition.continuous =
-            true;
+            !isMobile();
 
 
         recognition.interimResults =
@@ -976,19 +917,19 @@
             3;
 
 
-        recognition.lang =
-            navigator.language ||
-            "en-IN";
-
-
         recognition.onstart =
             () => {
 
-                state.wakeActive =
-                    true;
+                if (
+                    token !==
+                    state.recognizerToken
+                ) {
+                    return;
+                }
 
 
-                setState(
+                setUI(
+                    "idle",
                     "Aprisha ready",
                     "Say “Hey Aprisha”"
                 );
@@ -998,698 +939,65 @@
         recognition.onresult =
             event => {
 
-                let combined =
-                    "";
-
-
-                for (
-                    let index =
-                        event.resultIndex;
-
-                    index <
-                    event.results.length;
-
-                    index++
-                ) {
-
-                    combined +=
-                        " " +
-                        event.results[index][0]
-                            .transcript;
-                }
-
-
-                const result =
-                    detectWake(
-                        combined
-                    );
-
-
                 if (
-                    result.detected
+                    token !==
+                    state.recognizerToken
                 ) {
-
-                    wakeAprisha(
-                        result.command
-                    );
-                }
-            };
-
-
-        recognition.onerror =
-            event => {
-
-                state.wakeActive =
-                    false;
-
-
-                if (
-                    event.error ===
-                    "not-allowed" ||
-                    event.error ===
-                    "service-not-allowed"
-                ) {
-
-                    showPermissionPrompt(
-                        true
-                    );
-
-
-                    setState(
-                        "Enable Hey Aprisha",
-                        "Microphone permission is required once."
-                    );
-
-
                     return;
                 }
 
 
-                restartWake();
-            };
+                let heard =
+                    "";
 
 
-        recognition.onend =
-            () => {
+                for (
+                    let i =
+                        event.resultIndex;
 
-                state.wakeActive =
-                    false;
+                    i <
+                        event.results.length;
 
-
-                restartWake();
-            };
-
-
-        try {
-
-            recognition.start();
-
-        }
-        catch {
-
-            restartWake();
-        }
-    }
-
-
-    function restartWake() {
-
-        if (
-            state.restarting ||
-            !state.enabled ||
-            state.awake ||
-            state.commandActive ||
-            state.thinking ||
-            document.hidden
-        ) {
-            return;
-        }
-
-
-        state.restarting =
-            true;
-
-
-        setTimeout(
-            () => {
-
-                state.restarting =
-                    false;
-
-                startWakeListening();
-
-            },
-            450
-        );
-    }
-
-
-    /* =========================================================
-       WAKE RESPONSE
-       ========================================================= */
-
-    async function wakeAprisha(
-        immediateCommand = ""
-    ) {
-
-        if (
-            state.awake ||
-            state.thinking
-        ) {
-            return;
-        }
-
-
-        /*
-         * Completely release the wake recognizer first.
-         * Chrome/Android can otherwise keep the microphone
-         * attached to the old SpeechRecognition session.
-         */
-
-        stopWakeListening();
-
-
-        state.awake =
-            true;
-
-
-        state.commandActive =
-            false;
-
-
-        state.stayUntil =
-            Date.now() +
-            60000;
-
-
-        openSiri();
-
-
-        setTranscript("");
-
-
-        setState(
-            "Aprisha",
-            "How can I help?"
-        );
-
-
-        feedback();
-
-
-        /*
-         * Give Chrome a moment to release wake recognition.
-         */
-
-        await new Promise(
-            resolve =>
-                setTimeout(
-                    resolve,
-                    250
-                )
-        );
-
-
-        if (
-            immediateCommand &&
-            immediateCommand.trim().length > 2
-        ) {
-
-            await speak(
-                "I'm listening."
-            );
-
-
-            await new Promise(
-                resolve =>
-                    setTimeout(
-                        resolve,
-                        260
-                    )
-            );
-
-
-            executeCommand(
-                immediateCommand.trim()
-            );
-
-
-            return;
-        }
-
-
-        /*
-         * Speak first.
-         * The new speak() always resolves even when
-         * Chrome fails to fire SpeechSynthesis onend.
-         */
-
-        await speak(
-            "How can I help?"
-        );
-
-
-        /*
-         * Critical microphone handoff delay.
-         */
-
-        await new Promise(
-            resolve =>
-                setTimeout(
-                    resolve,
-                    420
-                )
-        );
-
-
-        if (
-            !state.awake ||
-            state.thinking
-        ) {
-            return;
-        }
-
-
-        setState(
-            "Listening",
-            "I'm listening…"
-        );
-
-
-        startCommandListening();
-    }
-
-    /* =========================================================
-       COMMAND LISTENER
-       ========================================================= */
-
-    function stopCommandListening() {
-
-        const recognition =
-            state.commandRecognition;
-
-
-        state.commandRecognition =
-            null;
-
-
-        state.commandActive =
-            false;
-
-
-        if (!recognition) {
-            return;
-        }
-
-
-        recognition.onstart =
-            null;
-
-        recognition.onresult =
-            null;
-
-        recognition.onspeechstart =
-            null;
-
-        recognition.onspeechend =
-            null;
-
-        recognition.onend =
-            null;
-
-        recognition.onerror =
-            null;
-
-
-        try {
-
-            recognition.stop();
-
-        }
-        catch {}
-
-
-        try {
-
-            recognition.abort();
-
-        }
-        catch {}
-    }
-
-
-    function startCommandListening(
-        retryAttempt = 0
-    ) {
-
-        if (
-            !SpeechRecognition ||
-            state.thinking ||
-            !state.awake ||
-            document.hidden
-        ) {
-
-            return;
-        }
-
-
-        /*
-         * Never let wake recognition compete for microphone.
-         */
-
-        stopWakeListening();
-
-
-        if (
-            state.commandRecognition
-        ) {
-
-            stopCommandListening();
-        }
-
-
-        openSiri();
-
-
-        setTranscript("");
-
-
-        /*
-         * Small handoff period is important on Android Chrome.
-         */
-
-        setTimeout(
-            () =>
-                launchCommandRecognition(
-                    retryAttempt
-                ),
-            retryAttempt === 0
-                ? 220
-                : 500
-        );
-    }
-
-
-    function launchCommandRecognition(
-        retryAttempt = 0
-    ) {
-
-        if (
-            !state.awake ||
-            state.thinking ||
-            document.hidden
-        ) {
-            return;
-        }
-
-
-        if (
-            state.commandActive
-        ) {
-            return;
-        }
-
-
-        if (!SpeechRecognition) {
-
-            setState(
-                "Voice unavailable",
-                "Speech recognition is not available in this browser."
-            );
-
-            return;
-        }
-
-
-        /*
-         * Critical:
-         * Do not allow the wake recognizer and command
-         * recognizer to fight for the microphone.
-         */
-
-        stopWakeListening();
-
-
-        let recognition;
-
-
-        try {
-
-            recognition =
-                new SpeechRecognition();
-
-        }
-        catch (error) {
-
-            console.error(
-                "APRISHA RECOGNITION CREATE ERROR:",
-                error
-            );
-
-            return;
-        }
-
-
-        state.commandRecognition =
-            recognition;
-
-
-        /*
-         * Use the same simple recognition model that AP Synapse's
-         * normal voice input already uses successfully.
-         */
-
-        recognition.continuous =
-            false;
-
-
-        recognition.interimResults =
-            false;
-
-
-        recognition.maxAlternatives =
-            1;
-
-
-        recognition.lang =
-            navigator.language ||
-            "en-IN";
-
-
-        let heardText =
-            "";
-
-
-        let completed =
-            false;
-
-
-        let recognitionStarted =
-            false;
-
-
-        /* ====================================================
-           START
-           ==================================================== */
-
-        recognition.onstart =
-            () => {
-
-                recognitionStarted =
-                    true;
-
-
-                state.commandActive =
-                    true;
-
-
-                setState(
-                    "Listening",
-                    "I'm listening…"
-                );
-
-
-                setTranscript(
-                    ""
-                );
-
-
-                console.log(
-                    "🎙️ APRISHA LISTENER STARTED"
-                );
-
-
-                console.log(
-                    "🎙️ Language:",
-                    recognition.lang
-                );
-            };
-
-
-        /* ====================================================
-           AUDIO DEBUG
-           ==================================================== */
-
-        recognition.onaudiostart =
-            () => {
-
-                console.log(
-                    "🎧 APRISHA AUDIO INPUT ACTIVE"
-                );
-
-
-                setState(
-                    "Listening",
-                    "I can hear your microphone…"
-                );
-            };
-
-
-        recognition.onsoundstart =
-            () => {
-
-                console.log(
-                    "🔊 APRISHA SOUND DETECTED"
-                );
-            };
-
-
-        recognition.onspeechstart =
-            () => {
-
-                console.log(
-                    "🗣️ APRISHA SPEECH DETECTED"
-                );
-
-
-                setState(
-                    "Listening",
-                    "I hear you…"
-                );
-            };
-
-
-        /* ====================================================
-           RESULT
-           ==================================================== */
-
-        recognition.onresult =
-            event => {
-
-                try {
-
-                    heardText =
-                        event.results?.[0]?.[0]
-                            ?.transcript
-                            ?.trim()
-                        ||
-                        "";
-
-
-                    console.log(
-                        "✅ APRISHA TRANSCRIPT:",
-                        heardText
-                    );
-
-
-                    if (
-                        !heardText
-                    ) {
-                        return;
-                    }
-
-
-                    completed =
-                        true;
-
-
-                    state.commandActive =
-                        false;
-
-
-                    if (
-                        state.commandRecognition ===
-                        recognition
-                    ) {
-
-                        state.commandRecognition =
-                            null;
-                    }
-
-
-                    setTranscript(
-                        heardText
-                    );
-
-
-                    setState(
-                        "Heard",
-                        heardText
-                    );
-
-
-                    /*
-                     * Prevent onend from starting another
-                     * recognizer after a successful result.
-                     */
-
-                    recognition.onend =
-                        null;
-
-
-                    recognition.onerror =
-                        null;
-
-
-                    try {
-
-                        recognition.stop();
-
-                    }
-                    catch {}
-
-
-                    /*
-                     * Tiny release time before AP intelligence.
-                     */
-
-                    setTimeout(
-                        () => {
-
-                            console.log(
-                                "⚡ APRISHA EXECUTING:",
-                                heardText
-                            );
-
-
-                            executeCommand(
-                                heardText
-                            );
-
-                        },
-                        120
-                    );
-
-                }
-                catch (error) {
-
-                    console.error(
-                        "APRISHA RESULT ERROR:",
-                        error
-                    );
-                }
-            };
-
-
-        /* ====================================================
-           ERROR
-           ==================================================== */
-
-        recognition.onerror =
-            event => {
-
-                state.commandActive =
-                    false;
-
-
-                if (
-                    state.commandRecognition ===
-                    recognition
+                    i++
                 ) {
 
-                    state.commandRecognition =
-                        null;
+                    heard +=
+                        " " +
+                        (
+                            event.results[i][0]
+                                ?.transcript
+                            ||
+                            ""
+                        );
                 }
 
 
-                console.warn(
-                    "⚠️ APRISHA SPEECH ERROR:",
-                    event.error
-                );
+                const match =
+                    detectWake(
+                        heard
+                    );
 
 
                 if (
-                    completed
+                    match.found
+                ) {
+
+                    destroyRecognizer();
+
+
+                    wake(
+                        match.after
+                    );
+                }
+            };
+
+
+        recognition.onerror =
+            event => {
+
+                if (
+                    token !==
+                    state.recognizerToken
                 ) {
                     return;
                 }
@@ -1702,37 +1010,17 @@
                         "service-not-allowed"
                 ) {
 
-                    setState(
-                        "Microphone permission needed",
-                        "Allow microphone access for Aprisha."
+                    state.permission =
+                        false;
+
+
+                    localStorage.removeItem(
+                        MIC_KEY
                     );
 
 
-                    const permission =
-                        document.getElementById(
-                            "apAprishaPermission"
-                        );
-
-
-                    if (permission) {
-
-                        permission.hidden =
-                            false;
-                    }
-
-
-                    return;
-                }
-
-
-                if (
-                    event.error ===
-                    "audio-capture"
-                ) {
-
-                    setState(
-                        "Microphone unavailable",
-                        "Another application may be using your microphone."
+                    showPermission(
+                        true
                     );
 
 
@@ -1740,201 +1028,78 @@
                 }
 
 
-                /*
-                 * Chrome sometimes produces one temporary
-                 * no-speech / aborted event during microphone
-                 * handoff. Retry cleanly.
-                 */
-
-                if (
-                    (
-                        event.error ===
-                            "no-speech" ||
-
-                        event.error ===
-                            "aborted" ||
-
-                        event.error ===
-                            "network"
-                    )
-                    &&
-                    retryAttempt < 3
-                    &&
-                    state.awake
-                ) {
-
-                    console.log(
-                        "↻ APRISHA LISTENER RETRY",
-                        retryAttempt + 1
-                    );
-
-
-                    setState(
-                        "Listening",
-                        "I'm listening…"
-                    );
-
-
-                    setTimeout(
-                        () => {
-
-                            launchCommandRecognition(
-                                retryAttempt + 1
-                            );
-
-                        },
-                        500
-                    );
-
-
-                    return;
-                }
-
-
-                setState(
-                    "Aprisha",
-                    "I couldn't hear that. Try again."
-                );
+                scheduleWake();
             };
 
-
-        /* ====================================================
-           END
-           ==================================================== */
 
         recognition.onend =
             () => {
 
-                console.log(
-                    "🎙️ APRISHA LISTENER ENDED"
-                );
-
-
-                state.commandActive =
-                    false;
-
-
                 if (
-                    state.commandRecognition ===
-                    recognition
-                ) {
-
-                    state.commandRecognition =
-                        null;
-                }
-
-
-                if (
-                    completed
+                    token !==
+                    state.recognizerToken
                 ) {
                     return;
                 }
 
 
-                /*
-                 * If Chrome ended without a result,
-                 * automatically listen again while the
-                 * Aprisha Presence session is alive.
-                 */
-
-                if (
-                    state.awake &&
-                    Date.now() <
-                        state.stayUntil &&
-                    retryAttempt < 3
-                ) {
-
-                    setState(
-                        "Listening",
-                        "I'm still listening…"
-                    );
+                state.recognizer =
+                    null;
 
 
-                    setTimeout(
-                        () => {
-
-                            launchCommandRecognition(
-                                retryAttempt + 1
-                            );
-
-                        },
-                        450
-                    );
-
-
-                    return;
-                }
-
-
-                if (
-                    !heardText
-                ) {
-
-                    setState(
-                        "Aprisha",
-                        "I didn't hear anything."
-                    );
-                }
+                scheduleWake();
             };
 
 
-        /* ====================================================
-           START RECOGNITION
-           ==================================================== */
-
         try {
-
-            console.log(
-                "▶ STARTING APRISHA SPEECH RECOGNITION"
-            );
-
 
             recognition.start();
 
         }
-        catch (error) {
+        catch {
 
-            state.commandActive =
-                false;
-
-
-            state.commandRecognition =
-                null;
-
-
-            console.warn(
-                "APRISHA START ERROR:",
-                error
-            );
-
-
-            if (
-                retryAttempt < 3 &&
-                state.awake
-            ) {
-
-                setTimeout(
-                    () => {
-
-                        launchCommandRecognition(
-                            retryAttempt + 1
-                        );
-
-                    },
-                    650
-                );
-            }
+            scheduleWake();
         }
     }
 
-    function manualSpeak() {
 
-        /*
-         * Manual microphone button must always work,
-         * even if the wake listener is currently active.
-         */
+    function scheduleWake() {
 
-        stopWakeListening();
+        clearTimeout(
+            state.wakeRestartTimer
+        );
+
+
+        if (
+            !state.enabled ||
+            state.awake ||
+            state.thinking ||
+            state.speaking ||
+            document.hidden
+        ) {
+            return;
+        }
+
+
+        state.wakeRestartTimer =
+            setTimeout(
+                armWake,
+                isMobile()
+                    ? 420
+                    : 250
+            );
+    }
+
+
+    /* =========================================================
+       WAKE
+       ========================================================= */
+
+    async function wake(
+        directCommand = ""
+    ) {
+
+        destroyRecognizer();
 
 
         state.awake =
@@ -1946,23 +1111,508 @@
             60000;
 
 
-        openSiri();
+        openPresence();
 
 
-        setState(
+        transcript("");
+
+
+        setUI(
+            "awake",
+            "Aprisha",
+            "How can I help?"
+        );
+
+
+        vibrate();
+
+
+        if (
+            directCommand &&
+            directCommand.length > 2
+        ) {
+
+            await speak(
+                "I'm listening."
+            );
+
+
+            await sleep(250);
+
+
+            execute(
+                directCommand
+            );
+
+
+            return;
+        }
+
+
+        await speak(
+            "How can I help?"
+        );
+
+
+        /*
+         * TTS must completely surrender the audio path
+         * before recognition starts.
+         */
+
+        await sleep(
+            isMobile()
+                ? 500
+                : 300
+        );
+
+
+        listen();
+    }
+
+
+    /* =========================================================
+       COMMAND LISTENING
+       ========================================================= */
+
+    function listen(
+        attempt = 0
+    ) {
+
+        if (
+            !Recognition ||
+            !state.awake ||
+            state.thinking ||
+            state.speaking ||
+            document.hidden
+        ) {
+            return;
+        }
+
+
+        destroyRecognizer();
+
+
+        openPresence();
+
+
+        transcript("");
+
+
+        setUI(
+            "listening",
             "Listening",
             "I'm listening…"
         );
 
 
-        startCommandListening();
+        const token =
+            state.recognizerToken;
+
+
+        let recognition;
+
+
+        try {
+
+            recognition =
+                new Recognition();
+
+        }
+        catch {
+
+            retryCommand(
+                attempt
+            );
+
+            return;
+        }
+
+
+        state.recognizer =
+            recognition;
+
+
+        recognition.lang =
+            navigator.language ||
+            "en-IN";
+
+
+        recognition.continuous =
+            false;
+
+
+        /*
+         * Interim gives immediate visual feedback.
+         * Final result remains the execution trigger.
+         */
+
+        recognition.interimResults =
+            true;
+
+
+        recognition.maxAlternatives =
+            1;
+
+
+        let lastText =
+            "";
+
+
+        let executed =
+            false;
+
+
+        recognition.onstart =
+            () => {
+
+                if (
+                    token !==
+                    state.recognizerToken
+                ) {
+                    return;
+                }
+
+
+                console.log(
+                    "🎙️ APRISHA LISTENING"
+                );
+            };
+
+
+        recognition.onaudiostart =
+            () => {
+
+                setUI(
+                    "listening",
+                    "Listening",
+                    "Microphone active…"
+                );
+            };
+
+
+        recognition.onspeechstart =
+            () => {
+
+                setUI(
+                    "listening",
+                    "Listening",
+                    "I hear you…"
+                );
+            };
+
+
+        recognition.onresult =
+            event => {
+
+                if (
+                    token !==
+                    state.recognizerToken
+                ) {
+                    return;
+                }
+
+
+                let full =
+                    "";
+
+                let final =
+                    false;
+
+
+                for (
+                    let i = 0;
+                    i <
+                        event.results.length;
+                    i++
+                ) {
+
+                    const result =
+                        event.results[i];
+
+
+                    full +=
+                        (
+                            full
+                                ? " "
+                                : ""
+                        )
+                        +
+                        (
+                            result[0]
+                                ?.transcript
+                            ||
+                            ""
+                        );
+
+
+                    if (
+                        result.isFinal
+                    ) {
+
+                        final =
+                            true;
+                    }
+                }
+
+
+                lastText =
+                    full.trim();
+
+
+                if (
+                    lastText
+                ) {
+
+                    transcript(
+                        lastText
+                    );
+
+
+                    setUI(
+                        "listening",
+                        "Listening",
+                        lastText
+                    );
+                }
+
+
+                if (
+                    final &&
+                    lastText &&
+                    !executed
+                ) {
+
+                    executed =
+                        true;
+
+
+                    const command =
+                        lastText;
+
+
+                    destroyRecognizer();
+
+
+                    setUI(
+                        "heard",
+                        "Heard",
+                        command
+                    );
+
+
+                    setTimeout(
+                        () =>
+                            execute(
+                                command
+                            ),
+                        80
+                    );
+                }
+            };
+
+
+        recognition.onerror =
+            event => {
+
+                if (
+                    token !==
+                    state.recognizerToken
+                ) {
+                    return;
+                }
+
+
+                console.warn(
+                    "Aprisha voice:",
+                    event.error
+                );
+
+
+                if (
+                    executed
+                ) {
+                    return;
+                }
+
+
+                state.recognizer =
+                    null;
+
+
+                if (
+                    event.error ===
+                        "not-allowed" ||
+                    event.error ===
+                        "service-not-allowed"
+                ) {
+
+                    state.permission =
+                        false;
+
+
+                    showPermission(
+                        true
+                    );
+
+
+                    setUI(
+                        "error",
+                        "Microphone blocked",
+                        "Allow microphone access."
+                    );
+
+
+                    return;
+                }
+
+
+                retryCommand(
+                    attempt
+                );
+            };
+
+
+        recognition.onend =
+            () => {
+
+                if (
+                    token !==
+                    state.recognizerToken
+                ) {
+                    return;
+                }
+
+
+                state.recognizer =
+                    null;
+
+
+                if (
+                    executed
+                ) {
+                    return;
+                }
+
+
+                /*
+                 * Mobile Chrome occasionally provides text
+                 * before ending without flagging isFinal.
+                 */
+
+                if (
+                    lastText
+                ) {
+
+                    executed =
+                        true;
+
+
+                    execute(
+                        lastText
+                    );
+
+
+                    return;
+                }
+
+
+                retryCommand(
+                    attempt
+                );
+            };
+
+
+        try {
+
+            recognition.start();
+
+        }
+        catch {
+
+            retryCommand(
+                attempt
+            );
+        }
     }
 
+
+    function retryCommand(
+        attempt
+    ) {
+
+        clearTimeout(
+            state.commandRestartTimer
+        );
+
+
+        if (
+            !state.awake ||
+            state.thinking ||
+            state.speaking
+        ) {
+            return;
+        }
+
+
+        if (
+            Date.now() >
+                state.stayUntil
+        ) {
+
+            sleepPresence();
+
+            return;
+        }
+
+
+        const next =
+            Math.min(
+                attempt + 1,
+                5
+            );
+
+
+        setUI(
+            "listening",
+            "Listening",
+            "I'm still listening…"
+        );
+
+
+        state.commandRestartTimer =
+            setTimeout(
+                () =>
+                    listen(next),
+                isMobile()
+                    ? 550
+                    : 350
+            );
+    }
+
+
     /* =========================================================
-       AP SYNAPSE ACTION ENGINE
+       LOCAL AP SYNAPSE ACTIONS
        ========================================================= */
 
-    function visibleControls() {
+    function visible(element) {
+
+        if (!element) {
+            return false;
+        }
+
+
+        const style =
+            getComputedStyle(element);
+
+
+        return (
+            style.display !== "none" &&
+            style.visibility !== "hidden"
+        );
+    }
+
+
+    function controls() {
 
         return [
             ...document.querySelectorAll(
@@ -1975,72 +1625,55 @@
                 [data-workspace]
                 `
             )
-        ].filter(
-            element => {
+        ]
+        .filter(
+            element =>
 
-                if (
-                    element.closest(
-                        "#apAprishaUniversal"
-                    )
-                ) {
+                visible(element) &&
 
-                    return false;
-                }
-
-
-                const style =
-                    getComputedStyle(
-                        element
-                    );
-
-
-                return (
-                    style.display !==
-                    "none"
-                    &&
-                    style.visibility !==
-                    "hidden"
-                );
-            }
+                !element.closest(
+                    "#apAprishaUniversal"
+                )
         );
     }
 
 
-    function clickByText(
-        possibilities
+    function clickText(
+        names
     ) {
 
         const wanted =
-            possibilities.map(
-                value =>
-                    normalize(value)
+            names.map(
+                normalize
             );
 
 
-        const controls =
-            visibleControls();
+        const list =
+            controls();
 
 
         /*
-         * Exact label first.
+         * Exact first.
          */
 
         for (
-            const control of
-            controls
+            const node of
+            list
         ) {
 
             const text =
                 normalize(
-                    control.innerText ||
-                    control.textContent ||
-                    control.getAttribute(
+                    node.getAttribute(
                         "aria-label"
-                    ) ||
-                    control.getAttribute(
+                    )
+                    ||
+                    node.getAttribute(
                         "title"
-                    ) ||
-                    ""
+                    )
+                    ||
+                    node.innerText
+                    ||
+                    node.textContent
                 );
 
 
@@ -2050,7 +1683,7 @@
                 )
             ) {
 
-                control.click();
+                node.click();
 
                 return true;
             }
@@ -2058,25 +1691,27 @@
 
 
         /*
-         * Then partial label.
+         * Partial fallback.
          */
 
         for (
-            const control of
-            controls
+            const node of
+            list
         ) {
 
             const text =
                 normalize(
-                    control.innerText ||
-                    control.textContent ||
-                    control.getAttribute(
+                    node.getAttribute(
                         "aria-label"
-                    ) ||
-                    control.getAttribute(
+                    )
+                    ||
+                    node.getAttribute(
                         "title"
-                    ) ||
-                    ""
+                    )
+                    ||
+                    node.innerText
+                    ||
+                    node.textContent
                 );
 
 
@@ -2087,7 +1722,7 @@
                 )
             ) {
 
-                control.click();
+                node.click();
 
                 return true;
             }
@@ -2098,7 +1733,7 @@
     }
 
 
-    function sendToMainChat(
+    function sendMainChat(
         text
     ) {
 
@@ -2118,7 +1753,6 @@
             !input ||
             !send
         ) {
-
             return false;
         }
 
@@ -2155,64 +1789,21 @@
     }
 
 
-    function latestAssistantText() {
-
-        const messages =
-            [
-                ...document.querySelectorAll(
-                    `
-                    .message.ai,
-                    .message.assistant,
-                    .assistant-message,
-                    .ai-message,
-                    .bot-message,
-                    [data-role="assistant"]
-                    `
-                )
-            ];
-
-
-        const last =
-            messages[
-                messages.length - 1
-            ];
-
-
-        return String(
-            last?.innerText || ""
-        )
-            .replace(
-                /\bCopy\b/gi,
-                ""
-            )
-            .replace(
-                /\bRead\b/gi,
-                ""
-            )
-            .trim();
-    }
-
-
-    async function executeCommand(
-        raw
+    async function localAction(
+        command
     ) {
 
-        const command =
-            normalize(
-                raw
-            );
+        const c =
+            normalize(command);
 
 
-        setTranscript(
-            raw
-        );
-
-
-        /* STOP */
+        /*
+         * Stop.
+         */
 
         if (
-            /^(stop|cancel|goodbye|bye|close aprisha)$/
-                .test(command)
+            /^(stop|cancel|goodbye|bye|close aprisha|go away)$/
+                .test(c)
         ) {
 
             await speak(
@@ -2220,16 +1811,19 @@
             );
 
 
-            endPresence();
+            sleepPresence();
 
-            return;
+
+            return true;
         }
 
 
-        /* STAY WITH ME */
+        /*
+         * Continuous conversation.
+         */
 
         if (
-            command.includes(
+            c.includes(
                 "stay with me"
             )
         ) {
@@ -2239,37 +1833,26 @@
                 120000;
 
 
-            setState(
-                "Aprisha",
-                "I'm here."
-            );
-
-
             await speak(
-                "I'm here. You can keep talking."
+                "I'm here. Keep talking."
             );
 
 
-            continueOrSleep();
+            followUp();
 
-            return;
+
+            return true;
         }
 
 
-        /* APRISHA VISION */
+        /*
+         * Vision.
+         */
 
         if (
-            command.includes(
-                "vision"
-            )
-            ||
-            command.includes(
-                "what am i looking at"
-            )
-            ||
-            command.includes(
-                "use camera"
-            )
+            c.includes("vision") ||
+            c.includes("use camera") ||
+            c.includes("what am i looking at")
         ) {
 
             await speak(
@@ -2277,7 +1860,7 @@
             );
 
 
-            closeSiri();
+            closePresence();
 
 
             window
@@ -2285,21 +1868,23 @@
                 ?.open?.();
 
 
-            resetPresenceState();
+            reset();
 
-            return;
+
+            return true;
         }
 
 
-        /* FULL PRESENCE */
+        /*
+         * Full Presence mode.
+         */
 
         if (
-            command.includes(
-                "open presence"
-            )
-            ||
-            command.includes(
+            c.includes(
                 "presence mode"
+            ) ||
+            c.includes(
+                "open presence"
             )
         ) {
 
@@ -2308,7 +1893,7 @@
             );
 
 
-            closeSiri();
+            closePresence();
 
 
             window
@@ -2316,205 +1901,217 @@
                 ?.open?.();
 
 
-            resetPresenceState();
+            reset();
 
-            return;
+
+            return true;
         }
 
 
-        /* NEW CHAT */
+        /*
+         * New chat.
+         */
 
         if (
-            /new (chat|conversation)/
-                .test(command)
+            c.includes("new chat") ||
+            c.includes("new conversation")
         ) {
 
             const success =
-                document.querySelector(
-                    ".new-chat-btn"
-                )
-                    ?.click?.();
-
-
-            await speak(
-                "Starting a new conversation."
-            );
-
-
-            endPresence();
-
-            return;
-        }
-
-
-        /* CODE STUDIO */
-
-        if (
-            command.includes(
-                "code studio"
-            )
-            ||
-            command === "coding"
-        ) {
-
-            const success =
-                clickByText([
-                    "Code Studio",
-                    "Code"
+                clickText([
+                    "New Conversation",
+                    "New Chat"
                 ]);
 
 
             await speak(
                 success
-                    ? "Opening Code Studio."
-                    : "I couldn't locate Code Studio."
+                    ? "Starting a new conversation."
+                    : "I couldn't find the new conversation control."
             );
 
 
-            endPresence();
+            sleepPresence();
 
-            return;
+
+            return true;
         }
 
 
-        /* DOCUMENTS */
+        /*
+         * Workspace navigation.
+         */
 
-        if (
-            command.includes(
-                "documents"
-            )
-            ||
-            command.includes(
-                "document intelligence"
-            )
+        const routes = [
+
+            {
+                test:
+                    c.includes(
+                        "code studio"
+                    ),
+
+                names:
+                    [
+                        "Code Studio",
+                        "Code"
+                    ],
+
+                reply:
+                    "Opening Code Studio."
+            },
+
+            {
+                test:
+                    c.includes(
+                        "documents"
+                    ),
+
+                names:
+                    [
+                        "Documents"
+                    ],
+
+                reply:
+                    "Opening Documents."
+            },
+
+            {
+                test:
+                    c.includes(
+                        "projects"
+                    ),
+
+                names:
+                    [
+                        "Projects"
+                    ],
+
+                reply:
+                    "Opening Projects."
+            },
+
+            {
+                test:
+                    c.includes(
+                        "knowledge"
+                    ),
+
+                names:
+                    [
+                        "Knowledge"
+                    ],
+
+                reply:
+                    "Opening Knowledge."
+            },
+
+            {
+                test:
+                    c.includes(
+                        "automation"
+                    ),
+
+                names:
+                    [
+                        "Automation"
+                    ],
+
+                reply:
+                    "Opening Automation."
+            },
+
+            {
+                test:
+                    c.includes(
+                        "settings"
+                    ),
+
+                names:
+                    [
+                        "Settings"
+                    ],
+
+                reply:
+                    "Opening Settings."
+            },
+
+            {
+                test:
+                    c.includes(
+                        "assistant"
+                    )
+                    &&
+                    (
+                        c.includes("open") ||
+                        c.includes("go to")
+                    ),
+
+                names:
+                    [
+                        "Assistant"
+                    ],
+
+                reply:
+                    "Opening Assistant."
+            },
+
+            {
+                test:
+                    c.includes("whiteboard") ||
+                    c.includes("canvas"),
+
+                names:
+                    [
+                        "Whiteboard",
+                        "Canvas"
+                    ],
+
+                reply:
+                    "Opening the canvas."
+            }
+        ];
+
+
+        for (
+            const route of
+            routes
         ) {
 
+            if (
+                !route.test
+            ) {
+                continue;
+            }
+
+
             const success =
-                clickByText([
-                    "Documents",
-                    "Document Intelligence"
-                ]);
+                clickText(
+                    route.names
+                );
 
 
             await speak(
                 success
-                    ? "Opening Documents."
-                    : "I couldn't locate Documents."
+                    ? route.reply
+                    : "I couldn't find that workspace."
             );
 
 
-            endPresence();
+            sleepPresence();
 
-            return;
+
+            return true;
         }
 
 
-        /* WHITEBOARD / CANVAS */
+        /*
+         * Web search.
+         */
 
         if (
-            command.includes(
-                "whiteboard"
-            )
-            ||
-            command === "canvas"
-            ||
-            command.includes(
-                "open canvas"
-            )
-        ) {
-
-            const success =
-                clickByText([
-                    "Whiteboard",
-                    "Canvas"
-                ]);
-
-
-            await speak(
-                success
-                    ? "Opening the canvas."
-                    : "I couldn't locate the canvas."
-            );
-
-
-            endPresence();
-
-            return;
-        }
-
-
-        /* PROJECTS */
-
-        if (
-            command.includes(
-                "projects"
-            )
-            ||
-            command.includes(
-                "open project"
-            )
-        ) {
-
-            const success =
-                clickByText([
-                    "Projects",
-                    "Project"
-                ]);
-
-
-            await speak(
-                success
-                    ? "Opening Projects."
-                    : "I couldn't locate Projects."
-            );
-
-
-            endPresence();
-
-            return;
-        }
-
-
-        /* SETTINGS */
-
-        if (
-            command.includes(
-                "settings"
-            )
-        ) {
-
-            const success =
-                clickByText([
-                    "Settings"
-                ]);
-
-
-            await speak(
-                success
-                    ? "Opening Settings."
-                    : "I couldn't locate Settings."
-            );
-
-
-            endPresence();
-
-            return;
-        }
-
-
-        /* WEB SEARCH */
-
-        if (
-            command.includes(
-                "turn on web"
-            )
-            ||
-            command.includes(
-                "enable web"
-            )
-            ||
-            command ===
-                "web search"
+            c.includes("enable web") ||
+            c.includes("turn on web") ||
+            c === "web search"
         ) {
 
             const button =
@@ -2538,20 +2135,16 @@
             );
 
 
-            continueOrSleep();
+            followUp();
 
-            return;
+
+            return true;
         }
 
 
         if (
-            command.includes(
-                "turn off web"
-            )
-            ||
-            command.includes(
-                "disable web"
-            )
+            c.includes("disable web") ||
+            c.includes("turn off web")
         ) {
 
             const button =
@@ -2575,20 +2168,22 @@
             );
 
 
-            continueOrSleep();
+            followUp();
 
-            return;
+
+            return true;
         }
 
 
-        /* DEEP THINK */
+        /*
+         * Deep Think.
+         */
 
         if (
-            command.includes(
+            c.includes(
                 "enable deep think"
-            )
-            ||
-            command.includes(
+            ) ||
+            c.includes(
                 "turn on deep think"
             )
         ) {
@@ -2614,132 +2209,123 @@
             );
 
 
-            continueOrSleep();
+            followUp();
 
-            return;
+
+            return true;
         }
 
 
-        /* READ LATEST RESPONSE */
+        /*
+         * Image generation belongs in normal AP Synapse chat
+         * so the generated image renders normally.
+         */
 
         if (
-            command.includes(
-                "read this"
-            )
-            ||
-            command.includes(
-                "read the answer"
-            )
-            ||
-            command.includes(
-                "read latest"
-            )
+            /\b(create|generate|draw|make)\b.*\b(image|picture|illustration|photo)\b/
+                .test(c)
         ) {
 
-            const text =
-                latestAssistantText();
-
-
-            if (text) {
-
-                setState(
-                    "Speaking",
-                    text
-                );
-
-
-                await speak(
-                    text
-                );
-            }
-            else {
-
-                await speak(
-                    "There isn't an answer to read yet."
-                );
-            }
-
-
-            continueOrSleep();
-
-            return;
-        }
-
-
-        /* STOP SPEAKING */
-
-        if (
-            command.includes(
-                "stop reading"
-            )
-            ||
-            command.includes(
-                "stop speaking"
-            )
-        ) {
-
-            window.speechSynthesis
-                ?.cancel();
-
-
-            continueOrSleep();
-
-            return;
-        }
-
-
-        /* IMAGE GENERATION -> NORMAL CHAT UI */
-
-        if (
-            /\b(create|generate|draw|make)\b.*\b(image|picture|photo|illustration)\b/
-                .test(command)
-        ) {
-
-            const success =
-                sendToMainChat(
-                    raw
+            const sent =
+                sendMainChat(
+                    command
                 );
 
 
             await speak(
-                success
-                    ? "I'll create that in AP Synapse."
-                    : "I couldn't open the image request."
+                sent
+                    ? "Creating that in AP Synapse."
+                    : "I couldn't start that request."
             );
 
 
-            endPresence();
+            sleepPresence();
+
+
+            return true;
+        }
+
+
+        return false;
+    }
+
+
+    /* =========================================================
+       EXECUTE
+       ========================================================= */
+
+    async function execute(
+        command
+    ) {
+
+        command =
+            String(command || "")
+                .trim();
+
+
+        if (!command) {
+
+            listen();
+
+            return;
+        }
+
+
+        transcript(
+            command
+        );
+
+
+        setUI(
+            "processing",
+            "Aprisha",
+            command
+        );
+
+
+        /*
+         * Local actions execute immediately.
+         */
+
+        if (
+            await localAction(
+                command
+            )
+        ) {
 
             return;
         }
 
 
         /*
-         * EVERYTHING ELSE:
-         * AP Synapse intelligence.
+         * Everything else goes to AP Synapse intelligence.
          */
 
-        await askAP(
-            raw
+        await ask(
+            command
         );
     }
 
 
     /* =========================================================
-       AP INTELLIGENCE
+       AP SYNAPSE INTELLIGENCE
        ========================================================= */
 
-    async function askAP(
+    async function ask(
         message
     ) {
+
+        destroyRecognizer();
+
 
         state.thinking =
             true;
 
 
-        setState(
+        setUI(
+            "thinking",
             "Thinking",
-            message
+            "Working on it…"
         );
 
 
@@ -2751,16 +2337,10 @@
                         "webBtn"
                     )
                     ?.classList
-                    .contains(
-                        "active"
-                    )
+                    .contains("active")
                 ||
-                /\b(search|look up|latest|current|today)\b/
-                    .test(
-                        normalize(
-                            message
-                        )
-                    );
+                /\b(latest|today|current|search|look up|news)\b/i
+                    .test(message);
 
 
             const response =
@@ -2775,16 +2355,22 @@
                             "Content-Type":
                                 "application/json",
 
+                            "Accept":
+                                "text/plain, application/json",
+
                             "x-session-id":
                                 state.sessionId
                         },
 
                         body:
                             JSON.stringify({
+
                                 message,
+
                                 web,
+
                                 source:
-                                    "aprisha-instant-presence"
+                                    "aprisha-mobile-master"
                             })
                     }
                 );
@@ -2800,61 +2386,171 @@
             }
 
 
-            const result =
-                await readResponse(
-                    response
+            const type =
+                response.headers
+                    .get("content-type")
+                ||
+                "";
+
+
+            let answer =
+                "";
+
+
+            /*
+             * JSON endpoint.
+             */
+
+            if (
+                type.includes(
+                    "application/json"
+                )
+            ) {
+
+                const json =
+                    await response.json();
+
+
+                if (
+                    json.type === "image" &&
+                    json.url
+                ) {
+
+                    sendMainChat(
+                        message
+                    );
+
+
+                    state.thinking =
+                        false;
+
+
+                    await speak(
+                        "Your image is being created in AP Synapse."
+                    );
+
+
+                    sleepPresence();
+
+
+                    return;
+                }
+
+
+                answer =
+                    json.reply ||
+                    json.response ||
+                    json.answer ||
+                    json.content ||
+                    json.text ||
+                    json.message?.content ||
+                    "";
+            }
+
+            /*
+             * Streaming/plain-text backend.
+             */
+
+            else if (
+                response.body
+            ) {
+
+                const reader =
+                    response.body
+                        .getReader();
+
+
+                const decoder =
+                    new TextDecoder();
+
+
+                while (true) {
+
+                    const {
+                        value,
+                        done
+                    } =
+                        await reader.read();
+
+
+                    if (done) {
+                        break;
+                    }
+
+
+                    const chunk =
+                        decoder.decode(
+                            value,
+                            {
+                                stream:
+                                    true
+                            }
+                        );
+
+
+                    answer +=
+                        chunk;
+
+
+                    const preview =
+                        cleanAnswer(
+                            answer
+                        );
+
+
+                    if (preview) {
+
+                        setUI(
+                            "thinking",
+                            "Aprisha",
+                            preview
+                        );
+                    }
+                }
+
+
+                answer +=
+                    decoder.decode();
+            }
+
+            else {
+
+                answer =
+                    await response.text();
+            }
+
+
+            answer =
+                parsePossibleStream(
+                    answer
                 );
+
+
+            answer =
+                cleanAnswer(
+                    answer
+                );
+
+
+            if (!answer) {
+
+                answer =
+                    "I couldn't create a useful response for that.";
+            }
 
 
             state.thinking =
                 false;
 
 
-            /*
-             * Image response.
-             */
-
-            if (
-                result.type ===
-                "image"
-                &&
-                result.url
-            ) {
-
-                setState(
-                    "Aprisha",
-                    "Your image is ready in AP Synapse."
-                );
-
-
-                sendToMainChat(
-                    message
-                );
-
-
-                await speak(
-                    "Your image request is ready in AP Synapse."
-                );
-
-
-                endPresence();
-
-                return;
-            }
-
-
-            const answer =
-                cleanForSpeech(
-                    result.text
-                )
-                ||
-                "I couldn't create a response for that.";
-
-
-            setState(
+            setUI(
+                "answer",
                 "Aprisha",
                 answer
             );
+
+
+            transcript("");
 
 
             await speak(
@@ -2862,13 +2558,13 @@
             );
 
 
-            continueOrSleep();
+            followUp();
 
         }
         catch (error) {
 
             console.error(
-                "Aprisha:",
+                "Aprisha intelligence:",
                 error
             );
 
@@ -2877,7 +2573,8 @@
                 false;
 
 
-            setState(
+            setUI(
+                "error",
                 "Connection issue",
                 "I couldn't reach AP Synapse right now."
             );
@@ -2888,245 +2585,132 @@
             );
 
 
-            continueOrSleep();
+            followUp();
         }
     }
 
 
-    async function readResponse(
-        response
-    ) {
-
-        if (
-            !response.body
-        ) {
-
-            const raw =
-                await response.text();
-
-
-            return parseRaw(
-                raw
-            );
-        }
-
-
-        const reader =
-            response.body
-                .getReader();
-
-
-        const decoder =
-            new TextDecoder();
-
-
-        let raw =
-            "";
-
-
-        while (true) {
-
-            const {
-                value,
-                done
-            } =
-                await reader.read();
-
-
-            if (done) {
-                break;
-            }
-
-
-            raw +=
-                decoder.decode(
-                    value,
-                    {
-                        stream:
-                            true
-                    }
-                );
-        }
-
-
-        raw +=
-            decoder.decode();
-
-
-        return parseRaw(
-            raw
-        );
-    }
-
-
-    function parseRaw(
+    function parsePossibleStream(
         raw
     ) {
 
-        const value =
+        raw =
             String(raw || "")
                 .trim();
 
 
-        if (!value) {
-
-            return {
-                type:
-                    "text",
-
-                text:
-                    ""
-            };
+        if (!raw) {
+            return "";
         }
 
 
         try {
 
             const json =
-                JSON.parse(
-                    value
-                );
+                JSON.parse(raw);
 
 
-            if (
-                json.type ===
-                "image"
-                &&
-                json.url
-            ) {
-
-                return {
-                    type:
-                        "image",
-
-                    url:
-                        json.url,
-
-                    text:
-                        ""
-                };
-            }
-
-
-            return {
-                type:
-                    "text",
-
-                text:
-                    (
-                        json.reply ||
-                        json.response ||
-                        json.answer ||
-                        json.content ||
-                        json.text ||
-                        json.message?.content ||
-                        ""
-                    )
-            };
-
+            return (
+                json.reply ||
+                json.response ||
+                json.answer ||
+                json.content ||
+                json.text ||
+                json.message?.content ||
+                ""
+            );
         }
         catch {}
 
 
-        let output =
-            "";
+        /*
+         * Parse SSE / JSON-line responses when present.
+         */
 
-
-        for (
-            let line of
-            value.split(
-                /\r?\n/
-            )
+        if (
+            raw.includes("\ndata:") ||
+            raw.startsWith("data:")
         ) {
 
-            line =
-                line.trim();
+            let result =
+                "";
 
 
-            if (!line) {
-                continue;
-            }
-
-
-            if (
-                line.startsWith(
-                    "data:"
-                )
+            for (
+                let line of
+                raw.split(/\r?\n/)
             ) {
 
                 line =
-                    line.slice(5)
-                        .trim();
-            }
+                    line.trim();
 
 
-            if (
-                line ===
-                "[DONE]"
-            ) {
+                if (
+                    !line ||
+                    line === "[DONE]" ||
+                    line === "data: [DONE]"
+                ) {
+                    continue;
+                }
 
-                continue;
-            }
 
+                if (
+                    line.startsWith(
+                        "data:"
+                    )
+                ) {
 
-            try {
-
-                const json =
-                    JSON.parse(
+                    line =
                         line
-                    );
+                            .slice(5)
+                            .trim();
+                }
 
 
-                output +=
-                    (
+                try {
+
+                    const json =
+                        JSON.parse(line);
+
+
+                    result +=
                         json.delta?.content ||
                         json.content ||
                         json.text ||
                         json.response ||
                         json.reply ||
-                        ""
-                    );
+                        "";
+                }
+                catch {
 
+                    result +=
+                        (
+                            result
+                                ? " "
+                                : ""
+                        )
+                        +
+                        line;
+                }
             }
-            catch {
 
-                output +=
-                    (
-                        output
-                            ? "\n"
-                            : ""
-                    )
-                    +
-                    line;
-            }
+
+            return result;
         }
 
 
-        return {
-            type:
-                "text",
-
-            text:
-                output ||
-                value
-        };
+        return raw;
     }
 
 
-    /* =========================================================
-       SPEECH
-       ========================================================= */
-
-    function cleanForSpeech(
+    function cleanAnswer(
         text
     ) {
 
-        return String(
-            text || ""
-        )
+        return String(text || "")
             .replace(
                 /```[\s\S]*?```/g,
-                " Code example available on screen. "
+                " Code is available in the response. "
             )
             .replace(
                 /\[([^\]]+)\]\([^)]+\)/g,
@@ -3144,6 +2728,10 @@
     }
 
 
+    /* =========================================================
+       SPEAK
+       ========================================================= */
+
     function speak(
         text
     ) {
@@ -3151,18 +2739,15 @@
         return new Promise(
             resolve => {
 
-                const spokenText =
-                    cleanForSpeech(
+                text =
+                    cleanAnswer(
                         text
                     );
 
 
                 if (
-                    !spokenText ||
-                    !(
-                        "speechSynthesis"
-                        in window
-                    )
+                    !text ||
+                    !("speechSynthesis" in window)
                 ) {
 
                     resolve();
@@ -3171,37 +2756,46 @@
                 }
 
 
-                let finished =
+                destroyRecognizer();
+
+
+                state.speaking =
+                    true;
+
+
+                setUI(
+                    "speaking",
+                    "Aprisha",
+                    text
+                );
+
+
+                let done =
                     false;
 
 
-                let safetyTimer =
-                    null;
+                let timer;
 
 
                 const finish =
                     () => {
 
-                        if (
-                            finished
-                        ) {
-
+                        if (done) {
                             return;
                         }
 
 
-                        finished =
+                        done =
                             true;
 
 
-                        if (
-                            safetyTimer
-                        ) {
+                        state.speaking =
+                            false;
 
-                            clearTimeout(
-                                safetyTimer
-                            );
-                        }
+
+                        clearTimeout(
+                            timer
+                        );
 
 
                         resolve();
@@ -3210,424 +2804,403 @@
 
                 try {
 
-                    window
-                        .speechSynthesis
-                        .cancel();
+                    speechSynthesis.cancel();
 
                 }
                 catch {}
 
 
-                const speech =
+                const utterance =
                     new SpeechSynthesisUtterance(
-                        spokenText
+                        text
                     );
 
 
-                speech.lang =
+                utterance.lang =
                     navigator.language ||
                     "en-IN";
 
 
-                speech.rate =
-                    1.02;
+                utterance.rate =
+                    isMobile()
+                        ? 1.04
+                        : 1.02;
 
 
-                speech.pitch =
+                utterance.pitch =
                     1;
 
 
-                speech.volume =
+                utterance.volume =
                     1;
 
 
-                speech.onend =
+                utterance.onend =
                     finish;
 
 
-                speech.onerror =
+                utterance.onerror =
                     finish;
 
 
                 /*
-                 * Critical fallback.
-                 *
-                 * Chrome can audibly finish the sentence but
-                 * occasionally omit the onend callback.
-                 * Aprisha must never get stuck because of that.
+                 * Chrome sometimes speaks but misses onend.
                  */
 
-                const estimatedMs =
-                    Math.max(
-                        1800,
-                        Math.min(
-                            60000,
-                            (
-                                spokenText.length *
-                                72
+                timer =
+                    setTimeout(
+                        finish,
+                        Math.max(
+                            1800,
+                            Math.min(
+                                60000,
+                                text.length *
+                                    65 +
+                                    1300
                             )
-                            +
-                            1200
                         )
                     );
 
 
-                safetyTimer =
-                    setTimeout(
-                        finish,
-                        estimatedMs
-                    );
-
-
-                /*
-                 * Chrome behaves more reliably when speak()
-                 * is not issued in the same event cycle as
-                 * speechSynthesis.cancel().
-                 */
-
                 setTimeout(
                     () => {
 
-                        if (
-                            finished
-                        ) {
-
-                            return;
-                        }
-
-
                         try {
 
-                            window
-                                .speechSynthesis
+                            speechSynthesis
                                 .speak(
-                                    speech
+                                    utterance
                                 );
 
                         }
-                        catch (
-                            error
-                        ) {
-
-                            console.warn(
-                                "Aprisha speech:",
-                                error
-                            );
-
+                        catch {
 
                             finish();
                         }
 
                     },
-                    60
+                    70
                 );
             }
         );
     }
 
+
     /* =========================================================
-       FOLLOW-UP MODE
+       FOLLOW-UP
        ========================================================= */
 
-    function continueOrSleep() {
+    async function followUp() {
 
         state.thinking =
             false;
 
 
         if (
-            Date.now() <
-            state.stayUntil
+            !state.awake
         ) {
 
-            state.awake =
-                true;
-
-
-            setState(
-                "Listening",
-                "Anything else?"
-            );
-
-
-            setTimeout(
-                startCommandListening,
-                420
-            );
+            scheduleWake();
 
             return;
         }
 
 
-        endPresence();
+        if (
+            Date.now() >
+                state.stayUntil
+        ) {
+
+            sleepPresence();
+
+            return;
+        }
+
+
+        await sleep(
+            isMobile()
+                ? 420
+                : 280
+        );
+
+
+        setUI(
+            "listening",
+            "Listening",
+            "Anything else?"
+        );
+
+
+        listen();
     }
 
 
-    function resetPresenceState() {
+    function reset() {
+
+        destroyRecognizer();
+
 
         state.awake =
             false;
 
-        state.commandActive =
-            false;
 
         state.thinking =
             false;
+
+
+        state.speaking =
+            false;
+
 
         state.stayUntil =
             0;
 
 
-        setState(
+        setUI(
+            "idle",
             "Aprisha ready",
             "Say “Hey Aprisha”"
         );
 
 
-        restartWake();
+        scheduleWake();
     }
 
 
-    function endPresence() {
+    function sleepPresence() {
 
-        stopCommandListening();
-
-
-        window.speechSynthesis
-            ?.cancel();
+        destroyRecognizer();
 
 
-        closeSiri();
+        try {
+            speechSynthesis.cancel();
+        }
+        catch {}
 
 
-        resetPresenceState();
+        closePresence();
+
+
+        reset();
     }
 
 
-    function pauseAprisha() {
+    function pause() {
 
         state.enabled =
             false;
 
 
         localStorage.setItem(
-            "apAprishaEnabled",
+            ENABLED_KEY,
             "false"
         );
 
 
-        stopWakeListening();
-        stopCommandListening();
+        destroyRecognizer();
 
 
-        window.speechSynthesis
-            ?.cancel();
+        state.awake =
+            false;
 
 
-        closeSiri();
+        closePresence();
 
 
-        setState(
+        setUI(
+            "idle",
             "Aprisha paused",
-            "Tap Enable to reactivate Hey Aprisha."
+            "Tap Enable to reactivate."
         );
     }
 
 
     /* =========================================================
-       FEEDBACK
+       UI EVENTS
        ========================================================= */
 
-    function feedback() {
+    function bindUI() {
 
-        try {
-
-            navigator.vibrate?.(
-                [20, 25, 38]
-            );
-
-        }
-        catch {}
-
-
-        try {
-
-            const AudioContext =
-                window.AudioContext ||
-                window.webkitAudioContext;
-
-
-            if (!AudioContext) {
-                return;
-            }
-
-
-            const context =
-                new AudioContext();
-
-
-            const oscillator =
-                context.createOscillator();
-
-
-            const gain =
-                context.createGain();
-
-
-            oscillator.frequency
-                .setValueAtTime(
-                    520,
-                    context.currentTime
-                );
-
-
-            oscillator.frequency
-                .exponentialRampToValueAtTime(
-                    760,
-                    context.currentTime +
-                    .13
-                );
-
-
-            gain.gain
-                .setValueAtTime(
-                    .035,
-                    context.currentTime
-                );
-
-
-            gain.gain
-                .exponentialRampToValueAtTime(
-                    .0001,
-                    context.currentTime +
-                    .18
-                );
-
-
-            oscillator.connect(
-                gain
+        document
+            .getElementById(
+                "apAprishaPermissionEnable"
+            )
+            ?.addEventListener(
+                "click",
+                enable
             );
 
 
-            gain.connect(
-                context.destination
+        document
+            .getElementById(
+                "apAprishaEnable"
+            )
+            ?.addEventListener(
+                "click",
+                enable
             );
 
 
-            oscillator.start();
-
-
-            oscillator.stop(
-                context.currentTime +
-                .18
-            );
-        }
-        catch {}
-    }
-
-
-    /* =========================================================
-       AUTO-ARM FROM WEBSITE OPEN
-       ========================================================= */
-
-    async function autoArm() {
-
-        if (
-            !state.enabled
-        ) {
-
-            setState(
-                "Aprisha paused",
-                "Tap Enable to reactivate."
-            );
-
-            return;
-        }
-
-
-        if (
-            !SpeechRecognition
-        ) {
-
-            setState(
-                "Voice wake unavailable",
-                "Use the Aprisha microphone button."
-            );
-
-            return;
-        }
-
-
-        const permission =
-            await permissionState();
-
-
-        if (
-            permission ===
-            "granted"
-        ) {
-
-            showPermissionPrompt(
-                false
+        document
+            .getElementById(
+                "apAprishaOrb"
+            )
+            ?.addEventListener(
+                "click",
+                openMiniPanel
             );
 
 
-            startWakeListening();
-
-            return;
-        }
-
-
-        /*
-         * First device visit:
-         * browsers require microphone permission.
-         */
-
-        showPermissionPrompt(
-            true
-        );
+        document
+            .getElementById(
+                "apAprishaClose"
+            )
+            ?.addEventListener(
+                "click",
+                closeMiniPanel
+            );
 
 
-        setState(
-            "Enable Hey Aprisha",
-            "Allow microphone once. Future visits will arm automatically."
-        );
+        document
+            .getElementById(
+                "apAprishaSpeak"
+            )
+            ?.addEventListener(
+                "click",
+                () => {
+
+                    destroyRecognizer();
 
 
-        /*
-         * After any normal interaction, try to resume
-         * automatically if permission changed.
-         */
-
-        document.addEventListener(
-            "pointerdown",
-            async () => {
-
-                const result =
-                    await permissionState();
+                    state.awake =
+                        true;
 
 
-                if (
-                    result ===
-                    "granted"
-                ) {
-
-                    showPermissionPrompt(
-                        false
-                    );
+                    state.stayUntil =
+                        Date.now() +
+                        60000;
 
 
-                    startWakeListening();
+                    openPresence();
+
+
+                    listen();
                 }
-            },
-            {
-                once:
-                    true,
+            );
 
-                capture:
-                    true
-            }
-        );
+
+        /*
+         * Tap mic = interrupt Aprisha and immediately listen.
+         */
+
+        document
+            .getElementById(
+                "apAprishaSiriMic"
+            )
+            ?.addEventListener(
+                "click",
+                () => {
+
+                    try {
+                        speechSynthesis.cancel();
+                    }
+                    catch {}
+
+
+                    state.speaking =
+                        false;
+
+
+                    state.awake =
+                        true;
+
+
+                    state.stayUntil =
+                        Date.now() +
+                        60000;
+
+
+                    listen();
+                }
+            );
+
+
+        document
+            .getElementById(
+                "apAprishaStop"
+            )
+            ?.addEventListener(
+                "click",
+                pause
+            );
+
+
+        document
+            .getElementById(
+                "apAprishaSiriClose"
+            )
+            ?.addEventListener(
+                "click",
+                sleepPresence
+            );
+
+
+        document
+            .getElementById(
+                "apAprishaBackdrop"
+            )
+            ?.addEventListener(
+                "click",
+                sleepPresence
+            );
+
+
+        document
+            .getElementById(
+                "apAprishaSiriVision"
+            )
+            ?.addEventListener(
+                "click",
+                () => {
+
+                    destroyRecognizer();
+
+
+                    closePresence();
+
+
+                    window
+                        .APAprishaVision
+                        ?.open?.();
+
+
+                    reset();
+                }
+            );
+
+
+        document
+            .getElementById(
+                "apAprishaSiriPresence"
+            )
+            ?.addEventListener(
+                "click",
+                () => {
+
+                    destroyRecognizer();
+
+
+                    closePresence();
+
+
+                    window
+                        .APAprishaPresence
+                        ?.open?.();
+
+
+                    reset();
+                }
+            );
     }
 
 
@@ -3643,8 +3216,7 @@
                 document.hidden
             ) {
 
-                stopWakeListening();
-                stopCommandListening();
+                destroyRecognizer();
 
                 return;
             }
@@ -3652,12 +3224,13 @@
 
             if (
                 state.enabled &&
-                !state.awake
+                !state.awake &&
+                state.permission
             ) {
 
                 setTimeout(
-                    startWakeListening,
-                    350
+                    armWake,
+                    450
                 );
             }
         }
@@ -3670,30 +3243,13 @@
 
             if (
                 state.enabled &&
-                !state.awake
+                !state.awake &&
+                state.permission
             ) {
 
                 setTimeout(
-                    startWakeListening,
-                    300
-                );
-            }
-        }
-    );
-
-
-    window.addEventListener(
-        "pageshow",
-        () => {
-
-            if (
-                state.enabled &&
-                !state.awake
-            ) {
-
-                setTimeout(
-                    startWakeListening,
-                    500
+                    armWake,
+                    400
                 );
             }
         }
@@ -3701,35 +3257,180 @@
 
 
     /* =========================================================
-       PUBLIC APRISHA API
+       AUTO RESTORE
+       ========================================================= */
+
+    async function restore() {
+
+        if (
+            !state.enabled
+        ) {
+
+            showPermission(
+                false
+            );
+
+            return;
+        }
+
+
+        if (!Recognition) {
+
+            setUI(
+                "error",
+                "Voice wake unavailable",
+                "Use the Speak button on this browser."
+            );
+
+            return;
+        }
+
+
+        /*
+         * Chrome Permissions API.
+         */
+
+        try {
+
+            const result =
+                await navigator.permissions
+                    ?.query({
+                        name:
+                            "microphone"
+                    });
+
+
+            if (
+                result?.state ===
+                "granted"
+            ) {
+
+                state.permission =
+                    true;
+
+
+                localStorage.setItem(
+                    MIC_KEY,
+                    "true"
+                );
+
+
+                showPermission(
+                    false
+                );
+
+
+                armWake();
+
+
+                result.onchange =
+                    () => {
+
+                        if (
+                            result.state ===
+                            "granted"
+                        ) {
+
+                            state.permission =
+                                true;
+
+                            armWake();
+
+                        }
+                        else {
+
+                            state.permission =
+                                false;
+
+                            destroyRecognizer();
+
+                            showPermission(
+                                true
+                            );
+                        }
+                    };
+
+
+                return;
+            }
+
+
+            if (
+                result?.state ===
+                "denied"
+            ) {
+
+                state.permission =
+                    false;
+
+
+                showPermission(
+                    true
+                );
+
+
+                return;
+            }
+
+        }
+        catch {}
+
+
+        /*
+         * Stored permission hint for browsers where
+         * Permissions.query("microphone") is unavailable.
+         */
+
+        if (
+            localStorage.getItem(
+                MIC_KEY
+            ) === "true"
+        ) {
+
+            state.permission =
+                true;
+
+
+            showPermission(
+                false
+            );
+
+
+            armWake();
+
+        }
+        else {
+
+            showPermission(
+                true
+            );
+        }
+    }
+
+
+    /* =========================================================
+       PUBLIC API
        ========================================================= */
 
     window.APAprisha = {
 
-        wake:
-            () =>
-                wakeAprisha(),
+        enable,
 
-        listen:
-            startCommandListening,
+        wake,
 
-        ask:
-            askAP,
+        listen,
 
-        execute:
-            executeCommand,
+        ask,
 
-        enable:
-            enableAprisha,
+        execute,
 
-        pause:
-            pauseAprisha,
+        pause,
 
         open:
-            openSiri,
+            wake,
 
         close:
-            endPresence
+            sleepPresence
     };
 
 
@@ -3739,20 +3440,21 @@
 
     function boot() {
 
-        createUI();
+        buildUI();
 
 
-        setState(
+        setUI(
+            "idle",
             "Aprisha ready",
             "Say “Hey Aprisha”"
         );
 
 
-        autoArm();
+        restore();
 
 
         console.log(
-            "✅ AP SYNAPSE — APRISHA INSTANT PRESENCE READY"
+            "✅ AP SYNAPSE · APRISHA MOBILE MASTER V12 READY"
         );
     }
 

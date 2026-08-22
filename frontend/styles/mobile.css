@@ -5352,3 +5352,117 @@
 }
 
 /* AP SYNAPSE PROFILE FINAL VISUAL V4 END */
+
+/* ============================================================
+   AP SYNAPSE — STABLE PROFILE AUTH
+   ============================================================ */
+
+@media (max-width:760px) {
+
+    #profileCard .ap-profile-stable-auth {
+
+        width:100% !important;
+
+        margin:
+            14px 0 18px !important;
+
+        padding:
+            0 !important;
+
+        display:
+            flex !important;
+
+        flex-direction:
+            column !important;
+
+        box-sizing:
+            border-box !important;
+    }
+
+
+    #profileCard
+    .ap-profile-stable-auth[hidden] {
+
+        display:none !important;
+    }
+
+
+    #profileCard
+    .ap-profile-stable-auth
+    .g_id_signin {
+
+        width:100% !important;
+
+        display:flex !important;
+
+        justify-content:center !important;
+    }
+
+
+    #profileCard
+    .ap-profile-stable-auth iframe {
+
+        max-width:100% !important;
+    }
+
+
+    #profileCard
+    .ap-profile-stable-google {
+
+        width:100% !important;
+        height:44px !important;
+
+        margin:0 !important;
+        padding:0 14px !important;
+
+        display:flex !important;
+
+        align-items:center !important;
+        justify-content:flex-start !important;
+
+        gap:10px !important;
+
+        color:#f4f3ee !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(29,30,33,.98),
+                rgba(16,17,19,.98)
+            ) !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.09) !important;
+
+        border-radius:12px !important;
+    }
+
+
+    #profileCard
+    .ap-profile-stable-g {
+
+        width:24px !important;
+        height:24px !important;
+
+        display:grid !important;
+        place-items:center !important;
+
+        color:#ddb159 !important;
+
+        border:
+            1px solid
+            rgba(221,177,89,.28) !important;
+
+        border-radius:7px !important;
+    }
+
+
+    #profileCard
+    .ap-profile-stable-hidden {
+
+        display:none !important;
+    }
+
+}
+

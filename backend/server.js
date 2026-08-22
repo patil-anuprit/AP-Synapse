@@ -55,6 +55,7 @@ import {
 } from "./memory/index.js";
 
 import { createAIStream } from "./services/router.js";
+import shareV2Router from "./services/shareV2Router.js";
 import {
     createLiveConversation,
     getLiveConversation,
@@ -73,6 +74,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+app.use("/share-v2", shareV2Router);
 
 app.get("/", (req, res) => {
 

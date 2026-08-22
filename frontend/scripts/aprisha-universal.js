@@ -1379,22 +1379,35 @@
             state.thinking ||
             document.hidden
         ) {
+            return;
+        }
+
+
+        if (
+            state.commandActive
+        ) {
+            return;
+        }
+
+
+        if (!SpeechRecognition) {
+
+            setState(
+                "Voice unavailable",
+                "Speech recognition is not available in this browser."
+            );
 
             return;
         }
 
 
         /*
-         * Another recognizer may already have successfully
-         * started while a retry timer was waiting.
+         * Critical:
+         * Do not allow the wake recognizer and command
+         * recognizer to fight for the microphone.
          */
 
-        if (
-            state.commandActive
-        ) {
-
-            return;
-        }
+        stopWakeListening();
 
 
         let recognition;
@@ -1409,7 +1422,7 @@
         catch (error) {
 
             console.error(
-                "Aprisha recognition creation:",
+                "APRISHA RECOGNITION CREATE ERROR:",
                 error
             );
 
@@ -1421,16 +1434,21 @@
             recognition;
 
 
+        /*
+         * Use the same simple recognition model that AP Synapse's
+         * normal voice input already uses successfully.
+         */
+
         recognition.continuous =
             false;
 
 
         recognition.interimResults =
-            true;
+            false;
 
 
         recognition.maxAlternatives =
-            3;
+            1;
 
 
         recognition.lang =
@@ -1438,20 +1456,28 @@
             "en-IN";
 
 
-        let transcript =
+        let heardText =
             "";
 
 
-        let commandExecuted =
+        let completed =
             false;
 
 
-        let heardSpeech =
+        let recognitionStarted =
             false;
 
+
+        /* ====================================================
+           START
+           ==================================================== */
 
         recognition.onstart =
             () => {
+
+                recognitionStarted =
+                    true;
+
 
                 state.commandActive =
                     true;
@@ -1463,11 +1489,47 @@
                 );
 
 
-                setTranscript("");
+                setTranscript(
+                    ""
+                );
 
 
                 console.log(
-                    "🎙️ APRISHA COMMAND LISTENER ACTIVE"
+                    "🎙️ APRISHA LISTENER STARTED"
+                );
+
+
+                console.log(
+                    "🎙️ Language:",
+                    recognition.lang
+                );
+            };
+
+
+        /* ====================================================
+           AUDIO DEBUG
+           ==================================================== */
+
+        recognition.onaudiostart =
+            () => {
+
+                console.log(
+                    "🎧 APRISHA AUDIO INPUT ACTIVE"
+                );
+
+
+                setState(
+                    "Listening",
+                    "I can hear your microphone…"
+                );
+            };
+
+
+        recognition.onsoundstart =
+            () => {
+
+                console.log(
+                    "🔊 APRISHA SOUND DETECTED"
                 );
             };
 
@@ -1475,115 +1537,80 @@
         recognition.onspeechstart =
             () => {
 
-                heardSpeech =
-                    true;
+                console.log(
+                    "🗣️ APRISHA SPEECH DETECTED"
+                );
 
 
                 setState(
                     "Listening",
-                    "Go ahead…"
+                    "I hear you…"
                 );
             };
 
 
+        /* ====================================================
+           RESULT
+           ==================================================== */
+
         recognition.onresult =
             event => {
 
-                /*
-                 * Reconstruct the ENTIRE recognition result.
-                 * This is much more reliable than only reading
-                 * event.resultIndex on Android Chrome.
-                 */
+                try {
 
-                let full =
-                    "";
-
-
-                let hasFinal =
-                    false;
+                    heardText =
+                        event.results?.[0]?.[0]
+                            ?.transcript
+                            ?.trim()
+                        ||
+                        "";
 
 
-                for (
-                    let index = 0;
-                    index <
-                    event.results.length;
-                    index++
-                ) {
-
-                    const result =
-                        event.results[index];
+                    console.log(
+                        "✅ APRISHA TRANSCRIPT:",
+                        heardText
+                    );
 
 
                     if (
-                        result &&
-                        result[0] &&
-                        result[0].transcript
+                        !heardText
                     ) {
-
-                        full +=
-                            (
-                                full
-                                    ? " "
-                                    : ""
-                            )
-                            +
-                            result[0]
-                                .transcript;
+                        return;
                     }
 
 
-                    if (
-                        result.isFinal
-                    ) {
-
-                        hasFinal =
-                            true;
-                    }
-                }
-
-
-                transcript =
-                    full.trim();
-
-
-                if (
-                    transcript
-                ) {
-
-                    heardSpeech =
+                    completed =
                         true;
 
 
+                    state.commandActive =
+                        false;
+
+
+                    if (
+                        state.commandRecognition ===
+                        recognition
+                    ) {
+
+                        state.commandRecognition =
+                            null;
+                    }
+
+
                     setTranscript(
-                        transcript
+                        heardText
                     );
 
 
                     setState(
-                        "Listening",
-                        transcript
-                    );
-                }
-
-
-                if (
-                    hasFinal &&
-                    transcript &&
-                    !commandExecuted
-                ) {
-
-                    commandExecuted =
-                        true;
-
-
-                    console.log(
-                        "✅ APRISHA HEARD:",
-                        transcript
+                        "Heard",
+                        heardText
                     );
 
 
                     /*
-                     * Stop recognizer before calling AP Synapse.
+                     * Prevent onend from starting another
+                     * recognizer after a successful result.
                      */
 
                     recognition.onend =
@@ -1594,14 +1621,6 @@
                         null;
 
 
-                    state.commandActive =
-                        false;
-
-
-                    state.commandRecognition =
-                        null;
-
-
                     try {
 
                         recognition.stop();
@@ -1610,36 +1629,41 @@
                     catch {}
 
 
-                    executeCommand(
-                        transcript
+                    /*
+                     * Tiny release time before AP intelligence.
+                     */
+
+                    setTimeout(
+                        () => {
+
+                            console.log(
+                                "⚡ APRISHA EXECUTING:",
+                                heardText
+                            );
+
+
+                            executeCommand(
+                                heardText
+                            );
+
+                        },
+                        120
+                    );
+
+                }
+                catch (error) {
+
+                    console.error(
+                        "APRISHA RESULT ERROR:",
+                        error
                     );
                 }
             };
 
 
-        recognition.onspeechend =
-            () => {
-
-                /*
-                 * Android sometimes provides a useful interim
-                 * transcript but never marks it final.
-                 * Calling stop() asks Chrome to finalize it.
-                 */
-
-                if (
-                    transcript &&
-                    !commandExecuted
-                ) {
-
-                    try {
-
-                        recognition.stop();
-
-                    }
-                    catch {}
-                }
-            };
-
+        /* ====================================================
+           ERROR
+           ==================================================== */
 
         recognition.onerror =
             event => {
@@ -1659,15 +1683,14 @@
 
 
                 console.warn(
-                    "Aprisha recognition:",
+                    "⚠️ APRISHA SPEECH ERROR:",
                     event.error
                 );
 
 
                 if (
-                    commandExecuted
+                    completed
                 ) {
-
                     return;
                 }
 
@@ -1685,17 +1708,15 @@
                     );
 
 
-                    const permissionBar =
+                    const permission =
                         document.getElementById(
                             "apAprishaPermission"
                         );
 
 
-                    if (
-                        permissionBar
-                    ) {
+                    if (permission) {
 
-                        permissionBar.hidden =
+                        permission.hidden =
                             false;
                     }
 
@@ -1704,28 +1725,49 @@
                 }
 
 
+                if (
+                    event.error ===
+                    "audio-capture"
+                ) {
+
+                    setState(
+                        "Microphone unavailable",
+                        "Another application may be using your microphone."
+                    );
+
+
+                    return;
+                }
+
+
                 /*
-                 * Android/Chrome regularly produces
-                 * aborted/network/no-speech during microphone
-                 * transitions. Retry automatically.
+                 * Chrome sometimes produces one temporary
+                 * no-speech / aborted event during microphone
+                 * handoff. Retry cleanly.
                  */
 
                 if (
                     (
                         event.error ===
-                            "aborted" ||
-                        event.error ===
                             "no-speech" ||
+
                         event.error ===
-                            "audio-capture" ||
+                            "aborted" ||
+
                         event.error ===
                             "network"
                     )
                     &&
-                    retryAttempt < 4
+                    retryAttempt < 3
                     &&
                     state.awake
                 ) {
+
+                    console.log(
+                        "↻ APRISHA LISTENER RETRY",
+                        retryAttempt + 1
+                    );
+
 
                     setState(
                         "Listening",
@@ -1734,11 +1776,14 @@
 
 
                     setTimeout(
-                        () =>
-                            startCommandListening(
+                        () => {
+
+                            launchCommandRecognition(
                                 retryAttempt + 1
-                            ),
-                        550
+                            );
+
+                        },
+                        500
                     );
 
 
@@ -1746,12 +1791,24 @@
                 }
 
 
-                continueOrSleep();
+                setState(
+                    "Aprisha",
+                    "I couldn't hear that. Try again."
+                );
             };
 
 
+        /* ====================================================
+           END
+           ==================================================== */
+
         recognition.onend =
             () => {
+
+                console.log(
+                    "🎙️ APRISHA LISTENER ENDED"
+                );
+
 
                 state.commandActive =
                     false;
@@ -1768,71 +1825,40 @@
 
 
                 if (
-                    commandExecuted
+                    completed
                 ) {
-
                     return;
                 }
 
 
                 /*
-                 * IMPORTANT:
-                 * Some mobile browsers return transcript and
-                 * immediately end without an isFinal result.
-                 * Do NOT throw that speech away.
-                 */
-
-                if (
-                    transcript.trim()
-                ) {
-
-                    commandExecuted =
-                        true;
-
-
-                    console.log(
-                        "✅ APRISHA HEARD ON END:",
-                        transcript
-                    );
-
-
-                    executeCommand(
-                        transcript.trim()
-                    );
-
-
-                    return;
-                }
-
-
-                /*
-                 * Nothing was heard.
-                 * Keep listening instead of silently dying.
+                 * If Chrome ended without a result,
+                 * automatically listen again while the
+                 * Aprisha Presence session is alive.
                  */
 
                 if (
                     state.awake &&
                     Date.now() <
-                        state.stayUntil
+                        state.stayUntil &&
+                    retryAttempt < 3
                 ) {
 
                     setState(
                         "Listening",
-                        heardSpeech
-                            ? "Go ahead…"
-                            : "I'm listening…"
+                        "I'm still listening…"
                     );
 
 
                     setTimeout(
-                        () =>
-                            startCommandListening(
-                                Math.min(
-                                    retryAttempt + 1,
-                                    4
-                                )
-                            ),
-                        500
+                        () => {
+
+                            launchCommandRecognition(
+                                retryAttempt + 1
+                            );
+
+                        },
+                        450
                     );
 
 
@@ -1840,11 +1866,28 @@
                 }
 
 
-                continueOrSleep();
+                if (
+                    !heardText
+                ) {
+
+                    setState(
+                        "Aprisha",
+                        "I didn't hear anything."
+                    );
+                }
             };
 
 
+        /* ====================================================
+           START RECOGNITION
+           ==================================================== */
+
         try {
+
+            console.log(
+                "▶ STARTING APRISHA SPEECH RECOGNITION"
+            );
+
 
             recognition.start();
 
@@ -1860,35 +1903,29 @@
 
 
             console.warn(
-                "Aprisha listener start retry:",
+                "APRISHA START ERROR:",
                 error
             );
 
 
             if (
-                retryAttempt < 4 &&
+                retryAttempt < 3 &&
                 state.awake
             ) {
 
                 setTimeout(
-                    () =>
-                        startCommandListening(
+                    () => {
+
+                        launchCommandRecognition(
                             retryAttempt + 1
-                        ),
+                        );
+
+                    },
                     650
-                );
-
-            }
-            else {
-
-                setState(
-                    "Aprisha",
-                    "Tap Speak and try again."
                 );
             }
         }
     }
-
 
     function manualSpeak() {
 

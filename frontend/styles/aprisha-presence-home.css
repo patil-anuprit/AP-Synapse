@@ -1,0 +1,737 @@
+﻿html.ap-presence-open,
+body.ap-presence-open {
+    overflow: hidden !important;
+}
+
+
+#apAprishaPresenceHome {
+    position: fixed;
+    inset: 0;
+
+    z-index: 2147482000;
+
+    display: flex;
+    flex-direction: column;
+
+    width: 100vw;
+    height: 100dvh;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    visibility: hidden;
+    opacity: 0;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            circle at 50% 24%,
+            rgba(209,170,82,.10),
+            transparent 31%
+        ),
+        radial-gradient(
+            circle at 20% 90%,
+            rgba(255,255,255,.025),
+            transparent 30%
+        ),
+        #0b0c0e;
+
+    color: #f5f2eb;
+
+    transition:
+        opacity .22s ease,
+        visibility .22s ease;
+}
+
+
+#apAprishaPresenceHome.ap-visible {
+    visibility: visible;
+    opacity: 1;
+
+    pointer-events: auto;
+}
+
+
+.ap-presence-backdrop {
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            120deg,
+            transparent,
+            rgba(255,255,255,.012),
+            transparent
+        );
+}
+
+
+/* HEADER */
+
+.ap-presence-top {
+    position: relative;
+    z-index: 3;
+
+    flex: 0 0 auto;
+
+    min-height:
+        calc(
+            62px +
+            env(safe-area-inset-top)
+        );
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    padding:
+        env(safe-area-inset-top)
+        18px
+        12px;
+
+    box-sizing: border-box;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.055);
+
+    background:
+        rgba(12,13,15,.72);
+
+    backdrop-filter:
+        blur(24px);
+
+    -webkit-backdrop-filter:
+        blur(24px);
+}
+
+
+.ap-presence-brand {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.ap-presence-logo {
+    width: 34px;
+    height: 34px;
+
+    display: grid;
+    place-items: center;
+
+    border:
+        1px solid
+        rgba(218,180,96,.24);
+
+    border-radius: 10px;
+
+    background:
+        rgba(218,180,96,.055);
+
+    color: #dfba69;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: .08em;
+}
+
+
+.ap-presence-brand strong {
+    display: block;
+
+    font-size: 13px;
+    font-weight: 650;
+}
+
+
+.ap-presence-brand span {
+    display: block;
+
+    margin-top: 2px;
+
+    color:
+        rgba(239,236,228,.38);
+
+    font-size: 8px;
+}
+
+
+.ap-presence-top-actions {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.ap-presence-connection {
+    color:
+        rgba(224,188,109,.72);
+
+    font-size: 8px;
+}
+
+
+#apPresenceClose {
+    width: 32px;
+    height: 32px;
+
+    display: grid;
+    place-items: center;
+
+    padding: 0;
+
+    border:
+        1px solid
+        rgba(255,255,255,.055);
+
+    border-radius: 9px;
+
+    background:
+        rgba(255,255,255,.018);
+
+    color:
+        rgba(245,242,235,.60);
+
+    font-size: 20px;
+
+    cursor: pointer;
+}
+
+
+/* MAIN */
+
+.ap-presence-stage {
+    position: relative;
+
+    z-index: 2;
+
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding:
+        20px;
+
+    box-sizing: border-box;
+
+    overflow-y: auto;
+}
+
+
+.ap-presence-intelligence {
+    width:
+        min(
+            720px,
+            100%
+        );
+
+    text-align: center;
+}
+
+
+/* CORE */
+
+.ap-presence-core {
+    position: relative;
+
+    width: 190px;
+    height: 190px;
+
+    margin:
+        0 auto
+        28px;
+
+    display: grid;
+    place-items: center;
+}
+
+
+.ap-presence-node {
+    position: relative;
+
+    z-index: 4;
+
+    width: 54px;
+    height: 54px;
+
+    display: grid;
+    place-items: center;
+
+    border:
+        1px solid
+        rgba(225,187,101,.33);
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle at 35% 25%,
+            rgba(233,197,116,.24),
+            rgba(31,30,27,.94) 46%,
+            #111214 100%
+        );
+
+    box-shadow:
+        0 0 35px
+        rgba(218,178,92,.13);
+
+    color:
+        #e2bc6b;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: .08em;
+}
+
+
+.ap-presence-ring {
+    position: absolute;
+
+    border:
+        1px solid
+        rgba(215,176,91,.10);
+
+    border-radius: 50%;
+}
+
+
+.ring-1 {
+    width: 84px;
+    height: 84px;
+}
+
+.ring-2 {
+    width: 116px;
+    height: 116px;
+}
+
+.ring-3 {
+    width: 150px;
+    height: 150px;
+}
+
+.ring-4 {
+    width: 186px;
+    height: 186px;
+}
+
+
+/* STATES */
+
+.ap-presence-core[data-mode="listening"]
+.ap-presence-ring {
+    animation:
+        apPresenceListen
+        1.55s ease-in-out
+        infinite;
+}
+
+
+.ap-presence-core[data-mode="listening"]
+.ring-2 {
+    animation-delay: .10s;
+}
+
+
+.ap-presence-core[data-mode="listening"]
+.ring-3 {
+    animation-delay: .20s;
+}
+
+
+.ap-presence-core[data-mode="listening"]
+.ring-4 {
+    animation-delay: .30s;
+}
+
+
+.ap-presence-core[data-mode="thinking"] {
+    animation:
+        apPresenceThink
+        5s linear
+        infinite;
+}
+
+
+.ap-presence-core[data-mode="awake"]
+.ap-presence-node {
+    box-shadow:
+        0 0 50px
+        rgba(218,178,92,.24);
+}
+
+
+.ap-presence-state {
+    color:
+        #dfbc70;
+
+    font-size: 11px;
+    font-weight: 650;
+
+    letter-spacing: .055em;
+}
+
+
+.ap-presence-transcript {
+    width:
+        min(
+            630px,
+            100%
+        );
+
+    max-height: 180px;
+
+    margin:
+        12px auto 0;
+
+    overflow-y: auto;
+
+    color:
+        rgba(246,244,237,.90);
+
+    font-size:
+        clamp(
+            18px,
+            2.5vw,
+            27px
+        );
+
+    font-weight: 450;
+
+    line-height: 1.46;
+}
+
+
+.ap-presence-hint {
+    margin-top: 12px;
+
+    color:
+        rgba(239,235,225,.27);
+
+    font-size: 8px;
+
+    letter-spacing: .09em;
+}
+
+
+.ap-presence-suggestions {
+    width:
+        min(
+            620px,
+            100%
+        );
+
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 34px;
+}
+
+
+.ap-presence-suggestions button {
+    min-height: 36px;
+
+    padding:
+        0 14px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.06);
+
+    border-radius: 999px;
+
+    background:
+        rgba(255,255,255,.018);
+
+    color:
+        rgba(242,239,232,.64);
+
+    font-size: 9px;
+
+    cursor: pointer;
+}
+
+
+/* FOOTER */
+
+.ap-presence-controls {
+    position: relative;
+    z-index: 3;
+
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 16px;
+
+    min-height:
+        calc(
+            94px +
+            env(safe-area-inset-bottom)
+        );
+
+    padding:
+        12px
+        18px
+        calc(
+            12px +
+            env(safe-area-inset-bottom)
+        );
+
+    box-sizing: border-box;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.045);
+
+    background:
+        rgba(10,11,13,.75);
+
+    backdrop-filter:
+        blur(22px);
+
+    -webkit-backdrop-filter:
+        blur(22px);
+}
+
+
+.ap-presence-mic {
+    position: relative;
+
+    width: 58px;
+    height: 58px;
+
+    min-width: 58px;
+
+    display: grid;
+    place-items: center;
+
+    padding: 0;
+
+    border:
+        1px solid
+        rgba(218,179,94,.30);
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle at 35% 25%,
+            rgba(226,189,105,.18),
+            rgba(29,29,27,.97)
+        );
+
+    box-shadow:
+        0 12px 34px
+        rgba(0,0,0,.30);
+
+    cursor: pointer;
+}
+
+
+.ap-presence-mic-symbol {
+    position: relative;
+
+    width: 13px;
+    height: 20px;
+
+    border:
+        1.8px solid
+        #dfba69;
+
+    border-radius:
+        8px;
+}
+
+
+.ap-presence-mic-symbol::before {
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    bottom: -7px;
+
+    width: 21px;
+    height: 13px;
+
+    border:
+        1.6px solid
+        #dfba69;
+
+    border-top: 0;
+
+    border-radius:
+        0 0 11px 11px;
+
+    transform:
+        translateX(-50%);
+}
+
+
+.ap-presence-secondary {
+    min-width: 118px;
+    min-height: 38px;
+
+    padding:
+        0 13px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.06);
+
+    border-radius: 11px;
+
+    background:
+        rgba(255,255,255,.018);
+
+    color:
+        rgba(242,239,231,.64);
+
+    font-size: 9px;
+
+    cursor: pointer;
+}
+
+
+@keyframes apPresenceListen {
+
+    0%,
+    100% {
+        transform: scale(.93);
+        opacity: .25;
+    }
+
+    50% {
+        transform: scale(1.08);
+        opacity: .95;
+    }
+}
+
+
+@keyframes apPresenceThink {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+    .ap-presence-top {
+        padding-left: 13px;
+        padding-right: 13px;
+    }
+
+
+    .ap-presence-stage {
+        justify-content: center;
+
+        padding:
+            14px
+            14px
+            20px;
+    }
+
+
+    .ap-presence-core {
+        width: 152px;
+        height: 152px;
+
+        margin-bottom: 22px;
+    }
+
+
+    .ring-1 {
+        width: 68px;
+        height: 68px;
+    }
+
+    .ring-2 {
+        width: 94px;
+        height: 94px;
+    }
+
+    .ring-3 {
+        width: 122px;
+        height: 122px;
+    }
+
+    .ring-4 {
+        width: 150px;
+        height: 150px;
+    }
+
+
+    .ap-presence-transcript {
+        max-height: 150px;
+
+        font-size: 18px;
+    }
+
+
+    .ap-presence-suggestions {
+        margin-top: 25px;
+    }
+
+
+    .ap-presence-controls {
+        gap: 8px;
+
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+
+    .ap-presence-secondary {
+        flex: 1;
+
+        min-width: 0;
+
+        max-width: 135px;
+
+        padding:
+            0 7px;
+
+        font-size: 8px;
+    }
+
+
+    .ap-presence-mic {
+        width: 54px;
+        height: 54px;
+
+        min-width: 54px;
+    }
+
+
+    .ap-presence-connection {
+        display: none;
+    }
+}

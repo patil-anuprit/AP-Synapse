@@ -1,0 +1,637 @@
+﻿html.ap-vision-open,
+body.ap-vision-open {
+    overflow: hidden !important;
+}
+
+
+#apAprishaVision {
+    position: fixed;
+    inset: 0;
+
+    z-index: 2147483000;
+
+    width: 100vw;
+    height: 100dvh;
+
+    visibility: hidden;
+    opacity: 0;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(213,174,89,.08),
+            transparent 35%
+        ),
+        #090a0c;
+
+    color: #f5f2eb;
+
+    transition:
+        opacity .2s ease,
+        visibility .2s ease;
+}
+
+
+#apAprishaVision.ap-visible {
+    visibility: visible;
+    opacity: 1;
+
+    pointer-events: auto;
+}
+
+
+.ap-vision-shell {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* HEADER */
+
+.ap-vision-header {
+    flex: 0 0 auto;
+
+    min-height:
+        calc(
+            62px +
+            env(safe-area-inset-top)
+        );
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    padding:
+        env(safe-area-inset-top)
+        16px
+        12px;
+
+    box-sizing: border-box;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.055);
+
+    background:
+        rgba(12,13,15,.92);
+
+    backdrop-filter:
+        blur(22px);
+
+    -webkit-backdrop-filter:
+        blur(22px);
+}
+
+
+.ap-vision-brand {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.ap-vision-logo {
+    width: 34px;
+    height: 34px;
+
+    display: grid;
+    place-items: center;
+
+    border:
+        1px solid
+        rgba(219,181,97,.23);
+
+    border-radius: 10px;
+
+    background:
+        rgba(219,181,97,.055);
+
+    color:
+        #dfb96a;
+
+    font-size: 9px;
+    font-weight: 800;
+}
+
+
+.ap-vision-brand strong {
+    display: block;
+
+    font-size: 13px;
+    font-weight: 650;
+}
+
+
+.ap-vision-brand span {
+    display: block;
+
+    margin-top: 2px;
+
+    color:
+        rgba(240,237,228,.38);
+
+    font-size: 8px;
+}
+
+
+#apVisionClose {
+    width: 32px;
+    height: 32px;
+
+    padding: 0;
+
+    border:
+        1px solid
+        rgba(255,255,255,.06);
+
+    border-radius: 9px;
+
+    background:
+        rgba(255,255,255,.018);
+
+    color:
+        rgba(245,242,235,.64);
+
+    font-size: 20px;
+}
+
+
+/* MAIN */
+
+.ap-vision-main {
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0,1.15fr)
+        minmax(340px,.85fr);
+
+    gap: 18px;
+
+    padding: 18px;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+}
+
+
+/* CAMERA */
+
+.ap-vision-camera {
+    position: relative;
+
+    min-width: 0;
+    min-height: 0;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        rgba(255,255,255,.065);
+
+    border-radius: 22px;
+
+    background:
+        #050607;
+}
+
+
+#apVisionVideo,
+#apVisionCapturePreview {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    background:
+        #050607;
+}
+
+
+#apVisionVideo {
+    transform:
+        none;
+}
+
+
+.ap-vision-frame-guide {
+    position: absolute;
+    inset: 22px;
+
+    pointer-events: none;
+}
+
+
+.ap-vision-frame-guide span {
+    position: absolute;
+
+    width: 28px;
+    height: 28px;
+
+    border-color:
+        rgba(222,184,98,.55);
+
+    border-style:
+        solid;
+}
+
+
+.ap-vision-frame-guide .tl {
+    left: 0;
+    top: 0;
+
+    border-width:
+        1px 0 0 1px;
+}
+
+
+.ap-vision-frame-guide .tr {
+    right: 0;
+    top: 0;
+
+    border-width:
+        1px 1px 0 0;
+}
+
+
+.ap-vision-frame-guide .bl {
+    left: 0;
+    bottom: 0;
+
+    border-width:
+        0 0 1px 1px;
+}
+
+
+.ap-vision-frame-guide .br {
+    right: 0;
+    bottom: 0;
+
+    border-width:
+        0 1px 1px 0;
+}
+
+
+.ap-vision-status {
+    position: absolute;
+
+    left: 14px;
+    top: 14px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    padding:
+        7px 10px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    border-radius:
+        999px;
+
+    background:
+        rgba(10,11,13,.72);
+
+    backdrop-filter:
+        blur(14px);
+
+    color:
+        rgba(245,242,235,.74);
+
+    font-size: 8px;
+}
+
+
+.ap-vision-status-dot {
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background:
+        #dcb45e;
+
+    box-shadow:
+        0 0 8px
+        rgba(220,180,94,.6);
+}
+
+
+.ap-vision-status-dot.ap-error {
+    background:
+        #c77c72;
+
+    box-shadow:
+        none;
+}
+
+
+.ap-vision-privacy {
+    position: absolute;
+
+    left: 50%;
+    bottom: 13px;
+
+    transform:
+        translateX(-50%);
+
+    width:
+        max-content;
+
+    max-width:
+        calc(100% - 26px);
+
+    padding:
+        6px 10px;
+
+    border-radius:
+        999px;
+
+    background:
+        rgba(5,6,7,.69);
+
+    color:
+        rgba(245,242,235,.42);
+
+    font-size: 7px;
+}
+
+
+/* INTELLIGENCE */
+
+.ap-vision-intelligence {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding:
+        clamp(
+            18px,
+            4vw,
+            44px
+        );
+
+    box-sizing: border-box;
+
+    border:
+        1px solid
+        rgba(255,255,255,.055);
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(24,25,27,.68),
+            rgba(15,16,18,.88)
+        );
+}
+
+
+.ap-vision-kicker {
+    color:
+        #dcb868;
+
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: .14em;
+}
+
+
+.ap-vision-intelligence h2 {
+    margin:
+        11px 0 12px;
+
+    color:
+        rgba(248,246,239,.96);
+
+    font-size:
+        clamp(
+            24px,
+            3vw,
+            38px
+        );
+
+    font-weight: 520;
+
+    line-height: 1.12;
+}
+
+
+#apVisionAnswer {
+    max-height: 260px;
+
+    overflow-y: auto;
+
+    margin:
+        0 0 20px;
+
+    color:
+        rgba(240,238,231,.68);
+
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+
+#apVisionQuestion {
+    width: 100%;
+
+    min-height: 70px;
+
+    resize: none;
+
+    box-sizing: border-box;
+
+    padding:
+        12px 13px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    border-radius: 12px;
+
+    outline: none;
+
+    background:
+        rgba(255,255,255,.025);
+
+    color:
+        rgba(247,244,237,.90);
+
+    font:
+        inherit;
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+
+#apVisionQuestion:focus {
+    border-color:
+        rgba(220,181,95,.25);
+}
+
+
+.ap-vision-actions {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 12px;
+}
+
+
+.ap-vision-actions button {
+    min-height: 38px;
+
+    padding:
+        0 13px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.065);
+
+    border-radius: 10px;
+
+    background:
+        rgba(255,255,255,.025);
+
+    color:
+        rgba(244,241,234,.67);
+
+    font-size: 9px;
+
+    cursor: pointer;
+}
+
+
+.ap-vision-actions
+.ap-vision-primary {
+    border-color:
+        rgba(220,180,93,.23);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(217,177,91,.13),
+            rgba(217,177,91,.055)
+        );
+
+    color:
+        #e1bd70;
+}
+
+
+.ap-vision-actions button:disabled {
+    opacity: .45;
+
+    cursor: default;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 760px) {
+
+    .ap-vision-main {
+        display: flex;
+        flex-direction: column;
+
+        gap: 10px;
+
+        padding:
+            10px;
+
+        overflow-y: auto;
+    }
+
+
+    .ap-vision-camera {
+        flex:
+            0 0
+            min(
+                46dvh,
+                420px
+            );
+
+        min-height:
+            260px;
+
+        border-radius:
+            17px;
+    }
+
+
+    .ap-vision-intelligence {
+        flex:
+            0 0 auto;
+
+        padding:
+            18px 15px
+            calc(
+                18px +
+                env(safe-area-inset-bottom)
+            );
+
+        border-radius:
+            17px;
+    }
+
+
+    .ap-vision-intelligence h2 {
+        font-size:
+            23px;
+    }
+
+
+    #apVisionAnswer {
+        max-height:
+            none;
+
+        font-size:
+            12.5px;
+    }
+
+
+    .ap-vision-actions {
+        display: grid;
+
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+
+    .ap-vision-actions button {
+        width:
+            100%;
+    }
+
+
+    .ap-vision-frame-guide {
+        inset:
+            15px;
+    }
+
+}

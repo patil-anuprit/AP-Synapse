@@ -1,0 +1,946 @@
+﻿/* ============================================================
+   AP SYNAPSE — SHARED CONVERSATION FOCUS VIEW
+   Mobile + Desktop
+   ============================================================ */
+
+html:has(body.ap-shared-conversation-view),
+body.ap-shared-conversation-view {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background:
+        radial-gradient(
+            circle at 50% -20%,
+            rgba(201, 162, 79, .075),
+            transparent 36%
+        ),
+        #0b0c0e;
+}
+
+
+/* ============================================================
+   REMOVE NORMAL WORKSPACE CHROME
+   ============================================================ */
+
+body.ap-shared-conversation-view .sidebar,
+body.ap-shared-conversation-view #sidebar,
+body.ap-shared-conversation-view .topbar,
+body.ap-shared-conversation-view .top-bar,
+body.ap-shared-conversation-view .app-topbar,
+body.ap-shared-conversation-view .global-search,
+body.ap-shared-conversation-view #conversationNavigator,
+body.ap-shared-conversation-view .conversation-navigator,
+body.ap-shared-conversation-view #heroScreen,
+body.ap-shared-conversation-view .hero-screen {
+    display: none !important;
+}
+
+
+/* ============================================================
+   RESET DESKTOP SIDEBAR OFFSETS
+   ============================================================ */
+
+body.ap-shared-conversation-view .workspace,
+body.ap-shared-conversation-view .workspace-main,
+body.ap-shared-conversation-view .workspace-content,
+body.ap-shared-conversation-view .main-content,
+body.ap-shared-conversation-view main {
+    width: 100% !important;
+    max-width: none !important;
+
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+
+/* ============================================================
+   DEDICATED SHARED HEADER
+   ============================================================ */
+
+#apSharedConversationHeader {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    z-index: 15000;
+
+    height: 64px;
+
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding:
+        env(safe-area-inset-top)
+        18px
+        0;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.065);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(15,16,18,.985),
+            rgba(11,12,14,.965)
+        );
+
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,.22);
+}
+
+
+.ap-shared-header-inner {
+    width: min(940px, 100%);
+
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    min-width: 0;
+}
+
+
+.ap-shared-brand {
+    width: 34px;
+    height: 34px;
+
+    flex: 0 0 34px;
+
+    display: grid;
+    place-items: center;
+
+    border:
+        1px solid rgba(222,186,106,.30);
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(218,179,92,.13),
+            rgba(255,255,255,.025)
+        );
+
+    color: #e1bd70;
+
+    font-size: 11px;
+    font-weight: 760;
+    letter-spacing: .04em;
+}
+
+
+.ap-shared-heading {
+    min-width: 0;
+    flex: 1;
+}
+
+
+.ap-shared-heading-top {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    min-width: 0;
+}
+
+
+#apSharedConversationTitle {
+    overflow: hidden;
+
+    color: rgba(248,246,240,.94);
+
+    font-size: 13px;
+    font-weight: 640;
+
+    line-height: 1.25;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.ap-shared-live-pill {
+    flex: 0 0 auto;
+
+    display: inline-flex;
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 3px 7px;
+
+    border:
+        1px solid rgba(216,177,88,.18);
+
+    border-radius: 999px;
+
+    background:
+        rgba(216,177,88,.055);
+
+    color:
+        rgba(231,199,126,.92);
+
+    font-size: 8px;
+    font-weight: 760;
+
+    letter-spacing: .10em;
+}
+
+
+.ap-shared-live-dot {
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: #dcb45d;
+
+    box-shadow:
+        0 0 10px rgba(220,180,93,.68);
+}
+
+
+.ap-shared-subtitle {
+    margin-top: 3px;
+
+    overflow: hidden;
+
+    color:
+        rgba(236,233,225,.42);
+
+    font-size: 9px;
+    font-weight: 500;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.ap-shared-header-status {
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    color:
+        rgba(237,234,225,.45);
+
+    font-size: 9px;
+    white-space: nowrap;
+}
+
+
+.ap-shared-status-dot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #71a884;
+}
+
+
+/* ============================================================
+   ASSISTANT / CONVERSATION SURFACE
+   ============================================================ */
+
+body.ap-shared-conversation-view #assistantPage {
+    display: block !important;
+
+    position: relative !important;
+
+    width: 100% !important;
+    max-width: none !important;
+
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    pointer-events: auto !important;
+
+    background: transparent !important;
+}
+
+
+body.ap-shared-conversation-view #chatWindow {
+    display: block !important;
+
+    width: min(940px, 100%) !important;
+    max-width: 940px !important;
+
+    height: 100dvh !important;
+
+    margin: 0 auto !important;
+
+    padding:
+        calc(86px + env(safe-area-inset-top))
+        28px
+        calc(140px + env(safe-area-inset-bottom))
+        !important;
+
+    box-sizing: border-box !important;
+
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+
+    overscroll-behavior-y: contain;
+
+    scrollbar-gutter: stable;
+
+    background: transparent !important;
+
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    scroll-behavior: auto !important;
+}
+
+
+/* ============================================================
+   MESSAGE ROWS
+   ============================================================ */
+
+body.ap-shared-conversation-view #chatWindow > * {
+    min-width: 0;
+}
+
+
+body.ap-shared-conversation-view .message,
+body.ap-shared-conversation-view .assistant-message,
+body.ap-shared-conversation-view .ai-message,
+body.ap-shared-conversation-view .bot-message,
+body.ap-shared-conversation-view .user-message {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    min-width: 0 !important;
+
+    box-sizing: border-box;
+
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+
+body.ap-shared-conversation-view .message {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+
+/* ============================================================
+   AP SYNAPSE RESPONSE
+   ============================================================ */
+
+body.ap-shared-conversation-view
+:is(
+    .message.ai,
+    .message.assistant,
+    .assistant-message,
+    .ai-message,
+    .bot-message,
+    [data-role="assistant"]
+) {
+    margin:
+        0 0 25px !important;
+}
+
+
+body.ap-shared-conversation-view
+:is(
+    .message.ai,
+    .message.assistant,
+    .assistant-message,
+    .ai-message,
+    .bot-message,
+    [data-role="assistant"]
+)
+:is(.message-body),
+body.ap-shared-conversation-view
+:is(
+    .message.ai,
+    .message.assistant,
+    .assistant-message,
+    .ai-message,
+    .bot-message,
+    [data-role="assistant"]
+)
+.message-body,
+body.ap-shared-conversation-view
+:is(
+    .message.ai,
+    .message.assistant,
+    .assistant-message,
+    .ai-message,
+    .bot-message,
+    [data-role="assistant"]
+)
+.message-content,
+body.ap-shared-conversation-view
+:is(
+    .message.ai,
+    .message.assistant,
+    .assistant-message,
+    .ai-message,
+    .bot-message,
+    [data-role="assistant"]
+)
+.response-content {
+    min-width: 0 !important;
+    max-width: 100% !important;
+
+    color:
+        rgba(244,242,236,.90) !important;
+
+    font-size: 14px;
+    line-height: 1.72;
+}
+
+
+/* ============================================================
+   USER MESSAGE
+   ============================================================ */
+
+body.ap-shared-conversation-view
+:is(
+    .message.user,
+    .user-message,
+    [data-role="user"]
+) {
+    display: flex !important;
+    justify-content: flex-end !important;
+
+    margin:
+        6px 0 24px !important;
+}
+
+
+body.ap-shared-conversation-view
+:is(
+    .message.user,
+    .user-message,
+    [data-role="user"]
+)
+:is(
+    .message-body,
+    .message-content
+) {
+    width: auto !important;
+
+    max-width: min(76%, 670px) !important;
+
+    padding:
+        11px 15px !important;
+
+    border:
+        1px solid rgba(255,255,255,.065) !important;
+
+    border-radius:
+        17px 17px 5px 17px !important;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(37,38,41,.96),
+            rgba(29,30,33,.96)
+        ) !important;
+
+    color:
+        rgba(249,247,242,.92) !important;
+
+    box-shadow:
+        0 8px 24px rgba(0,0,0,.12);
+}
+
+
+/* ============================================================
+   TEXT
+   ============================================================ */
+
+body.ap-shared-conversation-view
+.message-body p,
+body.ap-shared-conversation-view
+.message-content p,
+body.ap-shared-conversation-view
+.response-content p {
+    max-width: 100%;
+
+    margin-top: 0;
+    margin-bottom: .90em;
+
+    overflow-wrap: anywhere;
+}
+
+
+body.ap-shared-conversation-view
+.message-body h1,
+body.ap-shared-conversation-view
+.message-body h2,
+body.ap-shared-conversation-view
+.message-body h3,
+body.ap-shared-conversation-view
+.message-content h1,
+body.ap-shared-conversation-view
+.message-content h2,
+body.ap-shared-conversation-view
+.message-content h3 {
+    max-width: 100%;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ============================================================
+   LINKS
+   ============================================================ */
+
+body.ap-shared-conversation-view
+#chatWindow a {
+    max-width: 100%;
+
+    color: #dfbd72 !important;
+
+    text-decoration-color:
+        rgba(223,189,114,.40);
+
+    text-underline-offset: 3px;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+
+body.ap-shared-conversation-view
+#chatWindow table {
+    display: block;
+
+    width: 100%;
+    max-width: 100%;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    -webkit-overflow-scrolling: touch;
+
+    border-collapse: collapse;
+
+    white-space: normal;
+}
+
+
+/* ============================================================
+   CODE
+   ============================================================ */
+
+body.ap-shared-conversation-view
+#chatWindow pre {
+    width: 100%;
+    max-width: 100%;
+
+    box-sizing: border-box;
+
+    overflow-x: auto !important;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+
+body.ap-shared-conversation-view
+#chatWindow code {
+    max-width: 100%;
+}
+
+
+/* ============================================================
+   MEDIA
+   ============================================================ */
+
+body.ap-shared-conversation-view
+#chatWindow img,
+body.ap-shared-conversation-view
+#chatWindow video,
+body.ap-shared-conversation-view
+#chatWindow canvas,
+body.ap-shared-conversation-view
+#chatWindow svg {
+    max-width: 100% !important;
+
+    height: auto;
+
+    object-fit: contain;
+}
+
+
+/* ============================================================
+   RESPONSE ACTIONS
+   ============================================================ */
+
+body.ap-shared-conversation-view
+.ap-response-actions,
+body.ap-shared-conversation-view
+.ap-final-response-actions,
+body.ap-shared-conversation-view
+.message-actions {
+    max-width: 100%;
+
+    flex-wrap: wrap;
+}
+
+
+/* ============================================================
+   THINKING
+   ============================================================ */
+
+body.ap-shared-conversation-view #thinking {
+    position: fixed !important;
+
+    left: 50% !important;
+    bottom:
+        calc(
+            102px +
+            env(safe-area-inset-bottom)
+        ) !important;
+
+    z-index: 14000;
+
+    transform:
+        translateX(-50%) !important;
+
+    width: auto !important;
+    max-width:
+        calc(100vw - 32px);
+
+    margin: 0 !important;
+}
+
+
+/* ============================================================
+   SHARED COMPOSER
+   JS marks exact composer parent.
+   ============================================================ */
+
+body.ap-shared-conversation-view
+.ap-shared-composer-host {
+    position: fixed !important;
+
+    left: 50% !important;
+
+    bottom:
+        calc(
+            14px +
+            env(safe-area-inset-bottom)
+        ) !important;
+
+    z-index: 14500 !important;
+
+    transform:
+        translateX(-50%) !important;
+
+    width:
+        min(
+            880px,
+            calc(100vw - 32px)
+        ) !important;
+
+    max-width: 880px !important;
+
+    box-sizing: border-box !important;
+
+    margin: 0 !important;
+}
+
+
+/* ============================================================
+   JUMP TO LATEST
+   remains manual — NO AUTO SCROLL
+   ============================================================ */
+
+body.ap-shared-conversation-view
+#jumpToLatestBtn {
+    position: fixed !important;
+
+    right:
+        max(
+            20px,
+            env(safe-area-inset-right)
+        ) !important;
+
+    bottom:
+        calc(
+            104px +
+            env(safe-area-inset-bottom)
+        ) !important;
+
+    z-index: 14400 !important;
+}
+
+
+/* ============================================================
+   DESKTOP
+   ============================================================ */
+
+@media (min-width: 1100px) {
+
+    body.ap-shared-conversation-view
+    #chatWindow {
+        padding-left: 36px !important;
+        padding-right: 36px !important;
+    }
+
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    #apSharedConversationHeader {
+        height:
+            calc(
+                58px +
+                env(safe-area-inset-top)
+            );
+
+        padding:
+            env(safe-area-inset-top)
+            12px
+            0;
+    }
+
+
+    .ap-shared-header-inner {
+        gap: 10px;
+    }
+
+
+    .ap-shared-brand {
+        width: 30px;
+        height: 30px;
+
+        flex-basis: 30px;
+
+        border-radius: 9px;
+
+        font-size: 9px;
+    }
+
+
+    #apSharedConversationTitle {
+        font-size: 11.5px;
+    }
+
+
+    .ap-shared-subtitle {
+        font-size: 8px;
+    }
+
+
+    .ap-shared-header-status {
+        display: none;
+    }
+
+
+    .ap-shared-live-pill {
+        padding:
+            2px 5px;
+
+        font-size: 7px;
+    }
+
+
+    body.ap-shared-conversation-view
+    #chatWindow {
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        padding:
+            calc(
+                76px +
+                env(safe-area-inset-top)
+            )
+            14px
+            calc(
+                126px +
+                env(safe-area-inset-bottom)
+            )
+            !important;
+
+        scrollbar-gutter: auto;
+    }
+
+
+    body.ap-shared-conversation-view
+    :is(
+        .message.ai,
+        .message.assistant,
+        .assistant-message,
+        .ai-message,
+        .bot-message,
+        [data-role="assistant"]
+    ) {
+        margin-bottom:
+            20px !important;
+    }
+
+
+    body.ap-shared-conversation-view
+    :is(
+        .message.user,
+        .user-message,
+        [data-role="user"]
+    )
+    :is(
+        .message-body,
+        .message-content
+    ) {
+        max-width:
+            88% !important;
+
+        padding:
+            10px 13px !important;
+
+        border-radius:
+            15px 15px 4px 15px
+            !important;
+
+        font-size:
+            13px !important;
+
+        line-height:
+            1.55 !important;
+    }
+
+
+    body.ap-shared-conversation-view
+    :is(
+        .message.ai,
+        .message.assistant,
+        .assistant-message,
+        .ai-message,
+        .bot-message,
+        [data-role="assistant"]
+    )
+    :is(
+        .message-body,
+        .message-content,
+        .response-content
+    ) {
+        font-size:
+            13.4px !important;
+
+        line-height:
+            1.67 !important;
+    }
+
+
+    body.ap-shared-conversation-view
+    .avatar {
+        width: 27px !important;
+        height: 27px !important;
+
+        min-width: 27px !important;
+
+        font-size: 8px !important;
+    }
+
+
+    body.ap-shared-conversation-view
+    .ap-shared-composer-host {
+        width:
+            calc(
+                100vw -
+                20px
+            ) !important;
+
+        bottom:
+            calc(
+                8px +
+                env(safe-area-inset-bottom)
+            ) !important;
+    }
+
+
+    body.ap-shared-conversation-view
+    #jumpToLatestBtn {
+        right: 12px !important;
+
+        bottom:
+            calc(
+                94px +
+                env(safe-area-inset-bottom)
+            ) !important;
+    }
+
+
+    body.ap-shared-conversation-view
+    #chatWindow pre {
+        border-radius:
+            11px !important;
+
+        font-size:
+            11.5px !important;
+    }
+
+}
+
+
+/* ============================================================
+   VERY SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 380px) {
+
+    body.ap-shared-conversation-view
+    #chatWindow {
+        padding-left:
+            11px !important;
+
+        padding-right:
+            11px !important;
+    }
+
+
+    body.ap-shared-conversation-view
+    :is(
+        .message.user,
+        .user-message,
+        [data-role="user"]
+    )
+    :is(
+        .message-body,
+        .message-content
+    ) {
+        max-width:
+            91% !important;
+    }
+
+}

@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
     "use strict";
 
     /* =========================================================
@@ -1132,10 +1132,19 @@
         immediateCommand = ""
     ) {
 
-        if (state.awake) {
+        if (
+            state.awake ||
+            state.thinking
+        ) {
             return;
         }
 
+
+        /*
+         * Completely release the wake recognizer first.
+         * Chrome/Android can otherwise keep the microphone
+         * attached to the old SpeechRecognition session.
+         */
 
         stopWakeListening();
 
@@ -1144,9 +1153,13 @@
             true;
 
 
+        state.commandActive =
+            false;
+
+
         state.stayUntil =
             Date.now() +
-            45000;
+            60000;
 
 
         openSiri();
@@ -1164,9 +1177,22 @@
         feedback();
 
 
+        /*
+         * Give Chrome a moment to release wake recognition.
+         */
+
+        await new Promise(
+            resolve =>
+                setTimeout(
+                    resolve,
+                    250
+                )
+        );
+
+
         if (
             immediateCommand &&
-            immediateCommand.length > 2
+            immediateCommand.trim().length > 2
         ) {
 
             await speak(
@@ -1174,8 +1200,17 @@
             );
 
 
+            await new Promise(
+                resolve =>
+                    setTimeout(
+                        resolve,
+                        260
+                    )
+            );
+
+
             executeCommand(
-                immediateCommand
+                immediateCommand.trim()
             );
 
 
@@ -1183,17 +1218,46 @@
         }
 
 
+        /*
+         * Speak first.
+         * The new speak() always resolves even when
+         * Chrome fails to fire SpeechSynthesis onend.
+         */
+
         await speak(
             "How can I help?"
         );
 
 
-        setTimeout(
-            startCommandListening,
-            180
-        );
-    }
+        /*
+         * Critical microphone handoff delay.
+         */
 
+        await new Promise(
+            resolve =>
+                setTimeout(
+                    resolve,
+                    420
+                )
+        );
+
+
+        if (
+            !state.awake ||
+            state.thinking
+        ) {
+            return;
+        }
+
+
+        setState(
+            "Listening",
+            "I'm listening…"
+        );
+
+
+        startCommandListening();
+    }
 
     /* =========================================================
        COMMAND LISTENER
@@ -1218,55 +1282,139 @@
         }
 
 
+        recognition.onstart =
+            null;
+
+        recognition.onresult =
+            null;
+
+        recognition.onspeechstart =
+            null;
+
+        recognition.onspeechend =
+            null;
+
         recognition.onend =
+            null;
+
+        recognition.onerror =
             null;
 
 
         try {
+
             recognition.stop();
+
         }
         catch {}
 
 
         try {
+
             recognition.abort();
+
         }
         catch {}
     }
 
 
-    function startCommandListening() {
+    function startCommandListening(
+        retryAttempt = 0
+    ) {
 
         if (
             !SpeechRecognition ||
-            state.commandActive ||
-            state.thinking
+            state.thinking ||
+            !state.awake ||
+            document.hidden
         ) {
+
             return;
         }
 
 
+        /*
+         * Never let wake recognition compete for microphone.
+         */
+
         stopWakeListening();
-        stopCommandListening();
+
+
+        if (
+            state.commandRecognition
+        ) {
+
+            stopCommandListening();
+        }
 
 
         openSiri();
 
 
-        state.awake =
-            true;
+        setTranscript("");
 
 
-        state.stayUntil =
-            Math.max(
-                state.stayUntil,
-                Date.now() +
-                45000
+        /*
+         * Small handoff period is important on Android Chrome.
+         */
+
+        setTimeout(
+            () =>
+                launchCommandRecognition(
+                    retryAttempt
+                ),
+            retryAttempt === 0
+                ? 220
+                : 500
+        );
+    }
+
+
+    function launchCommandRecognition(
+        retryAttempt = 0
+    ) {
+
+        if (
+            !state.awake ||
+            state.thinking ||
+            document.hidden
+        ) {
+
+            return;
+        }
+
+
+        /*
+         * Another recognizer may already have successfully
+         * started while a retry timer was waiting.
+         */
+
+        if (
+            state.commandActive
+        ) {
+
+            return;
+        }
+
+
+        let recognition;
+
+
+        try {
+
+            recognition =
+                new SpeechRecognition();
+
+        }
+        catch (error) {
+
+            console.error(
+                "Aprisha recognition creation:",
+                error
             );
 
-
-        const recognition =
-            new SpeechRecognition();
+            return;
+        }
 
 
         state.commandRecognition =
@@ -1290,6 +1438,18 @@
             "en-IN";
 
 
+        let transcript =
+            "";
+
+
+        let commandExecuted =
+            false;
+
+
+        let heardSpeech =
+            false;
+
+
         recognition.onstart =
             () => {
 
@@ -1299,70 +1459,184 @@
 
                 setState(
                     "Listening",
-                    "Go ahead…"
+                    "I'm listening…"
                 );
 
 
                 setTranscript("");
+
+
+                console.log(
+                    "🎙️ APRISHA COMMAND LISTENER ACTIVE"
+                );
+            };
+
+
+        recognition.onspeechstart =
+            () => {
+
+                heardSpeech =
+                    true;
+
+
+                setState(
+                    "Listening",
+                    "Go ahead…"
+                );
             };
 
 
         recognition.onresult =
             event => {
 
-                let text =
+                /*
+                 * Reconstruct the ENTIRE recognition result.
+                 * This is much more reliable than only reading
+                 * event.resultIndex on Android Chrome.
+                 */
+
+                let full =
                     "";
 
-                let final =
+
+                let hasFinal =
                     false;
 
 
                 for (
-                    let index =
-                        event.resultIndex;
-
+                    let index = 0;
                     index <
                     event.results.length;
-
                     index++
                 ) {
 
-                    text +=
-                        " " +
-                        event.results[index][0]
-                            .transcript;
+                    const result =
+                        event.results[index];
 
 
                     if (
-                        event.results[index]
-                            .isFinal
+                        result &&
+                        result[0] &&
+                        result[0].transcript
                     ) {
 
-                        final =
+                        full +=
+                            (
+                                full
+                                    ? " "
+                                    : ""
+                            )
+                            +
+                            result[0]
+                                .transcript;
+                    }
+
+
+                    if (
+                        result.isFinal
+                    ) {
+
+                        hasFinal =
                             true;
                     }
                 }
 
 
-                text =
-                    text.trim();
-
-
-                setTranscript(
-                    text
-                );
+                transcript =
+                    full.trim();
 
 
                 if (
-                    final &&
-                    text
+                    transcript
                 ) {
 
-                    stopCommandListening();
+                    heardSpeech =
+                        true;
+
+
+                    setTranscript(
+                        transcript
+                    );
+
+
+                    setState(
+                        "Listening",
+                        transcript
+                    );
+                }
+
+
+                if (
+                    hasFinal &&
+                    transcript &&
+                    !commandExecuted
+                ) {
+
+                    commandExecuted =
+                        true;
+
+
+                    console.log(
+                        "✅ APRISHA HEARD:",
+                        transcript
+                    );
+
+
+                    /*
+                     * Stop recognizer before calling AP Synapse.
+                     */
+
+                    recognition.onend =
+                        null;
+
+
+                    recognition.onerror =
+                        null;
+
+
+                    state.commandActive =
+                        false;
+
+
+                    state.commandRecognition =
+                        null;
+
+
+                    try {
+
+                        recognition.stop();
+
+                    }
+                    catch {}
+
 
                     executeCommand(
-                        text
+                        transcript
                     );
+                }
+            };
+
+
+        recognition.onspeechend =
+            () => {
+
+                /*
+                 * Android sometimes provides a useful interim
+                 * transcript but never marks it final.
+                 * Calling stop() asks Chrome to finalize it.
+                 */
+
+                if (
+                    transcript &&
+                    !commandExecuted
+                ) {
+
+                    try {
+
+                        recognition.stop();
+
+                    }
+                    catch {}
                 }
             };
 
@@ -1375,22 +1649,101 @@
 
 
                 if (
-                    event.error ===
-                    "no-speech" ||
-                    event.error ===
-                    "aborted"
+                    state.commandRecognition ===
+                    recognition
                 ) {
 
-                    continueOrSleep();
+                    state.commandRecognition =
+                        null;
+                }
+
+
+                console.warn(
+                    "Aprisha recognition:",
+                    event.error
+                );
+
+
+                if (
+                    commandExecuted
+                ) {
 
                     return;
                 }
 
 
-                setState(
-                    "Aprisha",
-                    "I didn't catch that."
-                );
+                if (
+                    event.error ===
+                        "not-allowed" ||
+                    event.error ===
+                        "service-not-allowed"
+                ) {
+
+                    setState(
+                        "Microphone permission needed",
+                        "Allow microphone access for Aprisha."
+                    );
+
+
+                    const permissionBar =
+                        document.getElementById(
+                            "apAprishaPermission"
+                        );
+
+
+                    if (
+                        permissionBar
+                    ) {
+
+                        permissionBar.hidden =
+                            false;
+                    }
+
+
+                    return;
+                }
+
+
+                /*
+                 * Android/Chrome regularly produces
+                 * aborted/network/no-speech during microphone
+                 * transitions. Retry automatically.
+                 */
+
+                if (
+                    (
+                        event.error ===
+                            "aborted" ||
+                        event.error ===
+                            "no-speech" ||
+                        event.error ===
+                            "audio-capture" ||
+                        event.error ===
+                            "network"
+                    )
+                    &&
+                    retryAttempt < 4
+                    &&
+                    state.awake
+                ) {
+
+                    setState(
+                        "Listening",
+                        "I'm listening…"
+                    );
+
+
+                    setTimeout(
+                        () =>
+                            startCommandListening(
+                                retryAttempt + 1
+                            ),
+                        550
+                    );
+
+
+                    return;
+                }
 
 
                 continueOrSleep();
@@ -1402,6 +1755,92 @@
 
                 state.commandActive =
                     false;
+
+
+                if (
+                    state.commandRecognition ===
+                    recognition
+                ) {
+
+                    state.commandRecognition =
+                        null;
+                }
+
+
+                if (
+                    commandExecuted
+                ) {
+
+                    return;
+                }
+
+
+                /*
+                 * IMPORTANT:
+                 * Some mobile browsers return transcript and
+                 * immediately end without an isFinal result.
+                 * Do NOT throw that speech away.
+                 */
+
+                if (
+                    transcript.trim()
+                ) {
+
+                    commandExecuted =
+                        true;
+
+
+                    console.log(
+                        "✅ APRISHA HEARD ON END:",
+                        transcript
+                    );
+
+
+                    executeCommand(
+                        transcript.trim()
+                    );
+
+
+                    return;
+                }
+
+
+                /*
+                 * Nothing was heard.
+                 * Keep listening instead of silently dying.
+                 */
+
+                if (
+                    state.awake &&
+                    Date.now() <
+                        state.stayUntil
+                ) {
+
+                    setState(
+                        "Listening",
+                        heardSpeech
+                            ? "Go ahead…"
+                            : "I'm listening…"
+                    );
+
+
+                    setTimeout(
+                        () =>
+                            startCommandListening(
+                                Math.min(
+                                    retryAttempt + 1,
+                                    4
+                                )
+                            ),
+                        500
+                    );
+
+
+                    return;
+                }
+
+
+                continueOrSleep();
             };
 
 
@@ -1410,25 +1849,77 @@
             recognition.start();
 
         }
-        catch {
+        catch (error) {
 
-            continueOrSleep();
+            state.commandActive =
+                false;
+
+
+            state.commandRecognition =
+                null;
+
+
+            console.warn(
+                "Aprisha listener start retry:",
+                error
+            );
+
+
+            if (
+                retryAttempt < 4 &&
+                state.awake
+            ) {
+
+                setTimeout(
+                    () =>
+                        startCommandListening(
+                            retryAttempt + 1
+                        ),
+                    650
+                );
+
+            }
+            else {
+
+                setState(
+                    "Aprisha",
+                    "Tap Speak and try again."
+                );
+            }
         }
     }
 
 
     function manualSpeak() {
 
+        /*
+         * Manual microphone button must always work,
+         * even if the wake listener is currently active.
+         */
+
+        stopWakeListening();
+
+
         state.awake =
             true;
+
+
+        state.stayUntil =
+            Date.now() +
+            60000;
 
 
         openSiri();
 
 
+        setState(
+            "Listening",
+            "I'm listening…"
+        );
+
+
         startCommandListening();
     }
-
 
     /* =========================================================
        AP SYNAPSE ACTION ENGINE
@@ -2623,7 +3114,14 @@
         return new Promise(
             resolve => {
 
+                const spokenText =
+                    cleanForSpeech(
+                        text
+                    );
+
+
                 if (
+                    !spokenText ||
                     !(
                         "speechSynthesis"
                         in window
@@ -2636,15 +3134,56 @@
                 }
 
 
-                window.speechSynthesis
-                    .cancel();
+                let finished =
+                    false;
+
+
+                let safetyTimer =
+                    null;
+
+
+                const finish =
+                    () => {
+
+                        if (
+                            finished
+                        ) {
+
+                            return;
+                        }
+
+
+                        finished =
+                            true;
+
+
+                        if (
+                            safetyTimer
+                        ) {
+
+                            clearTimeout(
+                                safetyTimer
+                            );
+                        }
+
+
+                        resolve();
+                    };
+
+
+                try {
+
+                    window
+                        .speechSynthesis
+                        .cancel();
+
+                }
+                catch {}
 
 
                 const speech =
                     new SpeechSynthesisUtterance(
-                        cleanForSpeech(
-                            text
-                        )
+                        spokenText
                     );
 
 
@@ -2666,21 +3205,88 @@
 
 
                 speech.onend =
-                    resolve;
+                    finish;
 
 
                 speech.onerror =
-                    resolve;
+                    finish;
 
 
-                window.speechSynthesis
-                    .speak(
-                        speech
+                /*
+                 * Critical fallback.
+                 *
+                 * Chrome can audibly finish the sentence but
+                 * occasionally omit the onend callback.
+                 * Aprisha must never get stuck because of that.
+                 */
+
+                const estimatedMs =
+                    Math.max(
+                        1800,
+                        Math.min(
+                            60000,
+                            (
+                                spokenText.length *
+                                72
+                            )
+                            +
+                            1200
+                        )
                     );
+
+
+                safetyTimer =
+                    setTimeout(
+                        finish,
+                        estimatedMs
+                    );
+
+
+                /*
+                 * Chrome behaves more reliably when speak()
+                 * is not issued in the same event cycle as
+                 * speechSynthesis.cancel().
+                 */
+
+                setTimeout(
+                    () => {
+
+                        if (
+                            finished
+                        ) {
+
+                            return;
+                        }
+
+
+                        try {
+
+                            window
+                                .speechSynthesis
+                                .speak(
+                                    speech
+                                );
+
+                        }
+                        catch (
+                            error
+                        ) {
+
+                            console.warn(
+                                "Aprisha speech:",
+                                error
+                            );
+
+
+                            finish();
+                        }
+
+                    },
+                    60
+                );
             }
         );
     }
-
 
     /* =========================================================
        FOLLOW-UP MODE

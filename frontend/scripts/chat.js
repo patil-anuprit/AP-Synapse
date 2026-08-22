@@ -119,21 +119,14 @@ console.log("STEP 5");
 
 function scrollChatToBottom(force = false) {
 
-    if (!chatWindow) return;
+    /*
+     * AP SYNAPSE
+     * Automatic chat scrolling intentionally disabled.
+     *
+     * The user controls the conversation position manually.
+     */
 
-    const distance =
-        chatWindow.scrollHeight -
-        chatWindow.scrollTop -
-        chatWindow.clientHeight;
-
-    // Don't pull the user down while they are
-    // reading older messages.
-    if (!force && distance > 180) {
-        return;
-    }
-
-    chatWindow.scrollTop =
-        chatWindow.scrollHeight;
+    return;
 }
 
 console.log("STEP 6");
@@ -228,7 +221,7 @@ function getCurrentConversationMessages() {
 
 }
 // ============================================================
-// AP SYNAPSE — USER MESSAGE ACTIONS
+// AP SYNAPSE ï¿½ USER MESSAGE ACTIONS
 // ============================================================
 
 function createUserMessageActions(messageElement, body) {
@@ -355,7 +348,7 @@ function createUserMessageActions(messageElement, body) {
         );
 
         showToast(
-            "Edit message — press Enter to regenerate"
+            "Edit message ï¿½ press Enter to regenerate"
         );
 
     });
@@ -374,7 +367,7 @@ async function sendMessage() {
 
 
     // ============================================================
-// AP SYNAPSE — CLOSE MOBILE KEYBOARD AFTER SEND
+// AP SYNAPSE ï¿½ CLOSE MOBILE KEYBOARD AFTER SEND
 // ============================================================
 
 if (
@@ -512,7 +505,7 @@ chatWindow.style.setProperty(
 
 
     // =====================================
-    // SAVE USER MESSAGE — EXACTLY ONCE
+    // SAVE USER MESSAGE ï¿½ EXACTLY ONCE
     // =====================================
 
     saveHistoryMessage(
@@ -523,7 +516,7 @@ chatWindow.style.setProperty(
 
 
     // =====================================
-    // SHOW USER MESSAGE — EXACTLY ONCE
+    // SHOW USER MESSAGE ï¿½ EXACTLY ONCE
     // =====================================
 
     addMessage(
@@ -662,7 +655,7 @@ const thinkingInterval =
 
                 headers: {
                     "Content-Type": "application/json",
-                    "x-session-id": getSessionId()
+                    "x-session-id": (window.apLiveRoomId ? `live:${window.apLiveRoomId}` : getSessionId())
                 },
 
                 body: JSON.stringify({
@@ -850,7 +843,7 @@ if (contentType.includes("application/json")) {
 
 
         // =====================================
-// READ STREAM — OPTIMIZED
+// READ STREAM ï¿½ OPTIMIZED
 // =====================================
 
 let rawText = "";
@@ -858,7 +851,7 @@ let renderScheduled = false;
 let streamFinished = false;
 
 // ============================================================
-// AP SYNAPSE — STRUCTURED WEB SOURCES
+// AP SYNAPSE ï¿½ STRUCTURED WEB SOURCES
 // ============================================================
 
 let apSynapseSources = [];
@@ -1017,7 +1010,7 @@ if (finalChunk) {
 }
 
 // =====================================
-// AP SYNAPSE — FINAL RESPONSE RENDER
+// AP SYNAPSE ï¿½ FINAL RESPONSE RENDER
 // =====================================
 
 function renderLinks(text) {
@@ -1047,7 +1040,7 @@ function renderLinks(text) {
 }
 
 // ============================================================
-// AP SYNAPSE — PREMIUM WEB SOURCE CARDS
+// AP SYNAPSE ï¿½ PREMIUM WEB SOURCE CARDS
 // ============================================================
 
 function renderAPSynapseSources(sources) {
@@ -1229,7 +1222,7 @@ scrollChatToBottom(true);
 
 
         // =====================================
-        // SAVE COMPLETE AI RESPONSE — ONCE
+        // SAVE COMPLETE AI RESPONSE ï¿½ ONCE
         // =====================================
 
         const completeAIResponse =
@@ -1380,11 +1373,11 @@ Project created successfully.
 
 What would you like to do first?
 
-• Plan the project
-• Research
-• Write code
-• Create documentation
-• Build a roadmap`
+ï¿½ Plan the project
+ï¿½ Research
+ï¿½ Write code
+ï¿½ Create documentation
+ï¿½ Build a roadmap`
 
     );
 
@@ -1511,13 +1504,13 @@ addMessage(
 
 Type something like:
 
-• Create a futuristic city
+ï¿½ Create a futuristic city
 
-• Draw a solar system
+ï¿½ Draw a solar system
 
-• Generate a medical diagram
+ï¿½ Generate a medical diagram
 
-• Create an AI logo`
+ï¿½ Create an AI logo`
 
 );
 
@@ -1580,7 +1573,7 @@ function downloadImage(url){
 }
 
 // ============================================================
-// AP SYNAPSE — PREMIUM UPLOADED FILE MESSAGE
+// AP SYNAPSE ï¿½ PREMIUM UPLOADED FILE MESSAGE
 // ============================================================
 
 function getUploadType(file) {
@@ -1796,7 +1789,7 @@ function createUploadedFileMessage(file) {
 }
 
 // ============================================================
-// AP SYNAPSE — PREMIUM FILE UPLOAD
+// AP SYNAPSE ï¿½ PREMIUM FILE UPLOAD
 // ============================================================
 
 console.log("ABOUT TO REGISTER FILE EVENT");
@@ -1892,8 +1885,7 @@ fileInput.addEventListener("change", async (event) => {
                     method: "POST",
 
                     headers: {
-                        "x-session-id":
-                            getSessionId()
+                        "x-session-id": (window.apLiveRoomId ? `live:${window.apLiveRoomId}` : getSessionId())
                     },
 
                     body: formData
@@ -2048,98 +2040,189 @@ ${err.message || "Unable to upload the file."}`
 });
 
 // ===============================
-// Read Aloud
+// AP SYNAPSE â€” READ / PAUSE
 // ===============================
-
-document.addEventListener("click", (e) => {
-
-    if (!e.target.classList.contains("speakBtn")) return;
-
-    const text =
-        e.target
-        .closest(".message-body")
-        .innerText
-        .replace("?? Read Aloud","");
-
-    speechSynthesis.cancel();
-
-    const speech = new SpeechSynthesisUtterance(
-    window.APcleanSpeech ? window.APcleanSpeech(text) : text
-    );
-
-    speech.rate = 1;
-
-    speech.pitch = 1;
-
-    speech.volume = 1;
-
-    speech.lang = "en-US";
-
-    speechSynthesis.speak(speech);
-
-});
-
-speakBtn.addEventListener("click", () => {
-
-    if (!lastAIResponse) {
-
-        alert("No AI response available.");
-
-        return;
-
-    }
-
-    speechSynthesis.cancel();
-
-    const speech = new SpeechSynthesisUtterance(
-        window.APcleanSpeech
-            ? window.APcleanSpeech(lastAIResponse)
-            : lastAIResponse
-    );
-
-    speech.lang = "en-US";
-    speech.rate = 1;
-    speech.pitch = 1;
-
-    speechSynthesis.speak(speech);
-
-});
-
-// =====================================
-// AP Synapse Read Aloud
-// =====================================
 
 if (speakBtn) {
 
     speakBtn.addEventListener("click", () => {
 
-        if (!lastAIResponse) {
+        const synth =
+            window.speechSynthesis;
 
-            alert("No AI response available.");
+
+        /*
+         * SECOND TAP WHILE READING:
+         * PAUSE. Do not cancel. Do not restart.
+         */
+
+        if (
+            synth.speaking &&
+            !synth.paused
+        ) {
+
+            synth.pause();
+
+            speakBtn.classList.add(
+                "active"
+            );
+
+            speakBtn.setAttribute(
+                "title",
+                "Reading paused"
+            );
+
+            speakBtn.setAttribute(
+                "aria-label",
+                "Reading paused"
+            );
+
+            console.log(
+                "â¸ AP SYNAPSE â€” READING PAUSED"
+            );
 
             return;
-
         }
 
-        speechSynthesis.cancel();
 
-        const speech = new SpeechSynthesisUtterance(
+        /*
+         * If an older paused utterance exists and the user
+         * deliberately taps again later, clear it before
+         * beginning a fresh read.
+         */
+
+        if (synth.paused) {
+
+            synth.cancel();
+        }
+
+
+        if (!lastAIResponse) {
+
+            alert(
+                "No AP Synapse response available."
+            );
+
+            return;
+        }
+
+
+        const text =
             window.APcleanSpeech
-                ? window.APcleanSpeech(lastAIResponse)
-                : lastAIResponse
+                ?
+                window.APcleanSpeech(
+                    lastAIResponse
+                )
+                :
+                lastAIResponse;
+
+
+        if (
+            !text ||
+            !String(text).trim()
+        ) {
+
+            return;
+        }
+
+
+        const utterance =
+            new SpeechSynthesisUtterance(
+                text
+            );
+
+
+        utterance.lang =
+            "en-US";
+
+        utterance.rate =
+            1;
+
+        utterance.pitch =
+            1;
+
+        utterance.volume =
+            1;
+
+
+        utterance.onstart =
+            () => {
+
+                speakBtn.classList.add(
+                    "active"
+                );
+
+                speakBtn.setAttribute(
+                    "title",
+                    "Pause reading"
+                );
+
+                speakBtn.setAttribute(
+                    "aria-label",
+                    "Pause reading"
+                );
+
+                console.log(
+                    "â–¶ AP SYNAPSE â€” READING STARTED"
+                );
+            };
+
+
+        utterance.onend =
+            () => {
+
+                speakBtn.classList.remove(
+                    "active"
+                );
+
+                speakBtn.setAttribute(
+                    "title",
+                    "Read response"
+                );
+
+                speakBtn.setAttribute(
+                    "aria-label",
+                    "Read response"
+                );
+
+                console.log(
+                    "âœ… AP SYNAPSE â€” READING FINISHED"
+                );
+            };
+
+
+        utterance.onerror =
+            () => {
+
+                speakBtn.classList.remove(
+                    "active"
+                );
+
+                speakBtn.setAttribute(
+                    "title",
+                    "Read response"
+                );
+
+                speakBtn.setAttribute(
+                    "aria-label",
+                    "Read response"
+                );
+            };
+
+
+        /*
+         * Start cleanly.
+         */
+
+        synth.cancel();
+
+        synth.speak(
+            utterance
         );
-
-        speech.lang = "en-US";
-        speech.rate = 1;
-        speech.pitch = 1;
-        speech.volume = 1;
-
-        speechSynthesis.speak(speech);
 
     });
 
 }
-
 // ======================
 // Stop Speaking
 // ======================
@@ -2308,8 +2391,8 @@ showToast(
 }
 
 /* =========================================================
-   AP SYNAPSE — PREMIUM MESSAGE CONTROLS
-   Copy • Share • Regenerate • Timestamps • Tooltips
+   AP SYNAPSE ï¿½ PREMIUM MESSAGE CONTROLS
+   Copy ï¿½ Share ï¿½ Regenerate ï¿½ Timestamps ï¿½ Tooltips
    ========================================================= */
 
 (() => {
@@ -2632,7 +2715,7 @@ showToast(
 })();
 
 // ============================================================
-// AP SYNAPSE — CONVERSATION NAVIGATOR
+// AP SYNAPSE ï¿½ CONVERSATION NAVIGATOR
 // ============================================================
 
 function getConversationMessages() {
@@ -2664,7 +2747,7 @@ function getMessageLabel(message, index) {
     }
 
     return text.length > 52
-        ? `${text.slice(0, 52)}…`
+        ? `${text.slice(0, 52)}ï¿½`
         : text;
 }
 
@@ -2796,7 +2879,7 @@ function escapeHTML(value) {
 }
 
 // ============================================================
-// AP SYNAPSE — JUMP TO LATEST
+// AP SYNAPSE ï¿½ JUMP TO LATEST
 // ============================================================
 
 const jumpToLatestBtn =

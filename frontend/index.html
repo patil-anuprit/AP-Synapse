@@ -589,7 +589,186 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AP Synapse">
 
-<link rel="stylesheet" href="./styles/notification-final.css?v=1">
+
+<style>
+/* ============================================================
+   AP SYNAPSE — NOTIFICATIONS PERMANENTLY DISABLED
+   ============================================================ */
+
+#apSynapseNotificationCenter,
+.notification-center,
+.notifications-panel,
+.ap-notification-center {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+
+/* Hide notification/bell trigger itself */
+
+#notificationBtn,
+#notificationsBtn,
+#notificationButton,
+.notification-btn,
+.notifications-btn,
+[data-action="notifications"],
+[data-action="notification"],
+[aria-label="Notifications"],
+[aria-label="Notification"],
+[title="Notifications"],
+[title="Notification"] {
+    display: none !important;
+}
+
+</style>
+
+<script>
+/* ============================================================
+   AP SYNAPSE — NOTIFICATION SYSTEM OFF
+   No observer. No loop.
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    function removeNotifications() {
+
+        const panel =
+            document.getElementById(
+                "apSynapseNotificationCenter"
+            );
+
+        if (panel) {
+
+            if (
+                panel.contains(
+                    document.activeElement
+                )
+            ) {
+                document.activeElement?.blur?.();
+            }
+
+            panel.remove();
+        }
+
+
+        const selectors = [
+            "#notificationBtn",
+            "#notificationsBtn",
+            "#notificationButton",
+            ".notification-btn",
+            ".notifications-btn",
+            '[data-action="notifications"]',
+            '[data-action="notification"]',
+            '[aria-label="Notifications"]',
+            '[aria-label="Notification"]',
+            '[title="Notifications"]',
+            '[title="Notification"]'
+        ];
+
+
+        selectors.forEach(selector => {
+
+            document
+                .querySelectorAll(selector)
+                .forEach(element => {
+
+                    /*
+                     * Do not remove the whole topbar by mistake.
+                     * Only remove actual compact controls.
+                     */
+
+                    if (
+                        element !== document.body &&
+                        element !== document.documentElement
+                    ) {
+                        element.remove();
+                    }
+                });
+        });
+    }
+
+
+    /*
+     * Block notification-trigger clicks BEFORE
+     * old handlers receive them.
+     */
+
+    document.addEventListener(
+        "click",
+        event => {
+
+            const trigger =
+                event.target.closest(`
+                    #notificationBtn,
+                    #notificationsBtn,
+                    #notificationButton,
+                    .notification-btn,
+                    .notifications-btn,
+                    [data-action="notifications"],
+                    [data-action="notification"],
+                    [aria-label="Notifications"],
+                    [aria-label="Notification"],
+                    [title="Notifications"],
+                    [title="Notification"]
+                `);
+
+
+            if (!trigger) return;
+
+
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+
+        },
+        true
+    );
+
+
+    if (
+        document.readyState === "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            removeNotifications,
+            { once: true }
+        );
+
+    } else {
+
+        removeNotifications();
+    }
+
+
+    window.addEventListener(
+        "load",
+        removeNotifications,
+        { once: true }
+    );
+
+
+    console.log(
+        "✅ AP SYNAPSE — NOTIFICATION SYSTEM DISABLED"
+    );
+
+})();
+</script>
+
+<link rel="stylesheet" href="./styles/notification-icon-only.css?v=10">
+<link rel="stylesheet" href="./styles/chat-mobile-content-final.css?v=40">
+
+<link rel="stylesheet" href="./styles/sidebar-mobile-final.css?v=4">
+<link rel="stylesheet" href="./styles/ui-questionmark-final.css?v=1">
+<link rel="stylesheet" href="./styles/mobile-composer-final.css?v=1">
+<link rel="stylesheet" href="./styles/mobile-image-prompt-final.css?v=1">
+<link rel="stylesheet" href="./styles/source-link-render-final.css?v=1">
+<link rel="stylesheet" href="./styles/response-format-final.css?v=1">
+<link rel="stylesheet" href="./styles/response-actions-final.css?v=1">
+<link rel="stylesheet" href="./styles/live-conversation-final.css?v=1">
 </head>
 
 <body>
@@ -2154,7 +2333,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
 
 <script type="module" src="scripts/intelligence-field.js"></script>
-<script type="module" src="scripts/chat.js"></script>
+<script type="module" src="scripts/chat.js?v=60"></script>
 <script type="module" src="scripts/sidebar.js"></script>
 <script type="module" src="scripts/settings.js"></script>
 <script type="module" src="scripts/topbar.js"></script>
@@ -7104,7 +7283,21 @@ button:active,
 </style>
 
 <script src="./scripts/profile-final-stable.js?v=1"></script>
-<script src="./scripts/notification-final.js?v=2"></script>
+
+<script src="./scripts/notification-icon-only.js?v=10"></script>
+<script src="./scripts/chat-mobile-content-final.js?v=30"></script>
+
+<script src="./scripts/mobile-history-nav-final.js?v=52"></script>
+<script src="./scripts/sidebar-profile-bridge.js?v=1"></script>
+<script src="./scripts/sidebar-mobile-final.js?v=2"></script>
+<script src="./scripts/sidebar-settings-page-bridge.js?v=3"></script>
+<script src="./scripts/ui-questionmark-final.js?v=3"></script>
+<script src="./scripts/mobile-composer-final.js?v=1"></script>
+<script src="./scripts/mobile-image-prompt-final.js?v=2"></script>
+<script src="./scripts/source-link-render-final.js?v=1"></script>
+<script src="./scripts/response-format-final.js?v=1"></script>
+<script src="./scripts/response-actions-final.js?v=1"></script>
+<script src="./scripts/live-conversation-final.js?v=1"></script>
 </body>
 </html>
 

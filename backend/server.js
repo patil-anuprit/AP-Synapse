@@ -55,6 +55,12 @@ import {
 } from "./memory/index.js";
 
 import { createAIStream } from "./services/router.js";
+import {
+    createLiveConversation,
+    getLiveConversation,
+    syncLiveConversation,
+    stopLiveConversation
+} from "./services/liveConversationService.js";
 
 dotenv.config();
 
@@ -244,6 +250,194 @@ app.post(
     }
 );
 
+
+// ============================================================
+// AP SYNAPSE LIVE CONVERSATIONS
+// ============================================================
+
+app.post(
+    "/live-conversations",
+    async (req, res) => {
+
+        try {
+
+            const live =
+                await createLiveConversation({
+                    title:
+                        req.body?.title,
+                    messages:
+                        req.body?.messages
+                });
+
+
+            /*
+             * Seed AP Synapse memory so continuation starts
+             * with the conversation already visible in room.
+             */
+
+            const liveSession =
+                `live:${live.roomId}`;
+
+
+            for (
+                const item of
+                live.messages.slice(-60)
+            ) {
+
+                remember(
+                    liveSession,
+                    item.role,
+                    item.content
+                );
+            }
+
+
+            return res
+                .status(201)
+                .json({
+                    success: true,
+                    roomId:
+                        live.roomId,
+                    editKey:
+                        live.editKey,
+                    title:
+                        live.title,
+                    revision:
+                        live.revision
+                });
+
+        } catch (error) {
+
+            console.error(
+                "LIVE CREATE ERROR:",
+                error
+            );
+
+
+            return res
+                .status(
+                    error.statusCode ||
+                    500
+                )
+                .json({
+                    error:
+                        error.message ||
+                        "Unable to create live conversation."
+                });
+        }
+    }
+);
+
+
+app.get(
+    "/live-conversations/:roomId",
+    async (req, res) => {
+
+        try {
+
+            const live =
+                await getLiveConversation(
+                    req.params.roomId,
+                    req.headers[
+                        "x-live-key"
+                    ]
+                );
+
+
+            return res.json({
+                success: true,
+                ...live
+            });
+
+        } catch (error) {
+
+            return res
+                .status(
+                    error.statusCode ||
+                    500
+                )
+                .json({
+                    error:
+                        error.message ||
+                        "Unable to load live conversation."
+                });
+        }
+    }
+);
+
+
+app.post(
+    "/live-conversations/:roomId/sync",
+    async (req, res) => {
+
+        try {
+
+            const live =
+                await syncLiveConversation(
+                    req.params.roomId,
+                    req.headers[
+                        "x-live-key"
+                    ],
+                    req.body?.messages
+                );
+
+
+            return res.json({
+                success: true,
+                ...live
+            });
+
+        } catch (error) {
+
+            return res
+                .status(
+                    error.statusCode ||
+                    500
+                )
+                .json({
+                    error:
+                        error.message ||
+                        "Unable to synchronize live conversation."
+                });
+        }
+    }
+);
+
+
+app.delete(
+    "/live-conversations/:roomId",
+    async (req, res) => {
+
+        try {
+
+            await stopLiveConversation(
+                req.params.roomId,
+                req.headers[
+                    "x-live-key"
+                ]
+            );
+
+
+            return res.json({
+                success: true
+            });
+
+        } catch (error) {
+
+            return res
+                .status(
+                    error.statusCode ||
+                    500
+                )
+                .json({
+                    error:
+                        error.message ||
+                        "Unable to stop sharing."
+                });
+        }
+    }
+);
+
 app.post("/chat", async (req, res) => {
 
     const requestStart = performance.now();
@@ -389,11 +583,53 @@ app.post("/chat", async (req, res) => {
 // Starts while AI generation is happening.
 // ============================================================
 
-const sourcesPromise = searchWebSources(message)
+const sourceQueries = [
+    message,
+    `${message} official primary source`
+];
+
+const sourcesPromise =
+    Promise.allSettled(
+        sourceQueries.map(
+            query =>
+                searchWebSources(query)
+        )
+    )
+    .then(results => {
+
+        const merged = [];
+
+        for (const result of results) {
+
+            if (
+                result.status === "fulfilled" &&
+                Array.isArray(result.value)
+            ) {
+
+                merged.push(
+                    ...result.value
+                );
+
+            }
+
+            else if (
+                result.status === "rejected"
+            ) {
+
+                console.error(
+                    "Source search warning:",
+                    result.reason?.message ||
+                    result.reason
+                );
+            }
+        }
+
+        return merged;
+    })
     .catch(error => {
 
         console.error(
-            "⚠️ Source search error:",
+            "Source search error:",
             error.message
         );
 
@@ -784,16 +1020,82 @@ try {
     sources = [];
 }
 
-    const validSources =
-        Array.isArray(sources)
-            ? sources
-                .filter(source =>
-                    source &&
-                    typeof source.url === "string" &&
-                    source.url.trim()
-                )
-                .slice(0, 5)
-            : [];
+    const seenSourceUrls =
+    new Set();
+
+const validSources =
+    Array.isArray(sources)
+        ?
+        sources
+            .filter(source => {
+
+                if (
+                    !source ||
+                    typeof source.url !== "string"
+                ) {
+                    return false;
+                }
+
+                const rawUrl =
+                    source.url.trim();
+
+                if (!rawUrl) {
+                    return false;
+                }
+
+                try {
+
+                    const parsed =
+                        new URL(rawUrl);
+
+                    if (
+                        parsed.protocol !== "https:" &&
+                        parsed.protocol !== "http:"
+                    ) {
+                        return false;
+                    }
+
+                    /*
+                     * Remove fragments so the same page
+                     * is not shown several times.
+                     */
+
+                    parsed.hash = "";
+
+                    const normalized =
+                        parsed.href;
+
+                    if (
+                        seenSourceUrls.has(
+                            normalized
+                        )
+                    ) {
+                        return false;
+                    }
+
+                    seenSourceUrls.add(
+                        normalized
+                    );
+
+                    /*
+                     * Store normalized verified URL.
+                     */
+
+                    source.url =
+                        normalized;
+
+                    return true;
+
+                }
+
+                catch {
+
+                    return false;
+                }
+            })
+            .slice(0, 10)
+        :
+        [];
 
             // ============================================================
 // AP SYNAPSE — SOURCE PAYLOAD FOR FRONTEND
@@ -828,7 +1130,7 @@ if (validSources.length > 0) {
         res.write(
             "\n\n\n" +
             "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
-            "SOURCES & FURTHER READING\n" +
+            "USEFUL LINKS & SOURCES\n" +
             "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
         );
 

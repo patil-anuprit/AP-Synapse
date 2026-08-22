@@ -1,0 +1,546 @@
+﻿/* ============================================================
+   AP SYNAPSE — LIVE CONVERSATION
+   ============================================================ */
+
+#shareConversationBtn.ap-live-active {
+
+    border-color:
+        rgba(219,177,89,.34) !important;
+
+    background:
+        rgba(219,177,89,.08) !important;
+
+    color:
+        #e8c878 !important;
+}
+
+
+#shareConversationBtn.ap-live-active::before {
+
+    content:"";
+
+    width:6px;
+    height:6px;
+
+    margin-right:3px;
+
+    border-radius:999px;
+
+    background:
+        currentColor;
+
+    box-shadow:
+        0 0 12px currentColor;
+}
+
+
+.ap-live-share-backdrop {
+
+    position:fixed;
+    inset:0;
+
+    z-index:12000;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    background:
+        rgba(3,4,5,.72);
+
+    backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
+        blur(18px);
+}
+
+
+.ap-live-share-backdrop.ap-open {
+
+    display:flex;
+}
+
+
+.ap-live-share-panel {
+
+    width:min(
+        520px,
+        100%
+    );
+
+    max-height:
+        min(760px,90vh);
+
+    overflow:auto;
+
+    border:
+        1px solid
+        rgba(255,255,255,.09);
+
+    border-radius:22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(25,26,28,.98),
+            rgba(12,13,15,.99)
+        );
+
+    box-shadow:
+        0 32px 90px
+        rgba(0,0,0,.55);
+
+    color:
+        #f4f2ec;
+}
+
+
+.ap-live-share-head {
+
+    display:flex;
+
+    align-items:flex-start;
+    justify-content:space-between;
+
+    gap:16px;
+
+    padding:
+        22px 22px 18px;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.06);
+}
+
+
+.ap-live-share-kicker {
+
+    margin-bottom:7px;
+
+    color:
+        rgba(217,177,91,.82);
+
+    font-size:10px;
+
+    font-weight:700;
+
+    letter-spacing:.18em;
+}
+
+
+.ap-live-share-title {
+
+    margin:0;
+
+    font-size:21px;
+
+    line-height:1.2;
+
+    font-weight:650;
+}
+
+
+.ap-live-share-sub {
+
+    margin:
+        8px 0 0;
+
+    color:
+        rgba(239,237,231,.55);
+
+    font-size:12px;
+
+    line-height:1.55;
+}
+
+
+.ap-live-share-close {
+
+    width:34px;
+    height:34px;
+
+    flex:0 0 auto;
+
+    display:grid;
+    place-items:center;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    border-radius:10px;
+
+    background:
+        rgba(255,255,255,.025);
+
+    color:
+        rgba(255,255,255,.75);
+
+    cursor:pointer;
+}
+
+
+.ap-live-share-body {
+
+    padding:20px 22px 22px;
+}
+
+
+.ap-live-option {
+
+    padding:17px;
+
+    border:
+        1px solid
+        rgba(217,177,91,.15);
+
+    border-radius:16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(217,177,91,.055),
+            rgba(255,255,255,.018)
+        );
+}
+
+
+.ap-live-option-top {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-bottom:8px;
+}
+
+
+.ap-live-dot {
+
+    width:8px;
+    height:8px;
+
+    flex:0 0 auto;
+
+    border-radius:50%;
+
+    background:#dcb760;
+
+    box-shadow:
+        0 0 14px
+        rgba(220,183,96,.6);
+}
+
+
+.ap-live-option strong {
+
+    font-size:14px;
+
+    font-weight:650;
+}
+
+
+.ap-live-option p {
+
+    margin:
+        0 0 15px;
+
+    color:
+        rgba(242,240,233,.56);
+
+    font-size:11.5px;
+
+    line-height:1.55;
+}
+
+
+.ap-live-primary,
+.ap-live-secondary,
+.ap-live-danger {
+
+    min-height:40px;
+
+    padding:
+        0 14px;
+
+    border-radius:11px;
+
+    font:inherit;
+
+    font-size:11px;
+
+    font-weight:650;
+
+    cursor:pointer;
+
+    transition:
+        transform .14s ease,
+        border-color .14s ease,
+        background .14s ease;
+}
+
+
+.ap-live-primary {
+
+    width:100%;
+
+    color:#17130b;
+
+    border:
+        1px solid
+        rgba(236,201,123,.95);
+
+    background:
+        linear-gradient(
+            135deg,
+            #e6c16d,
+            #cfa958
+        );
+}
+
+
+.ap-live-secondary {
+
+    color:
+        rgba(245,243,238,.82);
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+    background:
+        rgba(255,255,255,.035);
+}
+
+
+.ap-live-danger {
+
+    color:
+        rgba(255,170,170,.86);
+
+    border:
+        1px solid
+        rgba(255,100,100,.14);
+
+    background:
+        rgba(255,70,70,.035);
+}
+
+
+.ap-live-primary:active,
+.ap-live-secondary:active,
+.ap-live-danger:active {
+
+    transform:
+        scale(.98);
+}
+
+
+.ap-live-active-box {
+
+    display:none;
+}
+
+
+.ap-live-active-box.ap-show {
+
+    display:block;
+}
+
+
+.ap-live-create-box.ap-hide {
+
+    display:none;
+}
+
+
+.ap-live-status {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    margin-bottom:13px;
+
+    color:
+        rgba(231,200,126,.92);
+
+    font-size:11px;
+
+    font-weight:650;
+}
+
+
+.ap-live-url-row {
+
+    display:flex;
+
+    gap:8px;
+}
+
+
+.ap-live-url {
+
+    min-width:0;
+
+    flex:1;
+
+    height:40px;
+
+    padding:
+        0 11px;
+
+    box-sizing:border-box;
+
+    color:
+        rgba(245,243,238,.72);
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    border-radius:10px;
+
+    outline:none;
+
+    background:
+        rgba(0,0,0,.22);
+
+    font-size:10.5px;
+}
+
+
+.ap-live-actions {
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:8px;
+
+    margin-top:10px;
+}
+
+
+.ap-live-security {
+
+    margin-top:14px;
+
+    padding-top:13px;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.05);
+
+    color:
+        rgba(242,240,233,.42);
+
+    font-size:10px;
+
+    line-height:1.55;
+}
+
+
+.ap-live-joined-banner {
+
+    position:fixed;
+
+    top:72px;
+    left:50%;
+
+    z-index:10020;
+
+    transform:
+        translateX(-50%);
+
+    pointer-events:none;
+
+    padding:
+        7px 12px;
+
+    border:
+        1px solid
+        rgba(218,178,91,.19);
+
+    border-radius:999px;
+
+    background:
+        rgba(16,17,18,.90);
+
+    backdrop-filter:
+        blur(12px);
+
+    color:
+        rgba(228,198,128,.9);
+
+    font-size:10px;
+
+    font-weight:650;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0,0,0,.25);
+}
+
+
+@media (max-width:760px) {
+
+    .ap-live-share-backdrop {
+
+        align-items:flex-end;
+
+        padding:
+            10px;
+    }
+
+
+    .ap-live-share-panel {
+
+        width:100%;
+
+        border-radius:
+            20px 20px 16px 16px;
+    }
+
+
+    .ap-live-share-head {
+
+        padding:
+            18px 17px 15px;
+    }
+
+
+    .ap-live-share-body {
+
+        padding:
+            16px 17px 18px;
+    }
+
+
+    .ap-live-url-row {
+
+        flex-direction:column;
+    }
+
+
+    .ap-live-url {
+
+        width:100%;
+    }
+
+
+    .ap-live-secondary,
+    .ap-live-danger {
+
+        flex:1;
+    }
+
+}

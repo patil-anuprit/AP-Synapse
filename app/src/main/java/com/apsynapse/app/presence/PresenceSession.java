@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -168,7 +171,7 @@ public class PresenceSession
             new TextView(context);
 
         title.setText(
-            "  AP Presence"
+            "  Aprisha"
         );
 
         title.setTextColor(
@@ -203,7 +206,7 @@ public class PresenceSession
             new TextView(context);
 
         response.setText(
-            "Ask AP anything."
+            "Ask Aprisha anything."
         );
 
         response.setTextColor(
@@ -327,10 +330,54 @@ public class PresenceSession
             SystemClock.elapsedRealtime()
             + 45_000L;
 
+        Intent wakeSuspend =
+            new Intent(
+                PresenceVoiceInteractionService.ACTION_WAKE_SUSPEND
+            );
+
+        wakeSuspend.setPackage(
+            context.getPackageName()
+        );
+
+        context.sendBroadcast(
+            wakeSuspend
+        );
+
+        AprishaHealthStore.recordWakeState(
+            context,
+            "session active",
+            "listening for your command"
+        );
+
+        playReadyTone();
+
         main.postDelayed(
             this::startListening,
-            300
+            220
         );
+    }
+
+    private void playReadyTone() {
+
+        try {
+
+            ToneGenerator tone =
+                new ToneGenerator(
+                    AudioManager.STREAM_NOTIFICATION,
+                    72
+                );
+
+            tone.startTone(
+                ToneGenerator.TONE_PROP_BEEP,
+                120
+            );
+
+            main.postDelayed(
+                tone::release,
+                350L
+            );
+
+        } catch (Throwable ignored) {}
     }
 
     private void startListening() {
@@ -542,7 +589,7 @@ public class PresenceSession
                 + 120_000L;
 
             answer(
-                "I'm here. You can keep talking without restarting AP Presence."
+                "I'm here. You can keep talking without saying Hey Aprisha again."
             );
 
             return;
@@ -1001,7 +1048,7 @@ public class PresenceSession
     ) {
 
         statusText(
-            "AP Presence"
+            "Aprisha"
         );
 
         responseText(text);
@@ -1035,12 +1082,16 @@ public class PresenceSession
                     ""
                 );
 
-        tts.speak(
+        int speakResult = tts.speak(
             spoken,
             TextToSpeech.QUEUE_FLUSH,
             null,
             UTTERANCE
         );
+
+        if (speakResult == TextToSpeech.ERROR) {
+            main.post(this::resumeListeningSoon);
+        }
     }
 
     private void resumeListeningSoon() {
@@ -1171,8 +1222,40 @@ public class PresenceSession
             TextToSpeech.SUCCESS
         ) {
 
-            tts.setLanguage(
-                Locale.getDefault()
+            int languageResult =
+                tts.setLanguage(
+                    Locale.getDefault()
+                );
+
+            if (
+                languageResult == TextToSpeech.LANG_MISSING_DATA ||
+                languageResult == TextToSpeech.LANG_NOT_SUPPORTED
+            ) {
+                languageResult = tts.setLanguage(Locale.US);
+            }
+
+            if (
+                languageResult == TextToSpeech.LANG_MISSING_DATA ||
+                languageResult == TextToSpeech.LANG_NOT_SUPPORTED
+            ) {
+                ttsReady = false;
+                pendingSpeech = null;
+                responseText(
+                    "Android text-to-speech is not installed or enabled."
+                );
+                main.post(this::resumeListeningSoon);
+                return;
+            }
+
+            tts.setAudioAttributes(
+                new AudioAttributes.Builder()
+                    .setUsage(
+                        AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY
+                    )
+                    .setContentType(
+                        AudioAttributes.CONTENT_TYPE_SPEECH
+                    )
+                    .build()
             );
 
             tts.setSpeechRate(

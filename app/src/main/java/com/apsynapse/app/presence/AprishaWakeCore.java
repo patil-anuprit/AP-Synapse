@@ -31,6 +31,9 @@ public final class AprishaWakeCore {
     private static final int SAMPLE_RATE =
             16000;
 
+    private static final int MODEL_REVISION =
+            3;
+
     private final Context context;
 
     private final Runnable detectedCallback;
@@ -80,11 +83,23 @@ public final class AprishaWakeCore {
                     "Microphone permission missing."
             );
 
+            AprishaHealthStore.recordWakeState(
+                    context,
+                    "permission required",
+                    "microphone access is missing"
+            );
+
             return;
         }
 
 
         try {
+
+            AprishaHealthStore.recordWakeState(
+                    context,
+                    "starting",
+                    "loading local wake model"
+            );
 
             File model =
                     materializeModel();
@@ -199,6 +214,12 @@ public final class AprishaWakeCore {
                     "✓ HEY APRISHA LOCAL LISTENER ACTIVE"
             );
 
+            AprishaHealthStore.recordWakeState(
+                    context,
+                    "listening",
+                    "say Hey Aprisha"
+            );
+
         }
         catch (Throwable error) {
 
@@ -206,6 +227,12 @@ public final class AprishaWakeCore {
                     TAG,
                     "Could not start Aprisha Wake Core.",
                     error
+            );
+
+            AprishaHealthStore.recordWakeState(
+                    context,
+                    "error",
+                    errorSummary(error)
             );
 
             release();
@@ -217,6 +244,8 @@ public final class AprishaWakeCore {
 
         short[] pcm =
                 new short[1600];
+
+        int consecutiveReadErrors = 0;
 
 
         try {
@@ -235,8 +264,18 @@ public final class AprishaWakeCore {
                         count <= 0
                 ) {
 
+                    consecutiveReadErrors++;
+
+                    if (consecutiveReadErrors >= 20) {
+                        throw new IllegalStateException(
+                                "Microphone returned repeated read errors: " + count
+                        );
+                    }
+
                     continue;
                 }
+
+                consecutiveReadErrors = 0;
 
 
                 float[] samples =
@@ -311,6 +350,12 @@ public final class AprishaWakeCore {
                         running =
                                 false;
 
+                        AprishaHealthStore.recordWakeState(
+                                context,
+                                "detected",
+                                keyword.trim()
+                        );
+
 
                         if (
                                 detectedCallback != null
@@ -334,6 +379,12 @@ public final class AprishaWakeCore {
                         TAG,
                         "Wake listening loop error.",
                         error
+                );
+
+                AprishaHealthStore.recordWakeState(
+                        context,
+                        "error",
+                        errorSummary(error)
                 );
             }
 
@@ -453,9 +504,38 @@ public final class AprishaWakeCore {
                 null;
     }
 
+    private static String errorSummary(Throwable error) {
+        if (error == null) {
+            return "unknown wake error";
+        }
+
+        String name = error.getClass().getSimpleName();
+        String message = error.getMessage();
+
+        if (message == null || message.trim().isEmpty()) {
+            return name;
+        }
+
+        String clean = message.replaceAll("\\s+", " ").trim();
+        if (clean.length() > 120) {
+            clean = clean.substring(0, 120);
+        }
+
+        return name + ": " + clean;
+    }
+
 
     private File materializeModel()
             throws Exception {
+
+        android.content.SharedPreferences modelPrefs =
+                context.getSharedPreferences(
+                        "aprisha_wake_model",
+                        Context.MODE_PRIVATE
+                );
+
+        boolean refreshModel =
+                modelPrefs.getInt("revision", 0) != MODEL_REVISION;
 
         File destination =
                 new File(
@@ -496,10 +576,8 @@ public final class AprishaWakeCore {
                     );
 
 
-            /*
-             * Copy again only when missing.
-             */
             if (
+                    !refreshModel &&
                     output.exists() &&
                     output.length() > 0
             ) {
@@ -549,6 +627,10 @@ public final class AprishaWakeCore {
                 }
             }
         }
+
+        modelPrefs.edit()
+                .putInt("revision", MODEL_REVISION)
+                .apply();
 
 
         return destination;

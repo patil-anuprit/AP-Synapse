@@ -119,7 +119,7 @@ export function routeAprishaIntent(message) {
     }
 
     const deviceCommand =
-        /^(?:open|launch|start|call|phone|ring|message|text|sms|navigate to|directions to|take me to|go to|search for|google|set|create|schedule)\b/;
+        /^(?:open|launch|start|call|phone|ring|send|message|text|sms|turn|remind|navigate to|directions to|take me to|go to|search for|google|set|create|schedule)\b/;
 
     const exactCommand =
         /^(?:mute|unmute|pause|play|resume|next|previous|stop music|volume up|volume down)$/;

@@ -73,7 +73,8 @@ public final class PresenceDeviceActions {
         }
 
         Matcher message = Pattern.compile(
-                "^(?:message|text|sms)\\s+(.+?)(?:\\s+(?:saying|say|that)\\s+(.+))?$",
+                "^(?:send\\s+)?(?:a\\s+)?(?:message|text|sms)(?:\\s+to)?\\s+" +
+                "(.+?)(?:\\s+(?:saying|say|that)\\s+(.+))?$",
                 Pattern.CASE_INSENSITIVE
         ).matcher(command);
 
@@ -85,78 +86,67 @@ public final class PresenceDeviceActions {
             );
         }
 
-        // AP_NATIVE_ROUTING_V4
+        Matcher reminderAfter = Pattern.compile(
+                "^(?:remind me|set (?:a )?reminder)\\s+(?:to\\s+)?(.+?)\\s+" +
+                "(?:in|after)\\s+(.+?)\\s+(seconds?|minutes?|hours?)$",
+                Pattern.CASE_INSENSITIVE
+        ).matcher(command);
+
+        if (reminderAfter.find()) {
+            int amount = parseSpokenNumber(reminderAfter.group(2));
+            return setTimer(
+                    context,
+                    amount,
+                    reminderAfter.group(3),
+                    reminderAfter.group(1).trim()
+            );
+        }
+
+        Matcher reminderBefore = Pattern.compile(
+                "^(?:remind me|set (?:a )?reminder)\\s+(?:in|after)\\s+" +
+                "(.+?)\\s+(seconds?|minutes?|hours?)\\s+(?:to\\s+)?(.+)$",
+                Pattern.CASE_INSENSITIVE
+        ).matcher(command);
+
+        if (reminderBefore.find()) {
+            int amount = parseSpokenNumber(reminderBefore.group(1));
+            return setTimer(
+                    context,
+                    amount,
+                    reminderBefore.group(2),
+                    reminderBefore.group(3).trim()
+            );
+        }
+
+        // AP_NATIVE_ROUTING_V5
         Matcher timer = Pattern.compile(
                 "(?:(?:set|start)\\s+(?:a\\s+)?timer|timer)\\s+" +
                 "(?:for\\s+)?" +
-                "([a-z0-9-]+(?:\\s+[a-z0-9-]+)?)\\s+" +
+                "(.+?)\\s+" +
                 "(seconds?|minutes?|hours?)\\b",
                 Pattern.CASE_INSENSITIVE
         ).matcher(command);
 
         if (timer.find()) {
             int amount = parseSpokenNumber(timer.group(1));
-            String unit = timer.group(2).toLowerCase(Locale.ROOT);
-
-            if (amount <= 0) {
-                return Result.handled(
-                        "Please tell me a valid timer duration."
-                );
-            }
-
-            long seconds = unit.startsWith("hour")
-                    ? amount * 3600L
-                    : unit.startsWith("minute")
-                    ? amount * 60L
-                    : amount;
-
-            seconds = Math.max(1L, Math.min(86400L, seconds));
-
-            Intent intent = new Intent(AlarmClock.ACTION_SET_TIMER)
-                    .putExtra(AlarmClock.EXTRA_LENGTH, (int) seconds)
-                    .putExtra(AlarmClock.EXTRA_MESSAGE, "Aprisha")
-                    .putExtra(AlarmClock.EXTRA_SKIP_UI, true)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            return startIntent(
-                    context,
-                    intent,
-                    "Timer set for " + amount + " " + unit + ".",
-                    "I couldn't start the timer."
-            );
+            return setTimer(context, amount, timer.group(2), "Aprisha");
         }
 
         Matcher alarm = Pattern.compile(
-                "(?:set|create)\\s+(?:an?\\s+)?alarm\\s+(?:for\\s+)?(\\d{1,2})(?::(\\d{2}))?\\s*(am|pm)?",
+                "^(?:set|create)\\s+(?:an?\\s+)?alarm\\s+(?:for\\s+|at\\s+)?(.+)$",
                 Pattern.CASE_INSENSITIVE
         ).matcher(command);
 
         if (alarm.find()) {
-            int hour = Integer.parseInt(alarm.group(1));
-            int minute = alarm.group(2) == null
-                    ? 0
-                    : Integer.parseInt(alarm.group(2));
-            String meridiem = alarm.group(3);
+            AlarmTime time = parseAlarmTime(alarm.group(1));
 
-            if (meridiem != null) {
-                if (hour < 1 || hour > 12) {
-                    return Result.handled("Please use an hour from 1 to 12.");
-                }
-                if (meridiem.equalsIgnoreCase("pm") && hour != 12) {
-                    hour += 12;
-                }
-                if (meridiem.equalsIgnoreCase("am") && hour == 12) {
-                    hour = 0;
-                }
-            }
-
-            if (hour > 23 || minute > 59) {
+            if (time == null) {
                 return Result.handled("That alarm time isn't valid.");
             }
 
             Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM)
-                    .putExtra(AlarmClock.EXTRA_HOUR, hour)
-                    .putExtra(AlarmClock.EXTRA_MINUTES, minute)
+                    .putExtra(AlarmClock.EXTRA_HOUR, time.hour)
+                    .putExtra(AlarmClock.EXTRA_MINUTES, time.minute)
                     .putExtra(AlarmClock.EXTRA_MESSAGE, "Aprisha")
                     .putExtra(AlarmClock.EXTRA_SKIP_UI, true)
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -286,11 +276,14 @@ public final class PresenceDeviceActions {
                             BatteryManager.BATTERY_PROPERTY_CAPACITY
                     );
 
+            boolean charging = battery != null && battery.isCharging();
+
             return level >= 0
                     ? Result.handled(
                             "Your battery is at " +
                             level +
-                            " percent."
+                            " percent" +
+                            (charging ? " and is charging." : ".")
                     )
                     : Result.handled(
                             "I couldn't read the battery level."
@@ -403,8 +396,30 @@ public final class PresenceDeviceActions {
             return openSettings(context, Settings.ACTION_WIFI_SETTINGS, "Opening Wi-Fi settings.");
         }
 
+        if (matches(command,
+                "turn on wifi", "turn wifi on", "wifi on",
+                "turn on wi fi", "turn wi fi on", "wi fi on",
+                "turn off wifi", "turn wifi off", "wifi off",
+                "turn off wi fi", "turn wi fi off", "wi fi off")) {
+            return openSettings(
+                    context,
+                    Settings.ACTION_WIFI_SETTINGS,
+                    "Opening Wi-Fi settings. Android requires you to confirm that change."
+            );
+        }
+
         if (command.contains("bluetooth settings") || command.equals("open bluetooth")) {
             return openSettings(context, Settings.ACTION_BLUETOOTH_SETTINGS, "Opening Bluetooth settings.");
+        }
+
+        if (matches(command,
+                "turn on bluetooth", "turn bluetooth on", "bluetooth on",
+                "turn off bluetooth", "turn bluetooth off", "bluetooth off")) {
+            return openSettings(
+                    context,
+                    Settings.ACTION_BLUETOOTH_SETTINGS,
+                    "Opening Bluetooth settings. Android requires you to confirm that change."
+            );
         }
 
         if (command.contains("display settings") || command.contains("brightness settings")) {
@@ -447,6 +462,113 @@ public final class PresenceDeviceActions {
         return Result.ignored();
     }
 
+    private static Result setTimer(Context context, int amount, String rawUnit, String label) {
+        if (amount <= 0) {
+            return Result.handled("Please tell me a valid timer duration.");
+        }
+
+        String unit = rawUnit == null ? "seconds" : rawUnit.toLowerCase(Locale.ROOT);
+        long seconds = unit.startsWith("hour")
+                ? amount * 3600L
+                : unit.startsWith("minute") ? amount * 60L : amount;
+        seconds = Math.max(1L, Math.min(86_400L, seconds));
+
+        String safeLabel = label == null || label.trim().isEmpty()
+                ? "Aprisha"
+                : label.trim();
+
+        Intent intent = new Intent(AlarmClock.ACTION_SET_TIMER)
+                .putExtra(AlarmClock.EXTRA_LENGTH, (int) seconds)
+                .putExtra(AlarmClock.EXTRA_MESSAGE, safeLabel)
+                .putExtra(AlarmClock.EXTRA_SKIP_UI, true)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        return startIntent(
+                context,
+                intent,
+                "Timer set for " + amount + " " + unit + ".",
+                "I couldn't start the timer."
+        );
+    }
+
+    private static AlarmTime parseAlarmTime(String rawValue) {
+        if (rawValue == null) {
+            return null;
+        }
+
+        String value = rawValue
+                .toLowerCase(Locale.ROOT)
+                .replace('.', ' ')
+                .replaceAll("\\s+", " ")
+                .trim();
+
+        String meridiem = null;
+        Matcher suffix = Pattern.compile("(am|pm|a m|p m)$").matcher(value);
+        if (suffix.find()) {
+            meridiem = suffix.group(1).replace(" ", "");
+            value = value.substring(0, suffix.start()).trim();
+        }
+
+        int hour;
+        int minute = 0;
+        Matcher numeric = Pattern.compile(
+                "^(\\d{1,2})(?:(?::|\\s+)(\\d{1,2}))?$"
+        ).matcher(value);
+
+        if (numeric.matches()) {
+            hour = Integer.parseInt(numeric.group(1));
+            if (numeric.group(2) != null) {
+                minute = Integer.parseInt(numeric.group(2));
+            }
+        } else {
+            String[] words = value.split(" ");
+            if (words.length < 1 || words.length > 3) {
+                return null;
+            }
+
+            hour = parseSpokenNumber(words[0]);
+            if (words.length > 1) {
+                StringBuilder minutes = new StringBuilder();
+                for (int index = 1; index < words.length; index++) {
+                    if (minutes.length() > 0) {
+                        minutes.append(' ');
+                    }
+                    minutes.append(words[index]);
+                }
+                minute = parseSpokenNumber(minutes.toString());
+            }
+        }
+
+        if (hour < 0 || minute < 0 || minute > 59) {
+            return null;
+        }
+
+        if (meridiem != null) {
+            if (hour < 1 || hour > 12) {
+                return null;
+            }
+            if ("pm".equals(meridiem) && hour != 12) {
+                hour += 12;
+            } else if ("am".equals(meridiem) && hour == 12) {
+                hour = 0;
+            }
+        } else if (hour > 23) {
+            return null;
+        }
+
+        return new AlarmTime(hour, minute);
+    }
+
+    private static final class AlarmTime {
+        final int hour;
+        final int minute;
+
+        AlarmTime(int hour, int minute) {
+            this.hour = hour;
+            this.minute = minute;
+        }
+    }
+
     private static int parseSpokenNumber(String value) {
         if (value == null) {
             return -1;
@@ -471,6 +593,7 @@ public final class PresenceDeviceActions {
         for (String word : normalized.split(" ")) {
             switch (word) {
                 case "zero": break;
+                case "oh": break;
                 case "one": total += 1; break;
                 case "two": total += 2; break;
                 case "three": total += 3; break;
@@ -495,6 +618,10 @@ public final class PresenceDeviceActions {
                 case "forty": total += 40; break;
                 case "fifty": total += 50; break;
                 case "sixty": total += 60; break;
+                case "seventy": total += 70; break;
+                case "eighty": total += 80; break;
+                case "ninety": total += 90; break;
+                case "and": break;
                 case "hundred":
                     total = Math.max(1, total) * 100;
                     break;
@@ -759,12 +886,14 @@ public final class PresenceDeviceActions {
             }
         } catch (Throwable ignored) {}
 
-        if (wanted.equals("youtube") || wanted.equals("you tube")) {
+        String webFallback = knownWebFallbacks().get(wanted);
+
+        if (webFallback != null) {
             return openUri(
                     context,
-                    "https://www.youtube.com/",
-                    "Opening YouTube.",
-                    "I couldn't open YouTube."
+                    webFallback,
+                    "Opening " + displayName(wanted) + ".",
+                    "I couldn't open " + displayName(wanted) + "."
             );
         }
 
@@ -791,6 +920,22 @@ public final class PresenceDeviceActions {
         values.put("photos", "com.google.android.apps.photos");
         values.put("google photos", "com.google.android.apps.photos");
         values.put("play store", "com.android.vending");
+        return values;
+    }
+
+    private static Map<String, String> knownWebFallbacks() {
+        Map<String, String> values = new HashMap<>();
+        values.put("youtube", "https://www.youtube.com/");
+        values.put("you tube", "https://www.youtube.com/");
+        values.put("youtube music", "https://music.youtube.com/");
+        values.put("gmail", "https://mail.google.com/");
+        values.put("whatsapp", "https://web.whatsapp.com/");
+        values.put("spotify", "https://open.spotify.com/");
+        values.put("instagram", "https://www.instagram.com/");
+        values.put("facebook", "https://www.facebook.com/");
+        values.put("telegram", "https://web.telegram.org/");
+        values.put("photos", "https://photos.google.com/");
+        values.put("google photos", "https://photos.google.com/");
         return values;
     }
 

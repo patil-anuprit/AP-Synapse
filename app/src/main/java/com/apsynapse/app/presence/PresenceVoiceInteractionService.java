@@ -18,6 +18,9 @@ public class PresenceVoiceInteractionService
     public static final String ACTION_WAKE_RESUME =
             "com.apsynapse.app.presence.APRISHA_WAKE_RESUME";
 
+    public static final String ACTION_WAKE_SUSPEND =
+            "com.apsynapse.app.presence.APRISHA_WAKE_SUSPEND";
+
     private static final String TAG =
             "AP-APRISHA";
 
@@ -27,6 +30,32 @@ public class PresenceVoiceInteractionService
             );
 
     private AprishaWakeCore wakeCore;
+
+    private boolean serviceReady = false;
+    private boolean wakeSuspended = false;
+    private boolean destroyed = false;
+
+    private final Runnable wakeWatchdog =
+            new Runnable() {
+
+        @Override
+        public void run() {
+            if (destroyed) {
+                return;
+            }
+
+            if (
+                    serviceReady &&
+                    !wakeSuspended &&
+                    (wakeCore == null || !wakeCore.isRunning())
+            ) {
+                stopAprisha();
+                startAprisha();
+            }
+
+            main.postDelayed(this, 5000L);
+        }
+    };
 
 
     private final BroadcastReceiver
@@ -39,12 +68,19 @@ public class PresenceVoiceInteractionService
                 Intent intent
         ) {
 
-            if (
-                    intent != null &&
-                    ACTION_WAKE_RESUME.equals(
-                            intent.getAction()
-                    )
-            ) {
+            if (intent == null) {
+                return;
+            }
+
+            if (ACTION_WAKE_SUSPEND.equals(intent.getAction())) {
+                wakeSuspended = true;
+                stopAprisha();
+                return;
+            }
+
+            if (ACTION_WAKE_RESUME.equals(intent.getAction())) {
+
+                wakeSuspended = false;
 
                 main.postDelayed(
                         () -> startAprisha(),
@@ -66,6 +102,10 @@ public class PresenceVoiceInteractionService
                         ACTION_WAKE_RESUME
                 );
 
+        filter.addAction(
+                ACTION_WAKE_SUSPEND
+        );
+
 
         if (
                 Build.VERSION.SDK_INT >= 33
@@ -85,6 +125,8 @@ public class PresenceVoiceInteractionService
                     filter
             );
         }
+
+        main.post(wakeWatchdog);
     }
 
 
@@ -93,17 +135,27 @@ public class PresenceVoiceInteractionService
 
         super.onReady();
 
+        serviceReady = true;
+        wakeSuspended = false;
+
         startAprisha();
     }
 
 
     private synchronized void startAprisha() {
 
-        if (
-                wakeCore != null
-        ) {
+        if (destroyed || !serviceReady || wakeSuspended) {
+            return;
+        }
+
+        if (wakeCore != null && wakeCore.isRunning()) {
 
             return;
+        }
+
+        if (wakeCore != null) {
+            wakeCore.stop();
+            wakeCore = null;
         }
 
 
@@ -162,6 +214,8 @@ public class PresenceVoiceInteractionService
 
     private void onAprishaDetected() {
 
+        wakeSuspended = true;
+
         stopAprisha();
 
 
@@ -198,6 +252,8 @@ public class PresenceVoiceInteractionService
                     error
             );
 
+            wakeSuspended = false;
+
 
             main.postDelayed(
                     this::startAprisha,
@@ -210,6 +266,9 @@ public class PresenceVoiceInteractionService
     @Override
     public void onLaunchVoiceAssistFromKeyguard() {
 
+        wakeSuspended = true;
+        stopAprisha();
+
         Bundle args =
                 new Bundle();
 
@@ -220,16 +279,25 @@ public class PresenceVoiceInteractionService
         );
 
 
-        showSession(
-                args,
-                VoiceInteractionSession
-                        .SHOW_WITH_ASSIST
-        );
+        try {
+            showSession(
+                    args,
+                    VoiceInteractionSession
+                            .SHOW_WITH_ASSIST
+            );
+        } catch (Throwable error) {
+            Log.e(TAG, "Could not display Aprisha from keyguard.", error);
+            wakeSuspended = false;
+            main.postDelayed(this::startAprisha, 1000L);
+        }
     }
 
 
     @Override
     public void onShutdown() {
+
+        serviceReady = false;
+        wakeSuspended = true;
 
         stopAprisha();
 
@@ -239,6 +307,11 @@ public class PresenceVoiceInteractionService
 
     @Override
     public void onDestroy() {
+
+        destroyed = true;
+        serviceReady = false;
+        wakeSuspended = true;
+        main.removeCallbacks(wakeWatchdog);
 
         stopAprisha();
 

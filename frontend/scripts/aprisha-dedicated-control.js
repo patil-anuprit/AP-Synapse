@@ -6,6 +6,26 @@
 
     let recognition = null;
 
+    function isAndroidDevice() {
+        return /android/i.test(String(navigator.userAgent || ""));
+    }
+
+    function openNativeAprisha(source = "web") {
+        const url =
+            "apsynapse://presence?start=1&source=" +
+            encodeURIComponent(source);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.style.display = "none";
+        link.setAttribute("aria-hidden", "true");
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        return true;
+    }
+
     function addStyles() {
         if (document.getElementById("apDedicatedAprishaStyles")) return;
 
@@ -245,9 +265,14 @@
             ?.classList.toggle("listening", active);
     }
 
-    function open() {
+    function open(webOnly = false) {
+        if (isAndroidDevice() && !webOnly) {
+            return openNativeAprisha("topbar");
+        }
+
         createPanel();
         document.getElementById(OVERLAY_ID)?.classList.add("open");
+        return true;
     }
 
     function close() {
@@ -447,6 +472,20 @@
             return;
         }
 
+        const deviceOnlyCommand =
+            /^(?:call|phone|ring|send (?:a )?(?:message|text|sms)|(?:set|start) (?:a )?(?:timer|alarm|reminder)|remind me|(?:what is|what's|tell me) my battery|battery level|turn (?:on|off) (?:the )?(?:flashlight|torch|wifi|wi fi|bluetooth)|volume (?:up|down)|mute|unmute|open camera|take (?:a )?(?:photo|picture)|record video)\b/.test(command);
+
+        if (deviceOnlyCommand) {
+            setState(
+                "Use Aprisha on Android",
+                "That command needs the native AP Synapse Android app."
+            );
+            speakOut(
+                "That device command needs Aprisha in the AP Synapse Android app."
+            );
+            return;
+        }
+
         watchForAssistantReply();
 
         if (sendToChat(text)) {
@@ -556,7 +595,12 @@
     }
 
     function speak() {
-        open();
+        if (isAndroidDevice()) {
+            openNativeAprisha("microphone");
+            return;
+        }
+
+        open(true);
         stop();
 
         const Speech =
@@ -703,10 +747,52 @@
         return true;
     }
 
+    function bindAndroidVoiceControls() {
+        if (!isAndroidDevice()) return;
+
+        document.addEventListener(
+            "click",
+            (event) => {
+                const button = event.target.closest(
+                    "button,a,[role='button']"
+                );
+
+                if (!button) return;
+                if (button.id === BUTTON_ID) return;
+                if (button.closest("#" + OVERLAY_ID)) return;
+
+                const label = String(
+                    button.getAttribute("aria-label") ||
+                    button.getAttribute("title") ||
+                    button.getAttribute("data-tooltip") ||
+                    ""
+                ).toLowerCase();
+
+                const isComposerVoice =
+                    button.id === "voiceBtn" ||
+                    label === "voice input" ||
+                    label === "microphone" ||
+                    label === "start voice input";
+
+                if (!isComposerVoice) return;
+
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                openNativeAprisha("composer-microphone");
+            },
+            true
+        );
+    }
+
     function boot() {
         addStyles();
-        createPanel();
+
+        if (!isAndroidDevice()) {
+            createPanel();
+        }
+
         installButton();
+        bindAndroidVoiceControls();
 
         const observer = new MutationObserver(() => {
             installButton();
@@ -717,7 +803,15 @@
             subtree: true
         });
 
-        window.Aprisha = { open, close, speak, stop, say: speakOut, command: handleAprishaCommand };
+        window.Aprisha = {
+            open,
+            close,
+            speak,
+            stop,
+            say: speakOut,
+            command: handleAprishaCommand,
+            openNative: openNativeAprisha
+        };
     }
 
     if (document.readyState === "loading") {

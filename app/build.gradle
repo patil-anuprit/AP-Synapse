@@ -20,6 +20,13 @@ plugins {
     id 'com.android.application'
 }
 
+def apKeystore = rootProject.file('android.keystore')
+def apStorePassword = System.getenv('AP_KEYSTORE_PASSWORD')
+def apKeyPassword = System.getenv('AP_KEY_PASSWORD') ?: apStorePassword
+def apCanSignRelease = apKeystore.exists() &&
+        apStorePassword != null &&
+        !apStorePassword.isEmpty()
+
 def twaManifest = [
     applicationId: 'com.apsynapse.app',
     hostName: 'ap-synapse.vercel.app', // The domain being opened in the TWA.
@@ -62,8 +69,8 @@ android {
         ndk {
             abiFilters "arm64-v8a"
         }
-        versionCode 2
-        versionName "2.0.2"
+        versionCode 3
+        versionName "3.0.0"
 
         // The name for the application
         resValue "string", "appName", twaManifest.name
@@ -155,9 +162,23 @@ android {
 
         
     }
+    signingConfigs {
+        if (apCanSignRelease) {
+            release {
+                storeFile apKeystore
+                storePassword apStorePassword
+                keyAlias 'ap-synapse'
+                keyPassword apKeyPassword
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled true
+
+            if (apCanSignRelease) {
+                signingConfig signingConfigs.release
+            }
         }
     }
     compileOptions {

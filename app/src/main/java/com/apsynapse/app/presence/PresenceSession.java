@@ -546,7 +546,7 @@ public class PresenceSession
             );
 
             responseText(
-                "I'm listeningâ€¦"
+                "I'm listeningÃ¢â‚¬Â¦"
             );
 
             recognizer
@@ -755,7 +755,20 @@ public class PresenceSession
          * ====================================================
          */
 
-                // AP_APRISHA_AGENT_V5_PIPELINE
+                // AP_APRISHA_NOTIFICATION_PIPELINE_V6
+        AprishaNotificationBridge.Result notificationAction =
+                AprishaNotificationBridge.route(
+                        getContext(),
+                        message
+                );
+
+        if (
+                notificationAction.handled
+        ) {
+            return notificationAction.response;
+        }
+
+        // AP_APRISHA_AGENT_V5_PIPELINE
         AprishaAgentBridge.Result agentAction =
                 null;
 

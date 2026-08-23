@@ -310,7 +310,7 @@
         
     
         <!-- ===================================================
-             AP SYNAPSE Â· AP PRESENCE
+             AP SYNAPSE Ã‚Â· AP PRESENCE
              =================================================== -->
 
         <activity
@@ -370,6 +370,19 @@
             android:permission="android.permission.BIND_VOICE_INTERACTION"
             android:exported="true" />
 
+
+        <!-- AP_APRISHA_NOTIFICATION_INTELLIGENCE_V6 -->
+        <service
+            android:name="com.apsynapse.app.presence.AprishaNotificationService"
+            android:label="@string/appName"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+            android:exported="false">
+
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+
+        </service>
         <!-- END AP PRESENCE -->
     </application>
 </manifest>

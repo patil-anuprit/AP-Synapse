@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
     "use strict";
 
     const VERSION = "desktop-wake-v1";
@@ -378,7 +378,7 @@
             show: showPanel
         };
 
-        setTimeout(showPanel, 1200);
+        // Quiet mode: no automatic wake setup popup.
 
         if (localStorage.getItem(KEY_ENABLED) === "1") {
             setTimeout(startRecognition, 1600);

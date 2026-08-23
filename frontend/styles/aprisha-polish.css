@@ -1,0 +1,99 @@
+﻿/* AP Aprisha Clean Premium Polish */
+
+.ap-auto-setup,
+.ap-desktop-wake-panel,
+#ap-android-installer-panel,
+#ap-wake-mode-setup,
+#ap-desktop-wake-panel {
+    display: none !important;
+}
+
+[id*="Aprisha"],
+[class*="aprisha"],
+[class*="Aprisha"] {
+    box-sizing: border-box;
+}
+
+#apAprishaSiriText,
+#apAprishaLiveTranscript {
+    max-width: 100% !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+}
+
+#apAprishaSiriText {
+    font-size: clamp(18px, 2.2vw, 28px) !important;
+    line-height: 1.35 !important;
+    font-weight: 650 !important;
+    letter-spacing: 0 !important;
+    text-align: center !important;
+}
+
+#apAprishaLiveTranscript {
+    font-size: clamp(13px, 1.2vw, 16px) !important;
+    line-height: 1.45 !important;
+    opacity: 0.78 !important;
+}
+
+.aprisha-modal,
+.ap-aprisha-modal,
+.aprisha-panel,
+.ap-aprisha-panel,
+#apAprishaModal,
+#apAprishaPanel,
+#apAprishaOverlay > div {
+    width: min(720px, calc(100vw - 32px)) !important;
+    max-width: calc(100vw - 32px) !important;
+    max-height: min(680px, calc(100dvh - 48px)) !important;
+    overflow: hidden !important;
+    border-radius: 22px !important;
+}
+
+.aprisha-modal *,
+.ap-aprisha-modal *,
+.aprisha-panel *,
+.ap-aprisha-panel *,
+#apAprishaModal *,
+#apAprishaPanel * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(214, 181, 94, 0.55) transparent;
+}
+
+.aprisha-modal *::-webkit-scrollbar,
+.ap-aprisha-modal *::-webkit-scrollbar,
+.aprisha-panel *::-webkit-scrollbar,
+.ap-aprisha-panel *::-webkit-scrollbar,
+#apAprishaModal *::-webkit-scrollbar,
+#apAprishaPanel *::-webkit-scrollbar {
+    width: 7px;
+}
+
+.aprisha-modal *::-webkit-scrollbar-thumb,
+.ap-aprisha-modal *::-webkit-scrollbar-thumb,
+.aprisha-panel *::-webkit-scrollbar-thumb,
+.ap-aprisha-panel *::-webkit-scrollbar-thumb,
+#apAprishaModal *::-webkit-scrollbar-thumb,
+#apAprishaPanel *::-webkit-scrollbar-thumb {
+    background: rgba(214, 181, 94, 0.55);
+    border-radius: 999px;
+}
+
+@media (max-width: 640px) {
+    #apAprishaSiriText {
+        font-size: 18px !important;
+        line-height: 1.35 !important;
+    }
+
+    .aprisha-modal,
+    .ap-aprisha-modal,
+    .aprisha-panel,
+    .ap-aprisha-panel,
+    #apAprishaModal,
+    #apAprishaPanel,
+    #apAprishaOverlay > div {
+        width: calc(100vw - 20px) !important;
+        max-width: calc(100vw - 20px) !important;
+        max-height: calc(100dvh - 24px) !important;
+        border-radius: 18px !important;
+    }
+}

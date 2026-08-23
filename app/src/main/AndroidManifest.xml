@@ -32,6 +32,52 @@
 
     
 
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.INTERNET" />
+<queries>
+    <intent>
+        <action android:name="android.speech.RecognitionService" />
+    </intent>
+    <intent>
+        <action android:name="android.intent.action.TTS_SERVICE" />
+    </intent>
+
+    <!-- AP_DEVICE_INTELLIGENCE_V2_VISIBILITY -->
+    <intent>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+    </intent>
+    <package android:name="com.google.android.youtube" />
+    <package android:name="com.google.android.apps.youtube.music" />
+    <package android:name="com.google.android.apps.maps" />
+    <package android:name="com.google.android.gm" />
+    <package android:name="com.android.chrome" />
+    <package android:name="com.google.android.googlequicksearchbox" />
+    <package android:name="com.whatsapp" />
+    <package android:name="com.spotify.music" />
+    <package android:name="com.instagram.android" />
+    <package android:name="com.facebook.katana" />
+    <package android:name="org.telegram.messenger" />
+    <package android:name="com.google.android.apps.photos" />
+    <package android:name="com.android.vending" />
+</queries>
+
+<uses-permission android:name="android.permission.READ_CONTACTS" />
+
+<uses-permission android:name="android.permission.CALL_PHONE" />
+
+<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
+
+<!-- AP_DEVICE_INTELLIGENCE_V2_PERMISSIONS -->
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:name="Application"
         android:allowBackup="true"
@@ -224,5 +270,60 @@
             </intent-filter>
         </service> 
         
+    
+        <!-- ===================================================
+             AP SYNAPSE Â· AP PRESENCE
+             =================================================== -->
+
+        <activity
+            android:name="com.apsynapse.app.presence.PresenceSetupActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:theme="@android:style/Theme.Material.NoActionBar">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="apsynapse"
+                    android:host="presence" />
+            </intent-filter>
+
+        </activity>
+
+
+        <service
+            android:name="com.apsynapse.app.presence.PresenceVoiceInteractionService"
+            android:permission="android.permission.BIND_VOICE_INTERACTION"
+            android:exported="true">
+
+            <intent-filter>
+                <action
+                    android:name="android.service.voice.VoiceInteractionService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.voice_interaction"
+                android:resource="@xml/ap_presence_voice_interaction" />
+
+        </service>
+
+
+        <service
+            android:name="com.apsynapse.app.presence.PresenceSessionService"
+            android:permission="android.permission.BIND_VOICE_INTERACTION"
+            android:exported="true"
+            android:process=":ap_presence_session" />
+
+        <!-- END AP PRESENCE -->
+
+        <service
+            android:name=".presence.AprishaWakeService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="microphone" />
     </application>
 </manifest>

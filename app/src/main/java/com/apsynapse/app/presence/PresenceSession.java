@@ -74,6 +74,10 @@ public class PresenceSession
 
     private boolean listening = false;
 
+    // AP_CONFIRMATION_CONTINUATION_V341
+    private boolean confirmationExpected = false;
+    private LinearLayout confirmationActions;
+
     private long presenceUntil = 0L;
 
     public PresenceSession(Context context) {
@@ -273,6 +277,21 @@ public class PresenceSession
         top.addView(mark);
         top.addView(title);
 
+        confirmationActions = new LinearLayout(context);
+        confirmationActions.setOrientation(LinearLayout.HORIZONTAL);
+        confirmationActions.setGravity(Gravity.END);
+        confirmationActions.setPadding(0, dp(12), 0, 0);
+        confirmationActions.setVisibility(View.GONE);
+
+        Button confirm = smallButton("Yes");
+        confirm.setOnClickListener(v -> submitConfirmation(true));
+
+        Button reject = smallButton("Cancel");
+        reject.setOnClickListener(v -> submitConfirmation(false));
+
+        confirmationActions.addView(confirm);
+        confirmationActions.addView(reject);
+
         actions.addView(listen);
         actions.addView(open);
         actions.addView(close);
@@ -280,6 +299,7 @@ public class PresenceSession
         card.addView(top);
         card.addView(status);
         card.addView(response);
+        card.addView(confirmationActions);
         card.addView(actions);
 
 
@@ -380,7 +400,48 @@ public class PresenceSession
         } catch (Throwable ignored) {}
     }
 
+    private void submitConfirmation(boolean confirmed) {
+        if (confirmationActions != null) {
+            confirmationActions.setVisibility(View.GONE);
+        }
+
+        if (tts != null) {
+            try { tts.stop(); } catch (Throwable ignored) {}
+        }
+
+        if (recognizer != null) {
+            try { recognizer.cancel(); } catch (Throwable ignored) {}
+        }
+
+        listening = false;
+        responseText(confirmed ? "Yes" : "Cancel");
+        handleRequest(confirmed ? "yes" : "cancel");
+    }
+
+    private void ensureConfirmationListening() {
+        if (!confirmationExpected || listening) {
+            return;
+        }
+
+        if (tts != null && tts.isSpeaking()) {
+            main.postDelayed(this::ensureConfirmationListening, 350L);
+            return;
+        }
+
+        playReadyTone();
+        startListening();
+    }
+
     private void startListening() {
+        // AP_CONFIRMATION_LISTEN_GUARD_V341
+        if (listening) {
+            return;
+        }
+
+        if (tts != null && tts.isSpeaking()) {
+            main.postDelayed(this::startListening, 300L);
+            return;
+        }
 
         if (
             SystemClock.elapsedRealtime()
@@ -576,12 +637,31 @@ public class PresenceSession
                 Locale.ROOT
             );
 
+        // AP_CONFIRMATION_REPLY_V341
+        boolean confirmationReply =
+            confirmationExpected &&
+            (normalized.equals("yes") ||
+             normalized.equals("yeah") ||
+             normalized.equals("yep") ||
+             normalized.equals("confirm") ||
+             normalized.equals("do it") ||
+             normalized.equals("go ahead") ||
+             normalized.equals("no") ||
+             normalized.equals("cancel"));
+
+        if (confirmationReply) {
+            confirmationExpected = false;
+            if (confirmationActions != null) {
+                confirmationActions.setVisibility(View.GONE);
+            }
+        }
+
 
         if (
             normalized.equals("stop") ||
             normalized.equals("goodbye") ||
             normalized.equals("close") ||
-            normalized.equals("cancel")
+            (normalized.equals("cancel") && !confirmationReply)
         ) {
 
             finish();
@@ -1066,6 +1146,22 @@ public class PresenceSession
 
         responseText(text);
 
+        // AP_CONFIRMATION_ANSWER_V341
+        confirmationExpected =
+            text != null &&
+            text.toLowerCase(Locale.ROOT).contains("say yes or cancel");
+
+        if (confirmationActions != null) {
+            confirmationActions.setVisibility(
+                confirmationExpected ? View.VISIBLE : View.GONE
+            );
+        }
+
+        if (confirmationExpected) {
+            presenceUntil = SystemClock.elapsedRealtime() + 90_000L;
+            main.postDelayed(this::ensureConfirmationListening, 4_000L);
+        }
+
         speak(text);
     }
 
@@ -1341,8 +1437,17 @@ public class PresenceSession
         int error
     ) {
 
-        listening =
-            false;
+        listening = false;
+
+        // AP_CONFIRMATION_ERROR_RECOVERY_V341
+        if (confirmationExpected) {
+            if (recognizer != null) {
+                try { recognizer.destroy(); } catch (Throwable ignored) {}
+                recognizer = null;
+            }
+            main.postDelayed(this::ensureConfirmationListening, 700L);
+            return;
+        }
 
         if (
             error ==

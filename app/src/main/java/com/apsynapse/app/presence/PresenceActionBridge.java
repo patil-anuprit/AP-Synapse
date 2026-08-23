@@ -16,7 +16,7 @@ public final class PresenceActionBridge {
     private static final String KEY_PENDING_NAME = "pending_name";
     private static final String KEY_PENDING_UNTIL = "pending_until";
     private static final String KEY_LAST_CONTACT = "last_contact";
-    private static final long CONFIRM_WINDOW_MS = 30_000L;
+    private static final long CONFIRM_WINDOW_MS = 90_000L;
 
     private PresenceActionBridge() {}
 
@@ -88,7 +88,7 @@ public final class PresenceActionBridge {
         }
 
         Matcher call = Pattern.compile(
-                "^(?:call|phone|ring)\\s+(.+)$",
+                "^(?:call|phone|ring)(?:\\s+to)?\\s+(.+)$",
                 Pattern.CASE_INSENSITIVE
         ).matcher(command);
 

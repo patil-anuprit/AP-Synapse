@@ -64,7 +64,7 @@ public final class PresenceDeviceActions {
         }
 
         Matcher call = Pattern.compile(
-                "^(?:call|phone|ring)\\s+(.+)$",
+                "^(?:call|phone|ring)(?:\\s+to)?\\s+(.+)$",
                 Pattern.CASE_INSENSITIVE
         ).matcher(command);
 

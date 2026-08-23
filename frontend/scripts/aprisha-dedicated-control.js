@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
     "use strict";
 
     const BUTTON_ID = "apDedicatedAprishaButton";
@@ -255,42 +255,304 @@
         document.getElementById(OVERLAY_ID)?.classList.remove("open");
     }
 
-    function sendToChat(text) {
-        const input =
-            document.querySelector("#userInput") ||
-            document.querySelector("#messageInput") ||
-            document.querySelector("textarea");
 
-        if (!input) {
-            setState("Command received", text);
+    // AP_DEDICATED_ACTIONS_V4
+    let replyObserver = null;
+    let replyTimer = null;
+
+    function speakOut(text) {
+        const clean = String(text || "")
+            .replace(/https?:\/\/\S+/g, " link ")
+            .replace(/[\`*_#>|]/g, " ")
+            .replace(/\s+/g, " ")
+            .trim()
+            .slice(0, 1800);
+
+        if (!clean || !("speechSynthesis" in window)) return;
+
+        window.speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(clean);
+        utterance.lang = navigator.language || "en-IN";
+        utterance.rate = 1;
+        utterance.pitch = 1;
+        utterance.volume = 1;
+
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function assistantNodes() {
+        const selectors = [
+            '[data-role="assistant"]',
+            '[data-message-role="assistant"]',
+            '.message.assistant',
+            '.assistant-message',
+            '.ai-message',
+            '.bot-message',
+            '.response-message',
+            '.message-row.assistant'
+        ];
+
+        return Array.from(
+            document.querySelectorAll(selectors.join(","))
+        ).filter((node) => !node.closest("#" + OVERLAY_ID));
+    }
+
+    function watchForAssistantReply() {
+        replyObserver?.disconnect();
+        clearTimeout(replyTimer);
+
+        const baseline = new Set(
+            assistantNodes().map((node) =>
+                String(node.innerText || node.textContent || "").trim()
+            )
+        );
+
+        replyObserver = new MutationObserver(() => {
+            const candidate = assistantNodes()
+                .slice()
+                .reverse()
+                .find((node) => {
+                    const text = String(
+                        node.innerText || node.textContent || ""
+                    ).trim();
+
+                    return text.length > 2 && !baseline.has(text);
+                });
+
+            if (!candidate) return;
+
+            clearTimeout(replyTimer);
+
+            replyTimer = setTimeout(() => {
+                const answer = String(
+                    candidate.innerText ||
+                    candidate.textContent ||
+                    ""
+                ).trim();
+
+                if (!answer) return;
+
+                replyObserver?.disconnect();
+                setState("Aprisha", answer);
+                speakOut(answer);
+            }, 2200);
+        });
+
+        replyObserver.observe(document.body, {
+            childList: true,
+            subtree: true,
+            characterData: true
+        });
+
+        setTimeout(() => replyObserver?.disconnect(), 90000);
+    }
+
+    function openWebsite(name, url) {
+        setState("Opening " + name, "Taking you to " + name + ".");
+        speakOut("Opening " + name);
+
+        const opened = window.open(url, "_blank");
+
+        if (opened) {
+            try {
+                opened.opener = null;
+            } catch {}
+        } else {
+            setTimeout(() => window.location.assign(url), 500);
+        }
+    }
+
+    function handleAprishaCommand(text) {
+        const command = String(text || "")
+            .toLowerCase()
+            .replace(/[^a-z0-9\s.-]/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+
+        const wantsOpen =
+            /\b(open|launch|start|visit|go to)\b/.test(command);
+
+        const websites = [
+            {
+                words: ["youtube"],
+                name: "YouTube",
+                url: "https://www.youtube.com/"
+            },
+            {
+                words: ["whatsapp"],
+                name: "WhatsApp",
+                url: "https://web.whatsapp.com/"
+            },
+            {
+                words: ["gmail"],
+                name: "Gmail",
+                url: "https://mail.google.com/"
+            },
+            {
+                words: ["google drive", "drive"],
+                name: "Google Drive",
+                url: "https://drive.google.com/"
+            },
+            {
+                words: ["google calendar", "calendar"],
+                name: "Google Calendar",
+                url: "https://calendar.google.com/"
+            },
+            {
+                words: ["github"],
+                name: "GitHub",
+                url: "https://github.com/"
+            }
+        ];
+
+        if (wantsOpen) {
+            const target = websites.find((website) =>
+                website.words.some((word) => command.includes(word))
+            );
+
+            if (target) {
+                openWebsite(target.name, target.url);
+                return;
+            }
+        }
+
+        const youtubeSearch = command.match(
+            /(?:search|find)\s+(?:on\s+)?youtube\s+(?:for\s+)?(.+)/
+        );
+
+        if (youtubeSearch?.[1]) {
+            const query = encodeURIComponent(youtubeSearch[1]);
+
+            openWebsite(
+                "YouTube search",
+                "https://www.youtube.com/results?search_query=" + query
+            );
+
             return;
         }
 
-        const nativeSetter =
+        const googleSearch = command.match(
+            /(?:search|google)\s+(?:for\s+)?(.+)/
+        );
+
+        if (googleSearch?.[1]) {
+            const query = encodeURIComponent(googleSearch[1]);
+
+            openWebsite(
+                "Google search",
+                "https://www.google.com/search?q=" + query
+            );
+
+            return;
+        }
+
+        watchForAssistantReply();
+
+        if (sendToChat(text)) {
+            setState("Sent to AP Synapse", text);
+            speakOut("Your request has been sent to AP Synapse.");
+        } else {
+            replyObserver?.disconnect();
+
+            setState(
+                "Chat connection unavailable",
+                "Open an AP Synapse conversation and try again."
+            );
+
+            speakOut(
+                "Please open an AP Synapse conversation and try again."
+            );
+        }
+    }
+
+    function sendToChat(text) {
+        const inputSelectors = [
+            "#userInput",
+            "#messageInput",
+            "#chatInput",
+            "#promptInput",
+            "textarea[placeholder*='message' i]",
+            "textarea[placeholder*='ask' i]",
+            "textarea"
+        ];
+
+        const inputs = Array.from(
+            document.querySelectorAll(inputSelectors.join(","))
+        ).filter((element) => {
+            if (element.closest("#" + OVERLAY_ID)) return false;
+            if (element.disabled || element.readOnly) return false;
+
+            return element.getClientRects().length > 0;
+        });
+
+        const input = inputs[0];
+
+        if (!input) return false;
+
+        const descriptor =
             Object.getOwnPropertyDescriptor(
                 Object.getPrototypeOf(input),
                 "value"
-            )?.set;
+            );
 
-        if (nativeSetter) {
-            nativeSetter.call(input, text);
+        if (descriptor?.set) {
+            descriptor.set.call(input, text);
         } else {
             input.value = text;
         }
 
-        input.dispatchEvent(new Event("input", { bubbles: true }));
+        input.dispatchEvent(
+            new Event("input", { bubbles: true })
+        );
+
+        input.dispatchEvent(
+            new Event("change", { bubbles: true })
+        );
+
         input.focus();
 
-        const sendButton =
-            document.querySelector("#sendButton") ||
-            document.querySelector("[data-send]") ||
-            document.querySelector("button[type='submit']");
+        const sendSelectors = [
+            "#sendButton",
+            "#sendBtn",
+            "[data-send]",
+            ".send-button",
+            ".send-btn",
+            "button[aria-label*='send' i]",
+            "button[title*='send' i]"
+        ];
 
-        if (sendButton && !sendButton.disabled) {
+        const sendButton = Array.from(
+            document.querySelectorAll(sendSelectors.join(","))
+        ).find((button) => {
+            if (button.closest("#" + OVERLAY_ID)) return false;
+            if (button.disabled) return false;
+
+            return button.getClientRects().length > 0;
+        });
+
+        if (sendButton) {
             sendButton.click();
+            return true;
         }
 
-        setState("Sent to AP Synapse", text);
+        const form = input.closest("form");
+
+        if (form?.requestSubmit) {
+            form.requestSubmit();
+            return true;
+        }
+
+        input.dispatchEvent(
+            new KeyboardEvent("keydown", {
+                key: "Enter",
+                code: "Enter",
+                bubbles: true,
+                cancelable: true
+            })
+        );
+
+        return true;
     }
 
     function speak() {
@@ -330,7 +592,7 @@
             const heard = (finalText || interimText).trim();
 
             if (heard) setState("I heard you", heard);
-            if (finalText.trim()) sendToChat(finalText.trim());
+            if (finalText.trim()) handleAprishaCommand(finalText.trim());
         };
 
         recognition.onerror = (event) => {
@@ -455,7 +717,7 @@
             subtree: true
         });
 
-        window.Aprisha = { open, close, speak, stop };
+        window.Aprisha = { open, close, speak, stop, say: speakOut, command: handleAprishaCommand };
     }
 
     if (document.readyState === "loading") {

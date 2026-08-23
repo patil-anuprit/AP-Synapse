@@ -38,6 +38,7 @@ import {
 } from "./services/communicationScheduler.js";
 
 import brain from "./core/index.js";
+import { routeAprishaIntent } from "./services/aprishaIntentRouter.js";
 
 import {
     detectIntent,
@@ -75,6 +76,27 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 app.use("/share-v2", shareV2Router);
+
+// AP_APRISHA_LIVE_ROUTER_V1
+app.post("/aprisha/route", (req, res) => {
+    try {
+        const result = routeAprishaIntent(req.body?.message);
+
+        res.json({
+            ok: true,
+            version: "aprisha-live-router-1",
+            ...result
+        });
+    } catch (error) {
+        console.error("Aprisha router failed:", error);
+
+        res.status(500).json({
+            ok: false,
+            handled: false,
+            mode: "chat"
+        });
+    }
+});
 
 app.get("/", (req, res) => {
 

@@ -197,10 +197,7 @@ public final class PresenceSetupActivity extends Activity {
 
         for (Intent candidate : candidates) {
             try {
-                if (candidate.resolveActivity(getPackageManager()) == null) {
-                    continue;
-                }
-
+                candidate.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(candidate);
                 Toast.makeText(
                         this,
@@ -258,6 +255,15 @@ public final class PresenceSetupActivity extends Activity {
             return;
         }
 
+        if (!isAssistantActive()) {
+            deepLinkHandled = false;
+            status.setText(
+                    "AP Synapse is not the selected Android assistant. " +
+                    "Select AP Synapse on the settings screen, then return here."
+            );
+            openAssistantSettings();
+            return;
+        }
         if (!assistantBasicsReady()) {
             deepLinkHandled = false;
             status.setText(
@@ -346,18 +352,26 @@ public final class PresenceSetupActivity extends Activity {
     }
 
     private boolean isAssistantActive() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            RoleManager manager = getSystemService(RoleManager.class);
-            if (manager != null && manager.isRoleAvailable(RoleManager.ROLE_ASSISTANT)) {
-                return manager.isRoleHeld(RoleManager.ROLE_ASSISTANT);
-            }
-        }
-
         String service = Settings.Secure.getString(
                 getContentResolver(),
                 "voice_interaction_service"
         );
-        return service != null && service.contains(getPackageName());
+
+        if (service == null || service.trim().isEmpty()) {
+            return false;
+        }
+
+        android.content.ComponentName selected =
+                android.content.ComponentName.unflattenFromString(service);
+
+        if (selected == null) {
+            return false;
+        }
+
+        return getPackageName().equals(selected.getPackageName()) &&
+                PresenceVoiceInteractionService.class
+                        .getName()
+                        .equals(selected.getClassName());
     }
 
     @Override

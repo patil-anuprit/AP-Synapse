@@ -62,6 +62,10 @@ public class PresenceSession
     private SpeechRecognizer recognizer;
     private TextToSpeech tts;
 
+    // AP_TTS_READY_QUEUE_V4
+    private boolean ttsReady = false;
+    private String pendingSpeech;
+
     private TextView status;
     private TextView response;
 
@@ -989,9 +993,9 @@ public class PresenceSession
         String text
     ) {
 
-        if (tts == null) {
+        if (tts == null || !ttsReady) {
 
-            resumeListeningSoon();
+            pendingSpeech = text;
 
             return;
         }
@@ -1189,6 +1193,29 @@ public class PresenceSession
                         );
                     }
                 }
+            );
+
+            ttsReady = true;
+
+            String queued = pendingSpeech;
+            pendingSpeech = null;
+
+            if (
+                queued != null &&
+                !queued.trim().isEmpty()
+            ) {
+                main.post(
+                    () -> speak(queued)
+                );
+            }
+
+        } else {
+
+            ttsReady = false;
+            pendingSpeech = null;
+
+            main.post(
+                this::resumeListeningSoon
             );
         }
     }

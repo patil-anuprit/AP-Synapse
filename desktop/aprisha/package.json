@@ -1,0 +1,39 @@
+{
+  "name": "ap-synapse-aprisha-desktop",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Aprisha desktop presence for AP Synapse",
+  "author": "Anuprit Patil",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:win": "electron-builder --win nsis"
+  },
+  "devDependencies": {
+    "electron": "43.4.1",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "com.apsynapse.aprisha.desktop",
+    "productName": "Aprisha",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "windows/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}

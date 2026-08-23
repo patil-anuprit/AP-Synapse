@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta
+        http-equiv="Content-Security-Policy"
+        content="
+            default-src 'self';
+            script-src 'self';
+            style-src 'self' 'unsafe-inline';
+            connect-src https://ap-synapse-backend.onrender.com;
+            img-src 'self' data:;
+            font-src 'self' data:;
+        "
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aprisha</title>
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+<body data-state="idle">
+    <main class="shell">
+        <div class="glow"></div>
+
+        <section class="presence">
+            <div class="identity">
+                <div id="orb" class="orb" aria-label="Ready">
+                    <span class="orb-core"></span>
+                    <span class="orb-ring ring-a"></span>
+                    <span class="orb-ring ring-b"></span>
+                </div>
+
+                <div class="brand">
+                    <div class="eyebrow">AP SYNAPSE</div>
+                    <div class="name">Aprisha</div>
+                </div>
+            </div>
+
+            <div class="status">
+                <span id="state">Ready</span>
+                <span class="divider">â€¢</span>
+                <span id="shortcut">Ctrl+Shift+Space</span>
+            </div>
+
+            <button id="close" class="icon-button close" aria-label="Hide Aprisha">Ã—</button>
+        </section>
+
+        <section class="content">
+            <div id="response" class="response">
+                Ask anything or tell me what to do on this PC.
+            </div>
+
+            <div id="progress" class="progress"></div>
+        </section>
+
+        <section class="composer">
+            <input
+                id="prompt"
+                autocomplete="off"
+                spellcheck="true"
+                placeholder="Ask Aprisha or give a desktop taskâ€¦"
+            />
+
+            <button id="mic" class="icon-button mic" aria-label="Speak">âŒ</button>
+            <button id="openAP" class="open-ap">AP</button>
+            <button id="send" class="send">â†‘</button>
+        </section>
+    </main>
+
+    <script src="./renderer.js"></script>
+</body>
+</html>

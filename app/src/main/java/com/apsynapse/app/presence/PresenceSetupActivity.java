@@ -124,7 +124,7 @@ public final class PresenceSetupActivity extends Activity {
         web.setOnClickListener(view -> openWebApp());
 
         Button settings = button("Android assistant settings");
-        settings.setOnClickListener(view -> requestAssistantRole(false));
+        settings.setOnClickListener(view -> openAssistantSettings());
 
         root.addView(mark);
         root.addView(title);
@@ -177,28 +177,42 @@ public final class PresenceSetupActivity extends Activity {
             return;
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            RoleManager manager = getSystemService(RoleManager.class);
+        openAssistantSettings();
+    }
 
-            if (manager != null && manager.isRoleAvailable(RoleManager.ROLE_ASSISTANT)) {
-                startActivityForResult(
-                        manager.createRequestRoleIntent(RoleManager.ROLE_ASSISTANT),
-                        REQ_ASSISTANT
-                );
+    private void openAssistantSettings() {
+        Intent samsungAssist = new Intent();
+        samsungAssist.setComponent(
+                new android.content.ComponentName(
+                        "com.android.settings",
+                        "com.android.settings.Settings$ManageAssistActivity"
+                )
+        );
+
+        Intent[] candidates = new Intent[]{
+                samsungAssist,
+                new Intent(Settings.ACTION_VOICE_INPUT_SETTINGS),
+                new Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS)
+        };
+
+        for (Intent candidate : candidates) {
+            try {
+                if (candidate.resolveActivity(getPackageManager()) == null) {
+                    continue;
+                }
+
+                startActivity(candidate);
+                Toast.makeText(
+                        this,
+                        "Open Device assistance app and choose AP Synapse.",
+                        Toast.LENGTH_LONG
+                ).show();
                 return;
+            } catch (Throwable ignored) {
             }
         }
 
-        try {
-            startActivity(new Intent(Settings.ACTION_VOICE_INPUT_SETTINGS));
-            Toast.makeText(
-                    this,
-                    "Choose AP Synapse as the assistant, then return here.",
-                    Toast.LENGTH_LONG
-            ).show();
-        } catch (Throwable error) {
-            status.setText("Open Android Settings and choose AP Synapse as the default assistant.");
-        }
+        status.setText("Android assistant settings could not be opened on this firmware.");
     }
 
     private void requestOptionalPermissions() {

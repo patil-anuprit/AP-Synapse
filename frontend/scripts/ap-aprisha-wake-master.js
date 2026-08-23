@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
     "use strict";
 
     const KEY = "ap_aprisha_wake_master_enabled";
@@ -200,6 +200,26 @@
         }, true);
     }
 
+    
+    // AP_WAKE_AUTO_ARM_ON_FIRST_GESTURE
+    function armOnFirstGesture() {
+        const shouldArm =
+            localStorage.getItem(KEY) === "1" ||
+            location.search.includes("wake=1") ||
+            location.search.includes("fresh=wake");
+
+        if (!shouldArm) return;
+
+        const arm = () => {
+            document.removeEventListener("pointerdown", arm, true);
+            document.removeEventListener("keydown", arm, true);
+            enable();
+        };
+
+        document.addEventListener("pointerdown", arm, true);
+        document.addEventListener("keydown", arm, true);
+    }
+
     function boot() {
         window.APAprishaWakeMaster = {
             enable,
@@ -213,6 +233,7 @@
         };
 
         hookEnableButtons();
+        armOnFirstGesture();
 
         if (localStorage.getItem(KEY) === "1") {
             setTimeout(start, 1200);

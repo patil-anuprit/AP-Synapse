@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
     "use strict";
 
     const Speech =
@@ -99,6 +99,8 @@
     }
 
     async function start() {
+        // AP_APRISHA_V2_VOICE_GATE
+        window.__AP_APRISHA_ALLOW_VOICE_START = true;
         ensureUI();
 
         if (!Speech) {
@@ -164,6 +166,7 @@
     }
 
     function stop() {
+        window.__AP_APRISHA_ALLOW_VOICE_START = false;
         setListening(false);
 
         if (recognition) {

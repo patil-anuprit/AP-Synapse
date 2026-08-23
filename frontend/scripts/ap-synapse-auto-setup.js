@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
     "use strict";
 
     const AP_AUTO_VERSION = "ap-auto-setup-v1";
@@ -288,6 +288,46 @@
             updateServiceWorker: registerServiceWorker
         };
     }
+
+    
+    // AP_WAKE_MODE_SETUP_V1
+    function showWakeModePanel() {
+        if (document.getElementById("ap-wake-mode-setup")) return;
+
+        const panel = document.createElement("div");
+        panel.id = "ap-wake-mode-setup";
+        panel.className = "ap-auto-setup";
+        panel.innerHTML = `
+            <h3>Aprisha Wake Mode</h3>
+            <p>
+                For full mobile power, install AP Synapse as the Android app,
+                allow microphone, notifications and device permissions, then
+                enable Aprisha Wake Mode inside the app.
+            </p>
+            <div class="ap-auto-setup-actions">
+                <button type="button" data-ap-wake-open>Open AP Synapse</button>
+                <button type="button" class="secondary" data-ap-wake-close>Later</button>
+            </div>
+        `;
+
+        document.body.appendChild(panel);
+
+        panel.querySelector("[data-ap-wake-close]")?.addEventListener("click", () => {
+            panel.remove();
+        });
+
+        panel.querySelector("[data-ap-wake-open]")?.addEventListener("click", () => {
+            location.href = "/?wake-mode=1";
+        });
+    }
+
+    window.APAprishaWakeMode = {
+        show: showWakeModePanel,
+        note:
+            "Always-on wake word requires the installed Android app with a visible foreground service. Browser and iPhone cannot provide unrestricted Siri replacement."
+    };
+
+    setTimeout(showWakeModePanel, 2200);
 
     async function boot() {
         exposeApi();

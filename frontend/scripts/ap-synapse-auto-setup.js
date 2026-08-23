@@ -329,6 +329,46 @@
 
     setTimeout(showWakeModePanel, 2200);
 
+    
+    // AP_ANDROID_INSTALLER_PANEL_V1
+    function showAndroidInstallerPanel() {
+        const isAndroid =
+            /Android/i.test(navigator.userAgent || "");
+
+        if (!isAndroid) return;
+        if (document.getElementById("ap-android-installer-panel")) return;
+
+        setupStyles();
+
+        const panel = document.createElement("div");
+        panel.id = "ap-android-installer-panel";
+        panel.className = "ap-auto-setup";
+
+        panel.innerHTML = `
+            <h3>Unlock Full Aprisha Power</h3>
+            <p>
+                For wake mode, device actions, app launching and full mobile control,
+                install the AP Synapse Android app and allow permissions.
+            </p>
+            <div class="ap-auto-setup-actions">
+                <button type="button" data-ap-download-app>Install Android App</button>
+                <button type="button" class="secondary" data-ap-close-app>Later</button>
+            </div>
+        `;
+
+        document.body.appendChild(panel);
+
+        panel.querySelector("[data-ap-close-app]")?.addEventListener("click", () => {
+            panel.remove();
+        });
+
+        panel.querySelector("[data-ap-download-app]")?.addEventListener("click", () => {
+            location.href = "/downloads/ap-synapse-android.apk";
+        });
+    }
+
+    setTimeout(showAndroidInstallerPanel, 1800);
+
     async function boot() {
         exposeApi();
         captureInstallPrompt();

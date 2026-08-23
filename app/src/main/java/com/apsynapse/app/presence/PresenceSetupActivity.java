@@ -383,46 +383,13 @@ public class PresenceSetupActivity extends Activity {
             );
         }
     }
-
-
-
-    // AP_WAKE_SETUP_ACTIVITY_START_V1
+    // AP_NATIVE_ASSISTANT_SERVICE_OWNS_WAKE
     private void apStartWakeModeAfterPermissionDelay() {
-        new android.os.Handler(
-                android.os.Looper.getMainLooper()
-        ).postDelayed(
-                this::apStartWakeModeIfAllowed,
-                900
-        );
-    }
-
-    private void apStartWakeModeIfAllowed() {
-        try {
-            if (
-                    android.os.Build.VERSION.SDK_INT >= 23 &&
-                    checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) != android.content.pm.PackageManager.PERMISSION_GRANTED
-            ) {
-                return;
-            }
-
-            android.content.Intent service =
-                    new android.content.Intent(
-                            this,
-                            AprishaWakeService.class
-                    );
-
-            if (android.os.Build.VERSION.SDK_INT >= 26) {
-                startForegroundService(service);
-            } else {
-                startService(service);
-            }
-
-            android.widget.Toast.makeText(
-                    this,
-                    "Aprisha Wake Mode enabled.",
-                    android.widget.Toast.LENGTH_SHORT
-            ).show();
-        } catch (Throwable ignored) {}
+        /*
+         * Retained for existing permission callbacks.
+         * Android's selected VoiceInteractionService owns
+         * Sherpa wake-word listening.
+         */
     }
 
 }

@@ -72,9 +72,7 @@
 <!-- AP_DEVICE_INTELLIGENCE_V2_PERMISSIONS -->
 <uses-permission android:name="android.permission.CAMERA" />
 <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
-<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
@@ -319,11 +317,5 @@
             android:process=":ap_presence_session" />
 
         <!-- END AP PRESENCE -->
-
-        <service
-            android:name=".presence.AprishaWakeService"
-            android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType="microphone" />
     </application>
 </manifest>

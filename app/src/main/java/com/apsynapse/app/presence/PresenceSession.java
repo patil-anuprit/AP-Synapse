@@ -546,7 +546,7 @@ public class PresenceSession
             );
 
             responseText(
-                "I'm listening…"
+                "I'm listeningâ€¦"
             );
 
             recognizer
@@ -755,7 +755,38 @@ public class PresenceSession
          * ====================================================
          */
 
-        PresenceActionBridge.Result nativeAction =
+                // AP_APRISHA_AGENT_V5_PIPELINE
+        AprishaAgentBridge.Result agentAction =
+                null;
+
+        boolean agentCandidate =
+                AprishaAgentBridge
+                        .looksActionLike(
+                                message
+                        );
+
+        if (
+                agentCandidate &&
+                AprishaAgentBridge
+                        .looksCompound(
+                                message
+                        )
+        ) {
+
+            agentAction =
+                    AprishaAgentBridge.route(
+                            getContext(),
+                            message
+                    );
+
+            if (
+                    agentAction.handled
+            ) {
+                return agentAction.response;
+            }
+        }
+
+PresenceActionBridge.Result nativeAction =
                 PresenceActionBridge.route(
                         getContext(),
                         message
@@ -789,6 +820,24 @@ public class PresenceSession
         }
 
 
+
+        if (
+                agentCandidate &&
+                agentAction == null
+        ) {
+
+            agentAction =
+                    AprishaAgentBridge.route(
+                            getContext(),
+                            message
+                    );
+
+            if (
+                    agentAction.handled
+            ) {
+                return agentAction.response;
+            }
+        }
 
         HttpURLConnection connection =
             null;

@@ -1,0 +1,174 @@
+﻿.aprisha-v2-fab {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 99990;
+    width: 64px;
+    height: 64px;
+    border: 1px solid rgba(214, 181, 94, 0.42);
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.18), transparent 30%),
+        linear-gradient(145deg, rgba(22, 23, 27, 0.96), rgba(8, 9, 12, 0.96));
+    color: #e7c76f;
+    font-weight: 900;
+    letter-spacing: 0;
+    box-shadow:
+        0 18px 52px rgba(0, 0, 0, 0.42),
+        0 0 24px rgba(214, 181, 94, 0.18);
+    cursor: pointer;
+}
+
+.aprisha-v2-fab.listening {
+    animation: aprishaV2Pulse 1.2s ease-in-out infinite;
+}
+
+.aprisha-v2-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99989;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    background: rgba(0, 0, 0, 0.58);
+    backdrop-filter: blur(10px);
+}
+
+.aprisha-v2-overlay.open {
+    display: flex;
+}
+
+.aprisha-v2-panel {
+    width: min(680px, 100%);
+    max-height: min(620px, calc(100dvh - 36px));
+    overflow: hidden;
+    border: 1px solid rgba(214, 181, 94, 0.24);
+    border-radius: 22px;
+    background:
+        radial-gradient(circle at 50% 8%, rgba(214, 181, 94, 0.10), transparent 34%),
+        linear-gradient(145deg, rgba(23, 24, 28, 0.98), rgba(11, 12, 15, 0.98));
+    color: #f5f2ea;
+    box-shadow: 0 26px 90px rgba(0, 0, 0, 0.55);
+}
+
+.aprisha-v2-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.aprisha-v2-title {
+    font-size: 15px;
+    font-weight: 850;
+}
+
+.aprisha-v2-close {
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    color: #f5f2ea;
+    cursor: pointer;
+}
+
+.aprisha-v2-body {
+    padding: 34px 26px 26px;
+    text-align: center;
+}
+
+.aprisha-v2-orb {
+    width: 116px;
+    height: 116px;
+    margin: 0 auto 22px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px solid rgba(214, 181, 94, 0.32);
+    color: #e8c86f;
+    font-weight: 900;
+    background:
+        radial-gradient(circle, rgba(214, 181, 94, 0.18), transparent 58%),
+        rgba(255, 255, 255, 0.03);
+    box-shadow: 0 0 60px rgba(214, 181, 94, 0.16);
+}
+
+.aprisha-v2-orb.listening {
+    animation: aprishaV2Pulse 1.15s ease-in-out infinite;
+}
+
+.aprisha-v2-status {
+    margin: 0 auto 10px;
+    max-width: 560px;
+    font-size: clamp(20px, 2.6vw, 32px);
+    line-height: 1.28;
+    font-weight: 760;
+    letter-spacing: 0;
+}
+
+.aprisha-v2-transcript {
+    min-height: 24px;
+    margin: 0 auto 24px;
+    max-width: 560px;
+    color: rgba(245, 242, 234, 0.68);
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.aprisha-v2-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.aprisha-v2-btn {
+    border: 0;
+    border-radius: 12px;
+    padding: 11px 16px;
+    background: linear-gradient(135deg, #e1c16b, #a7822c);
+    color: #101114;
+    font-weight: 850;
+    cursor: pointer;
+}
+
+.aprisha-v2-btn.secondary {
+    background: rgba(255, 255, 255, 0.08);
+    color: #f5f2ea;
+}
+
+@keyframes aprishaV2Pulse {
+    0%, 100% {
+        box-shadow: 0 0 26px rgba(214, 181, 94, 0.18);
+        transform: scale(1);
+    }
+
+    50% {
+        box-shadow: 0 0 64px rgba(214, 181, 94, 0.34);
+        transform: scale(1.035);
+    }
+}
+
+@media (max-width: 640px) {
+    .aprisha-v2-fab {
+        right: 16px;
+        bottom: 16px;
+        width: 58px;
+        height: 58px;
+    }
+
+    .aprisha-v2-panel {
+        border-radius: 18px;
+    }
+
+    .aprisha-v2-body {
+        padding: 28px 18px 22px;
+    }
+
+    .aprisha-v2-status {
+        font-size: 21px;
+    }
+}

@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
     "use strict";
 
     /*
@@ -1792,6 +1792,85 @@
     async function localAction(
         command
     ) {
+
+        // AP_APRISHA_WEB_LAUNCH_V2
+        const apLaunchCommand =
+            String(command || "")
+                .toLowerCase()
+                .trim()
+                .replace(/[.!?;:]+$/g, "")
+                .replace(/^hey\s+aprisha[\s,;:!-]*/i, "")
+                .replace(
+                    /^(?:(?:can|could|would|will)\s+you\s+)?(?:please\s+)?/i,
+                    ""
+                )
+                .replace(/\s+/g, " ")
+                .trim();
+
+        const apLaunchMatch =
+            apLaunchCommand.match(
+                /^(?:open|launch|start|visit|go\s+to|take\s+me\s+to)\s+(.+)$/
+            );
+
+        if (apLaunchMatch) {
+            let apLaunchTarget =
+                apLaunchMatch[1]
+                    .replace(/^the\s+/, "")
+                    .replace(/\s+please$/, "")
+                    .replace(/\s+for\s+me$/, "")
+                    .replace(
+                        /\s+(?:app|application|website|site)$/,
+                        ""
+                    )
+                    .replace(/[.!?;:]+$/g, "")
+                    .trim();
+
+            const apLaunchDestinations = {
+                "youtube": "https://www.youtube.com/",
+                "you tube": "https://www.youtube.com/",
+                "youtube.com": "https://www.youtube.com/",
+                "google": "https://www.google.com/",
+                "gmail": "https://mail.google.com/",
+                "maps": "https://maps.google.com/",
+                "google maps": "https://maps.google.com/",
+                "drive": "https://drive.google.com/",
+                "google drive": "https://drive.google.com/",
+                "github": "https://github.com/"
+            };
+
+            const apLaunchDestination =
+                apLaunchDestinations[apLaunchTarget];
+
+            if (apLaunchDestination) {
+                try {
+                    const text =
+                        document.getElementById(
+                            "apAprishaSiriText"
+                        );
+
+                    if (text) {
+                        text.textContent =
+                            "Opening " +
+                            apLaunchTarget
+                                .replace(
+                                    /\b\w/g,
+                                    letter =>
+                                        letter.toUpperCase()
+                                ) +
+                            "…";
+                    }
+                }
+                catch {}
+
+                window.location.assign(
+                    apLaunchDestination
+                );
+
+                return true;
+            }
+        }
+
+
 
         // AP_APRISHA_WEB_DIRECT_ACTION_MASTER
         /*

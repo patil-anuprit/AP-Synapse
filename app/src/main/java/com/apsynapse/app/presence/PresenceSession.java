@@ -628,6 +628,26 @@ public class PresenceSession
             return nativeAction.response;
         }
 
+        // AP_APRISHA_LIVE_DEVICE_FALLBACK_V1
+        String liveCommand =
+                AprishaLiveRouter.resolve(message);
+
+        if (
+                liveCommand != null &&
+                !liveCommand.trim().isEmpty()
+        ) {
+
+            PresenceActionBridge.Result liveAction =
+                    PresenceActionBridge.route(
+                            getContext(),
+                            liveCommand
+                    );
+
+            if (liveAction.handled) {
+                return liveAction.response;
+            }
+        }
+
 
 
         HttpURLConnection connection =

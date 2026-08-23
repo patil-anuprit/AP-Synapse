@@ -60,6 +60,43 @@
     <package android:name="org.telegram.messenger" />
     <package android:name="com.google.android.apps.photos" />
     <package android:name="com.android.vending" />
+
+    <!-- AP_APRISHA_DEVICE_VISIBILITY_V2 -->
+    <intent>
+        <action android:name="android.intent.action.SET_TIMER" />
+    </intent>
+
+    <intent>
+        <action android:name="android.intent.action.SET_ALARM" />
+    </intent>
+
+    <intent>
+        <action android:name="android.intent.action.DIAL" />
+        <data android:scheme="tel" />
+    </intent>
+
+    <intent>
+        <action android:name="android.intent.action.SENDTO" />
+        <data android:scheme="smsto" />
+    </intent>
+
+    <intent>
+        <action android:name="android.media.action.IMAGE_CAPTURE" />
+    </intent>
+
+    <intent>
+        <action android:name="android.media.action.VIDEO_CAPTURE" />
+    </intent>
+
+    <intent>
+        <action android:name="android.intent.action.VIEW" />
+        <data android:scheme="geo" />
+    </intent>
+
+    <intent>
+        <action android:name="android.intent.action.INSERT" />
+        <data android:scheme="content" />
+    </intent>
 </queries>
 
 <uses-permission android:name="android.permission.READ_CONTACTS" />

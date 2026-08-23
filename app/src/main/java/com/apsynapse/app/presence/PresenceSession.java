@@ -427,11 +427,24 @@ public class PresenceSession
 
             if (recognizer == null) {
 
+                android.content.ComponentName
+                    externalRecognizer =
+                        AprishaRecognitionService
+                            .findExternalRecognizer(
+                                context
+                            );
+
                 recognizer =
-                    SpeechRecognizer
-                        .createSpeechRecognizer(
-                            context
-                        );
+                    externalRecognizer == null
+                        ? SpeechRecognizer
+                            .createSpeechRecognizer(
+                                context
+                            )
+                        : SpeechRecognizer
+                            .createSpeechRecognizer(
+                                context,
+                                externalRecognizer
+                            );
 
                 recognizer
                     .setRecognitionListener(

@@ -336,6 +336,7 @@
 
         <service
             android:name="com.apsynapse.app.presence.PresenceVoiceInteractionService"
+            android:label="@string/appName"
             android:permission="android.permission.BIND_VOICE_INTERACTION"
             android:exported="true">
 
@@ -347,6 +348,19 @@
             <meta-data
                 android:name="android.voice_interaction"
                 android:resource="@xml/ap_presence_voice_interaction" />
+
+        </service>
+
+
+        <service
+            android:name="com.apsynapse.app.presence.AprishaRecognitionService"
+            android:label="@string/appName"
+            android:permission="android.permission.BIND_SPEECH_RECOGNITION_SERVICE"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.speech.RecognitionService" />
+            </intent-filter>
 
         </service>
 

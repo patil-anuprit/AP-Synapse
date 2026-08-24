@@ -348,7 +348,7 @@ public class PresenceSession
 
         presenceUntil =
             SystemClock.elapsedRealtime()
-            + 45_000L;
+            + 180_000L; // AP_APRISHA_V8_CONVERSATION_WINDOW
 
         Intent wakeSuspend =
             new Intent(
@@ -439,7 +439,8 @@ public class PresenceSession
         }
 
         if (tts != null && tts.isSpeaking()) {
-            main.postDelayed(this::startListening, 300L);
+            main.postDelayed(this::startListening,
+            120L);
             return;
         }
 
@@ -546,7 +547,7 @@ public class PresenceSession
             );
 
             responseText(
-                "I'm listeningÃ¢â‚¬Â¦"
+                "I'm listeningÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦"
             );
 
             recognizer
@@ -766,6 +767,27 @@ public class PresenceSession
                 notificationAction.handled
         ) {
             return notificationAction.response;
+        }
+
+        // AP_APRISHA_CONTEXT_PIPELINE_V9
+        // Resolve safe conversational follow-ups before local/agent routing.
+        message =
+                AprishaContextCore.resolve(
+                        getContext(),
+                        message
+                );
+
+        // AP_APRISHA_UNIVERSAL_PIPELINE_V8
+        AprishaUniversalCore.Result universalAction =
+                AprishaUniversalCore.route(
+                        getContext(),
+                        message
+                );
+
+        if (
+                universalAction.handled
+        ) {
+            return universalAction.response;
         }
 
         // AP_APRISHA_AGENT_V5_PIPELINE
@@ -1275,7 +1297,7 @@ PresenceActionBridge.Result nativeAction =
 
             main.postDelayed(
                 this::startListening,
-                650L
+                320L
             );
 
         } else {

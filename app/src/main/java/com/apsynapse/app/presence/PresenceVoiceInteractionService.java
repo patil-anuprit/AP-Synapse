@@ -235,6 +235,17 @@ public class PresenceVoiceInteractionService
         );
 
 
+        // AP_APRISHA_V8_INSTANT_WAKE
+        args.putBoolean(
+                "ap_auto_listen",
+                true
+        );
+
+        args.putLong(
+                "ap_presence_window_ms",
+                180_000L
+        );
+
         try {
 
             showSession(

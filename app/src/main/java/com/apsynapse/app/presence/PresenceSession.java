@@ -547,7 +547,7 @@ public class PresenceSession
             );
 
             responseText(
-                "I'm listeningÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦"
+                "I'm listeningÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦"
             );
 
             recognizer
@@ -776,6 +776,43 @@ public class PresenceSession
                         getContext(),
                         message
                 );
+
+        // AP_APRISHA_SCREEN_CONTEXT_PIPELINE_V11
+        if (
+                AprishaAssistContextCore
+                        .isScreenContextRequest(
+                                message
+                        )
+        ) {
+
+            String contextualMessage =
+                    AprishaAssistContextCore
+                            .augment(
+                                    message
+                            );
+
+            if (
+                    contextualMessage == null ||
+                    contextualMessage.trim().isEmpty()
+            ) {
+
+                return "I couldn't access useful context from this screen. The app may not provide Android assist data.";
+            }
+
+            message =
+                    contextualMessage;
+        }
+
+        // AP_APRISHA_TIME_PIPELINE_V10
+        AprishaScheduleCore.Result scheduleAction =
+                AprishaScheduleCore.route(
+                        getContext(),
+                        message
+                );
+
+        if (scheduleAction.handled) {
+            return scheduleAction.response;
+        }
 
         // AP_APRISHA_UNIVERSAL_PIPELINE_V8
         AprishaUniversalCore.Result universalAction =
@@ -1642,4 +1679,40 @@ PresenceActionBridge.Result nativeAction =
 
         super.onDestroy();
     }
+
+    // AP_APRISHA_ASSIST_CAPTURE_V11
+
+    @Override
+    public void onHandleAssist(
+            android.service.voice.VoiceInteractionSession.AssistState state
+    ) {
+
+        super.onHandleAssist(state);
+
+        AprishaAssistContextCore.capture(
+                state
+        );
+    }
+
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onHandleAssist(
+            android.os.Bundle data,
+            android.app.assist.AssistStructure structure,
+            android.app.assist.AssistContent content
+    ) {
+
+        super.onHandleAssist(
+                data,
+                structure,
+                content
+        );
+
+        AprishaAssistContextCore.captureLegacy(
+                structure,
+                content
+        );
+    }
+
 }

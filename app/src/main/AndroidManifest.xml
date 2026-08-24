@@ -110,7 +110,9 @@
 <uses-permission android:name="android.permission.CAMERA" />
 <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
-    <application
+        <!-- AP_APRISHA_TIME_INTELLIGENCE_V10 -->
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+<application
         android:name="Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -310,7 +312,7 @@
         
     
         <!-- ===================================================
-             AP SYNAPSE Ã‚Â· AP PRESENCE
+             AP SYNAPSE Ãƒâ€šÃ‚Â· AP PRESENCE
              =================================================== -->
 
         <activity

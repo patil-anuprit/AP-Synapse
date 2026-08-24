@@ -108,7 +108,7 @@ public final class PresenceSetupActivity extends Activity {
         subtitle.setGravity(Gravity.CENTER);
         subtitle.setPadding(0, dp(9), 0, dp(25));
 
-        status = text("Checking Aprisha…", 14, Color.rgb(205, 202, 193));
+        status = text("Checking Aprishaâ€¦", 14, Color.rgb(205, 202, 193));
         status.setGravity(Gravity.START);
         status.setLineSpacing(0, 1.2f);
         status.setPadding(dp(16), dp(15), dp(16), dp(15));
@@ -227,6 +227,9 @@ public final class PresenceSetupActivity extends Activity {
         addIfMissing(missing, Manifest.permission.CALL_PHONE);
         addIfMissing(missing, Manifest.permission.CAMERA);
 
+        // AP_APRISHA_CALENDAR_PERMISSION_V10
+        addIfMissing(missing, Manifest.permission.READ_CALENDAR);
+
         if (missing.isEmpty()) {
             finishEnableFlow();
         } else {
@@ -303,6 +306,9 @@ public final class PresenceSetupActivity extends Activity {
         boolean phone = hasPermission(Manifest.permission.CALL_PHONE);
         boolean camera = hasPermission(Manifest.permission.CAMERA);
 
+        // AP_APRISHA_CALENDAR_STATUS_V10
+        boolean calendar = hasPermission(Manifest.permission.READ_CALENDAR);
+
         String wakeState = AprishaHealthStore.wakeState(this);
         String wakeDetail = AprishaHealthStore.wakeDetail(this);
         long wakeTime = AprishaHealthStore.wakeStateTime(this);
@@ -314,10 +320,11 @@ public final class PresenceSetupActivity extends Activity {
         value.append(line(contacts, "Contacts"));
         value.append(line(phone, "Phone calls"));
         value.append(line(camera, "Camera / flashlight"));
+        value.append(line(calendar, "Calendar"));
         value.append("\nWake service: ").append(wakeState);
 
         if (wakeDetail != null && !wakeDetail.trim().isEmpty()) {
-            value.append(" — ").append(wakeDetail.trim());
+            value.append(" â€” ").append(wakeDetail.trim());
         }
 
         if (wakeTime > 0) {
@@ -337,7 +344,7 @@ public final class PresenceSetupActivity extends Activity {
     }
 
     private String line(boolean ready, String label) {
-        return (ready ? "✓ " : "• ") + label + "\n";
+        return (ready ? "âœ“ " : "â€¢ ") + label + "\n";
     }
 
     private boolean assistantBasicsReady() {

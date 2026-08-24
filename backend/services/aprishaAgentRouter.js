@@ -386,6 +386,11 @@ function aprishaV12Consequential(value) {
 
 router.post("/loop", async (req, res) => {
 
+    // AP_APRISHA_V12_DETERMINISTIC_FASTPATH
+    const controllerVersion =
+        "aprisha-v12.1-closed-loop";
+
+
     const goal =
         String(req.body?.goal || "")
             .trim()
@@ -429,6 +434,135 @@ router.post("/loop", async (req, res) => {
                 }))
             : [];
 
+
+    // AP_APRISHA_V12_LOCAL_CHAIN_RESOLVER
+    //
+    // Resolve extremely clear supported compound tasks deterministically
+    // before calling the AI controller.
+    //
+    // This gives Aprisha a fast, reliable first step and still preserves
+    // the closed loop because subsequent calls include the real ledger.
+
+    const normalizedGoal =
+        goal
+            .toLowerCase()
+            .replace(/\s+/g, " ")
+            .trim();
+
+
+    const completedCommands =
+        new Set(
+            ledger
+                .filter((entry) =>
+                    entry.status === "success"
+                )
+                .map((entry) =>
+                    String(entry.command || "")
+                        .trim()
+                        .toLowerCase()
+                )
+        );
+
+
+    const youtubeThenTimer =
+        normalizedGoal.match(
+            /^(?:please\s+)?open\s+(?:the\s+)?youtube(?:\s+app)?\s+(?:and\s+then|then)\s+(?:set|start)\s+(?:a\s+)?timer\s+(?:for\s+)?(\d+)\s*(seconds?|minutes?|hours?)$/
+        );
+
+
+    if (youtubeThenTimer) {
+
+        const amount =
+            youtubeThenTimer[1];
+
+        const unit =
+            youtubeThenTimer[2];
+
+
+        if (
+            !completedCommands.has(
+                "open youtube"
+            )
+        ) {
+
+            return res.json({
+                controller_version:
+                    controllerVersion,
+
+                type:
+                    "agent_step",
+
+                done:
+                    false,
+
+                summary:
+                    "Open YouTube",
+
+                requires_confirmation:
+                    false,
+
+                action: {
+                    command:
+                        "open youtube",
+
+                    label:
+                        "Open YouTube"
+                }
+            });
+        }
+
+
+        const timerCommand =
+            `set timer for ${amount} ${unit}`;
+
+
+        if (
+            !completedCommands.has(
+                timerCommand
+            )
+        ) {
+
+            return res.json({
+                controller_version:
+                    controllerVersion,
+
+                type:
+                    "agent_step",
+
+                done:
+                    false,
+
+                summary:
+                    `Start a ${amount} ${unit} timer`,
+
+                requires_confirmation:
+                    false,
+
+                action: {
+                    command:
+                        timerCommand,
+
+                    label:
+                        `Start ${amount} ${unit} timer`
+                }
+            });
+        }
+
+
+        return res.json({
+            controller_version:
+                controllerVersion,
+
+            type:
+                "agent_step",
+
+            done:
+                true,
+
+            success_reply:
+                "Done."
+        });
+    }
 
     if (ledger.length >= MAX_ACTIONS) {
 
@@ -648,6 +782,9 @@ router.post("/loop", async (req, res) => {
 
 
         return res.json({
+
+            controller_version:
+                controllerVersion,
 
             type:
                 "agent_step",

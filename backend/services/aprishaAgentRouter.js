@@ -497,6 +497,92 @@ router.post("/loop", async (req, res) => {
         }
 
 
+        // AP_APRISHA_V12_SCHEMA_COMPAT
+        //
+        // Some models may occasionally answer using the older
+        // V5 device_plan schema:
+        //
+        // {
+        //   "type": "device_plan",
+        //   "actions": [...]
+        // }
+        //
+        // V12 safely converts that into ONE next action only.
+        // The remaining steps are NOT executed statically.
+        // They will be replanned after observing the real result.
+
+        if (
+            decision &&
+            decision.type !== "chat" &&
+            Array.isArray(decision.actions) &&
+            decision.actions.length > 0
+        ) {
+
+            const compatibleAction =
+                decision.actions
+                    .map((item) => ({
+                        command:
+                            String(
+                                item?.command ||
+                                ""
+                            ).trim(),
+
+                        label:
+                            String(
+                                item?.label ||
+                                item?.command ||
+                                ""
+                            ).trim()
+                    }))
+                    .find((item) =>
+                        aprishaV12AllowedCommand(
+                            item.command
+                        )
+                    );
+
+
+            if (compatibleAction) {
+
+                decision = {
+
+                    type:
+                        "agent_step",
+
+                    done:
+                        false,
+
+                    summary:
+                        String(
+                            decision.summary ||
+                            compatibleAction.label ||
+                            "Continue task"
+                        )
+                            .trim()
+                            .slice(0, 240),
+
+                    /*
+                     * Confirm only THIS step.
+                     *
+                     * Do not inherit V5's plan-wide confirmation
+                     * because a later call/message may have caused it.
+                     */
+                    requires_confirmation:
+                        aprishaV12Consequential(
+                            compatibleAction.command
+                        ),
+
+                    action: {
+                        command:
+                            compatibleAction.command,
+
+                        label:
+                            compatibleAction.label
+                    }
+                };
+            }
+        }
+
+
         if (
             !decision ||
             decision.type === "chat"

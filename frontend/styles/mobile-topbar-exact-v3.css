@@ -854,3 +854,134 @@
     }
 
 }
+/* ============================================================
+   AP SYNAPSE — MOBILE TOPBAR FINISH PATCH
+   Fix:
+   1) Ask Aprisha exact center
+   2) Share icon visible properly
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    .topbar {
+        position: relative !important;
+    }
+
+    /* --------------------------------------------
+       Left block fixed
+       -------------------------------------------- */
+    .topbar-left {
+        flex: 0 0 32px !important;
+        width: 32px !important;
+        min-width: 32px !important;
+        z-index: 2 !important;
+    }
+
+    /* --------------------------------------------
+       Right block fixed width
+       -------------------------------------------- */
+    .topbar-right {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 4px !important;
+        padding-left: 120px !important;
+        z-index: 2 !important;
+    }
+
+    /* --------------------------------------------
+       Ask Aprisha exactly centered
+       -------------------------------------------- */
+    #apDedicatedAprishaButton {
+        position: absolute !important;
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+
+        width: 116px !important;
+        min-width: 116px !important;
+        max-width: 116px !important;
+        height: 34px !important;
+
+        margin: 0 !important;
+        z-index: 3 !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        padding: 0 10px 0 31px !important;
+        text-align: center !important;
+    }
+
+    #apDedicatedAprishaButton:active {
+        transform: translate(-50%, -50%) scale(.97) !important;
+    }
+
+    #apDedicatedAprishaButton::after {
+        content: "ASK Aprisha •" !important;
+        display: block !important;
+        white-space: nowrap !important;
+        text-align: center !important;
+        font-size: 8px !important;
+        line-height: 1 !important;
+        letter-spacing: .03em !important;
+    }
+
+    /* --------------------------------------------
+       Share button visibility fix
+       -------------------------------------------- */
+    #shareConversationBtn {
+        background: linear-gradient(
+            145deg,
+            rgba(255,255,255,.05),
+            rgba(255,255,255,.018)
+        ) !important;
+
+        border: 1px solid rgba(255,255,255,.09) !important;
+        color: #f3eee3 !important;
+    }
+
+    #shareConversationBtn svg {
+        width: 15px !important;
+        height: 15px !important;
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    #shareConversationBtn svg,
+    #shareConversationBtn svg * {
+        stroke: #dfb76a !important;
+        fill: none !important;
+        stroke-width: 1.8 !important;
+        opacity: 1 !important;
+    }
+
+    /* If icon uses filled shapes */
+    #shareConversationBtn path[fill],
+    #shareConversationBtn circle[fill],
+    #shareConversationBtn rect[fill],
+    #shareConversationBtn polygon[fill] {
+        fill: #dfb76a !important;
+        stroke: #dfb76a !important;
+    }
+}
+
+
+/* Slightly tighter on 412px devices */
+@media (max-width: 430px) {
+
+    .topbar-right {
+        padding-left: 112px !important;
+        gap: 3px !important;
+    }
+
+    #apDedicatedAprishaButton {
+        width: 110px !important;
+        min-width: 110px !important;
+        max-width: 110px !important;
+    }
+}

@@ -836,3 +836,35 @@ body[data-theme="light"]
             1fr;
     }
 }
+
+/* ============================================================
+   SIDEBAR DIRECT PERSONALIZATION FOCUS
+   ============================================================ */
+
+#apPersonalizationPanel.ap-personalization-direct-focus
+.ap-personalization-shell {
+
+    border-color:
+        rgba(214,174,94,.34);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.05),
+        0 0 0 3px rgba(214,174,94,.055),
+        0 18px 48px rgba(0,0,0,.20);
+
+    transition:
+        border-color .3s ease,
+        box-shadow .3s ease;
+}
+
+#apRailPersonalization svg {
+    display: block;
+
+    width: 19px;
+    height: 19px;
+
+    margin: auto;
+
+    pointer-events: none;
+}
+

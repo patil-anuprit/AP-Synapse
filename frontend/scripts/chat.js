@@ -358,6 +358,369 @@ function createUserMessageActions(messageElement, body) {
 // SEND MESSAGE
 // =====================================
 
+
+// =========================================================
+// AP_VISUAL_FRONTEND_ROUTER_V1
+// VIDEO + 3D RESULT RENDERING
+// =========================================================
+
+function apSafeVisualUrl(value) {
+
+    try {
+
+        const url =
+            new URL(String(value || ""));
+
+        if (
+            url.protocol !== "https:" &&
+            url.protocol !== "http:"
+        ) {
+            return "";
+        }
+
+        return url.href;
+
+    }
+    catch {
+        return "";
+    }
+}
+
+
+function apRenderVisualError(message) {
+
+    const wrapper =
+        document.createElement("div");
+
+    wrapper.className =
+        "message ai";
+
+    const avatar =
+        document.createElement("div");
+
+    avatar.className =
+        "avatar";
+
+    avatar.textContent =
+        "AP";
+
+    const body =
+        document.createElement("div");
+
+    body.className =
+        "message-body";
+
+    body.textContent =
+        String(
+            message ||
+            "Visual generation is currently unavailable."
+        );
+
+    wrapper.appendChild(avatar);
+    wrapper.appendChild(body);
+
+    chatWindow.appendChild(wrapper);
+
+    scrollChatToBottom();
+}
+
+
+function apRenderVisualResult(
+    data,
+    type
+) {
+
+    const url =
+        apSafeVisualUrl(
+            data?.url
+        );
+
+    if (!url) {
+
+        apRenderVisualError(
+            "AP Synapse received an invalid visual result."
+        );
+
+        return;
+    }
+
+
+    const wrapper =
+        document.createElement("div");
+
+    wrapper.className =
+        "message ai";
+
+
+    const avatar =
+        document.createElement("div");
+
+    avatar.className =
+        "avatar";
+
+    avatar.textContent =
+        "AP";
+
+
+    const body =
+        document.createElement("div");
+
+    body.className =
+        "message-body";
+
+
+    const title =
+        document.createElement("strong");
+
+    title.textContent =
+        type === "video"
+            ? "Generated Video"
+            : "Generated 3D Model";
+
+
+    body.appendChild(title);
+
+
+    const mediaShell =
+        document.createElement("div");
+
+    mediaShell.style.marginTop =
+        "14px";
+
+    mediaShell.style.borderRadius =
+        "16px";
+
+    mediaShell.style.overflow =
+        "hidden";
+
+    mediaShell.style.border =
+        "1px solid rgba(255,255,255,.10)";
+
+    mediaShell.style.background =
+        "rgba(255,255,255,.035)";
+
+
+    if (type === "video") {
+
+        const video =
+            document.createElement("video");
+
+        video.src =
+            url;
+
+        video.controls =
+            true;
+
+        video.playsInline =
+            true;
+
+        video.preload =
+            "metadata";
+
+        video.style.display =
+            "block";
+
+        video.style.width =
+            "100%";
+
+        video.style.maxHeight =
+            "620px";
+
+        video.style.background =
+            "#000";
+
+        mediaShell.appendChild(
+            video
+        );
+
+    }
+    else {
+
+        const modelCard =
+            document.createElement("div");
+
+        modelCard.style.padding =
+            "24px";
+
+        modelCard.style.display =
+            "flex";
+
+        modelCard.style.flexDirection =
+            "column";
+
+        modelCard.style.gap =
+            "8px";
+
+
+        const modelTitle =
+            document.createElement("div");
+
+        modelTitle.textContent =
+            "AP Synapse 3D Asset";
+
+        modelTitle.style.fontWeight =
+            "700";
+
+        modelTitle.style.fontSize =
+            "16px";
+
+
+        const modelMeta =
+            document.createElement("div");
+
+        modelMeta.textContent =
+            data?.engine
+                ? `Engine: ${data.engine}`
+                : "3D model ready";
+
+        modelMeta.style.opacity =
+            ".68";
+
+        modelMeta.style.fontSize =
+            "13px";
+
+
+        modelCard.appendChild(
+            modelTitle
+        );
+
+        modelCard.appendChild(
+            modelMeta
+        );
+
+        mediaShell.appendChild(
+            modelCard
+        );
+
+    }
+
+
+    body.appendChild(
+        mediaShell
+    );
+
+
+    const actions =
+        document.createElement("div");
+
+    actions.style.display =
+        "flex";
+
+    actions.style.flexWrap =
+        "wrap";
+
+    actions.style.gap =
+        "8px";
+
+    actions.style.marginTop =
+        "12px";
+
+
+    const openButton =
+        document.createElement("button");
+
+    openButton.type =
+        "button";
+
+    openButton.textContent =
+        type === "video"
+            ? "Open Video"
+            : "Open 3D Model";
+
+    openButton.onclick =
+        () => {
+            window.open(
+                url,
+                "_blank",
+                "noopener,noreferrer"
+            );
+        };
+
+
+    const downloadButton =
+        document.createElement("button");
+
+    downloadButton.type =
+        "button";
+
+    downloadButton.textContent =
+        "Download";
+
+    downloadButton.onclick =
+        () => {
+
+            const link =
+                document.createElement("a");
+
+            link.href =
+                url;
+
+            link.target =
+                "_blank";
+
+            link.rel =
+                "noopener";
+
+            link.download =
+                type === "video"
+                    ? `AP-Synapse-Video-${Date.now()}.mp4`
+                    : `AP-Synapse-3D-${Date.now()}.glb`;
+
+            document.body.appendChild(
+                link
+            );
+
+            link.click();
+
+            link.remove();
+        };
+
+
+    actions.appendChild(
+        openButton
+    );
+
+    actions.appendChild(
+        downloadButton
+    );
+
+    body.appendChild(
+        actions
+    );
+
+
+    wrapper.appendChild(
+        avatar
+    );
+
+    wrapper.appendChild(
+        body
+    );
+
+    chatWindow.appendChild(
+        wrapper
+    );
+
+
+    if (
+        currentConversationId &&
+        typeof saveHistoryMessage === "function"
+    ) {
+
+        saveHistoryMessage(
+            currentConversationId,
+            "assistant",
+            type === "video"
+                ? `Generated video: ${url}`
+                : `Generated 3D model: ${url}`
+        );
+
+    }
+
+
+    scrollChatToBottom();
+}
+
 async function sendMessage() {
 
     const message =
@@ -539,6 +902,18 @@ chatWindow.style.setProperty(
             message
         );
 
+
+    // AP_VISUAL_INTENT_DETECTION_V1
+
+    const isVideoRequest =
+        /\b(create|generate|make|render|produce|animate|design)\b[\s\S]{0,500}\b(video|animation|animated clip|movie clip|cinematic clip)\b/i.test(
+            message
+        );
+
+    const is3DRequest =
+        /\b(create|generate|make|build|design|render|produce|convert|turn)\b[\s\S]{0,500}\b(3d|3-d|three dimensional|three-dimensional|3d model|3-d model|mesh)\b/i.test(
+            message
+        );
     console.log(
         "??? Frontend image request detected:",
         isImageRequest,
@@ -647,6 +1022,119 @@ const thinkingInterval =
         controller =
             new AbortController();
 
+
+
+        // =================================================
+        // AP_VISUAL_REQUEST_ROUTER_V1
+        // VIDEO + 3D
+        // Existing image/chat pipeline remains untouched.
+        // =================================================
+
+        if (
+            isVideoRequest ||
+            is3DRequest
+        ) {
+
+            const visualType =
+                is3DRequest
+                    ? "3d"
+                    : "video";
+
+            const endpoint =
+                visualType === "3d"
+                    ? "https://api.ap-synapse.com/3d"
+                    : "https://api.ap-synapse.com/video";
+
+
+            const payload =
+                visualType === "video"
+                    ? {
+                        prompt: message,
+                        duration: 5,
+                        resolution: "1080p",
+                        aspectRatio: "16:9"
+                    }
+                    : {
+                        prompt: message
+                    };
+
+
+            const visualResponse =
+                await fetch(
+                    endpoint,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+
+                            "x-session-id":
+                                (
+                                    window.apLiveRoomId
+                                        ? `live:${window.apLiveRoomId}`
+                                        : getSessionId()
+                                )
+                        },
+
+                        body:
+                            JSON.stringify(
+                                payload
+                            ),
+
+                        signal:
+                            controller.signal
+                    }
+                );
+
+
+            clearInterval(
+                thinkingInterval
+            );
+
+            document
+                .getElementById(
+                    "thinking"
+                )
+                ?.remove();
+
+
+            let visualData = {};
+
+            try {
+
+                visualData =
+                    await visualResponse.json();
+
+            }
+            catch {}
+
+
+            if (
+                !visualResponse.ok ||
+                visualData?.success === false
+            ) {
+
+                apRenderVisualError(
+                    visualData?.error ||
+                    (
+                        visualType === "video"
+                            ? "Video generation is currently unavailable."
+                            : "3D generation is currently unavailable."
+                    )
+                );
+
+                return;
+            }
+
+
+            apRenderVisualResult(
+                visualData,
+                visualType
+            );
+
+            return;
+        }
 
         const response = await fetch(
             "https://api.ap-synapse.com/chat",

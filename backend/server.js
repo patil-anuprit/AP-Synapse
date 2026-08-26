@@ -61,6 +61,8 @@ import { createAIStream } from "./services/router.js";
 import aprishaAgentRouter from "./services/aprishaAgentRouter.js";
 import aprishaDesktopRouter from "./services/aprishaDesktopRouter.js";
 import shareV2Router from "./services/shareV2Router.js";
+import { generateAPVideo } from "./services/apVideoService.js";
+import { generateAP3D } from "./services/ap3DService.js";
 import {
     createLiveConversation,
     getLiveConversation,
@@ -1769,6 +1771,320 @@ app.post("/communication/send", async (req, res) => {
                 error.message ||
                 "Communication failed."
 
+        });
+
+    }
+
+});
+
+
+// =========================================================
+// AP_VISUAL_MESH_V1
+// IMAGE + VIDEO + 3D UNIFIED GENERATION
+// =========================================================
+
+function isAPProtectedVisualIdentityV1(prompt) {
+
+    const value =
+        String(prompt || "");
+
+    return (
+        /\banuprit(?:\s+patil)?\b/i.test(value) ||
+        /\b(your|the|ap\s*synapse'?s?)\s*(creator|founder|developer|owner|maker)\b/i.test(value)
+    );
+}
+
+
+function rejectProtectedVisualIdentityV1(
+    prompt,
+    res
+) {
+
+    if (!isAPProtectedVisualIdentityV1(prompt)) {
+        return false;
+    }
+
+    console.warn(
+        "AP Visual Mesh: protected identity request blocked."
+    );
+
+    res.status(403).json({
+        success: false,
+        blocked: true,
+        code: "PROTECTED_IDENTITY_VISUAL",
+        error:
+            "AP Synapse cannot generate or fabricate visual media representing Anuprit Patil or its protected creator identity."
+    });
+
+    return true;
+}
+
+
+// =========================================================
+// VIDEO
+// =========================================================
+
+app.post("/video", async (req, res) => {
+
+    try {
+
+        const prompt =
+            String(req.body?.prompt || "").trim();
+
+        if (!prompt) {
+            return res.status(400).json({
+                success: false,
+                error: "Video prompt is required."
+            });
+        }
+
+        if (
+            rejectProtectedVisualIdentityV1(
+                prompt,
+                res
+            )
+        ) {
+            return;
+        }
+
+        const result =
+            await generateAPVideo(
+                prompt,
+                {
+                    duration:
+                        req.body?.duration,
+
+                    resolution:
+                        req.body?.resolution,
+
+                    aspectRatio:
+                        req.body?.aspectRatio
+                }
+            );
+
+        return res.json({
+            success: true,
+            ...result
+        });
+
+    }
+    catch (error) {
+
+        console.error(
+            "AP Visual Mesh video error:",
+            error
+        );
+
+        return res.status(502).json({
+            success: false,
+            error:
+                error?.message ||
+                "Video generation is currently unavailable."
+        });
+
+    }
+
+});
+
+
+// =========================================================
+// 3D
+// =========================================================
+
+app.post("/3d", async (req, res) => {
+
+    try {
+
+        const prompt =
+            String(req.body?.prompt || "").trim();
+
+        const imageUrl =
+            req.body?.imageUrl
+                ? String(req.body.imageUrl).trim()
+                : null;
+
+        if (!prompt && !imageUrl) {
+
+            return res.status(400).json({
+                success: false,
+                error:
+                    "Provide either a 3D prompt or a reference image URL."
+            });
+
+        }
+
+        if (
+            prompt &&
+            rejectProtectedVisualIdentityV1(
+                prompt,
+                res
+            )
+        ) {
+            return;
+        }
+
+        const result =
+            await generateAP3D({
+                prompt,
+                imageUrl,
+                faceCount:
+                    req.body?.faceCount
+            });
+
+        return res.json({
+            success: true,
+            ...result
+        });
+
+    }
+    catch (error) {
+
+        console.error(
+            "AP Visual Mesh 3D error:",
+            error
+        );
+
+        return res.status(502).json({
+            success: false,
+            error:
+                error?.message ||
+                "3D generation is currently unavailable."
+        });
+
+    }
+
+});
+
+
+// =========================================================
+// UNIFIED VISUAL ROUTER
+// =========================================================
+
+app.post("/visual", async (req, res) => {
+
+    try {
+
+        const type =
+            String(
+                req.body?.type ||
+                "image"
+            )
+            .trim()
+            .toLowerCase();
+
+        const prompt =
+            String(
+                req.body?.prompt ||
+                ""
+            ).trim();
+
+
+        if (
+            prompt &&
+            rejectProtectedVisualIdentityV1(
+                prompt,
+                res
+            )
+        ) {
+            return;
+        }
+
+
+        // -----------------------------------------
+        // IMAGE
+        // Reuse existing /image route externally.
+        // -----------------------------------------
+
+        if (type === "image") {
+
+            return res.status(400).json({
+                success: false,
+                code: "USE_IMAGE_ENDPOINT",
+                endpoint: "/image",
+                error:
+                    "Image generation is available through the existing /image endpoint."
+            });
+
+        }
+
+
+        // -----------------------------------------
+        // VIDEO
+        // -----------------------------------------
+
+        if (type === "video") {
+
+            const result =
+                await generateAPVideo(
+                    prompt,
+                    {
+                        duration:
+                            req.body?.duration,
+
+                        resolution:
+                            req.body?.resolution,
+
+                        aspectRatio:
+                            req.body?.aspectRatio
+                    }
+                );
+
+            return res.json({
+                success: true,
+                ...result
+            });
+
+        }
+
+
+        // -----------------------------------------
+        // 3D
+        // -----------------------------------------
+
+        if (
+            type === "3d" ||
+            type === "model"
+        ) {
+
+            const result =
+                await generateAP3D({
+                    prompt,
+
+                    imageUrl:
+                        req.body?.imageUrl ||
+                        null,
+
+                    faceCount:
+                        req.body?.faceCount
+                });
+
+            return res.json({
+                success: true,
+                ...result
+            });
+
+        }
+
+
+        return res.status(400).json({
+            success: false,
+            error:
+                `Unsupported visual type: ${type}`
+        });
+
+    }
+    catch (error) {
+
+        console.error(
+            "AP Visual Mesh unified route error:",
+            error
+        );
+
+        return res.status(502).json({
+            success: false,
+            error:
+                error?.message ||
+                "Visual generation is currently unavailable."
         });
 
     }

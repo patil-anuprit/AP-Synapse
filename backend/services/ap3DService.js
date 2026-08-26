@@ -1,114 +1,123 @@
 ﻿import "dotenv/config";
 
 import {
-    runReplicateModel
-} from "./replicateVisualRunner.js";
+    Client,
+    handle_file
+} from "@gradio/client";
+
+import {
+    generateCloudflareImage
+} from "./cloudflareImageService.js";
 
 
-const MODEL =
-    "tencent/hunyuan-3d-3.1";
+const SPACE =
+    "stabilityai/TripoSR";
 
 
-function clamp(
-    value,
-    min,
-    max,
-    fallback
-) {
+function findUrl(value) {
 
-    const n =
-        Number(value);
+    if (!value) return "";
 
-    if (!Number.isFinite(n)) {
-        return fallback;
+    if (
+        typeof value === "string" &&
+        /^https?:\/\//i.test(value)
+    ) {
+        return value;
     }
 
-    return Math.min(
-        max,
-        Math.max(min, n)
-    );
+    if (Array.isArray(value)) {
+
+        for (const item of value) {
+
+            const url =
+                findUrl(item);
+
+            if (url) return url;
+        }
+
+        return "";
+    }
+
+    if (typeof value === "object") {
+
+        if (
+            typeof value.url === "string" &&
+            value.url
+        ) {
+            return value.url;
+        }
+
+        for (const item of Object.values(value)) {
+
+            const url =
+                findUrl(item);
+
+            if (url) return url;
+        }
+    }
+
+    return "";
 }
 
 
-function find3DUrl(output) {
+async function getReferenceImage(
+    prompt,
+    imageUrl
+) {
 
-    if (!output) {
-        return "";
-    }
+    if (imageUrl) {
 
+        const response =
+            await fetch(imageUrl);
 
-    if (
-        typeof output === "string"
-    ) {
-        return output;
-    }
-
-
-    if (
-        Array.isArray(output)
-    ) {
-
-        for (const value of output) {
-
-            const found =
-                find3DUrl(value);
-
-            if (found) {
-                return found;
-            }
+        if (!response.ok) {
+            throw new Error(
+                "Unable to read reference image."
+            );
         }
 
-        return "";
+        return Buffer.from(
+            await response.arrayBuffer()
+        );
     }
 
 
-    if (
-        typeof output === "object"
-    ) {
+    const optimizedPrompt = `
+Create a clean 3D reconstruction reference image of:
+${prompt}
 
-        const keys = [
-            "glb",
-            "gltf",
-            "model",
-            "model_url",
-            "model_file",
-            "mesh",
-            "url",
-            "file",
-            "output"
-        ];
-
-
-        for (const key of keys) {
-
-            if (output[key]) {
-
-                const found =
-                    find3DUrl(
-                        output[key]
-                    );
-
-                if (found) {
-                    return found;
-                }
-            }
-        }
-    }
+Requirements:
+single isolated object,
+entire object fully visible,
+centered composition,
+neutral plain background,
+clear silhouette,
+realistic materials,
+balanced studio lighting,
+no text,
+no watermark,
+no extra objects.
+`.trim();
 
 
-    return "";
+    const image =
+        await generateCloudflareImage(
+            optimizedPrompt
+        );
+
+
+    return image.buffer;
 }
 
 
 export async function generateAP3D({
     prompt = "",
     imageUrl = null,
-    faceCount = 500000
+    faceCount = 256000
 } = {}) {
 
     const cleanPrompt =
-        String(prompt || "")
-            .trim();
+        String(prompt || "").trim();
 
     const cleanImageUrl =
         imageUrl
@@ -120,123 +129,156 @@ export async function generateAP3D({
         !cleanPrompt &&
         !cleanImageUrl
     ) {
-
         throw new Error(
             "A 3D prompt or image is required."
         );
     }
 
 
-    const safeFaceCount =
-        Math.round(
-            clamp(
-                faceCount,
-                40000,
-                1500000,
-                500000
-            )
-        );
-
-
-    const input = {
-
-        enable_pbr:
-            true,
-
-        face_count:
-            safeFaceCount,
-
-        generate_type:
-            "Normal"
-    };
-
-
-    if (cleanImageUrl) {
-
-        input.image =
-            cleanImageUrl;
-
-    }
-    else {
-
-        input.prompt =
-            cleanPrompt;
-    }
-
-
     console.log(
-        "AP VISUAL MESH -> HUNYUAN 3D 3.1"
+        "AP VISUAL MESH -> FREE TRIPOSR 3D"
     );
 
 
     try {
 
-        const result =
-            await runReplicateModel(
-                MODEL,
-                input,
-                {
-                    timeoutMs:
-                        300000,
+        const referenceBuffer =
+            await getReferenceImage(
+                cleanPrompt,
+                cleanImageUrl
+            );
 
-                    pollMs:
-                        2000
+
+        const options =
+            process.env.HF_TOKEN
+                ? { token: process.env.HF_TOKEN }
+                : {};
+
+
+        const app =
+            await Client.connect(
+                SPACE,
+                options
+            );
+
+
+        // -----------------------------------------------
+        // Preprocess/reference cleanup
+        // -----------------------------------------------
+
+        const preprocess =
+            await app.predict(
+                "/preprocess",
+                {
+                    "Input Image":
+                        handle_file(referenceBuffer),
+
+                    "Remove Background":
+                        true,
+
+                    "Foreground Ratio":
+                        0.85
                 }
             );
 
 
-        const url =
-            find3DUrl(
-                result?.output
+        const processed =
+            preprocess?.data?.[0];
+
+        const processedUrl =
+            findUrl(processed);
+
+
+        // If the intermediate URL cannot be resolved,
+        // safely reuse the original image buffer.
+        const finalImage =
+            processedUrl
+                ? handle_file(processedUrl)
+                : handle_file(referenceBuffer);
+
+
+        // -----------------------------------------------
+        // Generate OBJ + GLB
+        // -----------------------------------------------
+
+        const generated =
+            await app.predict(
+                "/generate",
+                {
+                    "Processed Image":
+                        finalImage,
+
+                    "Marching Cubes Resolution":
+                        256
+                }
             );
 
 
+        const obj =
+            generated?.data?.[0];
+
+        const glb =
+            generated?.data?.[1];
+
+
+        // Prefer GLB.
+        const glbUrl =
+            findUrl(glb);
+
+        const objUrl =
+            findUrl(obj);
+
+        const url =
+            glbUrl ||
+            objUrl;
+
+
         if (!url) {
+
+            console.error(
+                "TRIPOSR raw result:",
+                JSON.stringify(generated?.data)
+            );
+
             throw new Error(
-                "No 3D output."
+                "No 3D model URL returned."
             );
         }
 
 
+        console.log(
+            "AP FREE 3D -> SUCCESS"
+        );
+
+
         return {
             success: true,
-
-            type:
-                "3d",
-
-            status:
-                "completed",
-
-            engine:
-                "hunyuan-3d-3.1",
-
+            type: "3d",
+            status: "completed",
+            engine: "hf-triposr-free",
             format:
-                "3d-model",
-
-            url,
-
-            requestId:
-                result?.requestId ||
-                null
+                glbUrl
+                    ? "glb"
+                    : "obj",
+            url
         };
 
     }
     catch (error) {
 
         console.error(
-            "AP 3D ENGINE FAILED:",
-            error?.code ||
-            "PROVIDER_UNAVAILABLE"
+            "FREE 3D FAILED:",
+            error?.message || error
         );
 
 
         const clean =
             new Error(
-                "3D generation is temporarily unavailable. Please try again later."
+                "3D generation is temporarily busy. Please try again shortly."
             );
 
         clean.code =
-            "3D_GENERATION_UNAVAILABLE";
+            "3D_FREE_CAPACITY";
 
         throw clean;
     }

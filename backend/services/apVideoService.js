@@ -1,90 +1,59 @@
 ﻿import "dotenv/config";
+import { Client } from "@gradio/client";
 
-import {
-    runReplicateModel
-} from "./replicateVisualRunner.js";
+const SPACE =
+    "OpenKing/wan2-video-generation";
 
+function findUrl(value) {
 
-const MODEL =
-    "wan-video/wan-2.7-t2v";
-
-
-function clamp(
-    value,
-    min,
-    max,
-    fallback
-) {
-
-    const n =
-        Number(value);
-
-    if (!Number.isFinite(n)) {
-        return fallback;
-    }
-
-    return Math.min(
-        max,
-        Math.max(min, n)
-    );
-}
-
-
-function findVideoUrl(output) {
-
-    if (!output) {
-        return "";
-    }
+    if (!value) return "";
 
     if (
-        typeof output === "string"
+        typeof value === "string" &&
+        /^https?:\/\//i.test(value)
     ) {
-        return output;
+        return value;
     }
 
-    if (
-        Array.isArray(output)
-    ) {
+    if (Array.isArray(value)) {
 
-        for (const value of output) {
+        for (const item of value) {
 
-            const found =
-                findVideoUrl(value);
+            const url =
+                findUrl(item);
 
-            if (found) {
-                return found;
-            }
+            if (url) return url;
         }
 
         return "";
     }
 
+    if (typeof value === "object") {
 
-    if (
-        typeof output === "object"
-    ) {
-
-        const keys = [
+        const preferred = [
             "url",
             "video",
-            "video_url",
-            "file",
-            "output"
+            "path",
+            "file"
         ];
 
-        for (const key of keys) {
+        for (const key of preferred) {
 
-            if (output[key]) {
+            if (value[key]) {
 
-                const found =
-                    findVideoUrl(
-                        output[key]
-                    );
+                const url =
+                    findUrl(value[key]);
 
-                if (found) {
-                    return found;
-                }
+                if (url) return url;
             }
+        }
+
+        for (const item of Object.values(value)) {
+
+            const url =
+                findUrl(item);
+
+            if (url) return url;
         }
     }
 
@@ -95,15 +64,14 @@ function findVideoUrl(output) {
 export async function generateAPVideo(
     prompt,
     {
-        duration = 5,
-        resolution = "1080p",
+        duration = 3,
+        resolution = "720p",
         aspectRatio = "16:9"
     } = {}
 ) {
 
     const cleanPrompt =
-        String(prompt || "")
-            .trim();
+        String(prompt || "").trim();
 
     if (!cleanPrompt) {
         throw new Error(
@@ -111,110 +79,119 @@ export async function generateAPVideo(
         );
     }
 
-
-    const safeDuration =
-        clamp(
-            duration,
-            2,
-            15,
-            5
-        );
-
-
     console.log(
-        "AP VISUAL MESH -> WAN 2.7 VIDEO"
+        "AP VISUAL MESH -> FREE HUGGING FACE WAN VIDEO"
     );
-
 
     try {
 
+        const options =
+            process.env.HF_TOKEN
+                ? { token: process.env.HF_TOKEN }
+                : {};
+
+        const app =
+            await Client.connect(
+                SPACE,
+                options
+            );
+
+
+        // Space supports 512-1920 width / 512-1080 height.
+        const landscape =
+            !String(aspectRatio).includes("9:16");
+
+        const width =
+            landscape
+                ? 1280
+                : 704;
+
+        const height =
+            landscape
+                ? 704
+                : 1080;
+
+
+        // 73 frames ~= short clip.
         const result =
-            await runReplicateModel(
-                MODEL,
+            await app.predict(
+                "/generate_video",
                 {
                     prompt:
                         cleanPrompt,
 
-                    duration:
-                        safeDuration,
+                    image:
+                        null,
 
-                    resolution:
-                        String(
-                            resolution ||
-                            "1080p"
-                        ),
+                    width,
 
-                    aspect_ratio:
-                        String(
-                            aspectRatio ||
-                            "16:9"
-                        ),
+                    height,
 
-                    negative_prompt:
-                        "low quality, blurry, distorted, malformed, artifacts, flicker, watermark, text",
+                    num_frames:
+                        73,
 
-                    enable_prompt_expansion:
-                        true
-                },
-                {
-                    timeoutMs:
-                        300000,
+                    // Minimum allowed by this Space = 20.
+                    // Fastest sensible free setting.
+                    num_inference_steps:
+                        20,
 
-                    pollMs:
-                        2000
+                    guidance_scale:
+                        5,
+
+                    seed:
+                        -1
                 }
             );
 
 
+        const videoResult =
+            result?.data?.[0];
+
         const url =
-            findVideoUrl(
-                result?.output
-            );
+            findUrl(videoResult);
 
 
         if (!url) {
+
+            console.error(
+                "WAN raw result:",
+                JSON.stringify(result?.data)
+            );
+
             throw new Error(
-                "No video output."
+                "No video URL returned."
             );
         }
 
 
+        console.log(
+            "AP FREE VIDEO -> SUCCESS"
+        );
+
+
         return {
             success: true,
-
-            type:
-                "video",
-
-            status:
-                "completed",
-
-            engine:
-                "wan-2.7",
-
-            url,
-
-            requestId:
-                result?.requestId ||
-                null
+            type: "video",
+            status: "completed",
+            engine: "hf-wan-free",
+            url
         };
 
     }
     catch (error) {
 
         console.error(
-            "AP VIDEO ENGINE FAILED:",
-            error?.code ||
-            "PROVIDER_UNAVAILABLE"
+            "FREE VIDEO FAILED:",
+            error?.message || error
         );
-
 
         const clean =
             new Error(
-                "Video generation is temporarily unavailable. Please try again later."
+                "Video generation is temporarily busy. Please try again shortly."
             );
 
         clean.code =
-            "VIDEO_GENERATION_UNAVAILABLE";
+            "VIDEO_FREE_CAPACITY";
 
         throw clean;
     }

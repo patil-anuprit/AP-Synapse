@@ -12,6 +12,7 @@
     "@getbrevo/brevo": "^6.0.2",
     "@google/genai": "^1.52.0",
     "@google/generative-ai": "^0.24.1",
+    "@gradio/client": "^2.5.1",
     "cors": "^2.8.5",
     "dotenv": "^17.4.2",
     "express": "^4.21.2",

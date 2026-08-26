@@ -1,0 +1,880 @@
+﻿/* ============================================================
+   AP SYNAPSE
+   MOBILE GOLD SHELL
+   ============================================================ */
+
+
+/* Desktop remains completely untouched */
+
+#apMobileGoldTopbar {
+    display: none;
+}
+
+
+@media (max-width: 768px) {
+
+
+    /* ========================================================
+       MOBILE SAFETY
+       ======================================================== */
+
+    html,
+    body {
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        overflow-x: hidden !important;
+
+    }
+
+
+    /* ========================================================
+       PRESERVE ORIGINAL TOPBAR HEIGHT BUT REMOVE ITS CLUTTER
+       ======================================================== */
+
+    body.ap-mobile-gold-shell
+    .ap-original-mobile-topbar {
+
+        visibility:
+            hidden !important;
+
+        pointer-events:
+            none !important;
+
+    }
+
+
+    /* ========================================================
+       GOLD MOBILE TOPBAR
+       ======================================================== */
+
+    #apMobileGoldTopbar {
+
+        position: fixed !important;
+
+        z-index: 99950 !important;
+
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+
+        width: 100% !important;
+
+        height:
+            calc(
+                58px +
+                env(safe-area-inset-top, 0px)
+            ) !important;
+
+        box-sizing:
+            border-box !important;
+
+        padding:
+            env(safe-area-inset-top, 0px)
+            10px
+            0 !important;
+
+        display: grid !important;
+
+        grid-template-columns:
+            42px
+            minmax(0, 1fr)
+            88px !important;
+
+        align-items:
+            center !important;
+
+        gap:
+            8px !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(12,13,14,.98),
+                rgba(10,11,12,.94)
+            ) !important;
+
+        border-bottom:
+            1px solid
+            rgba(255,255,255,.07) !important;
+
+        box-shadow:
+            0 8px 30px
+            rgba(0,0,0,.24) !important;
+
+        backdrop-filter:
+            blur(22px)
+            saturate(125%) !important;
+
+        -webkit-backdrop-filter:
+            blur(22px)
+            saturate(125%) !important;
+
+    }
+
+
+    #apMobileGoldTopbar::after {
+
+        content: "";
+
+        position: absolute;
+
+        left: 48px;
+        right: 48px;
+        bottom: -1px;
+
+        height: 1px;
+
+        pointer-events: none;
+
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                rgba(211,169,86,.28),
+                transparent
+            );
+
+    }
+
+
+    /* ========================================================
+       BUTTON STANDARD
+       ======================================================== */
+
+    #apMobileGoldTopbar
+    button {
+
+        appearance:
+            none !important;
+
+        -webkit-appearance:
+            none !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+        outline:
+            none !important;
+
+        cursor:
+            pointer !important;
+
+        touch-action:
+            manipulation !important;
+
+        -webkit-tap-highlight-color:
+            transparent !important;
+
+    }
+
+
+    .ap-gold-topbar-button {
+
+        width: 38px !important;
+        height: 38px !important;
+
+        min-width: 38px !important;
+        min-height: 38px !important;
+
+        display: grid !important;
+
+        place-items:
+            center !important;
+
+        border:
+            1px solid
+            rgba(255,255,255,.08) !important;
+
+        border-radius:
+            12px !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(255,255,255,.045),
+                rgba(255,255,255,.018)
+            ) !important;
+
+        color:
+            rgba(245,244,239,.82) !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.035) !important;
+
+    }
+
+
+    .ap-gold-topbar-button:active {
+
+        transform:
+            scale(.96) !important;
+
+        background:
+            rgba(211,169,86,.08) !important;
+
+        border-color:
+            rgba(211,169,86,.28) !important;
+
+    }
+
+
+    .ap-gold-topbar-button svg {
+
+        width: 18px !important;
+        height: 18px !important;
+
+        fill:
+            none !important;
+
+        stroke:
+            currentColor !important;
+
+        stroke-width:
+            1.7 !important;
+
+        stroke-linecap:
+            round !important;
+
+        stroke-linejoin:
+            round !important;
+
+        pointer-events:
+            none !important;
+
+    }
+
+
+    /* ========================================================
+       BRAND
+       ======================================================== */
+
+    .ap-gold-mobile-brand {
+
+        min-width: 0 !important;
+
+        height: 42px !important;
+
+        display: flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        gap:
+            8px !important;
+
+        overflow:
+            hidden !important;
+
+        user-select:
+            none !important;
+
+    }
+
+
+    .ap-gold-brand-mark {
+
+        width: 29px !important;
+        height: 29px !important;
+
+        min-width: 29px !important;
+
+        display: grid !important;
+
+        place-items:
+            center !important;
+
+        border-radius:
+            9px !important;
+
+        border:
+            1px solid
+            rgba(210,169,87,.34) !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(210,169,87,.14),
+                rgba(210,169,87,.035)
+            ) !important;
+
+        color:
+            #e0b96e !important;
+
+        box-shadow:
+            inset 0 1px 0
+            rgba(255,255,255,.05) !important;
+
+        font-size:
+            8.5px !important;
+
+        line-height:
+            1 !important;
+
+        font-weight:
+            850 !important;
+
+        letter-spacing:
+            .04em !important;
+
+    }
+
+
+    .ap-gold-brand-copy {
+
+        min-width: 0 !important;
+
+        display: flex !important;
+
+        flex-direction:
+            column !important;
+
+        justify-content:
+            center !important;
+
+        gap:
+            3px !important;
+
+    }
+
+
+    .ap-gold-brand-copy strong {
+
+        overflow:
+            hidden !important;
+
+        text-overflow:
+            ellipsis !important;
+
+        white-space:
+            nowrap !important;
+
+        color:
+            rgba(247,246,241,.94) !important;
+
+        font-size:
+            9px !important;
+
+        line-height:
+            1 !important;
+
+        font-weight:
+            820 !important;
+
+        letter-spacing:
+            .14em !important;
+
+    }
+
+
+    .ap-gold-brand-copy span {
+
+        display: flex !important;
+
+        align-items:
+            center !important;
+
+        gap:
+            4px !important;
+
+        color:
+            rgba(240,238,231,.36) !important;
+
+        font-size:
+            6px !important;
+
+        line-height:
+            1 !important;
+
+        font-weight:
+            730 !important;
+
+        letter-spacing:
+            .11em !important;
+
+    }
+
+
+    .ap-gold-brand-copy i {
+
+        width: 4px !important;
+        height: 4px !important;
+
+        flex: 0 0 4px !important;
+
+        border-radius:
+            999px !important;
+
+        background:
+            #d3a956 !important;
+
+        box-shadow:
+            0 0 8px
+            rgba(211,169,86,.42) !important;
+
+    }
+
+
+    /* ========================================================
+       RIGHT ACTIONS
+       ======================================================== */
+
+    .ap-gold-mobile-actions {
+
+        width: 88px !important;
+
+        display: flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            flex-end !important;
+
+        gap:
+            7px !important;
+
+    }
+
+
+    .ap-gold-profile-button {
+
+        width: 38px !important;
+        height: 38px !important;
+
+        min-width: 38px !important;
+        min-height: 38px !important;
+
+        display: grid !important;
+
+        place-items:
+            center !important;
+
+        border:
+            1px solid
+            rgba(210,169,87,.30) !important;
+
+        border-radius:
+            12px !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(211,169,86,.12),
+                rgba(211,169,86,.035)
+            ) !important;
+
+        color:
+            #dfb76b !important;
+
+        font-size:
+            9px !important;
+
+        line-height:
+            1 !important;
+
+        font-weight:
+            840 !important;
+
+        letter-spacing:
+            .03em !important;
+
+    }
+
+
+    .ap-gold-profile-button:active {
+
+        transform:
+            scale(.96) !important;
+
+    }
+
+
+    /* ========================================================
+       PERSONALIZATION — REMOVE THE DOT COMPLETELY
+       ======================================================== */
+
+    #apRailPersonalization,
+    #apRailPersonalization.ap-mobile-rail-personalization-hidden {
+
+        display:
+            none !important;
+
+        width:
+            0 !important;
+
+        height:
+            0 !important;
+
+        min-width:
+            0 !important;
+
+        min-height:
+            0 !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+        opacity:
+            0 !important;
+
+        visibility:
+            hidden !important;
+
+        pointer-events:
+            none !important;
+
+    }
+
+
+    /* ========================================================
+       REAL PERSONALIZATION SIDEBAR ROW
+       ======================================================== */
+
+    #personalizationSidebarBtn,
+    .ap-mobile-personalization-row {
+
+        position:
+            relative !important;
+
+        width:
+            calc(100% - 20px) !important;
+
+        max-width:
+            none !important;
+
+        height:
+            48px !important;
+
+        min-height:
+            48px !important;
+
+        margin:
+            2px 10px !important;
+
+        padding:
+            0 12px !important;
+
+        box-sizing:
+            border-box !important;
+
+        display:
+            grid !important;
+
+        grid-template-columns:
+            28px
+            minmax(0,1fr)
+            auto !important;
+
+        align-items:
+            center !important;
+
+        gap:
+            9px !important;
+
+        overflow:
+            hidden !important;
+
+        opacity:
+            1 !important;
+
+        visibility:
+            visible !important;
+
+        transform:
+            none !important;
+
+        text-indent:
+            0 !important;
+
+        text-decoration:
+            none !important;
+
+        border:
+            1px solid
+            transparent !important;
+
+        border-radius:
+            11px !important;
+
+        outline:
+            none !important;
+
+        background:
+            transparent !important;
+
+        color:
+            rgba(239,239,235,.74) !important;
+
+        font-size:
+            12px !important;
+
+        line-height:
+            1 !important;
+
+        font-weight:
+            560 !important;
+
+        letter-spacing:
+            0 !important;
+
+        cursor:
+            pointer !important;
+
+        touch-action:
+            manipulation !important;
+
+        -webkit-tap-highlight-color:
+            transparent !important;
+
+    }
+
+
+    #personalizationSidebarBtn::before,
+    #personalizationSidebarBtn::after,
+    .ap-mobile-personalization-row::before,
+    .ap-mobile-personalization-row::after {
+
+        content:
+            none !important;
+
+        display:
+            none !important;
+
+    }
+
+
+    #personalizationSidebarBtn:hover,
+    .ap-mobile-personalization-row:hover {
+
+        background:
+            rgba(255,255,255,.035) !important;
+
+        border-color:
+            rgba(255,255,255,.045) !important;
+
+    }
+
+
+    #personalizationSidebarBtn:active,
+    .ap-mobile-personalization-row:active {
+
+        background:
+            rgba(211,169,86,.07) !important;
+
+        border-color:
+            rgba(211,169,86,.15) !important;
+
+    }
+
+
+    .ap-mobile-personalization-icon {
+
+        width: 28px !important;
+        height: 28px !important;
+
+        display: grid !important;
+
+        place-items:
+            center !important;
+
+        color:
+            rgba(219,180,104,.83) !important;
+
+    }
+
+
+    .ap-mobile-personalization-icon svg {
+
+        width: 17px !important;
+        height: 17px !important;
+
+        fill:
+            none !important;
+
+        stroke:
+            currentColor !important;
+
+        stroke-width:
+            1.65 !important;
+
+        stroke-linecap:
+            round !important;
+
+        stroke-linejoin:
+            round !important;
+
+    }
+
+
+    .ap-mobile-personalization-label {
+
+        min-width:
+            0 !important;
+
+        display:
+            block !important;
+
+        overflow:
+            hidden !important;
+
+        text-overflow:
+            ellipsis !important;
+
+        white-space:
+            nowrap !important;
+
+        opacity:
+            1 !important;
+
+        visibility:
+            visible !important;
+
+        color:
+            inherit !important;
+
+        font-size:
+            12px !important;
+
+        line-height:
+            1 !important;
+
+    }
+
+
+    .ap-mobile-personalization-badge {
+
+        display:
+            inline-flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        height:
+            18px !important;
+
+        padding:
+            0 6px !important;
+
+        border:
+            1px solid
+            rgba(211,169,86,.18) !important;
+
+        border-radius:
+            999px !important;
+
+        background:
+            rgba(211,169,86,.055) !important;
+
+        color:
+            rgba(220,181,104,.72) !important;
+
+        font-size:
+            6.5px !important;
+
+        line-height:
+            1 !important;
+
+        font-weight:
+            820 !important;
+
+        letter-spacing:
+            .09em !important;
+
+    }
+
+
+    /*
+     * If old sidebar scripts force font-size:0 or tiny dimensions
+     * on footer children, these values win.
+     */
+
+    #personalizationSidebarBtn *,
+    .ap-mobile-personalization-row * {
+
+        opacity:
+            1 !important;
+
+        visibility:
+            visible !important;
+
+        text-indent:
+            0 !important;
+
+    }
+
+
+    /* ========================================================
+       PERSONALIZATION WORKSPACE HAS ITS OWN HEADER
+       ======================================================== */
+
+    body.ap-personalization-open
+    #apMobileGoldTopbar {
+
+        display:
+            none !important;
+
+    }
+
+}
+
+
+/* ============================================================
+   NARROW PHONE
+   ============================================================ */
+
+@media (max-width: 360px) {
+
+    #apMobileGoldTopbar {
+
+        grid-template-columns:
+            40px
+            minmax(0,1fr)
+            82px !important;
+
+        padding-left:
+            8px !important;
+
+        padding-right:
+            8px !important;
+
+        gap:
+            5px !important;
+
+    }
+
+
+    .ap-gold-mobile-actions {
+
+        width:
+            82px !important;
+
+        gap:
+            5px !important;
+
+    }
+
+
+    .ap-gold-brand-copy span {
+
+        display:
+            none !important;
+
+    }
+
+}

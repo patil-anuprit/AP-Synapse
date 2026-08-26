@@ -110,6 +110,22 @@ no extra objects.
 }
 
 
+const AP_3D_TIMEOUT_V1 = 150000;
+
+function with3DTimeout(promise, label) {
+    return Promise.race([
+        promise,
+        new Promise((_, reject) =>
+            setTimeout(
+                () => reject(
+                    new Error(`${label} timed out`)
+                ),
+                AP_3D_TIMEOUT_V1
+            )
+        )
+    ]);
+}
+
 export async function generateAP3D({
     prompt = "",
     imageUrl = null,
@@ -142,11 +158,19 @@ export async function generateAP3D({
 
     try {
 
+        console.log("AP 3D -> Creating reference image");
+
         const referenceBuffer =
             await getReferenceImage(
                 cleanPrompt,
                 cleanImageUrl
             );
+
+        console.log(
+            "AP 3D -> Reference image ready:",
+            referenceBuffer.length,
+            "bytes"
+        );
 
 
         const options =
@@ -155,26 +179,40 @@ export async function generateAP3D({
                 : {};
 
 
+        console.log("AP 3D -> Connecting to TripoSR");
+
         const app =
-            await Client.connect(
-                SPACE,
-                options
+            await with3DTimeout(
+                Client.connect(
+                    SPACE,
+                    options
+                ),
+                "TripoSR connection"
             );
+
+        console.log("AP 3D -> TripoSR connected");
 
 
         // -----------------------------------------------
         // Preprocess/reference cleanup
         // -----------------------------------------------
 
+        console.log("AP 3D -> Preprocessing reference");
+
         const preprocess =
-            await app.predict(
-                "/preprocess",
-                [
-                    handle_file(referenceBuffer),
-                    true,
-                    0.85
-                ]
+            await with3DTimeout(
+                app.predict(
+                    "/preprocess",
+                    [
+                        handle_file(referenceBuffer),
+                        true,
+                        0.85
+                    ]
+                ),
+                "TripoSR preprocessing"
             );
+
+        console.log("AP 3D -> Preprocessing complete");
 
 
         const processed =
@@ -196,14 +234,23 @@ export async function generateAP3D({
         // Generate OBJ + GLB
         // -----------------------------------------------
 
+        console.log(
+            "AP 3D -> Waiting for free ZeroGPU and generating mesh"
+        );
+
         const generated =
-            await app.predict(
-                "/generate",
-                [
-                    finalImage,
-                    256
-                ]
+            await with3DTimeout(
+                app.predict(
+                    "/generate",
+                    [
+                        finalImage,
+                        128
+                    ]
+                ),
+                "TripoSR generation"
             );
+
+        console.log("AP 3D -> Mesh generation complete");
 
 
         const obj =

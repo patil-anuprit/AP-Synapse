@@ -1308,8 +1308,7 @@ app.get("/image", async (req, res) => {
     console.log("AP SYNAPSE IMAGE REQUEST");
     console.log("Prompt:", prompt);
 
-    const providerPrompt =
-        normalizeImagePromptForProviders(prompt);
+    const providerPrompt = prompt;
 
     console.log("Provider prompt:", providerPrompt);
 

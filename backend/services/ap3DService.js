@@ -185,7 +185,10 @@ export async function generateAP3D({
             await with3DTimeout(
                 Client.connect(
                     SPACE,
-                    options
+                    {
+                        ...options,
+                        events: ["data", "status"]
+                    }
                 ),
                 "TripoSR connection"
             );
@@ -235,22 +238,86 @@ export async function generateAP3D({
         // -----------------------------------------------
 
         console.log(
-            "AP 3D -> Waiting for free ZeroGPU and generating mesh"
+            "AP 3D -> Joining free ZeroGPU queue"
         );
 
-        const generated =
-            await with3DTimeout(
-                app.predict(
-                    "/generate",
-                    [
-                        finalImage,
-                        128
-                    ]
-                ),
-                "TripoSR generation"
+        const submission =
+            app.submit(
+                "/generate",
+                [
+                    finalImage,
+                    128
+                ]
             );
 
-        console.log("AP 3D -> Mesh generation complete");
+        let generated = null;
+        let queueTimedOut = false;
+
+        const queueTimer =
+            setTimeout(
+                () => {
+
+                    queueTimedOut = true;
+
+                    try {
+                        submission.cancel();
+                    }
+                    catch {}
+
+                },
+                AP_3D_TIMEOUT_V1
+            );
+
+        try {
+
+            for await (const event of submission) {
+
+                if (event?.type === "status") {
+
+                    const position =
+                        Number.isFinite(event.position)
+                            ? event.position
+                            : "?";
+
+                    const eta =
+                        Number.isFinite(event.eta)
+                            ? `${Math.max(0, Math.round(event.eta))}s`
+                            : "?";
+
+                    console.log(
+                        `AP 3D QUEUE -> ${event.stage || "pending"} | position ${position} | ETA ${eta}`
+                    );
+                }
+
+                if (event?.type === "data") {
+
+                    generated = {
+                        data: event.data
+                    };
+                }
+            }
+
+        }
+        finally {
+
+            clearTimeout(queueTimer);
+        }
+
+        if (queueTimedOut) {
+            throw new Error(
+                "Free 3D GPU queue timed out."
+            );
+        }
+
+        if (!generated?.data) {
+            throw new Error(
+                "TripoSR queue completed without model output."
+            );
+        }
+
+        console.log(
+            "AP 3D -> Mesh generation complete"
+        );
 
 
         const obj =

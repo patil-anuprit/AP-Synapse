@@ -1059,6 +1059,17 @@ const thinkingInterval =
                     };
 
 
+            // AP_VISUAL_WAIT_STATUS_V1
+            clearInterval(thinkingInterval);
+
+            if (thinkingStage) {
+
+                thinkingStage.textContent =
+                    visualType === "3d"
+                        ? "Waiting for free 3D GPU"
+                        : "Generating video";
+            }
+
             const visualResponse =
                 await fetch(
                     endpoint,

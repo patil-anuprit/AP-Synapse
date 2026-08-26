@@ -1,0 +1,856 @@
+﻿/* ============================================================
+   AP SYNAPSE — EXACT MOBILE COMMAND BAR V3
+   CSS ONLY
+   REAL EXISTING CONTROLS
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    /* ========================================================
+       TOPBAR FOUNDATION
+       ======================================================== */
+
+    .topbar {
+
+        position: relative !important;
+
+        width: 100% !important;
+
+        height: 58px !important;
+        min-height: 58px !important;
+
+        box-sizing: border-box !important;
+
+        padding:
+            0 8px !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        gap: 7px !important;
+
+        overflow: visible !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(11,12,13,.99),
+                rgba(8,9,10,.975)
+            ) !important;
+
+        border-bottom:
+            1px solid rgba(255,255,255,.075) !important;
+
+        box-shadow:
+            0 8px 28px rgba(0,0,0,.26),
+            inset 0 -1px 0 rgba(205,165,82,.025) !important;
+
+        backdrop-filter:
+            blur(22px)
+            saturate(118%) !important;
+
+        -webkit-backdrop-filter:
+            blur(22px)
+            saturate(118%) !important;
+    }
+
+
+    .topbar::after {
+
+        content: "" !important;
+
+        position: absolute !important;
+
+        left: 17% !important;
+        right: 17% !important;
+        bottom: -1px !important;
+
+        height: 1px !important;
+
+        pointer-events: none !important;
+
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                rgba(205,165,82,.28),
+                transparent
+            ) !important;
+    }
+
+
+    /* ========================================================
+       LEFT
+       KEEP ONLY COMPACT AP IDENTITY
+       ======================================================== */
+
+    .topbar-left {
+
+        flex:
+            0 0 31px !important;
+
+        width: 31px !important;
+        min-width: 31px !important;
+
+        margin: 0 !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        overflow: visible !important;
+    }
+
+
+    .topbar-left .workspace-title {
+
+        width: 31px !important;
+
+        min-width: 31px !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+        display: block !important;
+    }
+
+
+    /* Hide desktop-only Synapse Core */
+    #intelligenceFieldBtn {
+
+        display: none !important;
+    }
+
+
+    /* Hide workspace description */
+    .topbar-left .workspace-title > p {
+
+        display: none !important;
+    }
+
+
+    /* ========================================================
+       AP IDENTITY
+       ======================================================== */
+
+    #synapseIdentityBtn {
+
+        position: relative !important;
+
+        width: 31px !important;
+        height: 31px !important;
+
+        min-width: 31px !important;
+        max-width: 31px !important;
+
+        min-height: 31px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: grid !important;
+
+        place-items: center !important;
+
+        overflow: hidden !important;
+
+        border:
+            1px solid rgba(210,169,86,.31) !important;
+
+        border-radius:
+            9px !important;
+
+        background:
+            radial-gradient(
+                circle at 28% 18%,
+                rgba(224,184,105,.15),
+                rgba(210,169,86,.025)
+            ) !important;
+
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,.05),
+            0 0 17px rgba(210,169,86,.025) !important;
+
+        color:
+            transparent !important;
+
+        font-size: 0 !important;
+    }
+
+
+    #synapseIdentityBtn > * {
+
+        display: none !important;
+    }
+
+
+    #synapseIdentityBtn::after {
+
+        content: "AP" !important;
+
+        display: block !important;
+
+        color:
+            #dfb76a !important;
+
+        font-size:
+            7px !important;
+
+        line-height:
+            1 !important;
+
+        font-weight:
+            900 !important;
+
+        letter-spacing:
+            .05em !important;
+    }
+
+
+    /* ========================================================
+       SEARCH
+       ======================================================== */
+
+    .topbar-center {
+
+        display: none !important;
+    }
+
+
+    /* ========================================================
+       RIGHT COMMAND BAR
+       ======================================================== */
+
+    .topbar-right {
+
+        flex:
+            1 1 auto !important;
+
+        min-width: 0 !important;
+
+        margin:
+            0 0 0 auto !important;
+
+        padding:
+            0 !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        justify-content: flex-end !important;
+
+        gap: 4px !important;
+
+        overflow: visible !important;
+    }
+
+
+    /* Settings belongs in Settings/sidebar on mobile */
+
+    #settingsBtn {
+
+        display: none !important;
+    }
+
+
+    /* ========================================================
+       APRISHA
+       [ ◉  ASK Aprisha • ]
+       ======================================================== */
+
+    #apDedicatedAprishaButton {
+
+        order: 1 !important;
+
+        position: relative !important;
+
+        width: 112px !important;
+        min-width: 112px !important;
+        max-width: 112px !important;
+
+        height: 34px !important;
+        min-height: 34px !important;
+
+        flex:
+            0 0 112px !important;
+
+        box-sizing:
+            border-box !important;
+
+        margin: 0 !important;
+
+        padding:
+            0 9px 0 31px !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        justify-content: center !important;
+
+        overflow: hidden !important;
+
+        border:
+            1px solid rgba(210,169,86,.32) !important;
+
+        border-radius:
+            11px !important;
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(210,169,86,.13),
+                rgba(255,255,255,.022)
+            ) !important;
+
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,.05),
+            0 5px 18px rgba(0,0,0,.14) !important;
+
+        color:
+            transparent !important;
+
+        font-size:
+            0 !important;
+
+        white-space:
+            nowrap !important;
+
+        -webkit-tap-highlight-color:
+            transparent !important;
+    }
+
+
+    /* Aprisha intelligence orb */
+
+    #apDedicatedAprishaButton::before {
+
+        content: "" !important;
+
+        position: absolute !important;
+
+        left: 10px !important;
+        top: 50% !important;
+
+        width: 13px !important;
+        height: 13px !important;
+
+        transform:
+            translateY(-50%) !important;
+
+        border:
+            1px solid rgba(222,182,104,.76) !important;
+
+        border-radius:
+            50% !important;
+
+        background:
+            radial-gradient(
+                circle,
+                #d9ad58 0 20%,
+                transparent 24%
+            ) !important;
+
+        box-shadow:
+            0 0 10px rgba(211,169,86,.22) !important;
+    }
+
+
+    #apDedicatedAprishaButton::after {
+
+        content:
+            "ASK  Aprisha  •" !important;
+
+        color:
+            rgba(245,241,231,.93) !important;
+
+        font-size:
+            8px !important;
+
+        line-height:
+            1 !important;
+
+        font-weight:
+            730 !important;
+
+        letter-spacing:
+            .035em !important;
+
+        white-space:
+            nowrap !important;
+    }
+
+
+    #apDedicatedAprishaButton:active {
+
+        transform:
+            scale(.97) !important;
+
+        background:
+            rgba(210,169,86,.15) !important;
+    }
+
+
+    /* ========================================================
+       COMMON UTILITY CONTROL
+       ======================================================== */
+
+    .topbar-right .ap-notification-icon-only,
+    #apMobileThemeToggle,
+    #shareConversationBtn,
+    #profileBtn {
+
+        width: 30px !important;
+        height: 30px !important;
+
+        min-width: 30px !important;
+        max-width: 30px !important;
+
+        min-height: 30px !important;
+        max-height: 30px !important;
+
+        flex:
+            0 0 30px !important;
+
+        box-sizing:
+            border-box !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: inline-flex !important;
+
+        align-items: center !important;
+
+        justify-content: center !important;
+
+        overflow: hidden !important;
+
+        border:
+            1px solid rgba(255,255,255,.075) !important;
+
+        border-radius:
+            9px !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(255,255,255,.043),
+                rgba(255,255,255,.013)
+            ) !important;
+
+        color:
+            rgba(241,240,235,.74) !important;
+
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,.035) !important;
+
+        -webkit-tap-highlight-color:
+            transparent !important;
+
+        touch-action:
+            manipulation !important;
+
+        transition:
+            transform .14s ease,
+            border-color .14s ease,
+            background .14s ease,
+            color .14s ease !important;
+    }
+
+
+    /* ========================================================
+       EXACT ORDER
+       ======================================================== */
+
+    .topbar-right .ap-notification-icon-only {
+
+        order: 2 !important;
+    }
+
+
+    #apMobileThemeToggle {
+
+        order: 3 !important;
+    }
+
+
+    #shareConversationBtn {
+
+        order: 4 !important;
+    }
+
+
+    #profileBtn {
+
+        order: 5 !important;
+    }
+
+
+    /* ========================================================
+       NOTIFICATIONS
+       ======================================================== */
+
+    .topbar-right .ap-notification-icon-only {
+
+        position: relative !important;
+    }
+
+
+    .topbar-right
+    .ap-notification-icon-only::after {
+
+        content: "" !important;
+
+        position: absolute !important;
+
+        width: 4px !important;
+        height: 4px !important;
+
+        right: 5px !important;
+        top: 5px !important;
+
+        border-radius:
+            50% !important;
+
+        background:
+            #d9ad58 !important;
+
+        box-shadow:
+            0 0 7px rgba(217,173,88,.40) !important;
+
+        pointer-events:
+            none !important;
+    }
+
+
+    /* ========================================================
+       THEME
+       ======================================================== */
+
+    #apMobileThemeToggle {
+
+        font-size:
+            16px !important;
+
+        line-height:
+            1 !important;
+
+        color:
+            #d9ad58 !important;
+    }
+
+
+    /* ========================================================
+       SHARE
+       ======================================================== */
+
+    #shareConversationBtn {
+
+        font-size:
+            0 !important;
+
+        gap:
+            0 !important;
+    }
+
+
+    #shareConversationBtn span {
+
+        margin:
+            0 !important;
+    }
+
+
+    #shareConversationBtn span:last-child {
+
+        display:
+            none !important;
+    }
+
+
+    #shareConversationBtn svg {
+
+        width:
+            15px !important;
+
+        height:
+            15px !important;
+    }
+
+
+    /* ========================================================
+       PROFILE
+       ======================================================== */
+
+    #profileBtn {
+
+        border-color:
+            rgba(210,169,86,.31) !important;
+
+        background:
+            radial-gradient(
+                circle at 28% 18%,
+                rgba(220,179,99,.13),
+                rgba(210,169,86,.026)
+            ) !important;
+
+        color:
+            #dfb76a !important;
+
+        font-size:
+            7px !important;
+
+        font-weight:
+            900 !important;
+
+        letter-spacing:
+            .035em !important;
+    }
+
+
+    /* ========================================================
+       PRESS RESPONSE
+       ======================================================== */
+
+    .topbar-right
+    .ap-notification-icon-only:active,
+
+    #apMobileThemeToggle:active,
+
+    #shareConversationBtn:active,
+
+    #profileBtn:active {
+
+        transform:
+            scale(.93) !important;
+
+        border-color:
+            rgba(210,169,86,.28) !important;
+
+        background:
+            rgba(210,169,86,.075) !important;
+
+        color:
+            #dfb76a !important;
+    }
+
+
+    /* ========================================================
+       ICON NORMALIZATION
+       ======================================================== */
+
+    .topbar-right
+    .ap-notification-icon-only svg,
+
+    #shareConversationBtn svg {
+
+        width:
+            15px !important;
+
+        height:
+            15px !important;
+    }
+
+
+    /* ========================================================
+       LIGHT MODE
+       ======================================================== */
+
+    html[data-theme="light"]
+    .topbar,
+
+    body.light-mode
+    .topbar {
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(246,244,238,.99),
+                rgba(239,236,228,.975)
+            ) !important;
+
+        border-bottom-color:
+            rgba(42,36,25,.10) !important;
+
+        box-shadow:
+            0 8px 26px rgba(42,35,24,.075) !important;
+    }
+
+
+    html[data-theme="light"]
+    .topbar-right
+    .ap-notification-icon-only,
+
+    html[data-theme="light"]
+    #apMobileThemeToggle,
+
+    html[data-theme="light"]
+    #shareConversationBtn,
+
+    html[data-theme="light"]
+    #profileBtn,
+
+    body.light-mode
+    .topbar-right
+    .ap-notification-icon-only,
+
+    body.light-mode
+    #apMobileThemeToggle,
+
+    body.light-mode
+    #shareConversationBtn,
+
+    body.light-mode
+    #profileBtn {
+
+        border-color:
+            rgba(42,36,25,.11) !important;
+
+        background:
+            rgba(255,255,255,.61) !important;
+
+        color:
+            rgba(37,31,22,.72) !important;
+    }
+
+
+    html[data-theme="light"]
+    #apDedicatedAprishaButton,
+
+    body.light-mode
+    #apDedicatedAprishaButton {
+
+        border-color:
+            rgba(164,120,42,.25) !important;
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(184,139,55,.10),
+                rgba(255,255,255,.58)
+            ) !important;
+    }
+
+
+    html[data-theme="light"]
+    #apDedicatedAprishaButton::after,
+
+    body.light-mode
+    #apDedicatedAprishaButton::after {
+
+        color:
+            rgba(38,32,23,.91) !important;
+    }
+
+}
+
+
+/* ============================================================
+   EXACT 412PX TUNING
+   ============================================================ */
+
+@media (max-width: 430px) {
+
+    .topbar {
+
+        padding-left:
+            7px !important;
+
+        padding-right:
+            7px !important;
+
+        gap:
+            5px !important;
+    }
+
+
+    .topbar-right {
+
+        gap:
+            3px !important;
+    }
+
+
+    #apDedicatedAprishaButton {
+
+        width:
+            106px !important;
+
+        min-width:
+            106px !important;
+
+        max-width:
+            106px !important;
+
+        flex-basis:
+            106px !important;
+    }
+
+}
+
+
+/* ============================================================
+   VERY SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 370px) {
+
+    #apDedicatedAprishaButton {
+
+        width:
+            94px !important;
+
+        min-width:
+            94px !important;
+
+        max-width:
+            94px !important;
+
+        flex-basis:
+            94px !important;
+
+        padding-left:
+            27px !important;
+
+        padding-right:
+            5px !important;
+    }
+
+
+    #apDedicatedAprishaButton::after {
+
+        content:
+            "Aprisha  •" !important;
+    }
+
+
+    .topbar-right
+    .ap-notification-icon-only,
+
+    #apMobileThemeToggle,
+
+    #shareConversationBtn,
+
+    #profileBtn {
+
+        width:
+            28px !important;
+
+        height:
+            28px !important;
+
+        min-width:
+            28px !important;
+
+        max-width:
+            28px !important;
+
+        flex-basis:
+            28px !important;
+    }
+
+}

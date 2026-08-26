@@ -1,4 +1,4 @@
-﻿import { runReplicateModel }
+import { runReplicateModel }
 from "./replicateVisualRunner.js";
 
 const MODEL =
@@ -27,8 +27,12 @@ export async function generateAPVideo(
         "AP VISUAL MESH -> WAN 2.7 VIDEO"
     );
 
-    const result =
-        await runReplicateModel(
+    let result;
+
+    try {
+
+        result =
+            await runReplicateModel(
             MODEL,
             {
                 prompt:
@@ -52,6 +56,30 @@ export async function generateAPVideo(
                     true
             }
         );
+
+    }
+    catch (error) {
+
+        const message =
+            String(error?.message || error || "");
+
+        if (
+            /credit|billing|payment|insufficient/i.test(message)
+        ) {
+
+            const cleanError =
+                new Error(
+                    "Video generation is temporarily at capacity."
+                );
+
+            cleanError.code =
+                "VIDEO_CAPACITY_UNAVAILABLE";
+
+            throw cleanError;
+        }
+
+        throw error;
+    }
 
 
     const url =

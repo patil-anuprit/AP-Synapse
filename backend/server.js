@@ -1305,6 +1305,31 @@ app.get("/image", async (req, res) => {
         });
     }
 
+    // =====================================================
+    // AP_IMAGE_PROTECTED_IDENTITY_GUARD_V2
+    // Never fabricate the creator/protected identity.
+    // =====================================================
+
+    const protectedIdentityImageRequest =
+        /\banuprit(?:\s+patil)?\b/i.test(prompt) ||
+        /\b(ap\s*synapse'?s?\s*)?(creator|founder|developer|owner|maker)\b/i.test(prompt) ||
+        /\b(your|its|the)\s+(creator|founder|developer|owner|maker)\b/i.test(prompt);
+
+    if (protectedIdentityImageRequest) {
+
+        console.warn(
+            "AP Synapse Image Shield: protected identity request blocked."
+        );
+
+        return res.status(403).json({
+            blocked: true,
+            code: "PROTECTED_IDENTITY_IMAGE",
+            message:
+                "AP Synapse cannot generate or fabricate an image of Anuprit Patil or its protected creator identity."
+        });
+
+    }
+
     console.log("AP SYNAPSE IMAGE REQUEST");
     console.log("Prompt:", prompt);
 

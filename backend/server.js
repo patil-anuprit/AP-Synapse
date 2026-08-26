@@ -7,6 +7,7 @@ import upload from "./services/upload.js";
 import { readDocument } from "./services/documentReader.js";
 import { generateImage as generateGeminiImage } from "./services/geminiImageService.js";
 import { generateVisualImage } from "./services/visualForge.js";
+import { generateStabilityImage } from "./services/stabilityImageService.js";
 import { OAuth2Client } from "google-auth-library";
 import { searchWebSources } from "./services/webSources.js";
 import {
@@ -1276,8 +1277,8 @@ catch (finalizationError) {
 
 app.get("/image", async (req, res) => {
 
-    const prompt = String(req.query.prompt || "").trim();
-    
+    const prompt =
+        String(req.query.prompt || "").trim();
 
     if (!prompt) {
         return res.status(400).json({
@@ -1285,118 +1286,103 @@ app.get("/image", async (req, res) => {
         });
     }
 
-    console.log("Ã°Å¸Å½Â¨ AP SYNAPSE IMAGE REQUEST");
+    console.log("AP SYNAPSE IMAGE REQUEST");
     console.log("Prompt:", prompt);
 
-    // ==========================================
-// Ã°Å¸â€â€™ AP SYNAPSE Ã¢â‚¬â€ PROTECTED PERSON IMAGE GUARD
-// ==========================================
 
-const normalizedPrompt = String(prompt || "")
-    .toLowerCase()
-    .normalize("NFKC")
-    .replace(/[^\p{L}\p{N}\s]/gu, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+    // =====================================================
+    // AP SYNAPSE IMAGE IDENTITY SHIELD
+    // =====================================================
 
+    const normalizedPrompt =
+        prompt.toLowerCase();
 
-// ------------------------------------------
-// Identity targets
-// ------------------------------------------
+    const protectedPersonPatterns = [
 
-const protectedPersonPatterns = [
+        /\banuprit\s+patil\b/i,
 
-    // AP Synapse creator / owner / developer
-    /\b(anuprit\s+patil)\b/,
+        /\bwho\s+(is|are)\s+(your|the)\s+(creator|developer|owner|maker|founder)\b/i,
 
-    /\b(your|the)\s+(creator|developer|owner|maker|founder)\b/,
+        /\bwho\s+(made|created|built|developed|designed)\s+you\b/i,
 
-    /\b(creator|developer|owner|maker|founder)\s+of\s+(ap\s+synapse|ap\s+synapse\s+ai)\b/,
+        /\b(your|the)\s+(creator|developer|owner|maker|founder)\b/i
+    ];
 
-    // Person who made / built / created the AI
-    /\b(the\s+)?(person|human|individual|one)\s+(who|that)\s+(made|created|built|developed|designed)\s+you\b/,
+    const imageGenerationWords =
+        /\b(create|generate|make|draw|design|render|produce|paint|illustrate|visualize|depict|show|imagine)\b/i;
 
-    // Person behind the AI
-    /\b(the\s+)?(person|human|individual|one)\s+behind\s+(you|this\s+ai|this\s+assistant|ap\s+synapse)\b/,
+    const imageObjectWords =
+        /\b(image|picture|photo|portrait|artwork|illustration|wallpaper|poster|scene|person|human|character)\b/i;
 
-    // "who is your creator/developer"
-    /\bwho\s+(is|are)\s+(your|the)\s+(creator|developer|owner|maker|founder)\b/,
+    const containsProtectedIdentity =
+        protectedPersonPatterns.some(
+            pattern =>
+                pattern.test(normalizedPrompt)
+        );
 
-    /\bwho\s+(made|created|built|developed|designed)\s+you\b/
-];
+    const isImageRequest =
+        imageGenerationWords.test(normalizedPrompt) &&
+        imageObjectWords.test(normalizedPrompt);
 
+    if (
+        containsProtectedIdentity &&
+        isImageRequest
+    ) {
 
-// ------------------------------------------
-// Image-generation verbs
-// ------------------------------------------
+        console.warn(
+            "AP Synapse Image Shield blocked protected identity generation."
+        );
 
-const imageGenerationWords =
-    /\b(create|generate|make|draw|design|render|produce|paint|illustrate|visualize|depict|show|imagine)\b/i;
-
-const imageObjectWords =
-    /\b(image|picture|photo|portrait|artwork|illustration|wallpaper|poster|scene|person|human|character)\b/i;
-
-
-// ------------------------------------------
-// Deterministic identity detection
-// ------------------------------------------
-
-const containsProtectedIdentity =
-    protectedPersonPatterns.some(
-        pattern => pattern.test(normalizedPrompt)
-    );
+        return res.status(403).json({
+            error:
+                "AP Synapse cannot generate images representing its protected creator identity."
+        });
+    }
 
 
-// ------------------------------------------
-// Explicit image request
-// ------------------------------------------
-
-const isImageRequest =
-    imageGenerationWords.test(normalizedPrompt) &&
-    imageObjectWords.test(normalizedPrompt);
-
-
-// ------------------------------------------
-// HARD BLOCK
-// ------------------------------------------
-
-if (containsProtectedIdentity && isImageRequest) {
-
-    console.log(
-        "Ã°Å¸â€â€™ BLOCKED Ã¢â‚¬â€ Protected person identity image request."
-    );
-
-    return res.status(403).json({
-
-        type: "error",
-
-        code: "PROTECTED_IDENTITY",
-
-        error:
-            "I can't generate an image of my creator, developer, owner, or another protected person's identity."
-    });
-}
-
-    // ==========================================
-    // Ã°Å¸Å¸Â¢ PRIMARY Ã¢â‚¬â€ GEMINI IMAGE ENGINE
-    // ==========================================
+    // =====================================================
+    // PRIMARY ENGINE
+    // AP SYNAPSE VISUAL FORGE -> NANO BANANA 2
+    // =====================================================
 
     try {
 
         console.log(
-            "Ã°Å¸Å¸Â¢ Image Ã¢â€ â€™ Gemini"
+            "Visual Forge -> Nano Banana 2 / 2K"
         );
 
         const result =
-            await generateGeminiImage(prompt);
+            await generateVisualImage(prompt);
 
-            console.log("Ã¢Å“â€¦ GEMINI IMAGE GENERATED");
-            console.log("Mime type:", result.mimeType);
-            console.log("Buffer size:", result.buffer?.length);
+        if (!result?.url) {
+            throw new Error(
+                "Visual Forge returned no image URL."
+            );
+        }
+
+        const upstream =
+            await fetch(result.url);
+
+        if (!upstream.ok) {
+            throw new Error(
+                `Unable to retrieve Visual Forge image: ${upstream.status}`
+            );
+        }
+
+        const imageBuffer =
+            Buffer.from(
+                await upstream.arrayBuffer()
+            );
+
+        const contentType =
+            upstream.headers.get("content-type") ||
+            "image/png";
+
+        res.status(200);
 
         res.setHeader(
             "Content-Type",
-            result.mimeType
+            contentType
         );
 
         res.setHeader(
@@ -1404,63 +1390,164 @@ if (containsProtectedIdentity && isImageRequest) {
             "no-store"
         );
 
+        res.setHeader(
+            "X-AP-Synapse-Image-Engine",
+            "visual-forge-nano-banana-2"
+        );
+
+        if (result.requestId) {
+            res.setHeader(
+                "X-AP-Synapse-Request-Id",
+                result.requestId
+            );
+        }
+
+        console.log(
+            "Visual Forge image completed."
+        );
+
+        return res.end(imageBuffer);
+
+    }
+    catch (visualError) {
+
+        console.error(
+            "Visual Forge / Nano Banana 2 failed:"
+        );
+
+        console.error(
+            visualError?.message ||
+            visualError
+        );
+    }
+
+
+    // =====================================================
+    // EMERGENCY FALLBACK
+    // EXISTING GEMINI IMAGE SERVICE
+    // =====================================================
+
+    try {
+
+        console.log(
+            "Image fallback -> Gemini"
+        );
+
+        const result =
+            await generateGeminiImage(prompt);
+
+        if (!result?.buffer) {
+            throw new Error(
+                "Gemini Image returned no image buffer."
+            );
+        }
+
+        res.status(200);
+
+        res.setHeader(
+            "Content-Type",
+            result.mimeType ||
+            result.contentType ||
+            "image/png"
+        );
+
+        res.setHeader(
+            "Cache-Control",
+            "no-store"
+        );
+
+        res.setHeader(
+            "X-AP-Synapse-Image-Engine",
+            "gemini-fallback"
+        );
+
+        console.log(
+            "Gemini fallback image completed."
+        );
+
         return res.end(result.buffer);
 
     }
-
     catch (geminiError) {
 
         console.error(
-            "Ã¢Å¡Â Ã¯Â¸Â Gemini Image failed."
+            "Gemini Image fallback failed:"
         );
 
-        console.error(geminiError);
-
+        console.error(
+            geminiError?.message ||
+            geminiError
+        );
     }
 
-    // ==========================================
-// Ã°Å¸Å¸Â¡ AP SYNAPSE Ã¢â‚¬â€ VISUAL FORGE
-// PRIMARY IMAGE ENGINE
-// ==========================================
 
-try {
+    // =====================================================
+    // FINAL FAILURE
+    // =====================================================
 
-    console.log(
-        "Ã°Å¸Å¸Â¡ Image Ã¢â€ â€™ AP Synapse Visual Forge"
-    );
 
-    const imageUrl =
-        await generateVisualImage(prompt);
+    // =====================================================
+    // AP SYNAPSE STABILITY FALLBACK
+    // =====================================================
 
-    return res.json({
-        type: "image",
-        url: imageUrl,
-        engine: "AP Synapse Visual Forge"
-    });
+    try {
 
-}
+        console.log(
+            "Image fallback -> Stability AI"
+        );
 
-catch (visualError) {
+        const result =
+            await generateStabilityImage(prompt);
 
-    console.error(
-        "Ã¢Å¡Â Ã¯Â¸Â Visual Forge Image failed."
-    );
+        if (!result?.buffer) {
+            throw new Error(
+                "Stability AI returned no image buffer."
+            );
+        }
 
-    console.error(
-        visualError
-    );
-}
+        res.status(200);
+
+        res.setHeader(
+            "Content-Type",
+            result.mimeType ||
+            "image/png"
+        );
+
+        res.setHeader(
+            "Cache-Control",
+            "no-store"
+        );
+
+        res.setHeader(
+            "X-AP-Synapse-Image-Engine",
+            "stability-ai"
+        );
+
+        console.log(
+            "Stability fallback image completed."
+        );
+
+        return res.end(result.buffer);
+
+    }
+    catch (stabilityError) {
+
+        console.error(
+            "Stability AI fallback failed:"
+        );
+
+        console.error(
+            stabilityError?.message ||
+            stabilityError
+        );
+    }
 
     return res.status(502).json({
         error:
-            "All AP Synapse image-generation providers are currently unavailable."
+            "AP Synapse image generation is temporarily unavailable."
     });
 
 });
-
-// ==========================================
-// AP SYNAPSE Ã¢â‚¬â€ GOOGLE SIGN-IN VERIFICATION
-// ==========================================
 
 app.post("/auth/google", async (req, res) => {
     try {

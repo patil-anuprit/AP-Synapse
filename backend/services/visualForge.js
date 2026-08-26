@@ -1,4 +1,4 @@
-﻿import "dotenv/config";
+import "dotenv/config";
 import { fal } from "@fal-ai/client";
 
 const FAL_KEY = process.env.FAL_KEY;
@@ -126,10 +126,16 @@ export async function generateVisualImage(prompt) {
             IMAGE_MODEL,
             {
                 input: {
-                    prompt:
-                        premiumImagePrompt(
-                            cleanPrompt
-                        )
+                    prompt: premiumImagePrompt(cleanPrompt),
+
+                    // AP SYNAPSE VISUAL FORGE V2
+                    // Balanced production quality + speed
+                    resolution: "2K",
+                    aspect_ratio: "auto",
+                    output_format: "png",
+                    num_images: 1,
+                    safety_tolerance: "4",
+                    limit_generations: true
                 },
                 logs: true
             }

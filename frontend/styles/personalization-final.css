@@ -1,0 +1,838 @@
+﻿/* ============================================================
+   AP SYNAPSE PERSONALIZATION — FINAL
+   ============================================================ */
+
+#apPersonalizationPanel {
+    margin: 22px 0 18px;
+    padding: 0;
+    color: inherit;
+}
+
+.ap-personalization-shell {
+    position: relative;
+    overflow: hidden;
+
+    border: 1px solid rgba(255,255,255,.075);
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.018)
+        );
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.04),
+        0 18px 48px rgba(0,0,0,.18);
+}
+
+.ap-personalization-shell::before {
+    content: "";
+
+    position: absolute;
+    inset: 0 auto auto 0;
+
+    width: 100%;
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(214,174,94,.5),
+            transparent
+        );
+
+    pointer-events: none;
+}
+
+.ap-personalization-head {
+    padding: 20px 20px 18px;
+
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.06);
+}
+
+.ap-personalization-kicker {
+    margin: 0 0 6px;
+
+    font-size: 9px;
+    line-height: 1;
+
+    font-weight: 800;
+    letter-spacing: .17em;
+
+    text-transform: uppercase;
+
+    color: #d8ad58;
+}
+
+.ap-personalization-title {
+    margin: 0;
+
+    font-size: 19px;
+    line-height: 1.2;
+    font-weight: 720;
+
+    color: #f6f4ee;
+}
+
+.ap-personalization-description {
+    margin: 7px 0 0;
+
+    max-width: 590px;
+
+    font-size: 12.5px;
+    line-height: 1.55;
+
+    color: rgba(239,239,236,.62);
+}
+
+.ap-personalization-sync {
+    flex: 0 0 auto;
+
+    padding: 7px 10px;
+
+    border:
+        1px solid rgba(214,174,94,.18);
+
+    border-radius: 999px;
+
+    background:
+        rgba(214,174,94,.075);
+
+    color:
+        rgba(236,204,139,.92);
+
+    font-size: 9px;
+    font-weight: 750;
+    letter-spacing: .08em;
+
+    text-transform: uppercase;
+}
+
+.ap-personalization-controls {
+    padding: 15px 20px;
+
+    display: grid;
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
+    gap: 10px;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.055);
+}
+
+.ap-personalization-switch {
+    min-height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    padding: 11px 13px;
+
+    border:
+        1px solid rgba(255,255,255,.06);
+
+    border-radius: 13px;
+
+    background:
+        rgba(255,255,255,.024);
+}
+
+.ap-personalization-switch-copy strong {
+    display: block;
+
+    font-size: 12px;
+    font-weight: 690;
+
+    color: rgba(250,249,244,.93);
+}
+
+.ap-personalization-switch-copy span {
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 10px;
+    line-height: 1.35;
+
+    color: rgba(240,240,235,.46);
+}
+
+.ap-personalization-toggle {
+    position: relative;
+
+    width: 40px;
+    height: 22px;
+
+    flex: 0 0 40px;
+
+    border: 0;
+    padding: 0;
+
+    border-radius: 999px;
+
+    background:
+        rgba(255,255,255,.13);
+
+    cursor: pointer;
+
+    transition:
+        background .18s ease,
+        box-shadow .18s ease;
+}
+
+.ap-personalization-toggle::after {
+    content: "";
+
+    position: absolute;
+
+    width: 16px;
+    height: 16px;
+
+    left: 3px;
+    top: 3px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,.9);
+
+    box-shadow:
+        0 2px 7px rgba(0,0,0,.26);
+
+    transition:
+        transform .18s ease;
+}
+
+.ap-personalization-toggle[data-on="true"] {
+    background:
+        linear-gradient(
+            135deg,
+            #bd8e39,
+            #dfbd75
+        );
+
+    box-shadow:
+        0 0 0 3px rgba(215,177,99,.08);
+}
+
+.ap-personalization-toggle[data-on="true"]::after {
+    transform:
+        translateX(18px);
+
+    background:
+        #16130e;
+}
+
+.ap-personalization-body {
+    padding:
+        18px 20px 20px;
+}
+
+.ap-personalization-section-title {
+    margin:
+        3px 0 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    font-size: 10px;
+    font-weight: 790;
+    letter-spacing: .12em;
+
+    text-transform: uppercase;
+
+    color:
+        rgba(236,216,173,.78);
+}
+
+.ap-personalization-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
+    gap: 12px;
+}
+
+.ap-personalization-field {
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+
+    min-width: 0;
+}
+
+.ap-personalization-field.ap-wide {
+    grid-column:
+        1 / -1;
+}
+
+.ap-personalization-field label {
+    padding-left: 2px;
+
+    font-size: 10px;
+    font-weight: 650;
+
+    color:
+        rgba(241,240,235,.58);
+}
+
+.ap-personalization-input,
+.ap-personalization-select,
+.ap-personalization-textarea {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    border:
+        1px solid rgba(255,255,255,.075);
+
+    border-radius: 11px;
+
+    outline: none;
+
+    color:
+        rgba(250,249,245,.94);
+
+    background:
+        rgba(8,9,10,.33);
+
+    font: inherit;
+
+    transition:
+        border-color .18s ease,
+        background .18s ease,
+        box-shadow .18s ease;
+}
+
+.ap-personalization-input,
+.ap-personalization-select {
+    height: 42px;
+
+    padding:
+        0 12px;
+
+    font-size: 12px;
+}
+
+.ap-personalization-textarea {
+    min-height: 86px;
+
+    resize: vertical;
+
+    padding:
+        11px 12px;
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.ap-personalization-textarea.ap-large {
+    min-height: 110px;
+}
+
+.ap-personalization-input:focus,
+.ap-personalization-select:focus,
+.ap-personalization-textarea:focus {
+
+    border-color:
+        rgba(214,174,94,.42);
+
+    background:
+        rgba(10,10,11,.47);
+
+    box-shadow:
+        0 0 0 3px rgba(214,174,94,.06);
+}
+
+.ap-personalization-select option {
+    background:
+        #171719;
+
+    color:
+        #f3f1eb;
+}
+
+.ap-personalization-hint {
+    margin:
+        5px 2px 0;
+
+    font-size: 9.5px;
+    line-height: 1.45;
+
+    color:
+        rgba(239,239,234,.37);
+}
+
+.ap-personalization-actions {
+    margin-top: 17px;
+
+    display: flex;
+    flex-wrap: wrap;
+
+    align-items: center;
+
+    gap: 9px;
+}
+
+.ap-personalization-button {
+
+    min-height: 38px;
+
+    padding:
+        0 14px;
+
+    border-radius: 10px;
+
+    border:
+        1px solid rgba(255,255,255,.075);
+
+    background:
+        rgba(255,255,255,.038);
+
+    color:
+        rgba(247,246,241,.86);
+
+    font-size: 10.5px;
+    font-weight: 680;
+
+    cursor: pointer;
+
+    transition:
+        transform .15s ease,
+        background .15s ease,
+        border-color .15s ease;
+}
+
+.ap-personalization-button:hover {
+    background:
+        rgba(255,255,255,.065);
+
+    border-color:
+        rgba(255,255,255,.12);
+}
+
+.ap-personalization-button:active {
+    transform:
+        scale(.985);
+}
+
+.ap-personalization-button.ap-primary {
+
+    border-color:
+        rgba(214,174,94,.3);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(190,143,57,.96),
+            rgba(220,181,105,.96)
+        );
+
+    color:
+        #17130d;
+}
+
+.ap-personalization-button.ap-danger {
+
+    color:
+        rgba(255,177,177,.91);
+
+    border-color:
+        rgba(221,92,92,.16);
+
+    background:
+        rgba(164,54,54,.07);
+}
+
+.ap-personalization-save-state {
+    margin-left:
+        auto;
+
+    min-height: 20px;
+
+    display: inline-flex;
+    align-items: center;
+
+    font-size: 10px;
+
+    color:
+        rgba(239,239,234,.45);
+}
+
+.ap-personalization-memory {
+    margin-top: 19px;
+
+    padding-top: 17px;
+
+    border-top:
+        1px solid rgba(255,255,255,.055);
+}
+
+.ap-personalization-memory[hidden] {
+    display: none !important;
+}
+
+.ap-personalization-memory-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 11px;
+}
+
+.ap-personalization-memory-title {
+    font-size: 11px;
+    font-weight: 720;
+
+    color:
+        rgba(247,245,238,.86);
+}
+
+.ap-personalization-memory-subtitle {
+    margin-top: 3px;
+
+    font-size: 9.5px;
+
+    color:
+        rgba(239,239,234,.4);
+}
+
+.ap-personalization-memory-list {
+    display: grid;
+
+    gap: 8px;
+
+    max-height: 330px;
+
+    overflow-y: auto;
+
+    padding-right: 2px;
+}
+
+.ap-personalization-memory-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.ap-personalization-memory-list::-webkit-scrollbar-thumb {
+    background:
+        rgba(255,255,255,.11);
+
+    border-radius: 999px;
+}
+
+.ap-personalization-memory-item {
+
+    padding:
+        11px 11px 10px;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0,1fr) auto;
+
+    gap: 8px;
+
+    border:
+        1px solid rgba(255,255,255,.055);
+
+    border-radius: 11px;
+
+    background:
+        rgba(255,255,255,.022);
+}
+
+.ap-personalization-memory-category {
+
+    display: inline-flex;
+
+    width: fit-content;
+
+    margin-bottom: 5px;
+
+    padding:
+        3px 6px;
+
+    border-radius: 6px;
+
+    background:
+        rgba(213,174,95,.075);
+
+    color:
+        rgba(230,197,130,.8);
+
+    font-size: 8px;
+    font-weight: 760;
+
+    letter-spacing: .08em;
+
+    text-transform: uppercase;
+}
+
+.ap-personalization-memory-content {
+
+    color:
+        rgba(243,242,237,.72);
+
+    font-size: 10.5px;
+    line-height: 1.45;
+
+    overflow-wrap: anywhere;
+}
+
+.ap-personalization-memory-delete {
+
+    width: 28px;
+    height: 28px;
+
+    border: 0;
+    border-radius: 8px;
+
+    background:
+        transparent;
+
+    color:
+        rgba(240,240,235,.42);
+
+    cursor: pointer;
+
+    font-size: 16px;
+}
+
+.ap-personalization-memory-delete:hover {
+    background:
+        rgba(255,255,255,.05);
+
+    color:
+        rgba(255,175,175,.9);
+}
+
+.ap-personalization-empty {
+
+    padding:
+        22px 12px;
+
+    text-align: center;
+
+    border:
+        1px dashed rgba(255,255,255,.07);
+
+    border-radius: 11px;
+
+    color:
+        rgba(239,239,234,.4);
+
+    font-size: 10.5px;
+}
+
+.ap-personalization-add-memory {
+    margin-top: 10px;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0,1fr) auto;
+
+    gap: 8px;
+}
+
+.ap-personalization-add-memory input {
+    min-width: 0;
+}
+
+
+/* ============================================================
+   LIGHT MODE
+   ============================================================ */
+
+body.light-mode
+#apPersonalizationPanel
+.ap-personalization-shell,
+
+body[data-theme="light"]
+#apPersonalizationPanel
+.ap-personalization-shell {
+
+    border-color:
+        rgba(42,38,30,.1);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.82),
+            rgba(245,241,232,.76)
+        );
+
+    box-shadow:
+        0 16px 38px rgba(35,30,22,.07);
+}
+
+body.light-mode
+.ap-personalization-title,
+
+body[data-theme="light"]
+.ap-personalization-title {
+    color: #24211c;
+}
+
+body.light-mode
+.ap-personalization-description,
+
+body[data-theme="light"]
+.ap-personalization-description {
+    color:
+        rgba(37,33,26,.57);
+}
+
+body.light-mode
+.ap-personalization-switch-copy strong,
+
+body[data-theme="light"]
+.ap-personalization-switch-copy strong {
+    color:
+        rgba(31,28,23,.9);
+}
+
+body.light-mode
+.ap-personalization-input,
+
+body.light-mode
+.ap-personalization-select,
+
+body.light-mode
+.ap-personalization-textarea,
+
+body[data-theme="light"]
+.ap-personalization-input,
+
+body[data-theme="light"]
+.ap-personalization-select,
+
+body[data-theme="light"]
+.ap-personalization-textarea {
+
+    color:
+        #27231d;
+
+    border-color:
+        rgba(43,38,29,.11);
+
+    background:
+        rgba(255,255,255,.66);
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+    #apPersonalizationPanel {
+        margin:
+            18px 0 14px;
+    }
+
+    .ap-personalization-shell {
+        border-radius:
+            15px;
+    }
+
+    .ap-personalization-head {
+        padding:
+            16px 15px;
+
+        gap:
+            10px;
+    }
+
+    .ap-personalization-title {
+        font-size:
+            17px;
+    }
+
+    .ap-personalization-description {
+        font-size:
+            11px;
+    }
+
+    .ap-personalization-sync {
+        padding:
+            6px 7px;
+
+        font-size:
+            7.5px;
+    }
+
+    .ap-personalization-controls {
+        padding:
+            12px 15px;
+
+        grid-template-columns:
+            1fr;
+    }
+
+    .ap-personalization-body {
+        padding:
+            15px;
+    }
+
+    .ap-personalization-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+    .ap-personalization-field.ap-wide {
+        grid-column:
+            auto;
+    }
+
+    .ap-personalization-actions {
+        display:
+            grid;
+
+        grid-template-columns:
+            repeat(2,minmax(0,1fr));
+    }
+
+    .ap-personalization-button {
+        width:
+            100%;
+    }
+
+    .ap-personalization-save-state {
+        grid-column:
+            1 / -1;
+
+        margin-left:
+            0;
+
+        justify-content:
+            center;
+    }
+
+    .ap-personalization-add-memory {
+        grid-template-columns:
+            1fr;
+    }
+}

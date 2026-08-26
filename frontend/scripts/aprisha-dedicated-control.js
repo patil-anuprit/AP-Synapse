@@ -7,7 +7,13 @@
     let recognition = null;
 
     function isAndroidDevice() {
-        return /android/i.test(String(navigator.userAgent || ""));
+
+        return String(
+            document.referrer || ""
+        ).startsWith(
+            "android-app://"
+        );
+
     }
 
     function openNativeAprisha(source = "web") {

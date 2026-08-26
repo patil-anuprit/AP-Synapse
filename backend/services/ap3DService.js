@@ -1,4 +1,4 @@
-﻿import "dotenv/config";
+import "dotenv/config";
 
 import {
     Client,
@@ -169,16 +169,11 @@ export async function generateAP3D({
         const preprocess =
             await app.predict(
                 "/preprocess",
-                {
-                    "Input Image":
-                        handle_file(referenceBuffer),
-
-                    "Remove Background":
-                        true,
-
-                    "Foreground Ratio":
-                        0.85
-                }
+                [
+                    handle_file(referenceBuffer),
+                    true,
+                    0.85
+                ]
             );
 
 
@@ -204,13 +199,10 @@ export async function generateAP3D({
         const generated =
             await app.predict(
                 "/generate",
-                {
-                    "Processed Image":
-                        finalImage,
-
-                    "Marching Cubes Resolution":
-                        256
-                }
+                [
+                    finalImage,
+                    256
+                ]
             );
 
 

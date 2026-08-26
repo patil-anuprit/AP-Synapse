@@ -41,7 +41,7 @@
   "isChromeOSOnly": false,
   "isMetaQuest": false,
   "fullScopeUrl": "https://www.ap-synapse.com/",
-  "minSdkVersion": 21,
+  "minSdkVersion": 23,
   "orientation": "portrait-primary",
   "fingerprints": [],
   "additionalTrustedOrigins": [],

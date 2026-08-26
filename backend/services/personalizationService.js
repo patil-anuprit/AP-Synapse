@@ -1,4 +1,4 @@
-﻿import crypto from "crypto";
+import crypto from "crypto";
 import { pool } from "../database/db.js";
 
 
@@ -1288,6 +1288,11 @@ function profileLines(
     const pairs = [
 
         [
+            "Account name",
+            profile.name
+        ],
+
+        [
             "Preferred name",
             profile.preferredName
         ],
@@ -1649,6 +1654,8 @@ export async function getPersonalizationContext(
         "The current user request overrides saved response-style preferences when they conflict.",
 
         "Do not invent missing facts.",
+
+        "If the user asks who they are, what you know about them, what they do, what their goals are, or similar questions, answer directly from the available profile and memory. Never claim that you have no information when the supplied personalization context contains relevant facts.",
 
         ""
 

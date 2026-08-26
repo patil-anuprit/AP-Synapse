@@ -90,6 +90,10 @@ const googleClient = new OAuth2Client(
     process.env.GOOGLE_CLIENT_ID
 );
 
+import * as APPersonalization
+    from "./services/personalizationService.js";
+
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -499,7 +503,11 @@ app.post("/chat", async (req, res) => {
 
     try {
 
-        const message = req.body?.message?.trim();
+        let message =
+            req.body?.message?.trim();
+
+        const originalMessage =
+            message;
         const web = true;
         const documentImage = req.body?.documentImage || "";
 
@@ -513,6 +521,14 @@ app.post("/chat", async (req, res) => {
             req.headers["x-session-id"] ||
             req.ip ||
             "default";
+
+        // AP_PERSONALIZATION_CHAT_IDENTITY_FINAL
+        const apPersonalizationIdentity =
+            APPersonalization.resolvePersonalizationIdentity(
+                req,
+                sessionId
+            );
+
 
         console.log(
             `ÃƒÂ¢Ã…Â¡Ã‚Â¡ CHAT START | ${message.slice(0, 80)}`
@@ -605,6 +621,161 @@ app.post("/chat", async (req, res) => {
         // NOW ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â AND ONLY NOW ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â START STREAMING
         // ============================================================
 
+
+        // ============================================================
+        // AP_PERSONALIZATION_CHAT_CONTEXT_FINAL
+        // ============================================================
+
+        await APPersonalization.ensurePersonalizationIdentity(
+            apPersonalizationIdentity.identityId
+        );
+
+
+        await APPersonalization.maybeRememberFromUserMessage(
+            apPersonalizationIdentity.identityId,
+            originalMessage
+        );
+
+
+        const apPersonalizationContext =
+            await APPersonalization.getPersonalizationContext(
+                apPersonalizationIdentity.identityId,
+                originalMessage
+            );
+
+
+        console.log(
+            "AP PERSONALIZATION CHAT ->",
+            apPersonalizationIdentity.authenticated
+                ? "ACCOUNT"
+                : "BROWSER",
+            "| CONTEXT:",
+            apPersonalizationContext.length,
+            "chars"
+        );
+
+
+        message =
+            APPersonalization.composePersonalizedMessage(
+                originalMessage,
+                apPersonalizationContext
+            );
+
+
+        await APPersonalization.savePersonalizationTurn(
+            apPersonalizationIdentity.identityId,
+            sessionId,
+            "user",
+            originalMessage
+        );
+
+
+        /*
+         * Save the assistant's streamed response
+         * for future cross-conversation continuity.
+         */
+
+        let apPersonalizationAssistantText =
+            "";
+
+
+        const apOriginalWrite =
+            res.write.bind(res);
+
+
+        const apOriginalEnd =
+            res.end.bind(res);
+
+
+        res.write =
+            function (
+                chunk,
+                ...args
+            ) {
+
+                if (
+                    chunk !== undefined &&
+                    chunk !== null
+                ) {
+
+                    apPersonalizationAssistantText +=
+                        Buffer.isBuffer(chunk)
+                            ? chunk.toString("utf8")
+                            : String(chunk);
+
+                }
+
+
+                return apOriginalWrite(
+                    chunk,
+                    ...args
+                );
+
+            };
+
+
+        res.end =
+            function (
+                chunk,
+                ...args
+            ) {
+
+                if (
+                    chunk !== undefined &&
+                    chunk !== null
+                ) {
+
+                    apPersonalizationAssistantText +=
+                        Buffer.isBuffer(chunk)
+                            ? chunk.toString("utf8")
+                            : String(chunk);
+
+                }
+
+
+                return apOriginalEnd(
+                    chunk,
+                    ...args
+                );
+
+            };
+
+
+        res.once(
+            "finish",
+            () => {
+
+                const answer =
+                    apPersonalizationAssistantText.trim();
+
+
+                if (!answer) {
+                    return;
+                }
+
+
+                APPersonalization.savePersonalizationTurn(
+                    apPersonalizationIdentity.identityId,
+                    sessionId,
+                    "assistant",
+                    answer
+                )
+                .catch(
+                    error => {
+
+                        console.warn(
+                            "AP Personalization memory warning:",
+                            error?.message ||
+                            error
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
         res.status(200);
 
         res.setHeader(
@@ -639,8 +810,8 @@ app.post("/chat", async (req, res) => {
 // ============================================================
 
 const sourceQueries = [
-    message,
-    `${message} official primary source`
+    originalMessage,
+    `${originalMessage} official primary source`
 ];
 
 const sourcesPromise =

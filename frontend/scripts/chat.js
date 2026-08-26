@@ -1154,6 +1154,26 @@ const thinkingInterval =
 
                 headers: {
                     "Content-Type": "application/json",
+
+                    // AP_PERSONALIZATION_CHAT_HEADERS_FINAL
+                    "x-personalization-id":
+                        window.AP_PERSONALIZATION
+                            ?.getGuestId?.() ||
+                        localStorage.getItem(
+                            "apSynapsePersonalizationGuestId"
+                        ) ||
+                        "",
+
+                    ...(window.AP_PERSONALIZATION
+                        ?.getToken?.()
+
+                        ? {
+                            "Authorization":
+                                `Bearer ${window.AP_PERSONALIZATION.getToken()}`
+                        }
+
+                        : {}),
+
                     "x-session-id": (window.apLiveRoomId ? `live:${window.apLiveRoomId}` : getSessionId())
                 },
 

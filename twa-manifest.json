@@ -1,6 +1,6 @@
 {
   "packageId": "com.apsynapse.app",
-  "host": "ap-synapse.vercel.app",
+  "host": "ap-synapse.com",
   "name": "AP Synapse",
   "launcherName": "AP Synapse",
   "display": "standalone",
@@ -13,8 +13,8 @@
   "backgroundColor": "#0B0B0C",
   "enableNotifications": true,
   "startUrl": "/",
-  "iconUrl": "https://ap-synapse.vercel.app/favicon.png",
-  "maskableIconUrl": "https://ap-synapse.vercel.app/favicon.png",
+  "iconUrl": "https://ap-synapse.com/favicon.png",
+  "maskableIconUrl": "https://ap-synapse.com/favicon.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "D:\\Projects\\AP-Synapse\\android.keystore",
@@ -24,7 +24,7 @@
   "appVersionCode": 1,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
-  "webManifestUrl": "https://ap-synapse.vercel.app/manifest.json",
+  "webManifestUrl": "https://ap-synapse.com/manifest.json",
   "fallbackType": "customtabs",
   "features": {
     "playBilling": {
@@ -40,7 +40,7 @@
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
-  "fullScopeUrl": "https://ap-synapse.vercel.app/",
+  "fullScopeUrl": "https://ap-synapse.com/",
   "minSdkVersion": 21,
   "orientation": "portrait-primary",
   "fingerprints": [],
@@ -50,5 +50,5 @@
   "fileHandlers": [],
   "launchHandlerClientMode": "",
   "displayOverride": [],
-  "appVersion": "1"
+  "appVersion": "1.0.0"
 }

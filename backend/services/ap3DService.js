@@ -1,39 +1,141 @@
-﻿import { runReplicateModel }
-from "./replicateVisualRunner.js";
+﻿import "dotenv/config";
+
+import {
+    runReplicateModel
+} from "./replicateVisualRunner.js";
+
 
 const MODEL =
     "tencent/hunyuan-3d-3.1";
 
 
-export async function generateAP3D(
-    {
-        prompt = "",
-        imageUrl = null,
-        faceCount = 500000
-    } = {}
+function clamp(
+    value,
+    min,
+    max,
+    fallback
 ) {
 
-    const clean =
-        String(prompt || "").trim();
+    const n =
+        Number(value);
 
-
-    if (!clean && !imageUrl) {
-        throw new Error(
-            "A 3D prompt or reference image is required."
-        );
+    if (!Number.isFinite(n)) {
+        return fallback;
     }
 
-
-    if (clean && imageUrl) {
-        throw new Error(
-            "Use either a prompt or image for 3D generation, not both."
-        );
-    }
-
-
-    console.log(
-        "AP VISUAL MESH -> HUNYUAN 3D 3.1"
+    return Math.min(
+        max,
+        Math.max(min, n)
     );
+}
+
+
+function find3DUrl(output) {
+
+    if (!output) {
+        return "";
+    }
+
+
+    if (
+        typeof output === "string"
+    ) {
+        return output;
+    }
+
+
+    if (
+        Array.isArray(output)
+    ) {
+
+        for (const value of output) {
+
+            const found =
+                find3DUrl(value);
+
+            if (found) {
+                return found;
+            }
+        }
+
+        return "";
+    }
+
+
+    if (
+        typeof output === "object"
+    ) {
+
+        const keys = [
+            "glb",
+            "gltf",
+            "model",
+            "model_url",
+            "model_file",
+            "mesh",
+            "url",
+            "file",
+            "output"
+        ];
+
+
+        for (const key of keys) {
+
+            if (output[key]) {
+
+                const found =
+                    find3DUrl(
+                        output[key]
+                    );
+
+                if (found) {
+                    return found;
+                }
+            }
+        }
+    }
+
+
+    return "";
+}
+
+
+export async function generateAP3D({
+    prompt = "",
+    imageUrl = null,
+    faceCount = 500000
+} = {}) {
+
+    const cleanPrompt =
+        String(prompt || "")
+            .trim();
+
+    const cleanImageUrl =
+        imageUrl
+            ? String(imageUrl).trim()
+            : "";
+
+
+    if (
+        !cleanPrompt &&
+        !cleanImageUrl
+    ) {
+
+        throw new Error(
+            "A 3D prompt or image is required."
+        );
+    }
+
+
+    const safeFaceCount =
+        Math.round(
+            clamp(
+                faceCount,
+                40000,
+                1500000,
+                500000
+            )
+        );
 
 
     const input = {
@@ -42,62 +144,100 @@ export async function generateAP3D(
             true,
 
         face_count:
-            Math.max(
-                40000,
-                Math.min(
-                    1500000,
-                    Number(faceCount) || 500000
-                )
-            ),
+            safeFaceCount,
 
         generate_type:
             "Normal"
     };
 
 
-    if (imageUrl) {
+    if (cleanImageUrl) {
+
         input.image =
-            imageUrl;
+            cleanImageUrl;
+
     }
     else {
+
         input.prompt =
-            clean;
+            cleanPrompt;
     }
 
 
-    const result =
-        await runReplicateModel(
-            MODEL,
-            input,
-            {
-                timeoutMs:
-                    300000
-            }
+    console.log(
+        "AP VISUAL MESH -> HUNYUAN 3D 3.1"
+    );
+
+
+    try {
+
+        const result =
+            await runReplicateModel(
+                MODEL,
+                input,
+                {
+                    timeoutMs:
+                        300000,
+
+                    pollMs:
+                        2000
+                }
+            );
+
+
+        const url =
+            find3DUrl(
+                result?.output
+            );
+
+
+        if (!url) {
+            throw new Error(
+                "No 3D output."
+            );
+        }
+
+
+        return {
+            success: true,
+
+            type:
+                "3d",
+
+            status:
+                "completed",
+
+            engine:
+                "hunyuan-3d-3.1",
+
+            format:
+                "3d-model",
+
+            url,
+
+            requestId:
+                result?.requestId ||
+                null
+        };
+
+    }
+    catch (error) {
+
+        console.error(
+            "AP 3D ENGINE FAILED:",
+            error?.code ||
+            "PROVIDER_UNAVAILABLE"
         );
 
 
-    const url =
-        Array.isArray(result.output)
-            ? result.output[0]
-            : result.output;
+        const clean =
+            new Error(
+                "3D generation is temporarily unavailable. Please try again later."
+            );
 
+        clean.code =
+            "3D_GENERATION_UNAVAILABLE";
 
-    return {
-        type:
-            "3d",
-
-        status:
-            "completed",
-
-        engine:
-            "hunyuan-3d-3.1",
-
-        format:
-            "3d-model",
-
-        url,
-
-        requestId:
-            result.requestId
-    };
+        throw clean;
+    }
 }

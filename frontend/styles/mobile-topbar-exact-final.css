@@ -1,0 +1,575 @@
+﻿/* ============================================================
+   AP SYNAPSE — EXACT MOBILE COMMAND BAR
+   CSS ONLY
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    /* ========================================================
+       TOPBAR
+       ======================================================== */
+
+    .topbar,
+    header.topbar {
+
+        position: relative !important;
+
+        height: 58px !important;
+        min-height: 58px !important;
+
+        padding: 0 8px !important;
+
+        display: flex !important;
+        align-items: center !important;
+
+        gap: 6px !important;
+
+        overflow: hidden !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(12,13,14,.99),
+                rgba(8,9,10,.975)
+            ) !important;
+
+        border-bottom:
+            1px solid rgba(255,255,255,.075) !important;
+
+        box-shadow:
+            0 8px 28px rgba(0,0,0,.25),
+            inset 0 -1px 0 rgba(197,157,78,.025) !important;
+
+        backdrop-filter: blur(22px) !important;
+        -webkit-backdrop-filter: blur(22px) !important;
+    }
+
+
+    /* ========================================================
+       LEFT AREA
+       ☰  AP
+       ======================================================== */
+
+    .topbar-left {
+
+        flex: 0 0 auto !important;
+
+        min-width: 0 !important;
+
+        display: flex !important;
+        align-items: center !important;
+
+        gap: 6px !important;
+    }
+
+
+    #apMobileMenu,
+    .mobile-menu-button,
+    .mobile-menu-btn {
+
+        order: 1 !important;
+
+        width: 38px !important;
+        height: 38px !important;
+
+        min-width: 38px !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        border:
+            1px solid rgba(255,255,255,.10) !important;
+
+        border-radius: 12px !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(255,255,255,.045),
+                rgba(255,255,255,.014)
+            ) !important;
+
+        color: rgba(247,246,241,.88) !important;
+
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,.04) !important;
+    }
+
+
+    /*
+     * Transform existing AP Synapse brand
+     * into compact AP identity mark.
+     */
+
+    .topbar-left .brand,
+    .topbar-left .workspace-brand,
+    .topbar-left [class*="brand"] {
+
+        order: 2 !important;
+
+        width: 30px !important;
+        height: 30px !important;
+
+        min-width: 30px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: grid !important;
+        place-items: center !important;
+
+        overflow: hidden !important;
+
+        border:
+            1px solid rgba(207,164,80,.30) !important;
+
+        border-radius: 9px !important;
+
+        background:
+            radial-gradient(
+                circle at 30% 20%,
+                rgba(220,180,101,.15),
+                rgba(207,164,80,.025)
+            ) !important;
+
+        color: transparent !important;
+
+        font-size: 0 !important;
+    }
+
+
+    .topbar-left .brand::after,
+    .topbar-left .workspace-brand::after,
+    .topbar-left [class*="brand"]::after {
+
+        content: "AP" !important;
+
+        color: #dfb76b !important;
+
+        font-size: 7px !important;
+        font-weight: 900 !important;
+
+        letter-spacing: .05em !important;
+    }
+
+
+    .topbar-left .brand *,
+    .topbar-left .workspace-brand *,
+    .topbar-left [class*="brand"] * {
+
+        display: none !important;
+    }
+
+
+    /* desktop search not needed */
+
+    .topbar-center {
+        display: none !important;
+    }
+
+
+    /* ========================================================
+       RIGHT AREA
+       APRISHA  BELL  THEME  SHARE  PROFILE
+       ======================================================== */
+
+    .topbar-right {
+
+        flex: 1 1 auto !important;
+
+        min-width: 0 !important;
+
+        display: flex !important;
+        align-items: center !important;
+
+        justify-content: flex-end !important;
+
+        gap: 4px !important;
+
+        margin-left: 0 !important;
+    }
+
+
+    /* ========================================================
+       ASK APRISHA
+       [ ◉ ASK Aprisha • ]
+       ======================================================== */
+
+    #aprishaBtn,
+    #askAprishaBtn,
+    #aprishaButton,
+    .aprisha-btn,
+    .aprisha-button,
+    [aria-label*="Aprisha" i] {
+
+        order: 1 !important;
+
+        position: relative !important;
+
+        width: auto !important;
+        min-width: 112px !important;
+        max-width: 122px !important;
+
+        height: 36px !important;
+
+        padding:
+            0 10px 0 31px !important;
+
+        margin: 0 !important;
+
+        display: flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        overflow: hidden !important;
+
+        border:
+            1px solid rgba(208,165,79,.33) !important;
+
+        border-radius: 12px !important;
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(210,168,84,.13),
+                rgba(255,255,255,.022)
+            ) !important;
+
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,.05),
+            0 4px 17px rgba(0,0,0,.16) !important;
+
+        color: transparent !important;
+
+        font-size: 0 !important;
+    }
+
+
+    #aprishaBtn::before,
+    #askAprishaBtn::before,
+    #aprishaButton::before,
+    .aprisha-btn::before,
+    .aprisha-button::before,
+    [aria-label*="Aprisha" i]::before {
+
+        content: "" !important;
+
+        position: absolute !important;
+
+        left: 10px !important;
+        top: 50% !important;
+
+        width: 13px !important;
+        height: 13px !important;
+
+        transform:
+            translateY(-50%) !important;
+
+        border:
+            1px solid rgba(224,184,107,.76) !important;
+
+        border-radius: 50% !important;
+
+        background:
+            radial-gradient(
+                circle,
+                #dbae58 0 22%,
+                transparent 27%
+            ) !important;
+
+        box-shadow:
+            0 0 10px rgba(211,169,86,.18) !important;
+    }
+
+
+    #aprishaBtn::after,
+    #askAprishaBtn::after,
+    #aprishaButton::after,
+    .aprisha-btn::after,
+    .aprisha-button::after,
+    [aria-label*="Aprisha" i]::after {
+
+        content: "ASK  Aprisha  •" !important;
+
+        color: rgba(243,239,229,.92) !important;
+
+        font-size: 8px !important;
+
+        line-height: 1 !important;
+
+        font-weight: 720 !important;
+
+        letter-spacing: .045em !important;
+
+        white-space: nowrap !important;
+    }
+
+
+    #aprishaBtn *,
+    #askAprishaBtn *,
+    #aprishaButton *,
+    .aprisha-btn *,
+    .aprisha-button * {
+
+        display: none !important;
+    }
+
+
+    /* ========================================================
+       UTILITY BUTTON STANDARD
+       ======================================================== */
+
+    #notificationBtn,
+    #settingsBtn,
+    #shareConversationBtn,
+    #profileBtn,
+    .topbar-right .theme-toggle,
+    .topbar-right [aria-label*="theme" i] {
+
+        width: 32px !important;
+        height: 32px !important;
+
+        min-width: 32px !important;
+        max-width: 32px !important;
+
+        min-height: 32px !important;
+
+        flex: 0 0 32px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: inline-flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        overflow: hidden !important;
+
+        border:
+            1px solid rgba(255,255,255,.075) !important;
+
+        border-radius: 10px !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(255,255,255,.042),
+                rgba(255,255,255,.013)
+            ) !important;
+
+        color:
+            rgba(239,238,233,.72) !important;
+
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,.035) !important;
+
+        -webkit-tap-highlight-color:
+            transparent !important;
+    }
+
+
+    /* order exactly as requested */
+
+    #notificationBtn {
+        order: 2 !important;
+    }
+
+
+    #settingsBtn,
+    .topbar-right .theme-toggle,
+    .topbar-right [aria-label*="theme" i] {
+
+        order: 3 !important;
+    }
+
+
+    #shareConversationBtn {
+
+        order: 4 !important;
+    }
+
+
+    #profileBtn {
+
+        order: 5 !important;
+    }
+
+
+    /* ========================================================
+       SHARE — ICON ONLY
+       ======================================================== */
+
+    #shareConversationBtn {
+
+        gap: 0 !important;
+    }
+
+
+    #shareConversationBtn span:last-child {
+
+        display: none !important;
+    }
+
+
+    #shareConversationBtn span:first-child {
+
+        display: inline-flex !important;
+
+        align-items: center !important;
+        justify-content: center !important;
+
+        margin: 0 !important;
+
+        font-size: 15px !important;
+    }
+
+
+    /* ========================================================
+       PROFILE
+       ======================================================== */
+
+    #profileBtn {
+
+        border-color:
+            rgba(208,165,79,.30) !important;
+
+        background:
+            rgba(208,165,79,.065) !important;
+
+        color:
+            #ddb66a !important;
+
+        font-size: 7px !important;
+
+        font-weight: 880 !important;
+    }
+
+
+    /* ========================================================
+       ICON SIZE
+       ======================================================== */
+
+    #notificationBtn svg,
+    #settingsBtn svg,
+    #shareConversationBtn svg,
+    .topbar-right .theme-toggle svg {
+
+        width: 15px !important;
+        height: 15px !important;
+    }
+
+
+    /* ========================================================
+       ACTIVE PRESS
+       ======================================================== */
+
+    #notificationBtn:active,
+    #settingsBtn:active,
+    #shareConversationBtn:active,
+    #profileBtn:active,
+    .topbar-right .theme-toggle:active {
+
+        transform:
+            scale(.94) !important;
+
+        background:
+            rgba(208,165,79,.075) !important;
+
+        border-color:
+            rgba(208,165,79,.26) !important;
+    }
+
+}
+
+
+/* ============================================================
+   412px / SMALL MOBILE FIT
+   ============================================================ */
+
+@media (max-width: 430px) {
+
+    .topbar,
+    header.topbar {
+
+        padding-left: 7px !important;
+        padding-right: 7px !important;
+
+        gap: 5px !important;
+    }
+
+
+    .topbar-right {
+
+        gap: 3px !important;
+    }
+
+
+    #aprishaBtn,
+    #askAprishaBtn,
+    #aprishaButton,
+    .aprisha-btn,
+    .aprisha-button,
+    [aria-label*="Aprisha" i] {
+
+        min-width: 104px !important;
+
+        padding-left: 29px !important;
+
+        padding-right: 7px !important;
+    }
+
+
+    #notificationBtn,
+    #settingsBtn,
+    #shareConversationBtn,
+    #profileBtn,
+    .topbar-right .theme-toggle,
+    .topbar-right [aria-label*="theme" i] {
+
+        width: 30px !important;
+        height: 30px !important;
+
+        min-width: 30px !important;
+        max-width: 30px !important;
+
+        min-height: 30px !important;
+
+        flex-basis: 30px !important;
+    }
+
+}
+
+
+/* ============================================================
+   VERY SMALL DEVICES
+   ============================================================ */
+
+@media (max-width: 365px) {
+
+    #aprishaBtn,
+    #askAprishaBtn,
+    #aprishaButton,
+    .aprisha-btn,
+    .aprisha-button,
+    [aria-label*="Aprisha" i] {
+
+        min-width: 91px !important;
+
+        padding-left: 26px !important;
+    }
+
+
+    #aprishaBtn::after,
+    #askAprishaBtn::after,
+    #aprishaButton::after,
+    .aprisha-btn::after,
+    .aprisha-button::after,
+    [aria-label*="Aprisha" i]::after {
+
+        content:
+            "Aprisha  •" !important;
+    }
+
+}

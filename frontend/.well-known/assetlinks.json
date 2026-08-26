@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.apsynapse.app",
+      "sha256_cert_fingerprints": [
+        "16:3D:CF:F1:3C:D1:3A:AE:A4:E9:7A:F4:8F:86:5E:FC:02:88:EC:A0:E9:B5:3F:13:BD:48:CE:E7:57:13:77:B4"
+      ]
+    }
+  }
+]

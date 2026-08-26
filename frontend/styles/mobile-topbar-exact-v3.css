@@ -985,3 +985,97 @@
         max-width: 110px !important;
     }
 }
+/* ============================================================
+   AP SYNAPSE — FINAL MOBILE SHARE ICON
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    #shareConversationBtn {
+        position: relative !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        width: 30px !important;
+        height: 30px !important;
+        min-width: 30px !important;
+        max-width: 30px !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        color: transparent !important;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(255,255,255,.045),
+                rgba(255,255,255,.014)
+            ) !important;
+
+        border:
+            1px solid rgba(255,255,255,.08) !important;
+
+        border-radius: 9px !important;
+
+        overflow: hidden !important;
+    }
+
+
+    /* Hide whatever broken/black icon currently exists */
+    #shareConversationBtn > * {
+        opacity: 0 !important;
+        visibility: hidden !important;
+    }
+
+
+    /* Real final visible share symbol */
+    #shareConversationBtn::before {
+        content: "↗" !important;
+
+        position: absolute !important;
+
+        inset: 0 !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        color: #e2bb70 !important;
+
+        font-family:
+            "Segoe UI Symbol",
+            "Segoe UI",
+            Arial,
+            sans-serif !important;
+
+        font-size: 16px !important;
+        line-height: 1 !important;
+
+        font-weight: 500 !important;
+
+        opacity: 1 !important;
+        visibility: visible !important;
+
+        transform: translateY(-1px) !important;
+
+        pointer-events: none !important;
+    }
+
+
+    #shareConversationBtn:active::before {
+        color: #f0cc86 !important;
+    }
+
+
+    /* Light mode */
+    html[data-theme="light"]
+    #shareConversationBtn::before,
+
+    body.light-mode
+    #shareConversationBtn::before {
+        color: #8c6624 !important;
+    }
+}

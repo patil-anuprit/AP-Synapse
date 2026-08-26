@@ -9,6 +9,7 @@ import { generateImage as generateGeminiImage } from "./services/geminiImageServ
 import { generateVisualImage } from "./services/visualForge.js";
 import { generateStabilityImage } from "./services/stabilityImageService.js";
 import { generateFlux2ProImage } from "./services/flux2ProImageService.js";
+import { generateCloudflareImage } from "./services/cloudflareImageService.js";
 import { OAuth2Client } from "google-auth-library";
 import { searchWebSources } from "./services/webSources.js";
 import {
@@ -1329,53 +1330,153 @@ app.get("/image", async (req, res) => {
             message:
                 "AP Synapse cannot generate or fabricate an image of Anuprit Patil or its protected creator identity."
         });
-
     }
 
     console.log("AP SYNAPSE IMAGE REQUEST");
-    console.log("Prompt:", prompt);
 
     const providerPrompt =
         /\bpokemon\b/i.test(prompt)
             ? normalizeImagePromptForProviders(prompt)
             : prompt;
 
-    console.log("Provider prompt:", providerPrompt);
+    console.log(
+        "Provider prompt:",
+        providerPrompt
+    );
 
-    // ------------------------------------------
-    // FLUX.2 Pro (working primary)
-    // ------------------------------------------
+
+    // =====================================================
+    // 1. FLUX.2 PRO — PRIMARY
+    // =====================================================
+
     try {
-        const result =
-            await generateFlux2ProImage(providerPrompt);
 
-        res.setHeader("Content-Type", result.mimeType || "image/png");
-        return res.send(result.buffer);
+        console.log(
+            "AP IMAGE ROUTER -> FLUX.2 PRO"
+        );
+
+        const result =
+            await generateFlux2ProImage(
+                providerPrompt
+            );
+
+        res.setHeader(
+            "Content-Type",
+            result.mimeType || "image/png"
+        );
+
+        return res.send(
+            result.buffer
+        );
+
     }
     catch (fluxError) {
-        console.error("FLUX.2 Pro failed:");
-        console.error(fluxError?.message || fluxError);
+
+        console.error(
+            "FLUX.2 Pro failed:"
+        );
+
+        console.error(
+            fluxError?.message ||
+            fluxError
+        );
     }
 
-    // ------------------------------------------
-    // Stability Ultra (last fallback, if credits available)
-    // ------------------------------------------
-    try {
-        const result =
-            await generateStabilityImage(providerPrompt);
 
-        res.setHeader("Content-Type", result.mimeType || "image/png");
-        return res.send(result.buffer);
+    // =====================================================
+    // 2. CLOUDFLARE FLUX.1 SCHNELL — FALLBACK
+    // =====================================================
+
+    try {
+
+        console.log(
+            "AP IMAGE ROUTER -> CLOUDFLARE FLUX.1 SCHNELL"
+        );
+
+        const result =
+            await generateCloudflareImage(
+                providerPrompt
+            );
+
+        res.setHeader(
+            "Content-Type",
+            result.mimeType || "image/jpeg"
+        );
+
+        res.setHeader(
+            "X-AP-Image-Engine",
+            result.engine ||
+            "cloudflare-flux-1-schnell"
+        );
+
+        return res.send(
+            result.buffer
+        );
+
+    }
+    catch (cloudflareError) {
+
+        console.error(
+            "Cloudflare FLUX failed:"
+        );
+
+        console.error(
+            cloudflareError?.message ||
+            cloudflareError
+        );
+    }
+
+
+    // =====================================================
+    // 3. STABILITY ULTRA — LAST FALLBACK
+    // =====================================================
+
+    try {
+
+        console.log(
+            "AP IMAGE ROUTER -> STABILITY"
+        );
+
+        const result =
+            await generateStabilityImage(
+                providerPrompt
+            );
+
+        res.setHeader(
+            "Content-Type",
+            result.mimeType || "image/png"
+        );
+
+        return res.send(
+            result.buffer
+        );
+
     }
     catch (stabilityError) {
-        console.error("Stability failed:");
-        console.error(stabilityError?.message || stabilityError);
+
+        console.error(
+            "Stability failed:"
+        );
+
+        console.error(
+            stabilityError?.message ||
+            stabilityError
+        );
     }
 
+
+    // =====================================================
+    // ALL PROVIDERS FAILED
+    // =====================================================
+
     return res.status(502).json({
-        error: "AP Synapse image generation is temporarily unavailable."
+        success: false,
+        error:
+            "AP Synapse image generation is temporarily unavailable."
     });
-});app.post("/auth/google", async (req, res) => {
+});
+
+app.post("/auth/google", async (req, res) => {
     try {
         console.log("ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â Google authentication request received.");
 

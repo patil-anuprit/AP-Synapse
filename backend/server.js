@@ -1308,7 +1308,10 @@ app.get("/image", async (req, res) => {
     console.log("AP SYNAPSE IMAGE REQUEST");
     console.log("Prompt:", prompt);
 
-    const providerPrompt = prompt;
+    const providerPrompt =
+        /\bpokemon\b/i.test(prompt)
+            ? normalizeImagePromptForProviders(prompt)
+            : prompt;
 
     console.log("Provider prompt:", providerPrompt);
 

@@ -64,6 +64,19 @@ import aprishaDesktopRouter from "./services/aprishaDesktopRouter.js";
 import shareV2Router from "./services/shareV2Router.js";
 import { generateAPVideo } from "./services/apVideoService.js";
 import { generateAP3D } from "./services/ap3DService.js";
+
+
+import {
+    issuePersonalizationToken,
+    resolvePersonalizationIdentity,
+    ensurePersonalizationIdentity,
+    getPersonalizationContext,
+    composePersonalizedMessage,
+    savePersonalizationTurn,
+    maybeRememberFromUserMessage
+} from "./services/personalizationService.js";
+import personalizationRouter
+    from "./services/personalizationRouter.js";
 import {
     createLiveConversation,
     getLiveConversation,
@@ -469,6 +482,15 @@ app.delete(
                 });
         }
     }
+);
+
+/* ============================================================
+   AP SYNAPSE PERSONALIZATION API
+   ============================================================ */
+
+app.use(
+    "/personalization",
+    personalizationRouter
 );
 
 app.post("/chat", async (req, res) => {

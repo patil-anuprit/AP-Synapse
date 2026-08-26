@@ -1,0 +1,885 @@
+﻿/* ============================================================
+   AP SYNAPSE — PERSONALIZATION WORKSPACE MASTER
+   ============================================================ */
+
+
+#apPersonalizationWorkspace {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 99990;
+
+    display: none;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 50% -10%,
+            rgba(181,139,58,.07),
+            transparent 35%
+        ),
+        linear-gradient(
+            180deg,
+            #0d0e0f,
+            #111214
+        );
+
+    color: #f6f4ef;
+}
+
+
+#apPersonalizationWorkspace.active {
+
+    display: block;
+
+}
+
+
+html.ap-personalization-open,
+body.ap-personalization-open {
+
+    overflow: hidden !important;
+
+}
+
+
+/* ============================================================
+   SHELL
+   ============================================================ */
+
+
+.ap-personalization-workspace-shell {
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+
+.ap-personalization-workspace-header {
+
+    flex: 0 0 auto;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.065);
+
+    background:
+        rgba(13,14,15,.88);
+
+    backdrop-filter:
+        blur(22px);
+
+    -webkit-backdrop-filter:
+        blur(22px);
+}
+
+
+.ap-personalization-workspace-header-inner {
+
+    width:
+        min(1180px, calc(100% - 48px));
+
+    min-height: 88px;
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns:
+        42px minmax(0,1fr) auto;
+
+    align-items: center;
+
+    gap: 16px;
+}
+
+
+.ap-personalization-workspace-back {
+
+    width: 38px;
+    height: 38px;
+
+    display: grid;
+
+    place-items: center;
+
+    padding: 0;
+
+    border:
+        1px solid rgba(255,255,255,.075);
+
+    border-radius: 11px;
+
+    background:
+        rgba(255,255,255,.035);
+
+    color:
+        rgba(247,246,241,.88);
+
+    cursor: pointer;
+}
+
+
+.ap-personalization-workspace-back:hover {
+
+    background:
+        rgba(255,255,255,.065);
+
+}
+
+
+.ap-personalization-workspace-back svg {
+
+    width: 18px;
+    height: 18px;
+
+    fill: none;
+
+    stroke: currentColor;
+
+    stroke-width: 1.8;
+
+    stroke-linecap: round;
+
+    stroke-linejoin: round;
+
+}
+
+
+.ap-personalization-workspace-heading {
+
+    min-width: 0;
+
+}
+
+
+.ap-personalization-workspace-heading > span {
+
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #d7ad59;
+
+    font-size: 8.5px;
+
+    font-weight: 800;
+
+    letter-spacing: .18em;
+
+}
+
+
+.ap-personalization-workspace-heading h1 {
+
+    margin: 0;
+
+    color: #f7f5ef;
+
+    font-size: 22px;
+
+    line-height: 1.05;
+
+    font-weight: 740;
+
+    letter-spacing: -.02em;
+
+}
+
+
+.ap-personalization-workspace-heading p {
+
+    margin: 6px 0 0;
+
+    max-width: 640px;
+
+    color:
+        rgba(241,240,235,.48);
+
+    font-size: 11.5px;
+
+    line-height: 1.4;
+
+}
+
+
+.ap-personalization-workspace-status {
+
+    padding:
+        7px 10px;
+
+    border:
+        1px solid rgba(214,174,94,.16);
+
+    border-radius: 999px;
+
+    background:
+        rgba(214,174,94,.065);
+
+    color:
+        rgba(229,194,124,.8);
+
+    font-size: 8px;
+
+    font-weight: 760;
+
+    letter-spacing: .08em;
+
+    text-transform: uppercase;
+
+    white-space: nowrap;
+
+}
+
+
+/* ============================================================
+   MAIN
+   ============================================================ */
+
+
+.ap-personalization-workspace-main {
+
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    overflow-y: auto;
+
+    overscroll-behavior: contain;
+
+}
+
+
+.ap-personalization-workspace-main::-webkit-scrollbar {
+
+    width: 7px;
+
+}
+
+
+.ap-personalization-workspace-main::-webkit-scrollbar-thumb {
+
+    border-radius: 999px;
+
+    background:
+        rgba(255,255,255,.08);
+
+}
+
+
+.ap-personalization-workspace-content {
+
+    width:
+        min(1120px, calc(100% - 48px));
+
+    margin: 0 auto;
+
+    padding:
+        30px 0 70px;
+
+}
+
+
+/* ============================================================
+   REMOVE OLD PROFILE-PANEL FEEL
+   ============================================================ */
+
+
+#apPersonalizationWorkspace
+#apPersonalizationPanel {
+
+    width: 100%;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+}
+
+
+#apPersonalizationWorkspace
+.ap-personalization-shell {
+
+    overflow: visible;
+
+    border:
+        1px solid rgba(255,255,255,.07);
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.038),
+            rgba(255,255,255,.016)
+        );
+
+    box-shadow:
+        0 24px 80px rgba(0,0,0,.22);
+}
+
+
+/*
+ * The workspace already owns the main title.
+ * Keep this card header compact.
+ */
+
+#apPersonalizationWorkspace
+.ap-personalization-head {
+
+    padding:
+        22px 24px;
+
+}
+
+
+#apPersonalizationWorkspace
+.ap-personalization-title {
+
+    font-size: 20px;
+
+}
+
+
+#apPersonalizationWorkspace
+.ap-personalization-description {
+
+    max-width: 690px;
+
+    font-size: 12px;
+
+}
+
+
+/* ============================================================
+   CONTROLS
+   ============================================================ */
+
+
+#apPersonalizationWorkspace
+.ap-personalization-controls {
+
+    padding:
+        18px 24px;
+
+    gap: 12px;
+
+}
+
+
+#apPersonalizationWorkspace
+.ap-personalization-switch {
+
+    min-height: 68px;
+
+    padding:
+        13px 15px;
+
+}
+
+
+/* ============================================================
+   FORM
+   ============================================================ */
+
+
+#apPersonalizationWorkspace
+.ap-personalization-body {
+
+    padding:
+        24px;
+
+}
+
+
+#apPersonalizationWorkspace
+.ap-personalization-section-title {
+
+    margin-bottom: 15px;
+
+    font-size: 10px;
+
+}
+
+
+#apPersonalizationWorkspace
+.ap-personalization-grid {
+
+    gap:
+        16px 14px;
+
+}
+
+
+#apPersonalizationWorkspace
+.ap-personalization-field {
+
+    gap: 7px;
+
+}
+
+
+#apPersonalizationWorkspace
+.ap-personalization-field label {
+
+    font-size: 11px;
+
+    color:
+        rgba(242,241,236,.58);
+
+}
+
+
+#apPersonalizationWorkspace
+.ap-personalization-input,
+
+#apPersonalizationWorkspace
+.ap-personalization-select {
+
+    height: 46px;
+
+    padding:
+        0 13px;
+
+    border-radius: 12px;
+
+    font-size: 12.5px;
+
+}
+
+
+#apPersonalizationWorkspace
+.ap-personalization-textarea {
+
+    min-height: 100px;
+
+    padding:
+        13px;
+
+    border-radius: 12px;
+
+    font-size: 12.5px;
+
+}
+
+
+#apPersonalizationWorkspace
+.ap-personalization-textarea.ap-large {
+
+    min-height: 130px;
+
+}
+
+
+/* ============================================================
+   ACTION BAR
+   ============================================================ */
+
+
+#apPersonalizationWorkspace
+.ap-personalization-actions {
+
+    margin-top: 22px;
+
+    padding-top: 18px;
+
+    border-top:
+        1px solid rgba(255,255,255,.055);
+
+}
+
+
+#apPersonalizationWorkspace
+.ap-personalization-button {
+
+    min-height: 42px;
+
+    padding:
+        0 16px;
+
+    font-size: 11px;
+
+}
+
+
+/* ============================================================
+   MEMORY
+   ============================================================ */
+
+
+#apPersonalizationWorkspace
+.ap-personalization-memory {
+
+    margin-top: 24px;
+
+    padding-top: 22px;
+
+}
+
+
+#apPersonalizationWorkspace
+.ap-personalization-memory-list {
+
+    max-height: 440px;
+
+}
+
+
+/* ============================================================
+   NEVER SHOW PERSONALIZATION INSIDE PROFILE POPUP
+   ============================================================ */
+
+
+#profileCard
+#apPersonalizationPanel {
+
+    display: none !important;
+
+}
+
+
+/* ============================================================
+   MOBILE — REAL FULL-WIDTH EXPERIENCE
+   ============================================================ */
+
+
+@media (max-width: 760px) {
+
+
+    #apPersonalizationWorkspace {
+
+        background:
+            linear-gradient(
+                180deg,
+                #0d0e0f,
+                #111214
+            );
+
+    }
+
+
+    .ap-personalization-workspace-header-inner {
+
+        width:
+            calc(100% - 24px);
+
+        min-height: 74px;
+
+        grid-template-columns:
+            38px minmax(0,1fr);
+
+        gap: 10px;
+
+    }
+
+
+    .ap-personalization-workspace-back {
+
+        width: 36px;
+        height: 36px;
+
+        border-radius: 10px;
+
+    }
+
+
+    .ap-personalization-workspace-heading > span {
+
+        font-size: 7px;
+
+        margin-bottom: 4px;
+
+    }
+
+
+    .ap-personalization-workspace-heading h1 {
+
+        font-size: 19px;
+
+    }
+
+
+    .ap-personalization-workspace-heading p {
+
+        margin-top: 4px;
+
+        font-size: 9.5px;
+
+        line-height: 1.35;
+
+    }
+
+
+    .ap-personalization-workspace-status {
+
+        display: none;
+
+    }
+
+
+    .ap-personalization-workspace-content {
+
+        width:
+            calc(100% - 20px);
+
+        padding:
+            12px 0 46px;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-shell {
+
+        border-radius: 16px;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-head {
+
+        padding:
+            17px 15px;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-head
+    .ap-personalization-sync {
+
+        flex: 0 0 auto;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-title {
+
+        font-size: 18px;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-description {
+
+        font-size: 11px;
+
+        line-height: 1.45;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-controls {
+
+        padding:
+            12px;
+
+        grid-template-columns:
+            1fr;
+
+        gap: 8px;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-switch {
+
+        min-height: 62px;
+
+        padding:
+            12px;
+
+        border-radius: 12px;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-switch-copy strong {
+
+        font-size: 12px;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-switch-copy span {
+
+        font-size: 9.5px;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-body {
+
+        padding:
+            16px 13px 18px;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-grid {
+
+        grid-template-columns:
+            1fr;
+
+        gap: 13px;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-field.ap-wide {
+
+        grid-column:
+            auto;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-field label {
+
+        font-size: 10.5px;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-input,
+
+    #apPersonalizationWorkspace
+    .ap-personalization-select {
+
+        height: 48px;
+
+        font-size: 13px;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-textarea {
+
+        min-height: 104px;
+
+        font-size: 13px;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-textarea.ap-large {
+
+        min-height: 130px;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-actions {
+
+        display: grid;
+
+        grid-template-columns:
+            1fr;
+
+        gap: 8px;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-button {
+
+        width: 100%;
+
+        min-height: 46px;
+
+        font-size: 11px;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-save-state {
+
+        margin: 2px 0 0;
+
+        justify-content: center;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-memory-head {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-add-memory {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+}
+
+
+/* ============================================================
+   EXTRA SMALL MOBILE
+   ============================================================ */
+
+
+@media (max-width: 390px) {
+
+    .ap-personalization-workspace-content {
+
+        width:
+            calc(100% - 14px);
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-head {
+
+        padding:
+            15px 12px;
+
+    }
+
+
+    #apPersonalizationWorkspace
+    .ap-personalization-body {
+
+        padding:
+            14px 11px 16px;
+
+    }
+
+}

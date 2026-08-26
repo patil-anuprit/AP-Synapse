@@ -1877,9 +1877,7 @@ app.post("/video", async (req, res) => {
 
         return res.status(502).json({
             success: false,
-            error:
-                error?.message ||
-                "Video generation is currently unavailable."
+            error: "Video generation is temporarily unavailable. Please try again later."
         });
 
     }
@@ -1946,9 +1944,7 @@ app.post("/3d", async (req, res) => {
 
         return res.status(502).json({
             success: false,
-            error:
-                error?.message ||
-                "3D generation is currently unavailable."
+            error: "3D generation is temporarily unavailable. Please try again later."
         });
 
     }
@@ -2082,9 +2078,7 @@ app.post("/visual", async (req, res) => {
 
         return res.status(502).json({
             success: false,
-            error:
-                error?.message ||
-                "Visual generation is currently unavailable."
+            error: "Visual generation is temporarily unavailable. Please try again later."
         });
 
     }

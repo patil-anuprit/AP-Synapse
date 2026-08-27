@@ -2364,7 +2364,23 @@ scrollChatToBottom(true);
 }
 
 console.log("STEP 8");
-sendBtn.addEventListener("click", sendMessage);
+// AP_STABLE_SEND_DELEGATION_V1
+document.addEventListener(
+    "click",
+    event => {
+        const button =
+            event.target instanceof Element
+                ? event.target.closest("#sendBtn")
+                : null;
+
+        if (!button || button.disabled) {
+            return;
+        }
+
+        sendMessage();
+    },
+    false
+);
 
 stopBtn.addEventListener("click", () => {
 

@@ -4029,3 +4029,86 @@ jumpToLatestBtn?.addEventListener(
     }
 );
 
+
+
+/* ============================================================
+   AP_COMPOSER_DOM_RESILIENCE_V1
+   Keeps command-bar actions alive if UI code replaces buttons.
+   ============================================================ */
+
+const AP_ORIGINAL_COMPOSER_BUTTONS = new Map([
+    ["sendBtn", sendBtn],
+    ["attachBtn", attachBtn],
+    ["imageGenBtn", imageGenBtn],
+    ["voiceBtn", voiceBtn],
+    ["speakBtn", speakBtn],
+    ["webBtn", webBtn],
+    ["deepThinkBtn", deepThinkBtn],
+    ["stopBtn", stopBtn]
+].filter(([, button]) => button));
+
+document.addEventListener(
+    "click",
+    event => {
+        if (!(event.target instanceof Element)) {
+            return;
+        }
+
+        const liveButton = event.target.closest(
+            "#sendBtn,#attachBtn,#imageGenBtn,#voiceBtn,#speakBtn,#webBtn,#deepThinkBtn,#stopBtn"
+        );
+
+        if (!liveButton) {
+            return;
+        }
+
+        const original =
+            AP_ORIGINAL_COMPOSER_BUTTONS.get(
+                liveButton.id
+            );
+
+        /*
+         * If this is still the original button,
+         * its normal chat.js listener already owns it.
+         */
+        if (
+            !original ||
+            original === liveButton
+        ) {
+            return;
+        }
+
+        /*
+         * Forward the action to the original DOM node,
+         * which still owns AP Synapse's real listeners.
+         */
+        original.click();
+
+        /*
+         * Keep live toggle visuals synchronized.
+         */
+        if (
+            liveButton.id === "webBtn" ||
+            liveButton.id === "deepThinkBtn"
+        ) {
+            liveButton.classList.toggle(
+                "active",
+                original.classList.contains("active")
+            );
+        }
+
+        /*
+         * Voice button icon/status may be modified
+         * by the original recognition handler.
+         */
+        if (liveButton.id === "voiceBtn") {
+            liveButton.innerHTML =
+                original.innerHTML;
+        }
+    },
+    false
+);
+
+console.log(
+    "✅ AP SYNAPSE — COMPOSER DOM RESILIENCE ACTIVE"
+);

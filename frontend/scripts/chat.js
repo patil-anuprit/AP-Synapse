@@ -721,6 +721,252 @@ function apRenderVisualResult(
     scrollChatToBottom();
 }
 
+
+// ============================================================
+// AP_CHAT_RESILIENCE_V1
+// Network recovery + retry + offline wait
+// ============================================================
+
+const AP_CHAT_RETRYABLE_HTTP =
+    new Set([
+        408,
+        425,
+        429,
+        502,
+        503,
+        504,
+        520,
+        521,
+        522,
+        523,
+        524
+    ]);
+
+function apAbortError() {
+
+    return new DOMException(
+        "Generation stopped",
+        "AbortError"
+    );
+}
+
+function apRetryDelay(ms, signal) {
+
+    return new Promise(
+        (resolve, reject) => {
+
+            if (signal?.aborted) {
+                reject(apAbortError());
+                return;
+            }
+
+            const timer =
+                setTimeout(
+                    cleanupAndResolve,
+                    ms
+                );
+
+            function cleanupAndResolve() {
+
+                signal?.removeEventListener(
+                    "abort",
+                    onAbort
+                );
+
+                resolve();
+            }
+
+            function onAbort() {
+
+                clearTimeout(timer);
+
+                reject(apAbortError());
+            }
+
+            signal?.addEventListener(
+                "abort",
+                onAbort,
+                { once: true }
+            );
+        }
+    );
+}
+
+function apWaitForInternet(signal) {
+
+    if (navigator.onLine !== false) {
+        return Promise.resolve();
+    }
+
+    if (
+        typeof showToast === "function"
+    ) {
+        showToast(
+            "Connection paused — waiting to reconnect"
+        );
+    }
+
+    return new Promise(
+        (resolve, reject) => {
+
+            function cleanup() {
+
+                window.removeEventListener(
+                    "online",
+                    onOnline
+                );
+
+                signal?.removeEventListener(
+                    "abort",
+                    onAbort
+                );
+            }
+
+            function onOnline() {
+
+                cleanup();
+
+                if (
+                    typeof showToast ===
+                    "function"
+                ) {
+                    showToast(
+                        "Connection restored"
+                    );
+                }
+
+                resolve();
+            }
+
+            function onAbort() {
+
+                cleanup();
+                reject(apAbortError());
+            }
+
+            window.addEventListener(
+                "online",
+                onOnline,
+                { once: true }
+            );
+
+            signal?.addEventListener(
+                "abort",
+                onAbort,
+                { once: true }
+            );
+        }
+    );
+}
+
+async function apResilientFetch(
+    url,
+    options = {}
+) {
+
+    const signal =
+        options.signal;
+
+    const maxAttempts = 6;
+
+    let lastError = null;
+
+    for (
+        let attempt = 1;
+        attempt <= maxAttempts;
+        attempt++
+    ) {
+
+        if (signal?.aborted) {
+            throw apAbortError();
+        }
+
+        await apWaitForInternet(
+            signal
+        );
+
+        try {
+
+            const response =
+                await fetch(
+                    url,
+                    options
+                );
+
+            if (
+                response.ok ||
+                !AP_CHAT_RETRYABLE_HTTP
+                    .has(response.status)
+            ) {
+                return response;
+            }
+
+            lastError =
+                new Error(
+                    "HTTP " +
+                    response.status
+                );
+
+            try {
+                await response.body?.cancel();
+            }
+            catch {}
+
+        }
+        catch (error) {
+
+            if (
+                error?.name ===
+                "AbortError"
+            ) {
+                throw error;
+            }
+
+            lastError = error;
+        }
+
+        if (
+            attempt < maxAttempts
+        ) {
+
+            if (
+                attempt === 2 &&
+                typeof showToast ===
+                    "function"
+            ) {
+                showToast(
+                    "Restoring AP Synapse connection..."
+                );
+            }
+
+            const delay =
+                Math.min(
+                    8000,
+                    500 *
+                    Math.pow(
+                        2,
+                        attempt - 1
+                    )
+                ) +
+                Math.floor(
+                    Math.random() * 250
+                );
+
+            await apRetryDelay(
+                delay,
+                signal
+            );
+        }
+    }
+
+    throw (
+        lastError ||
+        new Error(
+            "AP Synapse request recovery exhausted."
+        )
+    );
+}
+
 async function sendMessage() {
 
     const message =
@@ -1147,7 +1393,7 @@ const thinkingInterval =
             return;
         }
 
-        const response = await fetch(
+        const response = await apResilientFetch(
             "https://api.ap-synapse.com/chat",
             {
                 method: "POST",
@@ -1778,6 +2024,24 @@ scrollChatToBottom(true);
 
     catch (error) {
 
+        // AP_USER_ABORT_RECOVERY_V1
+        if (
+            error?.name === "AbortError"
+        ) {
+
+            clearInterval(
+                thinkingInterval
+            );
+
+            document
+                .getElementById(
+                    "thinking"
+                )
+                ?.remove();
+
+            return;
+        }
+
         console.error("?? FULL AP SYNAPSE ERROR:", error);
         console.error("?? ERROR NAME:", error?.name);
         console.error("?? ERROR MESSAGE:", error?.message);
@@ -1799,7 +2063,7 @@ scrollChatToBottom(true);
 
         addMessage(
             "ai-message",
-            "?? Unable to connect to AP Synapse."
+            "AP Synapse is restoring the connection. Your request remains preserved in this conversation."
         );
 
     }

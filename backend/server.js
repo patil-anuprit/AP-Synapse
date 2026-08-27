@@ -97,6 +97,30 @@ import * as APPersonalization
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+/* ============================================================
+   AP_MULTI_BACKEND_ROLE_V3
+   Primary / secondary backend role control
+   ============================================================ */
+
+const AP_INSTANCE_ROLE =
+    String(
+        process.env.AP_INSTANCE_ROLE ||
+        "primary"
+    )
+        .trim()
+        .toLowerCase();
+
+const AP_SCHEDULER_ENABLED =
+    AP_INSTANCE_ROLE === "primary" &&
+    String(
+        process.env.AP_SCHEDULER_ENABLED ||
+        "true"
+    )
+        .trim()
+        .toLowerCase() !== "false";
+
+
+
 app.use(cors());
 app.use(express.json());
 app.use("/aprisha", aprishaAgentRouter);
@@ -145,7 +169,9 @@ app.get("/health", (_req, res) => {
     res.status(200).json({
         status: "ok",
         service: "AP Synapse",
-        uptime: Math.floor(process.uptime())
+        uptime: Math.floor(process.uptime()),
+        instanceRole: AP_INSTANCE_ROLE,
+        schedulerEnabled: AP_SCHEDULER_ENABLED
     });
 
 });
@@ -212,7 +238,7 @@ app.post(
 
                 
 
-            remember(
+            await remember(
                 sessionId,
                 "document",
                 content
@@ -334,7 +360,7 @@ app.post(
                 live.messages.slice(-60)
             ) {
 
-                remember(
+                await remember(
                     liveSession,
                     item.role,
                     item.content
@@ -508,7 +534,7 @@ app.post("/chat", async (req, res) => {
 
         const originalMessage =
             message;
-        const web = true;
+        const web = req.body?.web === true;
         const documentImage = req.body?.documentImage || "";
 
         if (!message) {
@@ -818,7 +844,9 @@ const sourcesPromise =
     Promise.allSettled(
         sourceQueries.map(
             query =>
-                searchWebSources(query)
+                web
+                    ? searchWebSources(query)
+                    : Promise.resolve([])
         )
     )
     .then(results => {
@@ -899,10 +927,10 @@ const sourcesPromise =
                 ? buildReasoning(intent, message)
                 : null;
 
-        remember(sessionId, "user", message);
+        await remember(sessionId, "user", message);
 
         const memory =
-            buildConversation(
+            await buildConversation(
                 sessionId
             );
 
@@ -1423,7 +1451,7 @@ if (validSources.length > 0) {
                 : ""
         );
 
-    remember(
+    await remember(
         sessionId,
         "assistant",
         validateResponse(finalResponse)
@@ -2406,7 +2434,24 @@ app.get("/database/status", async (req, res) => {
 initializeDatabase()
     .then(() => {
 
-        startCommunicationScheduler();
+        if (AP_SCHEDULER_ENABLED) {
+
+            console.log(
+                "AP Synapse instance role: " +
+                AP_INSTANCE_ROLE
+            );
+
+            startCommunicationScheduler();
+
+        }
+        else {
+
+            console.log(
+                "AP Synapse communication scheduler disabled on " +
+                AP_INSTANCE_ROLE +
+                " backend."
+            );
+        }
 
         const server = app.listen(PORT, () => {
 

@@ -180,7 +180,7 @@ router.post("/rooms", async (req, res) => {
         const approval = req.body?.approvalRequired === true;
         await pool.query(`INSERT INTO ap_share_rooms(room_id,owner_key_hash,guest_key_hash,title,permission,approval_required,messages,expires_at) VALUES($1,$2,$3,$4,$5,$6,$7::jsonb,$8)`, [roomId, hash(ownerKey), hash(guestKey), title, permission, approval, JSON.stringify(messages), expiresAt]);
         await event(roomId, "created", "Live conversation created.");
-        for (const item of messages.slice(-80)) remember(`live:${roomId}`, item.role, item.content);
+        for (const item of messages.slice(-80)) await remember(`live:${roomId}`, item.role, item.content);
         res.status(201).json({ roomId, ownerKey, guestKey, revision: 1, title, permission, approvalRequired: approval, expiresAt });
     } catch (error) {
         console.error("SHARE CREATE:", error);
@@ -384,7 +384,7 @@ router.post("/fork", async (req, res) => {
         const messages = safeMessages(req.body?.messages);
         if (!messages.length) return res.status(400).json({ error: "Nothing to fork." });
         const sessionId = `fork:${token(18)}`;
-        for (const item of messages.slice(-80)) remember(sessionId, item.role, item.content);
+        for (const item of messages.slice(-80)) await remember(sessionId, item.role, item.content);
         res.status(201).json({ sessionId });
     } catch (error) { res.status(500).json({ error: error.message }); }
 });

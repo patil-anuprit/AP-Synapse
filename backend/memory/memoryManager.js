@@ -1,3 +1,4 @@
+
 import {
     getConversation,
     addConversationMessage
@@ -7,28 +8,54 @@ import {
     shouldStore
 } from "./security.js";
 
-export function buildConversation(sessionId) {
 
-    return getConversation(sessionId).map(message => ({
+export async function buildConversation(
+    sessionId
+) {
 
-        role: message.role,
+    const history =
+        await getConversation(
+            sessionId
+        );
 
-        content: message.content
+    return history.map(
+        message => ({
 
-    }));
+            role:
+                message.role,
 
+            content:
+                message.content
+
+        })
+    );
 }
 
-export function remember(sessionId, role, content) {
 
-    if (!sessionId || !role || !content) {
+export async function remember(
+    sessionId,
+    role,
+    content
+) {
+
+    if (
+        !sessionId ||
+        !role ||
+        !content
+    ) {
         return;
     }
 
-    // Preserve image/document objects.
-    if (typeof content === "object") {
+    /*
+     * Preserve image/document objects.
+     */
 
-        addConversationMessage(
+    if (
+        typeof content ===
+        "object"
+    ) {
+
+        await addConversationMessage(
             sessionId,
             role,
             content
@@ -38,20 +65,24 @@ export function remember(sessionId, role, content) {
     }
 
     const cleaned =
-        String(content).trim();
+        String(content)
+            .trim();
 
     if (!cleaned) {
         return;
     }
 
-    if (!shouldStore(cleaned)) {
+    if (
+        !shouldStore(
+            cleaned
+        )
+    ) {
         return;
     }
 
-    addConversationMessage(
+    await addConversationMessage(
         sessionId,
         role,
         cleaned
     );
-
 }

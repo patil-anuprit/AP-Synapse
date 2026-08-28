@@ -3,6 +3,31 @@
 
 <head>
 
+    <script>
+  (function(h,o,u,n,d) {
+    h=h[d]=h[d]||{q:[],onReady:function(c){h.q.push(c)}}
+    d=o.createElement(u);d.async=1;d.src=n;d.crossOrigin=''
+    n=o.getElementsByTagName(u)[0];n.parentNode.insertBefore(d,n)
+  })(window,document,'script','https://www.datadoghq-browser-agent.com/us1/v7/datadog-rum.js','DD_RUM')
+  window.DD_RUM.onReady(function() {
+    window.DD_RUM.init({
+        applicationId: 'cd55d50a-7797-4c98-8546-e32d9accbdda',
+        clientToken: 'pub333b26c5c9374e56f25e5e77cb609dfe',
+        site: 'datadoghq.com',
+        service: 'ap-synapse-web',
+        env: 'production',				// e.g. 'prod', 'staging-1', 'dev'
+        version: '1.0.0',	// e.g. '1.0.0'
+        sessionSampleRate: 100,			// capture 100% of sessions
+        sessionReplaySampleRate: 0,	// capture 20% of sessions with replay
+        trackResources: true,			// Enable Resource tracking
+        trackUserInteractions: true,	// Enable Action tracking
+        trackLongTasks: true,			// Enable Long Tasks tracking
+        defaultPrivacyLevel: 'mask',
+        enablePrivacyForActionName: true,
+    });
+  })
+</script>
+
 <script>
 /* ============================================================
    AP SYNAPSE EARLY LEGACY ALERT GUARD

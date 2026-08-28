@@ -221,7 +221,7 @@ function getCurrentConversationMessages() {
 
 }
 // ============================================================
-// AP SYNAPSE � USER MESSAGE ACTIONS
+// AP SYNAPSE ï¿½ USER MESSAGE ACTIONS
 // ============================================================
 
 function createUserMessageActions(messageElement, body) {
@@ -348,7 +348,7 @@ function createUserMessageActions(messageElement, body) {
         );
 
         showToast(
-            "Edit message � press Enter to regenerate"
+            "Edit message ï¿½ press Enter to regenerate"
         );
 
     });
@@ -802,7 +802,7 @@ function apWaitForInternet(signal) {
         typeof showToast === "function"
     ) {
         showToast(
-            "Connection paused — waiting to reconnect"
+            "Connection paused â€” waiting to reconnect"
         );
     }
 
@@ -934,7 +934,7 @@ async function apResilientFetch(
             try {
 
                 console.log(
-                    "AP BACKEND TRY →",
+                    "AP BACKEND TRY â†’",
                     candidateURL
                 );
 
@@ -956,7 +956,7 @@ async function apResilientFetch(
                 ) {
 
                     console.log(
-                        "AP BACKEND ACTIVE →",
+                        "AP BACKEND ACTIVE â†’",
                         candidateURL,
                         response.status
                     );
@@ -977,7 +977,7 @@ async function apResilientFetch(
                     error;
 
                 console.warn(
-                    "AP BACKEND RETRYABLE →",
+                    "AP BACKEND RETRYABLE â†’",
                     candidateURL,
                     response.status
                 );
@@ -996,7 +996,7 @@ async function apResilientFetch(
                     error;
 
                 console.warn(
-                    "AP BACKEND UNAVAILABLE →",
+                    "AP BACKEND UNAVAILABLE â†’",
                     candidateURL,
                     error?.message ||
                         error
@@ -1023,108 +1023,127 @@ async function apResilientFetch(
         )
     );
 }
+// ============================================================
+// AP_HOST_STREAM_RECOVERY_V2
+// Render <-> Railway host-level stream continuity.
+// ============================================================
+
+function apBuildHostURL(
+    base,
+    path = "/chat"
 ) {
 
-    const signal =
-        options.signal;
+    return (
+        String(base || "")
+            .replace(/\/+$/, "") +
+        path
+    );
+}
 
-    const maxAttempts = 6;
 
-    let lastError = null;
+function apAlternateHostChatURL(
+    activeURL
+) {
 
-    for (
-        let attempt = 1;
-        attempt <= maxAttempts;
-        attempt++
+    const active =
+        String(activeURL || "");
+
+
+    if (
+        active.startsWith(
+            AP_SECONDARY_API_BASE
+        )
     ) {
 
-        if (signal?.aborted) {
-            throw apAbortError();
-        }
-
-        await apWaitForInternet(
-            signal
+        return apBuildHostURL(
+            AP_PRIMARY_API_BASE,
+            "/chat"
         );
 
-        try {
-
-            const response =
-                await fetch(
-                    url,
-                    options
-                );
-
-            if (
-                response.ok ||
-                !AP_CHAT_RETRYABLE_HTTP
-                    .has(response.status)
-            ) {
-                return response;
-            }
-
-            lastError =
-                new Error(
-                    "HTTP " +
-                    response.status
-                );
-
-            try {
-                await response.body?.cancel();
-            }
-            catch {}
-
-        }
-        catch (error) {
-
-            if (
-                error?.name ===
-                "AbortError"
-            ) {
-                throw error;
-            }
-
-            lastError = error;
-        }
-
-        if (
-            attempt < maxAttempts
-        ) {
-
-            if (
-                attempt === 2 &&
-                typeof showToast ===
-                    "function"
-            ) {
-                showToast(
-                    "Restoring AP Synapse connection..."
-                );
-            }
-
-            const delay =
-                Math.min(
-                    8000,
-                    500 *
-                    Math.pow(
-                        2,
-                        attempt - 1
-                    )
-                ) +
-                Math.floor(
-                    Math.random() * 250
-                );
-
-            await apRetryDelay(
-                delay,
-                signal
-            );
-        }
     }
 
-    throw (
-        lastError ||
-        new Error(
-            "AP Synapse request recovery exhausted."
-        )
+
+    return apBuildHostURL(
+        AP_SECONDARY_API_BASE,
+        "/chat"
+    );
+}
+
+
+function apRemoveHostResumeOverlap(
+    existingText,
+    incomingText
+) {
+
+    const existing =
+        String(existingText || "");
+
+    const incoming =
+        String(incomingText || "");
+
+
+    if (
+        !existing ||
+        !incoming
+    ) {
+        return incoming;
+    }
+
+
+    const maximum =
+        Math.min(
+            4000,
+            existing.length,
+            incoming.length
+        );
+
+
+    for (
+        let size = maximum;
+        size >= 8;
+        size--
+    ) {
+
+        if (
+            existing.slice(-size) ===
+            incoming.slice(0, size)
+        ) {
+
+            return incoming.slice(
+                size
+            );
+
+        }
+
+    }
+
+
+    return incoming;
+}
+
+
+function apBuildHostRecoveryMessage(
+    originalMessage,
+    partialAnswer
+) {
+
+    const partial =
+        String(
+            partialAnswer || ""
+        ).slice(-12000);
+
+
+    return (
+        String(originalMessage || "") +
+        "\n\n" +
+        "AP Synapse continuity recovery instruction:\n" +
+        "A previous AP Synapse server already started answering this exact request, " +
+        "but its connection was interrupted. Continue naturally from exactly where " +
+        "the partial answer below stopped. Do not restart the answer. Do not repeat " +
+        "already-written text. Do not mention the interruption, recovery process, " +
+        "hosting provider, or this instruction. Return only the natural continuation.\n\n" +
+        "PARTIAL ANSWER ALREADY SHOWN:\n" +
+        partial
     );
 }
 
@@ -1137,7 +1156,7 @@ async function sendMessage() {
 
 
     // ============================================================
-// AP SYNAPSE � CLOSE MOBILE KEYBOARD AFTER SEND
+// AP SYNAPSE ï¿½ CLOSE MOBILE KEYBOARD AFTER SEND
 // ============================================================
 
 if (
@@ -1275,7 +1294,7 @@ chatWindow.style.setProperty(
 
 
     // =====================================
-    // SAVE USER MESSAGE � EXACTLY ONCE
+    // SAVE USER MESSAGE ï¿½ EXACTLY ONCE
     // =====================================
 
     saveHistoryMessage(
@@ -1286,7 +1305,7 @@ chatWindow.style.setProperty(
 
 
     // =====================================
-    // SHOW USER MESSAGE � EXACTLY ONCE
+    // SHOW USER MESSAGE ï¿½ EXACTLY ONCE
     // =====================================
 
     addMessage(
@@ -1736,11 +1755,23 @@ if (contentType.includes("application/json")) {
         // NORMAL AI STREAM
         // =====================================
 
-        const reader =
+        let reader =
             response.body.getReader();
 
-        const decoder =
+        let decoder =
             new TextDecoder();
+
+        let apActiveHostURL =
+            response.url || "";
+
+        let apHostRecoveryCount =
+            0;
+
+        let apHostResumePending =
+            false;
+
+        let apHostResumeBuffer =
+            "";
 
 
         const wrapper =
@@ -1769,7 +1800,7 @@ if (contentType.includes("application/json")) {
 
 
         // =====================================
-// READ STREAM � OPTIMIZED
+// READ STREAM ï¿½ OPTIMIZED
 // =====================================
 
 let rawText = "";
@@ -1777,7 +1808,7 @@ let renderScheduled = false;
 let streamFinished = false;
 
 // ============================================================
-// AP SYNAPSE � STRUCTURED WEB SOURCES
+// AP SYNAPSE ï¿½ STRUCTURED WEB SOURCES
 // ============================================================
 
 let apSynapseSources = [];
@@ -1827,23 +1858,286 @@ const scheduleRender = () => {
 
 while (true) {
 
+    let apReadResult;
+
+    try {
+
+        apReadResult =
+            await reader.read();
+
+    }
+    catch (streamError) {
+
+        if (
+            streamError?.name ===
+            "AbortError"
+        ) {
+            throw streamError;
+        }
+
+
+        if (
+            apHostRecoveryCount >= 2
+        ) {
+            throw streamError;
+        }
+
+
+        apHostRecoveryCount++;
+
+
+        console.warn(
+            "AP HOST STREAM INTERRUPTED:",
+            apActiveHostURL,
+            streamError?.message ||
+                streamError
+        );
+
+
+        if (
+            typeof showToast ===
+            "function"
+        ) {
+
+            showToast(
+                "Continuing through backup server..."
+            );
+
+        }
+
+
+        const recoveryURL =
+            apAlternateHostChatURL(
+                apActiveHostURL
+            );
+
+
+        const originalSessionId =
+            (
+                window.apLiveRoomId
+                    ? `live:${window.apLiveRoomId}`
+                    : getSessionId()
+            );
+
+
+        const recoverySessionId =
+            originalSessionId +
+            ":host-recovery:" +
+            Date.now();
+
+
+        const personalizationToken =
+            window.AP_PERSONALIZATION
+                ?.getToken?.();
+
+
+        const recoveryResponse =
+            await fetch(
+                recoveryURL,
+                {
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "x-personalization-id":
+                            window.AP_PERSONALIZATION
+                                ?.getGuestId?.() ||
+                            localStorage.getItem(
+                                "apSynapsePersonalizationGuestId"
+                            ) ||
+                            "",
+
+                        ...(personalizationToken
+                            ? {
+                                "Authorization":
+                                    `Bearer ${personalizationToken}`
+                            }
+                            : {}),
+
+                        "x-session-id":
+                            recoverySessionId
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            message:
+                                apBuildHostRecoveryMessage(
+                                    message,
+                                    rawText
+                                ),
+
+                            document:
+                                typeof window.currentDocument ===
+                                    "string"
+                                    ? window.currentDocument
+                                    : "",
+
+                            web:
+                                window.webMode,
+
+                            deep:
+                                window.deepThinking
+                        }),
+
+                    signal:
+                        controller.signal
+                }
+            );
+
+
+        if (
+            !recoveryResponse.ok ||
+            !recoveryResponse.body
+        ) {
+
+            const recoveryError =
+                new Error(
+                    "Backup backend continuation failed."
+                );
+
+            recoveryError.status =
+                recoveryResponse.status;
+
+            throw recoveryError;
+        }
+
+
+        console.log(
+            "AP HOST CONTINUATION ACTIVE:",
+            recoveryResponse.url ||
+                recoveryURL
+        );
+
+
+        apActiveHostURL =
+            recoveryResponse.url ||
+            recoveryURL;
+
+
+        reader =
+            recoveryResponse.body.getReader();
+
+
+        decoder =
+            new TextDecoder();
+
+
+        apHostResumePending =
+            true;
+
+        apHostResumeBuffer =
+            "";
+
+
+        continue;
+    }
+
+
     const {
         done,
         value
-    } = await reader.read();
+    } = apReadResult;
 
     if (done) {
+
+        if (
+            apHostResumePending &&
+            apHostResumeBuffer
+        ) {
+
+            const finalRecoveryText =
+                apRemoveHostResumeOverlap(
+                    rawText,
+                    apHostResumeBuffer
+                );
+
+
+            if (finalRecoveryText) {
+
+                rawText +=
+                    finalRecoveryText;
+
+                aiMessage.dataset.raw =
+                    rawText;
+
+                lastAIResponse =
+                    rawText;
+
+                scheduleRender();
+
+            }
+
+
+            apHostResumeBuffer =
+                "";
+
+            apHostResumePending =
+                false;
+
+        }
+
         streamFinished = true;
         break;
     }
 
-    const chunk =
+    let chunk =
         decoder.decode(
             value,
             { stream: true }
         );
 
     if (!chunk) continue;
+
+    // ========================================================
+    // AP_HOST_STREAM_RECOVERY_V2 — RESUME ALIGNMENT
+    // ========================================================
+
+    if (apHostResumePending) {
+
+        apHostResumeBuffer +=
+            chunk;
+
+
+        /*
+         * Brief buffer gives overlap removal enough context
+         * without visibly delaying a resumed answer.
+         */
+        if (
+            apHostResumeBuffer.length <
+                160 &&
+            !apHostResumeBuffer.includes(
+                "\n"
+            )
+        ) {
+            continue;
+        }
+
+
+        chunk =
+            apRemoveHostResumeOverlap(
+                rawText,
+                apHostResumeBuffer
+            );
+
+
+        apHostResumeBuffer =
+            "";
+
+        apHostResumePending =
+            false;
+
+
+        if (!chunk) {
+            continue;
+        }
+
+    }
+
 
     rawText += chunk;
 
@@ -1936,7 +2230,7 @@ if (finalChunk) {
 }
 
 // =====================================
-// AP SYNAPSE � FINAL RESPONSE RENDER
+// AP SYNAPSE ï¿½ FINAL RESPONSE RENDER
 // =====================================
 
 function renderLinks(text) {
@@ -1966,7 +2260,7 @@ function renderLinks(text) {
 }
 
 // ============================================================
-// AP SYNAPSE � PREMIUM WEB SOURCE CARDS
+// AP SYNAPSE ï¿½ PREMIUM WEB SOURCE CARDS
 // ============================================================
 
 function renderAPSynapseSources(sources) {
@@ -2148,7 +2442,7 @@ scrollChatToBottom(true);
 
 
         // =====================================
-        // SAVE COMPLETE AI RESPONSE � ONCE
+        // SAVE COMPLETE AI RESPONSE ï¿½ ONCE
         // =====================================
 
         const completeAIResponse =
@@ -2333,11 +2627,11 @@ Project created successfully.
 
 What would you like to do first?
 
-� Plan the project
-� Research
-� Write code
-� Create documentation
-� Build a roadmap`
+ï¿½ Plan the project
+ï¿½ Research
+ï¿½ Write code
+ï¿½ Create documentation
+ï¿½ Build a roadmap`
 
     );
 
@@ -2464,13 +2758,13 @@ addMessage(
 
 Type something like:
 
-� Create a futuristic city
+ï¿½ Create a futuristic city
 
-� Draw a solar system
+ï¿½ Draw a solar system
 
-� Generate a medical diagram
+ï¿½ Generate a medical diagram
 
-� Create an AI logo`
+ï¿½ Create an AI logo`
 
 );
 
@@ -2533,7 +2827,7 @@ function downloadImage(url){
 }
 
 // ============================================================
-// AP SYNAPSE � PREMIUM UPLOADED FILE MESSAGE
+// AP SYNAPSE ï¿½ PREMIUM UPLOADED FILE MESSAGE
 // ============================================================
 
 function getUploadType(file) {
@@ -2749,7 +3043,7 @@ function createUploadedFileMessage(file) {
 }
 
 // ============================================================
-// AP SYNAPSE � PREMIUM FILE UPLOAD
+// AP SYNAPSE ï¿½ PREMIUM FILE UPLOAD
 // ============================================================
 
 console.log("ABOUT TO REGISTER FILE EVENT");
@@ -3000,7 +3294,7 @@ ${err.message || "Unable to upload the file."}`
 });
 
 // ===============================
-// AP SYNAPSE — READ / PAUSE
+// AP SYNAPSE â€” READ / PAUSE
 // ===============================
 
 if (speakBtn) {
@@ -3038,7 +3332,7 @@ if (speakBtn) {
             );
 
             console.log(
-                "⏸ AP SYNAPSE — READING PAUSED"
+                "â¸ AP SYNAPSE â€” READING PAUSED"
             );
 
             return;
@@ -3123,7 +3417,7 @@ if (speakBtn) {
                 );
 
                 console.log(
-                    "▶ AP SYNAPSE — READING STARTED"
+                    "â–¶ AP SYNAPSE â€” READING STARTED"
                 );
             };
 
@@ -3146,7 +3440,7 @@ if (speakBtn) {
                 );
 
                 console.log(
-                    "✅ AP SYNAPSE — READING FINISHED"
+                    "âœ… AP SYNAPSE â€” READING FINISHED"
                 );
             };
 
@@ -3351,8 +3645,8 @@ showToast(
 }
 
 /* =========================================================
-   AP SYNAPSE � PREMIUM MESSAGE CONTROLS
-   Copy � Share � Regenerate � Timestamps � Tooltips
+   AP SYNAPSE ï¿½ PREMIUM MESSAGE CONTROLS
+   Copy ï¿½ Share ï¿½ Regenerate ï¿½ Timestamps ï¿½ Tooltips
    ========================================================= */
 
 (() => {
@@ -3675,7 +3969,7 @@ showToast(
 })();
 
 // ============================================================
-// AP SYNAPSE � CONVERSATION NAVIGATOR
+// AP SYNAPSE ï¿½ CONVERSATION NAVIGATOR
 // ============================================================
 
 function getConversationMessages() {
@@ -3707,7 +4001,7 @@ function getMessageLabel(message, index) {
     }
 
     return text.length > 52
-        ? `${text.slice(0, 52)}�`
+        ? `${text.slice(0, 52)}ï¿½`
         : text;
 }
 
@@ -3839,7 +4133,7 @@ function escapeHTML(value) {
 }
 
 // ============================================================
-// AP SYNAPSE � JUMP TO LATEST
+// AP SYNAPSE ï¿½ JUMP TO LATEST
 // ============================================================
 
 const jumpToLatestBtn =
@@ -3978,12 +4272,12 @@ document.addEventListener(
 );
 
 console.log(
-    "✅ AP SYNAPSE — COMPOSER DOM RESILIENCE ACTIVE"
+    "âœ… AP SYNAPSE â€” COMPOSER DOM RESILIENCE ACTIVE"
 );
 
 
 /* ============================================================
-   AP SYNAPSE — COMPOSER ACTION SURVIVAL
+   AP SYNAPSE â€” COMPOSER ACTION SURVIVAL
    Keeps all primary composer actions alive after DOM replacement.
    ============================================================ */
 // AP_COMPOSER_ACTION_SURVIVAL_V1
@@ -4137,7 +4431,7 @@ document.addEventListener(
 );
 
 console.log(
-    "✅ AP SYNAPSE — COMPOSER ACTION SURVIVAL ACTIVE"
+    "âœ… AP SYNAPSE â€” COMPOSER ACTION SURVIVAL ACTIVE"
 );
 
 
@@ -4204,7 +4498,7 @@ console.log(
     );
 
     console.log(
-        "✅ AP SYNAPSE — DYNAMIC COMPOSER BRIDGE READY"
+        "âœ… AP SYNAPSE â€” DYNAMIC COMPOSER BRIDGE READY"
     );
 })();
 
@@ -4305,7 +4599,7 @@ function apRepairComposerControls() {
         }
 
         console.log(
-            "♻️ AP composer restored:",
+            "â™»ï¸ AP composer restored:",
             id
         );
     }
@@ -4360,7 +4654,7 @@ function apStartComposerSelfHeal() {
     );
 
     console.log(
-        "✅ AP SYNAPSE — COMPOSER SELF-HEAL ACTIVE"
+        "âœ… AP SYNAPSE â€” COMPOSER SELF-HEAL ACTIVE"
     );
 }
 
@@ -4471,5 +4765,5 @@ document.addEventListener(
 );
 
 console.log(
-    "✅ AP SYNAPSE — COMPOSER DOM RESILIENCE ACTIVE"
+    "âœ… AP SYNAPSE â€” COMPOSER DOM RESILIENCE ACTIVE"
 );

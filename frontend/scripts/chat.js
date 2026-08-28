@@ -4139,3 +4139,71 @@ document.addEventListener(
 console.log(
     "✅ AP SYNAPSE — COMPOSER ACTION SURVIVAL ACTIVE"
 );
+
+
+/* ============================================================
+   AP_DYNAMIC_COMPOSER_BRIDGE_V1
+   Keeps the complete composer functional if later UI code
+   replaces its buttons and strips their original listeners.
+   ============================================================ */
+
+(() => {
+    "use strict";
+
+    const originals = {
+        sendBtn,
+        attachBtn,
+        imageGenBtn,
+        voiceBtn,
+        speakBtn,
+        webBtn,
+        deepThinkBtn,
+        stopBtn
+    };
+
+    const selector = [
+        "#sendBtn",
+        "#attachBtn",
+        "#imageGenBtn",
+        "#voiceBtn",
+        "#speakBtn",
+        "#webBtn",
+        "#deepThinkBtn",
+        "#stopBtn"
+    ].join(",");
+
+    document.addEventListener(
+        "click",
+        event => {
+            const target =
+                event.target instanceof Element
+                    ? event.target.closest(selector)
+                    : null;
+
+            if (!target) return;
+
+            const original =
+                originals[target.id];
+
+            if (
+                !original ||
+                target === original
+            ) {
+                return;
+            }
+
+            /*
+             * The detached original element still owns the
+             * real chat.js listener. Triggering it preserves
+             * all existing AP Synapse behaviour without
+             * duplicating business logic.
+             */
+            original.click();
+        },
+        false
+    );
+
+    console.log(
+        "✅ AP SYNAPSE — DYNAMIC COMPOSER BRIDGE READY"
+    );
+})();

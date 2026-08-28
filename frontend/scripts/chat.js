@@ -4382,3 +4382,94 @@ else {
 
     apStartComposerSelfHeal();
 }
+
+
+/* ============================================================
+   AP_COMPOSER_DOM_REPLACEMENT_BRIDGE_V1
+   Keeps the entire composer functional even if later UI
+   controllers replace its DOM buttons.
+   ============================================================ */
+
+document.addEventListener(
+    "click",
+    event => {
+
+        const liveButton =
+            event.target instanceof Element
+                ? event.target.closest(
+                    "#sendBtn," +
+                    "#attachBtn," +
+                    "#imageGenBtn," +
+                    "#voiceBtn," +
+                    "#speakBtn," +
+                    "#webBtn," +
+                    "#deepThinkBtn," +
+                    "#stopBtn"
+                )
+                : null;
+
+        if (
+            !liveButton ||
+            !liveButton.isConnected
+        ) {
+            return;
+        }
+
+        const originals = {
+            sendBtn,
+            attachBtn,
+            imageGenBtn,
+            voiceBtn,
+            speakBtn,
+            webBtn,
+            deepThinkBtn,
+            stopBtn
+        };
+
+        const original =
+            originals[liveButton.id];
+
+        /*
+         * Same element = its normal chat.js
+         * listener still exists. Do nothing.
+         */
+        if (
+            !original ||
+            original === liveButton
+        ) {
+            return;
+        }
+
+        /*
+         * Replacement detected.
+         * Fire the original control whose real
+         * AP Synapse logic is still attached.
+         */
+        original.click();
+
+        /*
+         * Keep visible active state synchronized.
+         */
+        queueMicrotask(() => {
+
+            liveButton.classList.toggle(
+                "active",
+                original.classList.contains("active")
+            );
+
+            if (
+                original.hasAttribute("aria-pressed")
+            ) {
+                liveButton.setAttribute(
+                    "aria-pressed",
+                    original.getAttribute("aria-pressed")
+                );
+            }
+        });
+    },
+    true
+);
+
+console.log(
+    "✅ AP SYNAPSE — COMPOSER DOM RESILIENCE ACTIVE"
+);

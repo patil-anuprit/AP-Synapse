@@ -864,6 +864,167 @@ async function apResilientFetch(
     options = {}
 ) {
 
+    // AP_PRODUCTION_BACKEND_FAILOVER_V4
+
+    const originalURL =
+        String(url || "");
+
+    let candidates = [
+        originalURL
+    ];
+
+    if (
+        originalURL.startsWith(
+            AP_PRIMARY_API_BASE
+        )
+    ) {
+
+        candidates = [
+            originalURL,
+            AP_SECONDARY_API_BASE +
+                originalURL.slice(
+                    AP_PRIMARY_API_BASE.length
+                )
+        ];
+
+    }
+    else if (
+        originalURL.startsWith(
+            AP_SECONDARY_API_BASE
+        )
+    ) {
+
+        candidates = [
+            originalURL,
+            AP_PRIMARY_API_BASE +
+                originalURL.slice(
+                    AP_SECONDARY_API_BASE.length
+                )
+        ];
+    }
+
+    let lastError = null;
+
+    const retryableStatuses =
+        new Set([
+            408,
+            425,
+            429,
+            500,
+            502,
+            503,
+            504
+        ]);
+
+    /*
+     * Two complete rounds.
+     * Each round tries every available backend.
+     */
+    for (
+        let round = 0;
+        round < 2;
+        round++
+    ) {
+
+        for (
+            const candidateURL
+            of candidates
+        ) {
+
+            try {
+
+                console.log(
+                    "AP BACKEND TRY →",
+                    candidateURL
+                );
+
+                const response =
+                    await fetch(
+                        candidateURL,
+                        options
+                    );
+
+                /*
+                 * Success or permanent client error:
+                 * return it to normal chat handling.
+                 */
+                if (
+                    response.ok ||
+                    !retryableStatuses.has(
+                        response.status
+                    )
+                ) {
+
+                    console.log(
+                        "AP BACKEND ACTIVE →",
+                        candidateURL,
+                        response.status
+                    );
+
+                    return response;
+                }
+
+                const error =
+                    new Error(
+                        "Backend returned HTTP " +
+                        response.status
+                    );
+
+                error.status =
+                    response.status;
+
+                lastError =
+                    error;
+
+                console.warn(
+                    "AP BACKEND RETRYABLE →",
+                    candidateURL,
+                    response.status
+                );
+
+            }
+            catch (error) {
+
+                if (
+                    error?.name ===
+                    "AbortError"
+                ) {
+                    throw error;
+                }
+
+                lastError =
+                    error;
+
+                console.warn(
+                    "AP BACKEND UNAVAILABLE →",
+                    candidateURL,
+                    error?.message ||
+                        error
+                );
+            }
+        }
+
+        if (round === 0) {
+
+            await new Promise(
+                resolve =>
+                    setTimeout(
+                        resolve,
+                        350
+                    )
+            );
+        }
+    }
+
+    throw (
+        lastError ||
+        new TypeError(
+            "AP Synapse backends unavailable."
+        )
+    );
+}
+) {
+
     const signal =
         options.signal;
 

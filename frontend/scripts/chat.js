@@ -12,12 +12,12 @@ import {
 console.log("? chat.js loaded");
 console.log("PAGE LOADED:", Date.now());
 console.log("STEP 1");
-const input = document.getElementById("userInput");
+let input = document.getElementById("userInput");
 console.log("STEP 2");
-const sendBtn = document.getElementById("sendBtn");
+let sendBtn = document.getElementById("sendBtn");
 console.log("STEP 3");
-const voiceBtn = document.getElementById("voiceBtn");
-const speakBtn = document.getElementById("speakBtn");
+let voiceBtn = document.getElementById("voiceBtn");
+let speakBtn = document.getElementById("speakBtn");
 let lastAIResponse = "";
 
 window.currentDocumentImage = "";
@@ -37,7 +37,7 @@ let currentConversationId =
 
 };
 const fileInput = document.getElementById("fileInput");
-const attachBtn = document.getElementById("attachBtn");
+let attachBtn = document.getElementById("attachBtn");
 
 attachBtn.addEventListener("click", () => {
 
@@ -76,7 +76,7 @@ function ensureConversation() {
 console.log("File Input:", fileInput);
 const imageUpload=document.getElementById("imageUpload");
 console.log("Image Upload:", imageUpload);
-const stopBtn=document.getElementById("stopBtn");
+let stopBtn=document.getElementById("stopBtn");
 let controller = null;
 const chatWindow = document.getElementById("chatWindow");
 chatWindow.style.display = "none";
@@ -86,13 +86,13 @@ const projectModal = document.getElementById("projectModal");
 const createProjectBtn = document.getElementById("createProject");
 const cancelProjectBtn = document.getElementById("cancelProject");
 const projectCards = document.querySelectorAll(".prompt-chip");
-const imageGenBtn =
+let imageGenBtn =
 document.getElementById("imageGenBtn");
-const deepThinkBtn =
+let deepThinkBtn =
 document.getElementById("deepThinkBtn");
 
 window.deepThinking=false;
-const webBtn =
+let webBtn =
 document.getElementById("webBtn");
 
 let webMode=false;
@@ -3979,4 +3979,163 @@ document.addEventListener(
 
 console.log(
     "✅ AP SYNAPSE — COMPOSER DOM RESILIENCE ACTIVE"
+);
+
+
+/* ============================================================
+   AP SYNAPSE — COMPOSER ACTION SURVIVAL
+   Keeps all primary composer actions alive after DOM replacement.
+   ============================================================ */
+// AP_COMPOSER_ACTION_SURVIVAL_V1
+
+const AP_COMPOSER_ACTION_ANCHORS = Object.freeze({
+    input,
+    sendBtn,
+    attachBtn,
+    voiceBtn,
+    speakBtn,
+    webBtn,
+    deepThinkBtn,
+    imageGenBtn,
+    stopBtn
+});
+
+function apRefreshComposerActionRefs() {
+
+    input =
+        document.getElementById("userInput") ||
+        input;
+
+    sendBtn =
+        document.getElementById("sendBtn") ||
+        sendBtn;
+
+    attachBtn =
+        document.getElementById("attachBtn") ||
+        attachBtn;
+
+    voiceBtn =
+        document.getElementById("voiceBtn") ||
+        voiceBtn;
+
+    speakBtn =
+        document.getElementById("speakBtn") ||
+        speakBtn;
+
+    webBtn =
+        document.getElementById("webBtn") ||
+        webBtn;
+
+    deepThinkBtn =
+        document.getElementById("deepThinkBtn") ||
+        deepThinkBtn;
+
+    imageGenBtn =
+        document.getElementById("imageGenBtn") ||
+        imageGenBtn;
+
+    stopBtn =
+        document.getElementById("stopBtn") ||
+        stopBtn;
+}
+
+document.addEventListener(
+    "click",
+    event => {
+
+        if (!(event.target instanceof Element)) {
+            return;
+        }
+
+        const button =
+            event.target.closest(
+                "#sendBtn," +
+                "#attachBtn," +
+                "#voiceBtn," +
+                "#speakBtn," +
+                "#webBtn," +
+                "#deepThinkBtn," +
+                "#imageGenBtn," +
+                "#stopBtn"
+            );
+
+        if (!button || button.disabled) {
+            return;
+        }
+
+        const anchor =
+            AP_COMPOSER_ACTION_ANCHORS[
+                button.id
+            ];
+
+        /*
+         * If this is still the original element,
+         * its normal chat.js handler already runs.
+         */
+        if (button === anchor) {
+            return;
+        }
+
+        apRefreshComposerActionRefs();
+
+        if (button.id === "sendBtn") {
+            void sendMessage();
+            return;
+        }
+
+        /*
+         * Original detached element retains the proven
+         * chat.js handler. Relay to it while refreshed
+         * variables point at the current live controls.
+         */
+        if (anchor) {
+            anchor.click();
+        }
+    },
+    false
+);
+
+
+/*
+ * Enter / mobile keyboard Send also survives input replacement.
+ */
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key !== "Enter" ||
+            event.shiftKey ||
+            event.isComposing
+        ) {
+            return;
+        }
+
+        const liveInput =
+            event.target instanceof Element
+                ? event.target.closest("#userInput")
+                : null;
+
+        if (!liveInput) {
+            return;
+        }
+
+        if (
+            liveInput ===
+            AP_COMPOSER_ACTION_ANCHORS.input
+        ) {
+            return;
+        }
+
+        event.preventDefault();
+
+        apRefreshComposerActionRefs();
+
+        void sendMessage();
+    },
+    false
+);
+
+console.log(
+    "✅ AP SYNAPSE — COMPOSER ACTION SURVIVAL ACTIVE"
 );

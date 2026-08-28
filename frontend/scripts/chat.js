@@ -859,6 +859,12 @@ function apWaitForInternet(signal) {
     );
 }
 
+const AP_PRIMARY_API_BASE =
+    "https://api.ap-synapse.com";
+
+const AP_SECONDARY_API_BASE =
+    "https://ap-synapse-production.up.railway.app";
+
 async function apResilientFetch(
     url,
     options = {}

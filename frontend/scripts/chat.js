@@ -4207,3 +4207,178 @@ console.log(
         "✅ AP SYNAPSE — DYNAMIC COMPOSER BRIDGE READY"
     );
 })();
+
+
+/* ============================================================
+   AP_COMPOSER_SELF_HEAL_V1
+   Keep original chat controls + event handlers alive even when
+   later responsive/UI controllers recreate composer elements.
+   ============================================================ */
+
+const AP_COMPOSER_ORIGINALS = new Map([
+    ["userInput", input],
+    ["sendBtn", sendBtn],
+    ["voiceBtn", voiceBtn],
+    ["speakBtn", speakBtn],
+    ["attachBtn", attachBtn],
+    ["imageGenBtn", imageGenBtn],
+    ["deepThinkBtn", deepThinkBtn],
+    ["webBtn", webBtn],
+    ["stopBtn", stopBtn],
+    ["fileInput", fileInput]
+].filter(([, element]) => element));
+
+let apComposerRepairQueued = false;
+
+function apRepairComposerControls() {
+
+    apComposerRepairQueued = false;
+
+    for (const [id, original] of AP_COMPOSER_ORIGINALS) {
+
+        const live =
+            document.getElementById(id);
+
+        if (
+            !live ||
+            live === original
+        ) {
+            continue;
+        }
+
+        const wasFocused =
+            document.activeElement === live;
+
+        if (
+            "value" in live &&
+            "value" in original
+        ) {
+            original.value = live.value;
+        }
+
+        for (
+            const className of
+            live.classList
+        ) {
+            original.classList.add(
+                className
+            );
+        }
+
+        if (
+            "disabled" in live &&
+            "disabled" in original
+        ) {
+            original.disabled =
+                live.disabled;
+        }
+
+        live.replaceWith(
+            original
+        );
+
+        if (
+            wasFocused &&
+            typeof original.focus === "function"
+        ) {
+            original.focus({
+                preventScroll: true
+            });
+
+            if (
+                typeof original.setSelectionRange ===
+                    "function"
+            ) {
+                const end =
+                    String(
+                        original.value || ""
+                    ).length;
+
+                try {
+                    original.setSelectionRange(
+                        end,
+                        end
+                    );
+                }
+                catch {}
+            }
+        }
+
+        console.log(
+            "♻️ AP composer restored:",
+            id
+        );
+    }
+}
+
+function apQueueComposerRepair() {
+
+    if (apComposerRepairQueued) {
+        return;
+    }
+
+    apComposerRepairQueued = true;
+
+    queueMicrotask(
+        apRepairComposerControls
+    );
+}
+
+const apComposerObserver =
+    new MutationObserver(
+        apQueueComposerRepair
+    );
+
+function apStartComposerSelfHeal() {
+
+    apRepairComposerControls();
+
+    if (document.body) {
+
+        apComposerObserver.observe(
+            document.body,
+            {
+                childList: true,
+                subtree: true
+            }
+        );
+    }
+
+    setTimeout(
+        apRepairComposerControls,
+        100
+    );
+
+    setTimeout(
+        apRepairComposerControls,
+        500
+    );
+
+    setTimeout(
+        apRepairComposerControls,
+        1500
+    );
+
+    console.log(
+        "✅ AP SYNAPSE — COMPOSER SELF-HEAL ACTIVE"
+    );
+}
+
+if (
+    document.readyState ===
+    "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        apStartComposerSelfHeal,
+        {
+            once: true
+        }
+    );
+
+}
+else {
+
+    apStartComposerSelfHeal();
+}

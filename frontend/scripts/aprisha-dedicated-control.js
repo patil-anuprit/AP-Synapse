@@ -663,6 +663,13 @@
         recognition.onend = () => {
             setListening(false);
             recognition = null;
+
+            // AP_APRISHA_WAKE_SIGNAL_V63
+            document.dispatchEvent(
+                new CustomEvent(
+                    "ap:aprisha-listening-end"
+                )
+            );
         };
 
         try {

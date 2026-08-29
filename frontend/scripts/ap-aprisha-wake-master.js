@@ -48,6 +48,46 @@
     }
 
     function openAprisha() {
+        // AP_APRISHA_WAKE_HANDOFF_V63
+        // Hand wake detection directly to the current Aprisha controller.
+        if (
+            window.Aprisha &&
+            typeof window.Aprisha.open === "function"
+        ) {
+
+            /*
+             * Release the wake recognizer before Aprisha takes
+             * microphone control.
+             */
+            if (recognition) {
+                try {
+                    recognition.onend = null;
+                    recognition.onerror = null;
+                    recognition.abort();
+                } catch {}
+
+                recognition = null;
+            }
+
+            document.body.classList.add(
+                "chat-active",
+                "aprisha-awake"
+            );
+
+            window.Aprisha.open(true);
+
+            setTimeout(() => {
+                if (
+                    window.Aprisha &&
+                    typeof window.Aprisha.speak === "function"
+                ) {
+                    window.Aprisha.speak();
+                }
+            }, 220);
+
+            return true;
+        }
+
         document.body.classList.add("chat-active", "aprisha-awake");
 
         const selectors = [
@@ -200,7 +240,7 @@
         }, true);
     }
 
-    
+
     // AP_WAKE_AUTO_ARM_ON_FIRST_GESTURE
     function armOnFirstGesture() {
         const shouldArm =
@@ -220,7 +260,25 @@
         document.addEventListener("keydown", arm, true);
     }
 
-    function boot() {
+        // AP_APRISHA_WAKE_RESUME_V63
+    // After Aprisha finishes hearing a command,
+    // quietly restore wake-word listening.
+    document.addEventListener(
+        "ap:aprisha-listening-end",
+        () => {
+            if (localStorage.getItem(KEY) !== "1") {
+                return;
+            }
+
+            setTimeout(() => {
+                try {
+                    start();
+                } catch {}
+            }, 900);
+        }
+    );
+
+function boot() {
         window.APAprishaWakeMaster = {
             enable,
             start,

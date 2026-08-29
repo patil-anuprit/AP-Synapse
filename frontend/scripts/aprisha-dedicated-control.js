@@ -232,6 +232,12 @@
                         <button class="ap-dedicated-aprisha-stop secondary" type="button">
                             Stop
                         </button>
+                        <!-- AP_APRISHA_WAKE_BUTTON_V64 -->
+                        <button
+                            class="ap-dedicated-aprisha-wake secondary"
+                            type="button">
+                            Enable Hey Aprisha
+                        </button>
                     </div>
                 </div>
             </section>
@@ -247,6 +253,77 @@
 
         overlay.querySelector(".ap-dedicated-aprisha-stop")
             .addEventListener("click", stop);
+
+        // AP_APRISHA_WAKE_BUTTON_BIND_V64
+        const wakeButton =
+            overlay.querySelector(
+                ".ap-dedicated-aprisha-wake"
+            );
+
+        if (
+            localStorage.getItem(
+                "ap_aprisha_wake_master_enabled"
+            ) === "1"
+        ) {
+            wakeButton.textContent =
+                "Hey Aprisha: On";
+        }
+
+        wakeButton.addEventListener(
+            "click",
+            async () => {
+
+                const wake =
+                    window.APAprishaWakeMaster;
+
+                if (
+                    !wake ||
+                    typeof wake.enable !== "function"
+                ) {
+                    setState(
+                        "Hey Aprisha unavailable",
+                        "Close and reopen AP Synapse, then try again."
+                    );
+
+                    return;
+                }
+
+                wakeButton.disabled = true;
+
+                setState(
+                    "Enabling Hey Aprisha",
+                    "Allow microphone access when Android asks."
+                );
+
+                try {
+
+                    const enabled =
+                        await wake.enable();
+
+                    if (enabled === false) {
+
+                        setState(
+                            "Microphone required",
+                            "Allow microphone access and try again."
+                        );
+
+                        return;
+                    }
+
+                    wakeButton.textContent =
+                        "Hey Aprisha: On";
+
+                    setState(
+                        "Hey Aprisha is on",
+                        "Say Hey Aprisha while AP Synapse is open."
+                    );
+
+                }
+                finally {
+                    wakeButton.disabled = false;
+                }
+            }
+        );
 
         overlay.addEventListener("click", (event) => {
             if (event.target === overlay) close();
@@ -605,6 +682,12 @@
     }
 
     function speak() {
+
+        // AP_APRISHA_WAKE_PAUSE_V64
+        try {
+            window.APAprishaWakeMaster?.stop?.();
+        } catch {}
+
 
         // AP_APRISHA_SPEAK_TWA_V62
         // Installed Android TWA uses the same real web voice engine.

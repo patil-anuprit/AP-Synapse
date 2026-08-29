@@ -197,7 +197,27 @@
                 }
             };
 
-            recognition.onerror = restart;
+            // AP_APRISHA_WAKE_PERMISSION_GUARD_V64
+            recognition.onerror = (event) => {
+                const code = String(event?.error || "");
+
+                if (
+                    code === "not-allowed" ||
+                    code === "service-not-allowed"
+                ) {
+                    active = false;
+                    restarting = false;
+                    localStorage.removeItem(KEY);
+
+                    setText(
+                        "Microphone permission is required for Hey Aprisha."
+                    );
+
+                    return;
+                }
+
+                restart();
+            };
             recognition.onend = restart;
 
             recognition.start();
@@ -206,19 +226,42 @@
         }
     }
 
+    // AP_APRISHA_FIRST_ENABLE_V64
     async function enable() {
-        localStorage.setItem(KEY, "1");
+        if (!supported()) {
+            setText("Hey Aprisha is unavailable in this browser.");
+            return false;
+        }
 
         try {
             if (navigator.mediaDevices?.getUserMedia) {
                 const stream =
-                    await navigator.mediaDevices.getUserMedia({ audio: true });
+                    await navigator.mediaDevices.getUserMedia({
+                        audio: true
+                    });
 
-                stream.getTracks().forEach((track) => track.stop());
+                stream
+                    .getTracks()
+                    .forEach(track => track.stop());
             }
-        } catch {}
+        }
+        catch (error) {
+            active = false;
+            restarting = false;
+            localStorage.removeItem(KEY);
+
+            setText(
+                "Allow microphone access to enable Hey Aprisha."
+            );
+
+            return false;
+        }
+
+        localStorage.setItem(KEY, "1");
 
         start();
+
+        return true;
     }
 
     function hookEnableButtons() {

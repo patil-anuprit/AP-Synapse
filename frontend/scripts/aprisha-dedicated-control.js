@@ -605,10 +605,10 @@
     }
 
     function speak() {
-        if (isAndroidDevice()) {
-            openNativeAprisha("microphone");
-            return;
-        }
+
+        // AP_APRISHA_SPEAK_TWA_V62
+        // Installed Android TWA uses the same real web voice engine.
+        // Continue directly into SpeechRecognition below.
 
         open(true);
         stop();

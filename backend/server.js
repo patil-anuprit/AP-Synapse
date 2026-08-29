@@ -1,3 +1,4 @@
+import { generateCloudflareImageEdit } from "./services/cloudflareImageEditService.js";
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -899,7 +900,7 @@ app.post("/chat", async (req, res) => {
         if (apWantsImageEdit) {
 
             console.log(
-                "AP IMAGE EDIT -> FLUX.2 PRO"
+                "AP IMAGE EDIT -> CLOUDFLARE IMG2IMG"
             );
 
 
@@ -918,7 +919,7 @@ app.post("/chat", async (req, res) => {
 
 
                 const apEditResult =
-                    await generateFlux2ProImage(
+                    await generateCloudflareImageEdit(
                         apEditPrompt,
                         [
                             apAttachedImage.dataUrl
@@ -956,8 +957,7 @@ app.post("/chat", async (req, res) => {
                         true,
 
                     engine:
-                        apEditResult.engine ||
-                        "flux-2-pro"
+                        apEditResult.engine || "cloudflare-sd15-img2img"
                 });
 
             }

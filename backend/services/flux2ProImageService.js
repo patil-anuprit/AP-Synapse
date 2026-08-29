@@ -17,28 +17,57 @@ async function readJson(response) {
     const text =
         await response.text();
 
-    let data = null;
+    if (!text) {
+        return {};
+    }
 
     try {
-        data = JSON.parse(text);
+        return JSON.parse(text);
     }
     catch {
-        data = {
+        return {
             detail: text
         };
     }
-
-    return data;
 }
 
 
-export async function generateFlux2ProImage(prompt) {
+function normalizeInputImages(value) {
+
+    const list =
+        Array.isArray(value)
+            ? value
+            : value
+                ? [value]
+                : [];
+
+    return list
+        .map(item =>
+            String(item || "").trim()
+        )
+        .filter(item =>
+            /^data:image\//i.test(item) ||
+            /^https?:\/\//i.test(item)
+        )
+        .slice(0, 8);
+}
+
+
+// ============================================================
+// AP_FLUX2_IMAGE_EDIT_V21
+// ============================================================
+
+export async function generateFlux2ProImage(
+    prompt,
+    inputImages = []
+) {
 
     if (!TOKEN) {
         throw new Error(
             "REPLICATE_API_TOKEN is not configured."
         );
     }
+
 
     const cleanPrompt =
         String(prompt || "").trim();
@@ -49,25 +78,58 @@ export async function generateFlux2ProImage(prompt) {
         );
     }
 
-    console.log(
-        "AP SYNAPSE IMAGE ENGINE -> FLUX.2 PRO"
-    );
+
+    const images =
+        normalizeInputImages(
+            inputImages
+        );
+
+    const isEdit =
+        images.length > 0;
+
 
     console.log(
-        "Prompt:",
-        cleanPrompt
+        isEdit
+            ? "AP SYNAPSE IMAGE ENGINE -> FLUX.2 PRO EDIT"
+            : "AP SYNAPSE IMAGE ENGINE -> FLUX.2 PRO GENERATE"
     );
 
 
-    // -------------------------------------------------
-    // Create generation
-    // -------------------------------------------------
+    const input = {
+        prompt:
+            cleanPrompt,
+
+        aspect_ratio:
+            isEdit
+                ? "match_input_image"
+                : "1:1",
+
+        resolution:
+            "1 MP",
+
+        output_format:
+            "jpg",
+
+        output_quality:
+            92,
+
+        safety_tolerance:
+            2
+    };
+
+
+    if (isEdit) {
+        input.input_images =
+            images;
+    }
+
 
     const response =
         await fetch(
             ENDPOINT,
             {
-                method: "POST",
+                method:
+                    "POST",
 
                 headers: {
                     Authorization:
@@ -82,36 +144,19 @@ export async function generateFlux2ProImage(prompt) {
 
                 body:
                     JSON.stringify({
-                        input: {
-                            prompt:
-                                cleanPrompt,
-
-                            resolution:
-                                "1 MP",
-
-                            aspect_ratio:
-                                "1:1",
-
-                            output_format:
-                                "png",
-
-                            output_quality:
-                                100,
-
-                            safety_tolerance:
-                                2
-                        }
+                        input
                     })
             }
         );
 
 
     const initial =
-        await readJson(response);
+        await readJson(
+            response
+        );
 
 
     if (!response.ok) {
-
         throw new Error(
             `FLUX.2 Pro ${response.status}: ${
                 initial?.detail ||
@@ -125,29 +170,18 @@ export async function generateFlux2ProImage(prompt) {
     let prediction =
         initial;
 
+    const deadline =
+        Date.now() + 120000;
 
-    // -------------------------------------------------
-    // Poll only if Replicate didn't finish synchronously
-    // -------------------------------------------------
 
-    for (
-        let attempt = 0;
-        attempt < 30 &&
-        prediction?.status !== "succeeded";
-        attempt++
+    while (
+        prediction &&
+        prediction.status !== "succeeded" &&
+        prediction.status !== "failed" &&
+        prediction.status !== "canceled" &&
+        !prediction.output &&
+        Date.now() < deadline
     ) {
-
-        if (
-            prediction?.status === "failed" ||
-            prediction?.status === "canceled"
-        ) {
-
-            throw new Error(
-                prediction?.error ||
-                `FLUX.2 Pro generation ${prediction?.status}.`
-            );
-        }
-
 
         const statusUrl =
             prediction?.urls?.get;
@@ -156,9 +190,7 @@ export async function generateFlux2ProImage(prompt) {
             break;
         }
 
-
-        await sleep(2000);
-
+        await sleep(1500);
 
         const statusResponse =
             await fetch(
@@ -179,7 +211,6 @@ export async function generateFlux2ProImage(prompt) {
 
 
         if (!statusResponse.ok) {
-
             throw new Error(
                 `FLUX.2 Pro status ${statusResponse.status}`
             );
@@ -188,27 +219,23 @@ export async function generateFlux2ProImage(prompt) {
 
 
     if (
-        prediction?.status !== "succeeded"
+        prediction?.status === "failed" ||
+        prediction?.status === "canceled"
     ) {
-
         throw new Error(
-            "FLUX.2 Pro generation did not complete in time."
+            prediction?.error ||
+            `FLUX.2 Pro ${prediction.status}.`
         );
     }
 
 
-    // -------------------------------------------------
-    // Download generated image
-    // -------------------------------------------------
-
     const output =
-        Array.isArray(prediction.output)
+        Array.isArray(prediction?.output)
             ? prediction.output[0]
-            : prediction.output;
+            : prediction?.output;
 
 
     if (!output) {
-
         throw new Error(
             "FLUX.2 Pro returned no image URL."
         );
@@ -220,7 +247,6 @@ export async function generateFlux2ProImage(prompt) {
 
 
     if (!imageResponse.ok) {
-
         throw new Error(
             `Unable to retrieve FLUX.2 Pro image: ${imageResponse.status}`
         );
@@ -234,21 +260,10 @@ export async function generateFlux2ProImage(prompt) {
 
 
     if (!buffer.length) {
-
         throw new Error(
             "FLUX.2 Pro returned an empty image."
         );
     }
-
-
-    console.log(
-        "FLUX.2 PRO IMAGE GENERATED"
-    );
-
-    console.log(
-        "Buffer size:",
-        buffer.length
-    );
 
 
     return {
@@ -258,9 +273,12 @@ export async function generateFlux2ProImage(prompt) {
             imageResponse.headers.get(
                 "content-type"
             ) ||
-            "image/png",
+            "image/jpeg",
 
         engine:
-            "flux-2-pro"
+            "flux-2-pro",
+
+        edited:
+            isEdit
     };
 }

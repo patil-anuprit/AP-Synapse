@@ -1329,10 +1329,42 @@ chatWindow.style.setProperty(
     // UI
     // =====================================
 
-    const isImageRequest =
+    // ============================================================
+    // AP_IMAGE_EDIT_INTENT_V21
+    // ============================================================
+
+    const hasAttachedImage =
+        Boolean(
+            window.currentDocument &&
+            typeof window.currentDocument === "object" &&
+            window.currentDocument.type === "image" &&
+            window.currentDocument.dataUrl
+        );
+
+
+    const imageEditVerbPattern =
+        /\b(add|put|place|insert|remove|erase|delete|replace|swap|change|edit|modify|transform|retouch|enhance|recolor|colour|color|turn|make)\b/i;
+
+
+    const imageAnalysisPattern =
+        /^\s*(what|who|where|when|why|how|describe|analy[sz]e|identify|read|explain|tell\s+me|is\s+there|are\s+there|do\s+you\s+see|can\s+you\s+see)\b/i;
+
+
+    const isImageEditRequest =
+        hasAttachedImage &&
+        imageEditVerbPattern.test(message) &&
+        !imageAnalysisPattern.test(message);
+
+
+    const isImageCreateRequest =
         /\b(create|generate|make|draw|design|render|produce|paint|illustrate|visualize|depict|show|imagine)\b[\s\S]{0,500}\b(image|picture|photo|artwork|illustration|portrait|wallpaper|logo|poster|scene|character|landscape|concept.?art)\b/i.test(
             message
         );
+
+
+    const isImageRequest =
+        isImageCreateRequest ||
+        isImageEditRequest;
 
 
     // AP_VISUAL_INTENT_DETECTION_V1
@@ -1646,6 +1678,48 @@ if (contentType.includes("application/json")) {
 
     const data =
         await response.json();
+
+    // ============================================================
+    // AP_IMAGE_EDIT_RESULT_CONTEXT_V22
+    // An edited result becomes the source for the next edit.
+    // ============================================================
+
+    if (
+        data &&
+        data.type === "image" &&
+        data.edited === true &&
+        typeof data.url === "string" &&
+        data.url.startsWith("data:image/")
+    ) {
+
+        const mimeMatch =
+            data.url.match(
+                /^data:([^;]+);base64,/
+            );
+
+
+        window.currentDocument = {
+            type:
+                "image",
+
+            mimeType:
+                mimeMatch?.[1] ||
+                "image/jpeg",
+
+            dataUrl:
+                data.url
+        };
+
+
+        window.currentDocumentImage =
+            data.url;
+
+
+        console.log(
+            "AP IMAGE EDIT: latest result is now active."
+        );
+    }
+
 
     // =====================================
     // GEMINI IMAGE RESPONSE

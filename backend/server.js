@@ -859,6 +859,130 @@ app.post("/chat", async (req, res) => {
         );
 
         // ============================================================
+        // ============================================================
+        // AP_IMAGE_EDIT_ROUTE_V21
+        // Uploaded image + natural edit instruction -> FLUX.2 Pro
+        // ============================================================
+
+        const apEditDocument =
+            req.body?.document ?? "";
+
+
+        const apAttachedImage =
+            (
+                apEditDocument &&
+                typeof apEditDocument === "object" &&
+                apEditDocument.type === "image" &&
+                typeof apEditDocument.dataUrl === "string" &&
+                apEditDocument.dataUrl.startsWith("data:image/")
+            )
+                ? apEditDocument
+                : null;
+
+
+        const apImageEditVerbPattern =
+            /\b(add|put|place|insert|remove|erase|delete|replace|swap|change|edit|modify|transform|retouch|enhance|recolor|colour|color|turn|make)\b/i;
+
+
+        const apImageAnalysisPattern =
+            /^\s*(what|who|where|when|why|how|describe|analy[sz]e|identify|read|explain|tell\s+me|is\s+there|are\s+there|do\s+you\s+see|can\s+you\s+see)\b/i;
+
+
+        const apWantsImageEdit =
+            Boolean(
+                apAttachedImage &&
+                apImageEditVerbPattern.test(message) &&
+                !apImageAnalysisPattern.test(message)
+            );
+
+
+        if (apWantsImageEdit) {
+
+            console.log(
+                "AP IMAGE EDIT -> FLUX.2 PRO"
+            );
+
+
+            try {
+
+                const apEditPrompt =
+                    [
+                        "Edit the supplied source image according to the user's instruction.",
+                        "Preserve the source person's identity, facial features, body, pose, lighting, camera perspective, realism and all unrequested details.",
+                        "Change only what the user explicitly requests.",
+                        "Blend added objects naturally with correct scale, position, shadows and lighting.",
+                        "",
+                        "User instruction:",
+                        message
+                    ].join("\n");
+
+
+                const apEditResult =
+                    await generateFlux2ProImage(
+                        apEditPrompt,
+                        [
+                            apAttachedImage.dataUrl
+                        ]
+                    );
+
+
+                const mimeType =
+                    apEditResult.mimeType ||
+                    "image/jpeg";
+
+
+                const dataUrl =
+                    "data:" +
+                    mimeType +
+                    ";base64," +
+                    apEditResult.buffer.toString(
+                        "base64"
+                    );
+
+
+                console.log(
+                    "AP IMAGE EDIT COMPLETE"
+                );
+
+
+                return res.json({
+                    type:
+                        "image",
+
+                    url:
+                        dataUrl,
+
+                    edited:
+                        true,
+
+                    engine:
+                        apEditResult.engine ||
+                        "flux-2-pro"
+                });
+
+            }
+            catch (error) {
+
+                console.error(
+                    "AP IMAGE EDIT FAILED:",
+                    error?.message ||
+                    error
+                );
+
+
+                return res
+                    .status(502)
+                    .json({
+                        success:
+                            false,
+
+                        error:
+                            "AP Synapse could not complete this image edit right now."
+                    });
+            }
+        }
+
+
         // IMAGE REQUEST DETECTION
         // ============================================================
 

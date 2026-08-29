@@ -272,12 +272,16 @@
     }
 
     function open(webOnly = false) {
-        if (isAndroidDevice() && !webOnly) {
-            return openNativeAprisha("topbar");
-        }
 
+        // AP_APRISHA_TWA_SURFACE_V61
+        // Browser, PWA and installed Android TWA all use
+        // the real Aprisha surface hosted inside AP Synapse.
         createPanel();
-        document.getElementById(OVERLAY_ID)?.classList.add("open");
+
+        document
+            .getElementById(OVERLAY_ID)
+            ?.classList.add("open");
+
         return true;
     }
 
@@ -784,7 +788,12 @@
 
                 event.preventDefault();
                 event.stopImmediatePropagation();
-                openNativeAprisha("composer-microphone");
+                open(true);
+
+                // AP_APRISHA_TWA_MIC_V61
+                // This originates from a direct user tap,
+                // so microphone permission can be requested here.
+                speak();
             },
             true
         );
@@ -793,9 +802,9 @@
     function boot() {
         addStyles();
 
-        if (!isAndroidDevice()) {
-            createPanel();
-        }
+                // AP_APRISHA_TWA_PANEL_V61
+        // The installed TWA uses the same trusted Aprisha interface.
+        createPanel();
 
         installButton();
         bindAndroidVoiceControls();

@@ -1231,8 +1231,14 @@ const sourcesPromise =
                 sessionId
             );
 
-            const documentMemory =
-    memory.find(item => item.role === "document");
+            // AP_LATEST_DOCUMENT_CONTEXT_V2
+const documentMemory =
+    [...memory]
+        .reverse()
+        .find(
+            item =>
+                item.role === "document"
+        );
 
 const uploadedDocument =
     documentMemory

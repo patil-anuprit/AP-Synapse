@@ -1,0 +1,121 @@
+﻿/* ==========================================================
+   AP SYNAPSE — UPLOAD POLISH V2
+   ========================================================== */
+
+.ap-upload-card-v2 {
+    width: min(390px, 100%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.035);
+    box-sizing: border-box;
+}
+
+.ap-upload-visual-v2 {
+    width: 72px;
+    height: 72px;
+    flex: 0 0 72px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 11px;
+    border: 1px solid rgba(199,166,78,.24);
+    background: rgba(199,166,78,.055);
+}
+
+.ap-upload-visual-v2 img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    cursor: zoom-in;
+}
+
+.ap-upload-visual-v2 span {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    color: rgba(222,190,99,.96);
+}
+
+.ap-upload-info-v2 {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.ap-upload-info-v2 strong {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+    line-height: 1.35;
+}
+
+.ap-upload-meta-v2 {
+    font-size: 11px;
+    opacity: .62;
+}
+
+.ap-upload-preview-v2 {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: rgba(0,0,0,.84);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.ap-upload-preview-v2 > img {
+    display: block;
+    max-width: min(1100px, 94vw);
+    max-height: 88vh;
+    object-fit: contain;
+    border-radius: 14px;
+    box-shadow: 0 30px 100px rgba(0,0,0,.5);
+}
+
+.ap-upload-preview-close-v2 {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(25,25,27,.88);
+    color: white;
+    font-size: 25px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+#apAttachmentShelfV1[hidden] {
+    display: none !important;
+}
+
+@media (max-width: 700px) {
+
+    .ap-upload-card-v2 {
+        width: 100%;
+        gap: 10px;
+        padding: 8px;
+    }
+
+    .ap-upload-visual-v2 {
+        width: 64px;
+        height: 64px;
+        flex-basis: 64px;
+    }
+
+}

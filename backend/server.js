@@ -122,7 +122,8 @@ const AP_SCHEDULER_ENABLED =
 
 
 app.use(cors());
-app.use(express.json());
+// AP_DIRECT_ATTACHMENT_BODY_LIMIT_V4
+app.use(express.json({ limit: "12mb" }));
 app.use("/aprisha", aprishaAgentRouter);
 app.use("/aprisha-desktop", aprishaDesktopRouter);
 app.use("/share-v2", shareV2Router);
@@ -620,7 +621,7 @@ Your visible reply must be concise and natural:
 - Briefly state what the file/image contains, its main subject, and the most useful notable content or structure you can identify.
 - End exactly with: "How can I help you with it?"
 - Do not say "uploaded successfully".
-- Do not mention internal analysis, providers, models, APIs, prompts, tokens, or implementation.
+- Do not mention internal analysis, safety or moderation status, providers, models, APIs, prompts, tokens, or implementation.
 - Do not use a code block.
 - Do not invent details not present in the uploaded material.
 `;
@@ -1240,10 +1241,28 @@ const documentMemory =
                 item.role === "document"
         );
 
+// AP_DIRECT_ATTACHMENT_AUTHORITY_V4
+const requestDocument =
+    req.body?.document ?? "";
+
+const hasRequestDocument =
+    (
+        typeof requestDocument === "string" &&
+        requestDocument.trim().length > 0
+    ) ||
+    (
+        requestDocument &&
+        typeof requestDocument === "object"
+    );
+
 const uploadedDocument =
-    documentMemory
-        ? documentMemory.content
-        : "";
+    hasRequestDocument
+        ? requestDocument
+        : (
+            documentMemory
+                ? documentMemory.content
+                : ""
+        );
 
 const conversationMemory =
     memory.filter(
@@ -1343,7 +1362,7 @@ ${message}`
 // AP SYNAPSE ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â UPLOADED IMAGE VISION INPUT
 // ==========================================
 
-if (documentImage) {
+if (documentImage && !hasRequestDocument) {
 
     const lastUserMessage =
         [...messages]

@@ -1612,10 +1612,7 @@ const thinkingInterval =
                 body: JSON.stringify({
                     message,
 
-                    document:
-                        typeof window.currentDocument === "string"
-                            ? window.currentDocument
-                            : "",
+                    document: window.currentDocument ?? "",
 
                     web: window.webMode,
                     deep: window.deepThinking
@@ -1977,11 +1974,7 @@ while (true) {
                                     rawText
                                 ),
 
-                            document:
-                                typeof window.currentDocument ===
-                                    "string"
-                                    ? window.currentDocument
-                                    : "",
+                            document: window.currentDocument ?? "",
 
                             web:
                                 window.webMode,
@@ -3067,6 +3060,11 @@ fileInput.addEventListener("change", async (event) => {
     );
 
     if (!file) return;
+
+    // AP_DIRECT_ATTACHMENT_RESET_V4
+    // The newly selected file immediately replaces old attachment context.
+    window.currentDocument = "";
+    window.currentDocumentImage = "";
 
 
     const uploadType =

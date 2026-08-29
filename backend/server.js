@@ -523,6 +523,303 @@ app.use(
     personalizationRouter
 );
 
+
+// ============================================================
+// AP_DOCUMENT_AUTO_SUMMARY_V1
+// Private intake analysis after successful upload.
+// Does NOT add a fake user turn to conversation memory.
+// ============================================================
+
+app.post(
+    "/document/summary",
+    async (req, res) => {
+
+        try {
+
+            const sessionId =
+                req.headers["x-session-id"] ||
+                req.ip ||
+                "default";
+
+
+            const fileName =
+                String(
+                    req.body?.fileName ||
+                    "uploaded file"
+                )
+                .trim()
+                .slice(
+                    0,
+                    240
+                );
+
+
+            const mimeType =
+                String(
+                    req.body?.mimeType ||
+                    ""
+                )
+                .trim()
+                .slice(
+                    0,
+                    160
+                );
+
+
+            const memory =
+                await buildConversation(
+                    sessionId
+                );
+
+
+            const documentMemory =
+                [...memory]
+                    .reverse()
+                    .find(
+                        item =>
+                            item.role ===
+                            "document"
+                    );
+
+
+            const uploadedDocument =
+                documentMemory
+                    ?.content;
+
+
+            if (!uploadedDocument) {
+
+                return res
+                    .status(404)
+                    .json({
+                        success: false,
+                        error:
+                            "No uploaded document is available for this session."
+                    });
+
+            }
+
+
+            const isImage =
+                uploadedDocument &&
+                typeof uploadedDocument ===
+                    "object" &&
+                uploadedDocument.type ===
+                    "image" &&
+                uploadedDocument.dataUrl;
+
+
+            const systemPrompt = `
+You are AP Synapse document intake intelligence.
+
+Thoroughly inspect the newly uploaded content before replying.
+
+Your visible reply must be concise and natural:
+- 1 to 2 short sentences only.
+- Begin exactly with: "I've received ${fileName}."
+- Briefly state what the file/image contains, its main subject, and the most useful notable content or structure you can identify.
+- End exactly with: "How can I help you with it?"
+- Do not say "uploaded successfully".
+- Do not mention internal analysis, providers, models, APIs, prompts, tokens, or implementation.
+- Do not use a code block.
+- Do not invent details not present in the uploaded material.
+`;
+
+
+            let userContent;
+
+
+            if (isImage) {
+
+                userContent = [
+                    {
+                        type: "text",
+                        text:
+                            `Inspect this uploaded image carefully. File name: ${fileName}. MIME type: ${mimeType || "image"}.`
+                    },
+                    {
+                        type: "image_url",
+                        image_url: {
+                            url:
+                                uploadedDocument.dataUrl
+                        }
+                    }
+                ];
+
+            }
+            else {
+
+                const raw =
+                    String(
+                        uploadedDocument
+                    );
+
+
+                /*
+                 * For very large documents, inspect a balanced
+                 * beginning + middle + ending sample rather than
+                 * only the first pages.
+                 */
+                const MAX =
+                    36000;
+
+
+                let sample =
+                    raw;
+
+
+                if (
+                    raw.length >
+                    MAX
+                ) {
+
+                    const third =
+                        Math.floor(
+                            MAX / 3
+                        );
+
+
+                    const middleStart =
+                        Math.max(
+                            0,
+                            Math.floor(
+                                raw.length / 2
+                            ) -
+                            Math.floor(
+                                third / 2
+                            )
+                        );
+
+
+                    sample =
+                        raw.slice(
+                            0,
+                            third
+                        ) +
+                        "\n\n[... middle section ...]\n\n" +
+                        raw.slice(
+                            middleStart,
+                            middleStart +
+                                third
+                        ) +
+                        "\n\n[... final section ...]\n\n" +
+                        raw.slice(
+                            -third
+                        );
+
+                }
+
+
+                userContent =
+                    `File name: ${fileName}
+MIME type: ${mimeType || "document"}
+
+DOCUMENT CONTENT:
+${sample}`;
+
+            }
+
+
+            const stream =
+                await createAIStream([
+                    {
+                        role:
+                            "system",
+
+                        content:
+                            systemPrompt
+                    },
+                    {
+                        role:
+                            "user",
+
+                        content:
+                            userContent
+                    }
+                ]);
+
+
+            let summary =
+                "";
+
+
+            for await (
+                const chunk
+                of stream
+            ) {
+
+                const text =
+                    chunk?.choices?.[0]
+                        ?.delta?.content ||
+                    "";
+
+
+                if (!text) {
+                    continue;
+                }
+
+
+                summary +=
+                    text;
+
+            }
+
+
+            summary =
+                summary
+                    .replace(
+                        /```[\s\S]*?```/g,
+                        ""
+                    )
+                    .replace(
+                        /\s+/g,
+                        " "
+                    )
+                    .trim()
+                    .slice(
+                        0,
+                        900
+                    );
+
+
+            if (!summary) {
+
+                throw new Error(
+                    "Document analysis returned no summary."
+                );
+
+            }
+
+
+            return res.json({
+                success: true,
+                fileName,
+                summary
+            });
+
+        }
+        catch (error) {
+
+            console.error(
+                "AP DOCUMENT AUTO SUMMARY ERROR:",
+                error
+            );
+
+
+            return res
+                .status(500)
+                .json({
+                    success: false,
+                    error:
+                        error?.message ||
+                        "Unable to analyze uploaded document."
+                });
+
+        }
+
+    }
+);
+
 app.post("/chat", async (req, res) => {
 
     const requestStart = performance.now();

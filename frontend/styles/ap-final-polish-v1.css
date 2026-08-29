@@ -1,0 +1,132 @@
+﻿/* ==========================================================
+   AP SYNAPSE — FINAL PRODUCT POLISH V1
+   ========================================================== */
+
+.ap-attachment-shelf {
+    width: min(720px, calc(100% - 24px));
+    margin: 0 auto 8px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 14px;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(32, 32, 34, 0.96),
+            rgba(20, 20, 22, 0.96)
+        );
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+.ap-attachment-shelf[hidden] {
+    display: none !important;
+}
+
+.ap-attachment-visual {
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+    border-radius: 10px;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(201, 168, 76, 0.22);
+    background: rgba(201, 168, 76, 0.07);
+}
+
+.ap-attachment-preview-image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.ap-attachment-type {
+    font-size: 10px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: rgba(224, 196, 112, 0.96);
+}
+
+.ap-attachment-info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.ap-attachment-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 650;
+    color: rgba(255, 255, 255, 0.94);
+}
+
+.ap-attachment-meta {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.52);
+}
+
+.ap-chat-attachment-card {
+    width: min(430px, 100%);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    background: rgba(255, 255, 255, 0.035);
+}
+
+.ap-chat-attachment-card .ap-attachment-visual {
+    width: 58px;
+    height: 58px;
+    flex-basis: 58px;
+}
+
+.ap-smart-chat-link {
+    display: inline;
+    color: inherit;
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+}
+
+.ap-smart-chat-link:hover {
+    opacity: 0.78;
+}
+
+.ap-upload-intake-copy {
+    margin: 0;
+    line-height: 1.65;
+}
+
+@media (max-width: 700px) {
+
+    .ap-attachment-shelf {
+        width: calc(100% - 18px);
+        padding: 8px 10px;
+        border-radius: 13px;
+    }
+
+    .ap-attachment-visual {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+    }
+
+    .ap-chat-attachment-card {
+        width: 100%;
+    }
+
+}

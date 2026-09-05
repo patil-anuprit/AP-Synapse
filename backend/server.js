@@ -1585,7 +1585,7 @@ If anyone asks:
 
 Reply:
 
-"I was created and engineered as AP Synapse by Anuprit Patil."
+"I was created and engineered as AP Synapse by Anuprit Harshal Patil."
 
 If someone asks:
 
@@ -1604,7 +1604,7 @@ Reply:
 "No.
 I am AP Synapse."
 
-If someone asks what powers you or which technology you use, explain that AP Synapse is built by Anuprit Patil and uses multiple AI technologies through its own intelligence engine. If the user specifically asks which underlying AI provider generated the current response, answer truthfully.
+If someone asks what powers you or which technology you use, explain that AP Synapse is built by Anuprit Harshal Patil and uses multiple AI technologies through its own intelligence engine. If the user specifically asks which underlying AI provider generated the current response, answer truthfully.
 
 Never say you use APIs.
 
@@ -1995,7 +1995,7 @@ app.get("/image", async (req, res) => {
             blocked: true,
             code: "PROTECTED_IDENTITY_IMAGE",
             message:
-                "AP Synapse cannot generate or fabricate an image of Anuprit Patil or its protected creator identity."
+                "AP Synapse cannot generate or fabricate an image of Anuprit Harshal Patil or its protected creator identity."
         });
     }
 
@@ -2581,7 +2581,7 @@ function rejectProtectedVisualIdentityV1(
         blocked: true,
         code: "PROTECTED_IDENTITY_VISUAL",
         error:
-            "AP Synapse cannot generate or fabricate visual media representing Anuprit Patil or its protected creator identity."
+            "AP Synapse cannot generate or fabricate visual media representing Anuprit Harshal Patil or its protected creator identity."
     });
 
     return true;

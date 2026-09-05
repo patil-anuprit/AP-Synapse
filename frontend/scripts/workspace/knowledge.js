@@ -11,7 +11,7 @@ content:"Core architecture, router, memory engine and workspace."
 title:"ScienceVerse",
 category:"Education",
 favorite:true,
-content:"Educational platform built by Anuprit Patil."
+content:"Educational platform built by Anuprit Harshal Patil."
 },
 
 {

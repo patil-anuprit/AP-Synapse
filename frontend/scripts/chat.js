@@ -3678,7 +3678,7 @@ alert(`
 AP Synapse
 
 Creator:
-Anuprit Patil
+Anuprit Harshal Patil
 
 Version 1.0
 

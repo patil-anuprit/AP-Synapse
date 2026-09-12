@@ -12300,3 +12300,9 @@ setTimeout(() => {
 
   console.log("✅ AP SYNAPSE — PERMANENT MOBILE HISTORY FIX READY");
 })();
+
+/* AP SYNAPSE UNIVERSAL PRESENCE BRIDGE */
+
+window.AP_OPEN_SAVED_CONVERSATION =
+    openSavedConversation;
+

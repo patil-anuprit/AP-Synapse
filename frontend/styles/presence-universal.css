@@ -1,0 +1,489 @@
+.ap-presence-button {
+    position: fixed;
+    right: 20px;
+    bottom: 22px;
+    z-index: 99980;
+
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    height: 43px;
+    padding: 0 15px;
+
+    border:
+        1px solid
+        rgba(205, 171, 80, .23);
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(31,31,34,.96),
+            rgba(13,13,15,.97)
+        );
+
+    color: #f1eee7;
+
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 18px 55px
+        rgba(0,0,0,.38);
+
+    backdrop-filter:
+        blur(18px);
+}
+
+
+.ap-presence-orb {
+    width: 9px;
+    height: 9px;
+
+    border-radius: 999px;
+
+    background: #d4b45e;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(212,180,94,.08),
+        0 0 17px
+        rgba(212,180,94,.38);
+
+    animation:
+        apPresenceBreath
+        2.4s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes apPresenceBreath {
+
+    0%,100% {
+        opacity: .65;
+        transform: scale(.9);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.12);
+    }
+}
+
+
+.ap-presence-panel {
+    position: fixed;
+
+    top: 0;
+    right: 0;
+    bottom: 0;
+
+    z-index: 99990;
+
+    width:
+        min(400px, 94vw);
+
+    padding:
+        27px 20px 40px;
+
+    overflow-y: auto;
+
+    transform:
+        translateX(105%);
+
+    transition:
+        transform
+        .28s
+        cubic-bezier(.2,.8,.2,1);
+
+    border-left:
+        1px solid
+        rgba(255,255,255,.065);
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(197,157,61,.075),
+            transparent 30%
+        ),
+        rgba(10,10,11,.985);
+
+    color: #f2efe8;
+
+    box-shadow:
+        -30px 0 85px
+        rgba(0,0,0,.50);
+
+    backdrop-filter:
+        blur(22px);
+}
+
+
+.ap-presence-panel.open {
+    transform:
+        translateX(0);
+}
+
+
+.ap-presence-head {
+    display: flex;
+    justify-content:
+        space-between;
+    align-items:
+        flex-start;
+
+    margin-bottom: 26px;
+}
+
+
+.ap-presence-head small {
+    color: #b7974d;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: .22em;
+}
+
+
+.ap-presence-head h2 {
+    margin:
+        5px 0 6px;
+
+    font-size: 28px;
+    font-weight: 620;
+
+    letter-spacing: -.04em;
+}
+
+
+.ap-presence-head p {
+    margin: 0;
+
+    color: #858489;
+
+    font-size: 12px;
+}
+
+
+#apPresenceClose {
+    width: 37px;
+    height: 37px;
+
+    border-radius: 12px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    background:
+        rgba(255,255,255,.025);
+
+    color: #aaa9ad;
+
+    font-size: 21px;
+
+    cursor: pointer;
+}
+
+
+.ap-presence-this-device {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    min-height: 64px;
+
+    padding: 15px;
+
+    margin-bottom: 26px;
+
+    border-radius: 17px;
+
+    border:
+        1px solid
+        rgba(211,177,80,.22);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(211,177,80,.09),
+            rgba(255,255,255,.018)
+        );
+}
+
+
+.ap-presence-this-device strong,
+.ap-presence-device strong {
+    display: block;
+
+    color: #ece8df;
+
+    font-size: 13px;
+}
+
+
+.ap-presence-this-device span,
+.ap-presence-device span {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #8d8b8e;
+
+    font-size: 10px;
+}
+
+
+.ap-presence-label {
+    margin-bottom: 11px;
+
+    color: #6d6c71;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: .18em;
+}
+
+
+.ap-presence-devices {
+    display: flex;
+    flex-direction: column;
+
+    gap: 9px;
+}
+
+
+.ap-presence-device {
+    display: grid;
+
+    grid-template-columns:
+        40px 1fr auto;
+
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 13px;
+
+    border-radius: 15px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.065);
+
+    background:
+        rgba(255,255,255,.022);
+}
+
+
+.ap-device-symbol {
+    display: grid;
+    place-items: center;
+
+    width: 39px;
+    height: 39px;
+
+    border-radius: 12px;
+
+    border:
+        1px solid
+        rgba(208,170,64,.17);
+
+    background:
+        rgba(208,170,64,.065);
+
+    color: #d0ad54;
+}
+
+
+.ap-device-copy small {
+    display: block;
+
+    max-width: 145px;
+
+    margin-top: 5px;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+    color: #66656a;
+
+    font-size: 8px;
+}
+
+
+.ap-presence-move {
+    padding: 8px 10px;
+
+    border-radius: 10px;
+
+    border:
+        1px solid
+        rgba(210,175,75,.21);
+
+    background:
+        rgba(210,175,75,.065);
+
+    color: #d3b665;
+
+    font: inherit;
+    font-size: 9px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+.ap-presence-move:hover {
+    background:
+        rgba(210,175,75,.12);
+}
+
+
+.ap-presence-empty {
+    padding: 25px 17px;
+
+    border-radius: 15px;
+
+    border:
+        1px dashed
+        rgba(255,255,255,.075);
+
+    color: #707075;
+
+    text-align: center;
+
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+
+.ap-presence-privacy {
+    margin-top: 23px;
+
+    color: #55545a;
+
+    text-align: center;
+
+    font-size: 9px;
+    line-height: 1.5;
+}
+
+
+.ap-presence-toast {
+    position: fixed;
+
+    left: 50%;
+    bottom: 28px;
+
+    z-index: 100000;
+
+    min-width: 220px;
+
+    padding: 11px 16px;
+
+    transform:
+        translate(-50%, 16px);
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    border-radius: 13px;
+
+    border:
+        1px solid
+        rgba(210,174,70,.18);
+
+    background:
+        rgba(18,18,20,.97);
+
+    color: #eeeae2;
+
+    text-align: center;
+
+    font-size: 11px;
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,.45);
+
+    transition:
+        opacity .2s ease,
+        transform .2s ease;
+}
+
+
+.ap-presence-toast.show {
+    opacity: 1;
+
+    transform:
+        translate(-50%,0);
+}
+
+
+html[
+    data-ap-presence-state="transferring"
+]
+.ap-presence-orb {
+    animation-duration:
+        .45s;
+
+    box-shadow:
+        0 0 0 6px
+        rgba(212,180,94,.10),
+        0 0 26px
+        rgba(212,180,94,.65);
+}
+
+
+html[
+    data-ap-presence-state="receiving"
+]
+.ap-presence-orb {
+    animation-duration:
+        .35s;
+}
+
+
+@media (
+    max-width: 640px
+) {
+
+    .ap-presence-button {
+        right: 12px;
+        bottom: 88px;
+    }
+
+
+    .ap-presence-panel {
+        width: 100%;
+        padding:
+            22px 15px 115px;
+    }
+
+
+    .ap-presence-device {
+        grid-template-columns:
+            39px 1fr;
+    }
+
+
+    .ap-presence-move {
+        grid-column:
+            1 / -1;
+
+        width: 100%;
+    }
+}

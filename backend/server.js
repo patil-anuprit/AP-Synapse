@@ -1,3 +1,8 @@
+import {
+    installUniversalPresenceRoutes,
+    attachUniversalPresenceWebSocket
+} from "./presence/universalPresence.js";
+
 import { generateCloudflareImageEdit } from "./services/cloudflareImageEditService.js";
 import express from "express";
 import cors from "cors";
@@ -2877,6 +2882,12 @@ app.get("/database/status", async (req, res) => {
 
 });
 
+
+/* AP SYNAPSE UNIVERSAL PRESENCE */
+
+installUniversalPresenceRoutes(app);
+
+
 initializeDatabase()
     .then(() => {
 
@@ -2906,6 +2917,8 @@ initializeDatabase()
             );
 
         });
+
+                attachUniversalPresenceWebSocket(server);
 
         // AP SYNAPSE SERVER LIFECYCLE DIAGNOSTICS
         server.ref();

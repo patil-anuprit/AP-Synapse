@@ -22,6 +22,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.apsynapse.app">
 
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <uses-permission
+        android:name="android.permission.RECORD_AUDIO" />
+
     
         <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     
@@ -32,87 +41,20 @@
 
     
 
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-<uses-permission android:name="android.permission.INTERNET" />
-<queries>
-    <intent>
-        <action android:name="android.speech.RecognitionService" />
-    </intent>
-    <intent>
-        <action android:name="android.intent.action.TTS_SERVICE" />
-    </intent>
+    
+    <queries>
 
-    <!-- AP_DEVICE_INTELLIGENCE_V2_VISIBILITY -->
-    <intent>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.LAUNCHER" />
-    </intent>
-    <package android:name="com.google.android.youtube" />
-    <package android:name="com.google.android.apps.youtube.music" />
-    <package android:name="com.google.android.apps.maps" />
-    <package android:name="com.google.android.gm" />
-    <package android:name="com.android.chrome" />
-    <package android:name="com.google.android.googlequicksearchbox" />
-    <package android:name="com.whatsapp" />
-    <package android:name="com.spotify.music" />
-    <package android:name="com.instagram.android" />
-    <package android:name="com.facebook.katana" />
-    <package android:name="org.telegram.messenger" />
-    <package android:name="com.google.android.apps.photos" />
-    <package android:name="com.android.vending" />
+        <intent>
 
-    <!-- AP_APRISHA_DEVICE_VISIBILITY_V2 -->
-    <intent>
-        <action android:name="android.intent.action.SET_TIMER" />
-    </intent>
+            <action
+                android:name="android.speech.RecognitionService" />
 
-    <intent>
-        <action android:name="android.intent.action.SET_ALARM" />
-    </intent>
+        </intent>
 
-    <intent>
-        <action android:name="android.intent.action.DIAL" />
-        <data android:scheme="tel" />
-    </intent>
-
-    <intent>
-        <action android:name="android.intent.action.SENDTO" />
-        <data android:scheme="smsto" />
-    </intent>
-
-    <intent>
-        <action android:name="android.media.action.IMAGE_CAPTURE" />
-    </intent>
-
-    <intent>
-        <action android:name="android.media.action.VIDEO_CAPTURE" />
-    </intent>
-
-    <intent>
-        <action android:name="android.intent.action.VIEW" />
-        <data android:scheme="geo" />
-    </intent>
-
-    <intent>
-        <action android:name="android.intent.action.INSERT" />
-        <data android:scheme="content" />
-    </intent>
-</queries>
-
-<uses-permission android:name="android.permission.READ_CONTACTS" />
-
-<uses-permission android:name="android.permission.CALL_PHONE" />
-
-<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    </queries>
 
 
-<!-- AP_DEVICE_INTELLIGENCE_V2_PERMISSIONS -->
-<uses-permission android:name="android.permission.CAMERA" />
-<uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
-
-        <!-- AP_APRISHA_TIME_INTELLIGENCE_V10 -->
-    <uses-permission android:name="android.permission.READ_CALENDAR" />
-<application
+    <application
         android:name="Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -155,17 +97,6 @@
                 </intent-filter>
             </activity>
         
-
-        <activity
-            android:name=".AprishaBootstrapActivity"
-            android:exported="true"
-            android:theme="@android:style/Theme.Material.NoActionBar">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
         <activity android:name="LauncherActivity"
             android:alwaysRetainTaskState="true"
@@ -229,6 +160,11 @@
             
 
             
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW"/>
@@ -311,80 +247,230 @@
         </service> 
         
     
-        <!-- ===================================================
-             AP SYNAPSE Ãƒâ€šÃ‚Â· AP PRESENCE
-             =================================================== -->
+        <!-- AP SYNAPSE APRISHA NATIVE RUNTIME -->
+        <service
+
+            android:name=
+                "com.apsynapse.app.aprisha.AprishaRuntimeService"
+
+            android:enabled="true"
+
+            android:exported="false"
+
+            android:stopWithTask="false"
+
+            android:foregroundServiceType="microphone"
+
+        />
+
+
 
         <activity
-            android:name="com.apsynapse.app.presence.PresenceSetupActivity"
+
+            android:name=
+                "com.apsynapse.app.aprisha.AprishaRuntimeActivity"
+
+            android:enabled="true"
+
             android:exported="true"
+
+            android:noHistory="true"
+
             android:excludeFromRecents="true"
-            android:launchMode="singleTop"
-            android:theme="@android:style/Theme.Material.NoActionBar">
+
+            android:theme=
+                "@android:style/Theme.Translucent.NoTitleBar"
+
+        >
 
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <action
+                    android:name=
+                        "android.intent.action.VIEW"
+                />
+
+                <category
+                    android:name=
+                        "android.intent.category.DEFAULT"
+                />
+
+                <category
+                    android:name=
+                        "android.intent.category.BROWSABLE"
+                />
 
                 <data
-                    android:scheme="apsynapse"
-                    android:host="presence" />
+
+                    android:scheme=
+                        "apsynapse"
+
+                    android:host=
+                        "runtime"
+
+                />
+
             </intent-filter>
 
         </activity>
 
 
+
+        <!-- ============================================
+             AP SYNAPSE — APRISHA SYSTEM ASSISTANT
+             ============================================ -->
+
         <service
-            android:name="com.apsynapse.app.presence.PresenceVoiceInteractionService"
-            android:label="@string/appName"
-            android:permission="android.permission.BIND_VOICE_INTERACTION"
-            android:exported="true">
+
+            android:name=
+                "com.apsynapse.app.aprisha.AprishaVoiceInteractionService"
+
+            android:label=
+                "Aprisha"
+
+            android:permission=
+                "android.permission.BIND_VOICE_INTERACTION"
+
+            android:exported=
+                "true"
+
+            android:process=
+                ":aprisha_voice"
+
+        >
 
             <intent-filter>
+
                 <action
-                    android:name="android.service.voice.VoiceInteractionService" />
+                    android:name=
+                        "android.service.voice.VoiceInteractionService"
+                />
+
             </intent-filter>
+
 
             <meta-data
-                android:name="android.voice_interaction"
-                android:resource="@xml/ap_presence_voice_interaction" />
+
+                android:name=
+                    "android.voice_interaction"
+
+                android:resource=
+                    "@xml/aprisha_voice_interaction"
+
+            />
 
         </service>
 
 
         <service
-            android:name="com.apsynapse.app.presence.AprishaRecognitionService"
-            android:label="@string/appName"
-            android:permission="android.permission.BIND_SPEECH_RECOGNITION_SERVICE"
-            android:exported="true">
+
+            android:name=
+                "com.apsynapse.app.aprisha.AprishaVoiceInteractionSessionService"
+
+            android:exported=
+                "false"
+
+            android:process=
+                ":aprisha_session"
+
+        />
+
+
+        <service
+
+            android:name=
+                "com.apsynapse.app.aprisha.AprishaRecognitionService"
+
+            android:label=
+                "Aprisha Speech"
+
+            android:exported=
+                "true"
+
+        >
 
             <intent-filter>
-                <action android:name="android.speech.RecognitionService" />
+
+                <action
+                    android:name=
+                        "android.speech.RecognitionService"
+                />
+
+                <category
+                    android:name=
+                        "android.intent.category.DEFAULT"
+                />
+
             </intent-filter>
+
+
+            <meta-data
+
+                android:name=
+                    "android.speech"
+
+                android:resource=
+                    "@xml/aprisha_recognition_service"
+
+            />
 
         </service>
 
 
-        <service
-            android:name="com.apsynapse.app.presence.PresenceSessionService"
-            android:permission="android.permission.BIND_VOICE_INTERACTION"
-            android:exported="true" />
+        <activity
 
+            android:name=
+                "com.apsynapse.app.aprisha.AprishaAssistantSetupActivity"
 
-        <!-- AP_APRISHA_NOTIFICATION_INTELLIGENCE_V6 -->
-        <service
-            android:name="com.apsynapse.app.presence.AprishaNotificationService"
-            android:label="@string/appName"
-            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
-            android:exported="false">
+            android:exported=
+                "true"
+
+            android:noHistory=
+                "true"
+
+            android:excludeFromRecents=
+                "true"
+
+            android:theme=
+                "@android:style/Theme.Translucent.NoTitleBar"
+
+        >
 
             <intent-filter>
-                <action android:name="android.service.notification.NotificationListenerService" />
+
+                <action
+                    android:name=
+                        "android.intent.action.VIEW"
+                />
+
+                <category
+                    android:name=
+                        "android.intent.category.DEFAULT"
+                />
+
+                <category
+                    android:name=
+                        "android.intent.category.BROWSABLE"
+                />
+
+
+                <data
+
+                    android:scheme=
+                        "apsynapse"
+
+                    android:host=
+                        "assistant"
+
+                    android:path=
+                        "/activate"
+
+                />
+
             </intent-filter>
 
-        </service>
-        <!-- END AP PRESENCE -->
-    </application>
+        </activity>
+
+
+</application>
 </manifest>

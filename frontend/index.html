@@ -817,6 +817,12 @@
     href="./styles/presence-universal.css?v=1"
 />
 
+
+<link
+    rel="stylesheet"
+    href="./styles/aprisha-capability-center.css?v=1"
+>
+
 </head>
 
 <body>
@@ -7347,9 +7353,6 @@ button:active,
 <script src="./scripts/response-actions-final.js?v=1"></script>
 <script src="./scripts/share-v2.js?v=1"></script>
 <script src="./scripts/shared-mobile-master.js?v=2"></script>
-<script src="/scripts/aprisha-dedicated-control.js?v=native641" defer></script>
-<script src="/scripts/ap-aprisha-wake-master.js?v=wake641" defer></script>
-
 <script
     src="./scripts/personalization-final.js?v=1">
 </script>
@@ -7365,6 +7368,34 @@ button:active,
 
 
 
+
+
+<!-- AP SYNAPSE APRISHA RUNTIME -->
+<script>
+window.__AP_STABLE_WAKE_OWNS_MIC__ = true;
+window.__AP_EXTERNAL_COMMAND_MIC__ = true;
+</script>
+
+<script
+    src="./scripts/aprisha-universal.js?v=runtime-restore-1"
+    defer
+></script>
+
+<script
+    src="./scripts/aprisha-voice-router-v7.js?v=7.3"
+    defer
+></script>
+<script
+    src="./scripts/aprisha-enable-master-fix.js?v=runtime-restore-1"
+    defer
+></script>
+
+<script
+    src="./scripts/aprisha-dedicated-control.js?v=runtime-restore-1"
+    defer
+></script>
+<!-- /AP SYNAPSE APRISHA RUNTIME -->
+
 <script src="./scripts/aprisha-topbar-final.js?v=2"></script>
 
 
@@ -7374,6 +7405,29 @@ button:active,
 
 <script
     src="./scripts/presence-universal.js?v=1"
+    defer
+></script>
+
+<script
+    src="./scripts/aprisha-power-core.js?v=1"
+    defer
+></script>
+
+
+<script
+    src="./scripts/aprisha-native-runtime-bridge.js?v=1"
+    defer
+></script>
+
+
+<script
+    src="./scripts/aprisha-assistant-runtime.js?v=1"
+    defer
+></script>
+
+
+<script
+    src="./scripts/aprisha-capability-center.js?v=1"
     defer
 ></script>
 

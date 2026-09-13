@@ -861,6 +861,13 @@
 
     function armWake() {
 
+        // AP_STABLE_WAKE_OWNS_MIC
+        if (
+            window.__AP_STABLE_WAKE_OWNS_MIC__
+        ) {
+            return;
+        }
+
         if (
             !Recognition ||
             !state.enabled ||
@@ -1177,6 +1184,13 @@
     function listen(
         attempt = 0
     ) {
+
+        // AP_EXTERNAL_COMMAND_MIC_GUARD
+        if (
+            window.__AP_EXTERNAL_COMMAND_MIC__
+        ) {
+            return;
+        }
 
         if (
             !Recognition ||

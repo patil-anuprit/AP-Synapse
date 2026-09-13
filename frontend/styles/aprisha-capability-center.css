@@ -1,0 +1,375 @@
+#ap-capability-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483600;
+
+    display: none;
+    place-items: center;
+
+    padding: 24px;
+
+    background:
+        radial-gradient(
+            circle at 50% 20%,
+            rgba(194,151,72,.10),
+            transparent 38%
+        ),
+        rgba(5,5,6,.86);
+
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+
+    color: #f3f3f3;
+
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+#ap-capability-overlay.ap-open {
+    display: grid;
+}
+
+.ap-cap-card {
+    width:
+        min(
+            720px,
+            calc(100vw - 32px)
+        );
+
+    max-height:
+        min(
+            860px,
+            calc(100vh - 32px)
+        );
+
+    overflow: auto;
+
+    padding: 32px;
+
+    border:
+        1px solid
+        rgba(210,169,88,.24);
+
+    border-radius: 30px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(29,29,31,.97),
+            rgba(13,13,14,.98)
+        );
+
+    box-shadow:
+        0 40px 120px
+        rgba(0,0,0,.60);
+}
+
+.ap-cap-head {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+
+    margin-bottom: 24px;
+}
+
+.ap-cap-mark {
+    width: 62px;
+    height: 62px;
+
+    flex: 0 0 62px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        rgba(224,183,94,.72);
+
+    box-shadow:
+        inset 0 0 22px
+        rgba(222,180,89,.08),
+        0 0 32px
+        rgba(205,158,67,.08);
+
+    color: #e0b75e;
+
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: .08em;
+}
+
+.ap-cap-title {
+    margin: 0;
+
+    font-size:
+        clamp(
+            25px,
+            4vw,
+            36px
+        );
+
+    line-height: 1.1;
+}
+
+.ap-cap-subtitle {
+    margin:
+        7px 0 0;
+
+    color: #aaa;
+
+    line-height: 1.5;
+}
+
+.ap-cap-intro {
+    margin:
+        0 0 22px;
+
+    padding:
+        16px 18px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    border-radius: 16px;
+
+    background:
+        rgba(255,255,255,.035);
+
+    color: #c7c7c7;
+
+    line-height: 1.55;
+}
+
+.ap-cap-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0,1fr)
+        );
+
+    gap: 10px;
+
+    margin-bottom: 20px;
+}
+
+.ap-cap-item {
+    display: flex;
+    gap: 12px;
+
+    align-items: center;
+
+    min-height: 70px;
+
+    padding:
+        13px 14px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.065);
+
+    border-radius: 16px;
+
+    background:
+        rgba(255,255,255,.025);
+}
+
+.ap-cap-icon {
+    width: 36px;
+    height: 36px;
+
+    flex: 0 0 36px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 11px;
+
+    background:
+        rgba(220,176,89,.08);
+
+    color: #dbb363;
+
+    font-size: 17px;
+}
+
+.ap-cap-name {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.ap-cap-state {
+    margin-top: 4px;
+
+    color: #888;
+
+    font-size: 12px;
+}
+
+.ap-cap-state.ap-granted {
+    color: #8fcf9d;
+}
+
+.ap-cap-state.ap-denied {
+    color: #e19898;
+}
+
+.ap-cap-state.ap-prompt {
+    color: #d1ad67;
+}
+
+.ap-cap-note {
+    margin:
+        6px 0 22px;
+
+    color: #858585;
+
+    font-size: 12px;
+
+    line-height: 1.55;
+}
+
+.ap-cap-actions {
+    display: flex;
+    gap: 10px;
+
+    flex-wrap: wrap;
+}
+
+.ap-cap-primary,
+.ap-cap-secondary {
+    min-height: 48px;
+
+    padding:
+        0 20px;
+
+    border-radius: 14px;
+
+    font: inherit;
+    font-weight: 750;
+
+    cursor: pointer;
+}
+
+.ap-cap-primary {
+    border: 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            #dfba6a,
+            #bd9141
+        );
+
+    color: #111;
+}
+
+.ap-cap-primary:disabled {
+    opacity: .55;
+    cursor: default;
+}
+
+.ap-cap-secondary {
+    border:
+        1px solid
+        rgba(255,255,255,.1);
+
+    background:
+        rgba(255,255,255,.035);
+
+    color: #ddd;
+}
+
+.ap-cap-progress {
+    display: none;
+
+    margin-top: 18px;
+
+    padding: 14px;
+
+    border-radius: 14px;
+
+    background:
+        rgba(214,170,82,.07);
+
+    border:
+        1px solid
+        rgba(214,170,82,.15);
+
+    color: #d7c39b;
+
+    font-size: 13px;
+}
+
+.ap-cap-progress.ap-visible {
+    display: block;
+}
+
+.ap-cap-manage {
+    position: fixed;
+
+    right: 18px;
+    bottom: 18px;
+
+    z-index: 2147483000;
+
+    width: 44px;
+    height: 44px;
+
+    display: grid;
+    place-items: center;
+
+    border:
+        1px solid
+        rgba(211,169,83,.32);
+
+    border-radius: 50%;
+
+    background:
+        rgba(18,18,19,.88);
+
+    color: #d5ab59;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 12px 32px
+        rgba(0,0,0,.35);
+
+    backdrop-filter:
+        blur(12px);
+}
+
+@media (max-width: 640px) {
+
+    .ap-cap-card {
+        padding: 22px;
+        border-radius: 24px;
+    }
+
+    .ap-cap-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ap-cap-head {
+        align-items: flex-start;
+    }
+
+    .ap-cap-actions {
+        display: grid;
+    }
+
+    .ap-cap-primary,
+    .ap-cap-secondary {
+        width: 100%;
+    }
+}

@@ -458,86 +458,6 @@
        EXECUTE REAL APRISHA COMMAND
        ===================================================== */
 
-    // =====================================================
-    // AP_APRISHA_REAL_CHAT_BRIDGE_V113
-    //
-    // Voice Router previously called the Universal
-    // APAprisha.execute path.
-    //
-    // For conversational questions, use the dedicated
-    // Aprisha command bridge because it already:
-    //
-    // 1. inserts the exact prompt into AP Synapse chat
-    // 2. presses the real Send button
-    // 3. watches for the resulting assistant response
-    // 4. speaks that response
-    //
-    // Keep APAprisha.execute as a safe fallback.
-    // =====================================================
-
-    async function executeThroughRealChat(
-        command
-    ) {
-
-        const clean =
-            String(
-                command || ""
-            ).trim();
-
-
-        if (!clean) {
-            return;
-        }
-
-
-        if (
-            window.Aprisha &&
-            typeof window.Aprisha.command ===
-                "function"
-        ) {
-
-            console.log(
-                "🔗 APRISHA ROUTER → REAL CHAT BRIDGE:",
-                clean
-            );
-
-
-            return await Promise.resolve(
-                window.Aprisha.command(
-                    clean
-                )
-            );
-        }
-
-
-        /*
-         * Fallback only if the dedicated controller is
-         * unexpectedly unavailable.
-         */
-
-        if (
-            window.APAprisha &&
-            typeof window.APAprisha.execute ===
-                "function"
-        ) {
-
-            console.warn(
-                "⚠️ APRISHA CHAT BRIDGE FALLBACK → APAprisha.execute"
-            );
-
-
-            return await window.APAprisha.execute(
-                clean
-            );
-        }
-
-
-        throw new Error(
-            "No Aprisha execution bridge is available."
-        );
-    }
-
-
     async function executeCommand(
         command
     ) {
@@ -621,7 +541,7 @@
         try {
 
             await Promise.resolve(
-                executeThroughRealChat(
+                window.APAprisha.execute(
                     clean
                 )
             );

@@ -820,7 +820,7 @@
 
             score += 220;
 
-            if (safeWakeCommand) {
+            if (wake.command) {
                 score += 120;
             }
         }

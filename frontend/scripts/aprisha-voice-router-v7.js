@@ -131,6 +131,23 @@
 
     const WAKE_PHRASES = [
 
+        // AP_APRISHA_FAST_WAKE_ALIASES_V754
+        //
+        // Real Chrome transcriptions observed for "Aprisha".
+        "hey pree ha",
+        "hey preeha",
+        "hey pree sha",
+        "hey pri sha",
+        "hey prisha",
+        "hey preesha",
+        "hey apreesha",
+        "hey appreesha",
+        "hey appree ha",
+        "hey appre sha",
+        "hey apre sha",
+        "hey appreci",
+        "hey apprecia",
+
         "hey aprisha",
         "hi aprisha",
 
@@ -909,10 +926,21 @@
          * Allow Chrome a little time to finish
          * revising the sentence.
          */
+        // AP_APRISHA_FAST_WAKE_COMMIT_V754
+
+        const fastWake =
+            !sessionActive() &&
+            detectWake(candidate).found;
+
+
         const delay =
-            final
-                ? 850
-                : 1200;
+            fastWake
+                ? 120
+                : (
+                    final
+                        ? 850
+                        : 1200
+                );
 
 
         commitTimer =
@@ -1056,11 +1084,34 @@
 
                 // AP_APRISHA_CROSS_BURST_CONTINUATION_V751
 
-                utterancePrefix =
-                    String(
-                        latestText || ""
-                    )
-                        .trim();
+                // AP_APRISHA_SLEEP_RESET_V754
+                //
+                // Cross-burst continuation is useful AFTER
+                // Aprisha is awake, but harmful while waiting
+                // for "Hey Aprisha".
+                //
+                // While asleep, every new speech burst starts
+                // clean so background fragments never build up.
+
+                if (
+                    sessionActive()
+                ) {
+
+                    utterancePrefix =
+                        String(
+                            latestText || ""
+                        )
+                            .trim();
+
+                }
+                else {
+
+                    utterancePrefix =
+                        "";
+
+                    latestText =
+                        "";
+                }
 
 
                 utteranceResultStart =

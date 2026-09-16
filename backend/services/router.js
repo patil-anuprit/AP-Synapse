@@ -3,6 +3,11 @@ import { createStream as gemini } from "./geminiService.js";
 import { createStream as openrouter } from "./openrouterService.js";
 import { createStream as deepseek } from "./deepseekService.js";
 import { generateImage as generateGeminiImage } from "./geminiImageService.js";
+import {
+    apErrorFields,
+    apLog,
+    createAPRequestId
+} from "./observability.js";
 
 // ============================================================
 // AP_RESILIENCE_CORE_V1
@@ -169,53 +174,11 @@ function getErrorStatus(error) {
 }
 
 
-function describeProviderError(error) {
-
-    const status =
-        getErrorStatus(error);
-
-    if (status === 401) {
-        return "authentication failed";
-    }
-
-    if (status === 402) {
-        return "insufficient balance / payment required";
-    }
-
-    if (status === 403) {
-        return "access forbidden";
-    }
-
-    if (status === 404) {
-        return "model or endpoint unavailable";
-    }
-
-    if (status === 408) {
-        return "request timeout";
-    }
-
-    if (status === 413) {
-        return "request too large";
-    }
-
-    if (status === 429) {
-        return "rate limit reached";
-    }
-
-    if (status >= 500) {
-        return `provider server error (${status})`;
-    }
-
-    return error?.message || "unknown provider error";
-
-}
-
-
-
 async function tryProvider(
     providerName,
     providerFunction,
-    messages
+    messages,
+    requestId
 ) {
 
     const state =
@@ -226,22 +189,37 @@ async function tryProvider(
         state.openUntil > Date.now()
     ) {
 
-        console.warn(
-            providerName +
-            " temporarily bypassed by resilience circuit."
-        );
+        apLog("warn", "provider.skipped", {
+            request: requestId,
+            provider: providerName,
+            reason: "circuit_open",
+            retry_after_ms: Math.max(
+                0,
+                state.openUntil - Date.now()
+            )
+        });
 
         return null;
     }
 
     let lastError = null;
-    let failureAffectsHealth = true;
 
     for (
         let attempt = 1;
         attempt <= AP_PROVIDER_RETRIES;
         attempt++
     ) {
+
+        const attemptStarted =
+            performance.now();
+
+        apLog("info", "provider.attempt", {
+            request: requestId,
+            provider: providerName,
+            attempt,
+            max_attempts: AP_PROVIDER_RETRIES,
+            messages: messages.length
+        });
 
         try {
 
@@ -250,7 +228,12 @@ async function tryProvider(
                     Promise.resolve().then(
                         () =>
                             providerFunction(
-                                messages
+                                messages,
+                                {
+                                    requestId,
+                                    attempt,
+                                    providerName
+                                }
                             )
                     ),
                     AP_PROVIDER_TIMEOUT_MS,
@@ -260,6 +243,16 @@ async function tryProvider(
 
             state.failures = 0;
             state.openUntil = 0;
+
+            apLog("info", "provider.accepted", {
+                request: requestId,
+                provider: providerName,
+                attempt,
+                latency_ms: Math.round(
+                    performance.now() -
+                    attemptStarted
+                )
+            });
 
             return stream;
 
@@ -273,8 +266,29 @@ async function tryProvider(
                     error
                 )
             ) {
-                // This is a normal routing decision, not a provider
-                // outage. The invalid/over-budget request was never sent.
+                const details =
+                    error?.details || {};
+
+                apLog("info", "provider.skipped", {
+                    request: requestId,
+                    provider: providerName,
+                    reason:
+                        error?.reason ||
+                        "admission_denied",
+                    prompt_tokens:
+                        details.promptTokens,
+                    prompt_limit:
+                        details.maxPromptTokens,
+                    tokens_requested:
+                        details.tokens_requested,
+                    tokens_used:
+                        details.tokens_used,
+                    reservation_source:
+                        details.reservation_source,
+                    retry_after_ms:
+                        details.retryAfterMs
+                });
+
                 return null;
             }
 
@@ -282,13 +296,15 @@ async function tryProvider(
                 getErrorStatus(error);
 
             if (status === 413) {
-                // Admission control should make this unreachable. Never
-                // retry the same invalid payload or poison provider health.
-                failureAffectsHealth = false;
-
-                console.error(
-                    providerName +
-                    " rejected a payload after admission control."
+                apLog(
+                    "error",
+                    "provider.admission_invariant_failed",
+                    {
+                        request: requestId,
+                        provider: providerName,
+                        attempt,
+                        ...apErrorFields(error)
+                    }
                 );
 
                 return null;
@@ -297,23 +313,48 @@ async function tryProvider(
             if (status === 429) {
                 // Respect the provider's cooldown and immediately route the
                 // user to another provider instead of retrying too early.
-                state.openUntil =
-                    Date.now() +
+                const retryAfterMs =
                     apRetryAfterMs(error);
+
+                state.openUntil =
+                    Date.now() + retryAfterMs;
+
+                apLog("warn", "provider.rate_limited", {
+                    request: requestId,
+                    provider: providerName,
+                    attempt,
+                    retry_after_ms: retryAfterMs,
+                    ...apErrorFields(error)
+                });
 
                 return null;
             }
-
-            console.error(
-                providerName +
-                " attempt failed:",
-                describeProviderError(error)
-            );
 
             const retryable =
                 apIsRetryableProviderError(
                     error
                 );
+
+            const willRetry =
+                retryable &&
+                attempt < AP_PROVIDER_RETRIES;
+
+            apLog(
+                willRetry ? "warn" : "error",
+                "provider.failed",
+                {
+                    request: requestId,
+                    provider: providerName,
+                    attempt,
+                    latency_ms: Math.round(
+                        performance.now() -
+                        attemptStarted
+                    ),
+                    retryable,
+                    will_retry: willRetry,
+                    ...apErrorFields(error)
+                }
+            );
 
             if (
                 !retryable ||
@@ -322,15 +363,19 @@ async function tryProvider(
                 break;
             }
 
-            await apSleep(
+            const backoffMs =
                 400 *
-                Math.pow(2, attempt - 1)
-            );
-        }
-    }
+                Math.pow(2, attempt - 1);
 
-    if (!failureAffectsHealth) {
-        return null;
+            apLog("info", "provider.retry_scheduled", {
+                request: requestId,
+                provider: providerName,
+                next_attempt: attempt + 1,
+                backoff_ms: backoffMs
+            });
+
+            await apSleep(backoffMs);
+        }
     }
 
     state.failures += 1;
@@ -341,19 +386,21 @@ async function tryProvider(
             Date.now() +
             AP_PROVIDER_COOLDOWN_MS;
 
-        console.warn(
-            providerName +
-            " circuit opened for " +
-            AP_PROVIDER_COOLDOWN_MS +
-            "ms."
-        );
+        apLog("warn", "provider.circuit_opened", {
+            request: requestId,
+            provider: providerName,
+            failures: state.failures,
+            cooldown_ms:
+                AP_PROVIDER_COOLDOWN_MS
+        });
     }
 
-    console.error(
-        providerName +
-        " unavailable after resilience attempts:",
-        describeProviderError(lastError)
-    );
+    apLog("error", "provider.unavailable", {
+        request: requestId,
+        provider: providerName,
+        attempts: AP_PROVIDER_RETRIES,
+        ...apErrorFields(lastError)
+    });
 
     return null;
 }
@@ -493,7 +540,8 @@ function apRecordMidStreamFailure(
 
 async function* apFailoverStream(
     providers,
-    originalMessages
+    originalMessages,
+    requestId
 ) {
 
     let accumulated = "";
@@ -517,7 +565,8 @@ async function* apFailoverStream(
             await tryProvider(
                 provider.name,
                 provider.fn,
-                activeMessages
+                activeMessages,
+                requestId
             );
 
         if (!stream) {
@@ -526,6 +575,20 @@ async function* apFailoverStream(
 
         const recovering =
             accumulated.length > 0;
+
+        const streamStarted =
+            performance.now();
+
+        let providerCharacters = 0;
+
+        if (recovering) {
+            apLog("warn", "stream.recovery_started", {
+                request: requestId,
+                provider: provider.name,
+                existing_characters:
+                    accumulated.length
+            });
+        }
 
         /*
          * During recovery we briefly buffer the beginning
@@ -547,6 +610,9 @@ async function* apFailoverStream(
                 if (!chunkText) {
                     continue;
                 }
+
+                providerCharacters +=
+                    chunkText.length;
 
                 if (
                     recovering &&
@@ -627,6 +693,18 @@ async function* apFailoverStream(
              * Entire answer completed successfully.
              */
 
+            apLog("info", "provider.completed", {
+                request: requestId,
+                provider: provider.name,
+                stream_ms: Math.round(
+                    performance.now() -
+                    streamStarted
+                ),
+                output_characters:
+                    providerCharacters,
+                recovered: recovering
+            });
+
             return;
 
         }
@@ -661,14 +739,18 @@ async function* apFailoverStream(
                 }
             }
 
-            console.error(
-                provider.name +
-                " stream interrupted. " +
-                "AP Synapse is continuing with another provider:",
-                describeProviderError(
-                    error
-                )
-            );
+            apLog("error", "provider.stream_interrupted", {
+                request: requestId,
+                provider: provider.name,
+                stream_ms: Math.round(
+                    performance.now() -
+                    streamStarted
+                ),
+                output_characters:
+                    providerCharacters,
+                will_failover: true,
+                ...apErrorFields(error)
+            });
 
             apRecordMidStreamFailure(
                 provider.name
@@ -698,6 +780,15 @@ async function* apFailoverStream(
         }
     }
 
+    apLog("error", "route.exhausted", {
+        request: requestId,
+        providers:
+            providers
+                .map(provider => provider.name)
+                .join(">"),
+        ...apErrorFields(lastError)
+    });
+
     throw (
         lastError ||
         new Error(
@@ -716,6 +807,9 @@ export async function createAIStream(messages) {
         );
 
     }
+
+    const requestId =
+        createAPRequestId();
 
 
     // ==========================================
@@ -742,9 +836,13 @@ export async function createAIStream(messages) {
 
     if (hasImage) {
 
-        console.log(
-            "Vision request detected."
-        );
+        apLog("info", "route.started", {
+            request: requestId,
+            mode: "vision",
+            messages: messages.length,
+            providers:
+                "Gemini Vision>OpenRouter Vision"
+        });
 
         return apFailoverStream(
             [
@@ -761,7 +859,8 @@ export async function createAIStream(messages) {
                         openrouter
                 }
             ],
-            messages
+            messages,
+            requestId
         );
     }
 
@@ -789,13 +888,29 @@ export async function createAIStream(messages) {
 
     if (wantsImageGeneration) {
 
-        console.log(
-            "🎨 Image-generation request detected."
-        );
+        const imageStarted =
+            performance.now();
+
+        apLog("info", "route.started", {
+            request: requestId,
+            mode: "image_generation",
+            messages: messages.length,
+            providers: "Gemini Image"
+        });
 
         try {
             const imageResult =
                 await generateGeminiImage(userText);
+
+            apLog("info", "provider.completed", {
+                request: requestId,
+                provider: "Gemini Image",
+                latency_ms: Math.round(
+                    performance.now() -
+                    imageStarted
+                ),
+                output_type: imageResult.mimeType
+            });
 
             return {
                 type: "image",
@@ -805,10 +920,17 @@ export async function createAIStream(messages) {
         }
 
         catch (error) {
-            console.error(
-                "⚠️ Image generation unavailable:",
-                describeProviderError(error)
-            );
+            apLog("error", "provider.failed", {
+                request: requestId,
+                provider: "Gemini Image",
+                latency_ms: Math.round(
+                    performance.now() -
+                    imageStarted
+                ),
+                retryable: false,
+                will_retry: false,
+                ...apErrorFields(error)
+            });
 
             throw new Error(
                 "All AP Synapse image-generation providers are currently unavailable."
@@ -823,9 +945,13 @@ export async function createAIStream(messages) {
     // AP_STREAM_FAILOVER_V2
     // ==========================================
 
-    console.log(
-        "Text request detected."
-    );
+    apLog("info", "route.started", {
+        request: requestId,
+        mode: "text",
+        messages: messages.length,
+        providers:
+            "Groq>Gemini>DeepSeek>OpenRouter"
+    });
 
     return apFailoverStream(
         [
@@ -846,7 +972,8 @@ export async function createAIStream(messages) {
                 fn: openrouter
             }
         ],
-        messages
+        messages,
+        requestId
     );
 
 }

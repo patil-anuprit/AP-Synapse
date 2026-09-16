@@ -40,6 +40,18 @@
 
     let utterancePrefix = "";
 
+    // AP_APRISHA_STICKY_ALT_V758
+    //
+    // Preserve a high-quality multi-alternative result briefly
+    // so a later single low-quality Chrome result cannot erase it.
+    let preferredAlternativeText = "";
+
+    let preferredAlternativeScore =
+        -Infinity;
+
+    let preferredAlternativeAt =
+        0;
+
     let lastExecuted = "";
     let lastExecutedAt = 0;
 
@@ -864,12 +876,148 @@
         final
     ) {
 
-        const candidate =
-            String(text || "")
+        let candidate = String(text || "")
                 .trim();
 
         if (!candidate) {
             return;
+        }
+
+
+        /*
+         * AP_APRISHA_STICKY_ALT_V758
+         *
+         * Example:
+         *
+         * Multi-alt winner:
+         *   "explain Italy in short"
+         *
+         * Later Chrome result:
+         *   "explain Italy in hort"
+         *
+         * Keep the better sentence.
+         */
+
+        const preferredAge =
+            Date.now() -
+            preferredAlternativeAt;
+
+
+        if (
+            preferredAlternativeText &&
+            preferredAge >= 0 &&
+            preferredAge < 2200
+        ) {
+
+            const currentNormalized =
+                normalize(
+                    candidate
+                );
+
+
+            const preferredNormalized =
+                normalize(
+                    preferredAlternativeText
+                );
+
+
+            const currentWords =
+                currentNormalized
+                    .split(/\s+/)
+                    .filter(Boolean);
+
+
+            const preferredWords =
+                preferredNormalized
+                    .split(/\s+/)
+                    .filter(Boolean);
+
+
+            const count =
+                Math.min(
+                    currentWords.length,
+                    preferredWords.length
+                );
+
+
+            let samePositionWords =
+                0;
+
+
+            for (
+                let wordIndex = 0;
+                wordIndex < count;
+                wordIndex++
+            ) {
+
+                if (
+                    currentWords[
+                        wordIndex
+                    ] ===
+                    preferredWords[
+                        wordIndex
+                    ]
+                ) {
+
+                    samePositionWords++;
+                }
+            }
+
+
+            const agreement =
+                samePositionWords /
+                Math.max(
+                    currentWords.length,
+                    preferredWords.length,
+                    1
+                );
+
+
+            /*
+             * If the user genuinely continued the command,
+             * allow the longer sentence through.
+             */
+
+            const currentExtendsPreferred =
+                Boolean(
+                    preferredNormalized &&
+                    currentNormalized.startsWith(
+                        preferredNormalized +
+                        " "
+                    )
+                );
+
+
+            const nearSameSentence =
+                agreement >= 0.60 &&
+                Math.abs(
+                    currentWords.length -
+                    preferredWords.length
+                ) <= 1;
+
+
+            if (
+                !currentExtendsPreferred &&
+                nearSameSentence
+            ) {
+
+                console.log(
+                    "🎯 APRISHA STICKY ALTERNATIVE →",
+                    {
+                        rejected:
+                            candidate,
+
+                        kept:
+                            preferredAlternativeText,
+
+                        agreement
+                    }
+                );
+
+
+                candidate =
+                    preferredAlternativeText;
+            }
         }
 
 
@@ -1609,6 +1757,32 @@
 
                             piece =
                                 alternativeText;
+
+
+                            /*
+                             * Only multi-alternative recognition
+                             * gets privileged sticky status.
+                             *
+                             * A later single result must not
+                             * overwrite this immediately.
+                             */
+
+                            if (
+                                alternativeCount >
+                                1
+                            ) {
+
+                                preferredAlternativeText =
+                                    combinedCandidate;
+
+
+                                preferredAlternativeScore =
+                                    alternativeScore;
+
+
+                                preferredAlternativeAt =
+                                    Date.now();
+                            }
                         }
                     }
 

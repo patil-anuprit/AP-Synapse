@@ -58,7 +58,7 @@
     ) {
 
         console.warn(
-            "[APRISHA V11.2.1] Required browser audio APIs unavailable."
+            "[APRISHA V11.2.2] Required browser audio APIs unavailable."
         );
 
         return;
@@ -443,7 +443,7 @@
                 catch (error) {
 
                     console.warn(
-                        "[APRISHA V11.2.1] Microphone permission unavailable:",
+                        "[APRISHA V11.2.2] Microphone permission unavailable:",
                         error
                     );
 
@@ -621,7 +621,7 @@
 
 
                 console.log(
-                    "[APRISHA V11.2.1] Selected microphone:",
+                    "[APRISHA V11.2.2] Selected microphone:",
                     state.streamLabel
                 );
 
@@ -792,13 +792,15 @@
          * of Aprisha's own voice for a human interruption.
          */
 
+        // AP_APRISHA_SELF_ECHO_GUARD_V1122
+
         state.calibrateUntil =
             performance.now() +
-            900;
+            1800;
 
 
         console.log(
-            "[APRISHA V11.2.1] Raw mic barge-in armed on:",
+            "[APRISHA V11.2.2] Raw mic barge-in armed on:",
             state.streamLabel
         );
 
@@ -909,16 +911,22 @@
 
                     state.stableThreshold =
                         Math.max(
-                            0.028,
+                            0.045,
+
                             state.baseline *
-                                3.0,
-                            state.leakPeak *
-                                1.70
+                                3.2,
+
+                            state.leakPeak +
+                                Math.max(
+                                    0.012,
+                                    state.leakPeak *
+                                        0.25
+                                )
                         );
 
 
                     console.log(
-                        "[APRISHA V11.2.1] Anti-echo calibrated:",
+                        "[APRISHA V11.2.2] Anti-echo calibrated:",
                         {
                             baseline:
                                 state.baseline,
@@ -981,8 +989,7 @@
                  */
 
                 if (
-                    state.voiceMs >=
-                    300
+                    state.voiceMs >= 380
                 ) {
 
                     interruptAprisha(
@@ -1151,7 +1158,7 @@
         if (!text) {
 
             console.log(
-                "[APRISHA V11.2.1] Speech stopped; no replacement command captured."
+                "[APRISHA V11.2.2] Speech stopped; no replacement command captured."
             );
 
 
@@ -1163,7 +1170,7 @@
 
 
         console.log(
-            "[APRISHA V11.2.1] INTERRUPTION COMMAND:",
+            "[APRISHA V11.2.2] INTERRUPTION COMMAND:",
             text
         );
 
@@ -1200,7 +1207,7 @@
         ) {
 
             console.log(
-                "[APRISHA V11.2.1] DIRECT INTERRUPTION →",
+                "[APRISHA V11.2.2] DIRECT INTERRUPTION →",
                 text
             );
 
@@ -1215,7 +1222,7 @@
                     error => {
 
                         console.error(
-                            "[APRISHA V11.2.1] Direct interruption failed:",
+                            "[APRISHA V11.2.2] Direct interruption failed:",
                             error
                         );
                     }
@@ -1236,7 +1243,7 @@
 
 
         console.error(
-            "[APRISHA V11.2.1] Direct Aprisha executor unavailable."
+            "[APRISHA V11.2.2] Direct Aprisha executor unavailable."
         );
 
 
@@ -1263,7 +1270,7 @@
         if (!input) {
 
             console.error(
-                "[APRISHA V11.2.1] Chat input unavailable."
+                "[APRISHA V11.2.2] Chat input unavailable."
             );
 
 
@@ -1335,7 +1342,7 @@
 
 
         console.log(
-            "[APRISHA V11.2.1] New request sent."
+            "[APRISHA V11.2.2] New request sent."
         );
 
 
@@ -1381,7 +1388,7 @@
 
 
         console.log(
-            "[APRISHA V11.2.1] Normal Aprisha listening released."
+            "[APRISHA V11.2.2] Normal Aprisha listening released."
         );
     }
 
@@ -1393,7 +1400,7 @@
         ) {
 
             console.warn(
-                "[APRISHA V11.2.1] SpeechRecognition unavailable after interruption."
+                "[APRISHA V11.2.2] SpeechRecognition unavailable after interruption."
             );
 
 
@@ -1458,7 +1465,7 @@
             () => {
 
                 console.log(
-                    "[APRISHA V11.2.1] Listening for replacement command..."
+                    "[APRISHA V11.2.2] Listening for replacement command..."
                 );
             };
 
@@ -1492,7 +1499,7 @@
 
 
                 console.log(
-                    "[APRISHA V11.2.1] Heard after interruption:",
+                    "[APRISHA V11.2.2] Heard after interruption:",
                     heard
                 );
 
@@ -1527,7 +1534,7 @@
                 ) {
 
                     console.warn(
-                        "[APRISHA V11.2.1] Replacement listener event:",
+                        "[APRISHA V11.2.2] Replacement listener event:",
                         code
                     );
                 }
@@ -1620,7 +1627,7 @@
 
 
             console.warn(
-                "[APRISHA V11.2.1] Replacement recognizer failed:",
+                "[APRISHA V11.2.2] Replacement recognizer failed:",
                 error
             );
 
@@ -1671,7 +1678,7 @@
 
 
         console.log(
-            "[APRISHA V11.2.1] USER VOICE DETECTED - INTERRUPTING.",
+            "[APRISHA V11.2.2] USER VOICE DETECTED - INTERRUPTING.",
             {
                 level: rms,
                 threshold
@@ -1822,7 +1829,7 @@
 
 
             console.log(
-                "[APRISHA V11.2.1] Short TTS protected:",
+                "[APRISHA V11.2.2] Short TTS protected:",
                 spokenText
             );
 
@@ -1832,7 +1839,7 @@
 
 
         console.log(
-            "[APRISHA V11.2.1] Long Aprisha response - TRUE barge-in preparing."
+            "[APRISHA V11.2.2] Long Aprisha response - TRUE barge-in preparing."
         );
 
 
@@ -1880,7 +1887,7 @@
 
 
         console.log(
-            "[APRISHA V11.2.1] TTS complete - normal listening continues."
+            "[APRISHA V11.2.2] TTS complete - normal listening continues."
         );
     }
 
@@ -2084,7 +2091,7 @@
                     stopCurrentStream();
 
                     console.log(
-                        "[APRISHA V11.2.1] Audio devices changed - microphone will be reselected."
+                        "[APRISHA V11.2.2] Audio devices changed - microphone will be reselected."
                     );
                 }
             );
@@ -2124,7 +2131,7 @@
 
 
     console.log(
-        "[APRISHA V11.2.1] TRUE BARGE-IN ENGINE READY"
+        "[APRISHA V11.2.2] TRUE BARGE-IN ENGINE READY"
     );
 
 })();

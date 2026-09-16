@@ -632,6 +632,45 @@
             );
 
 
+        // AP_APRISHA_WAKE_TAIL_GUARD_V752
+        //
+        // Chrome commonly leaves tiny garbage fragments after
+        // a fuzzy wake transcription:
+        //
+        // "hey appri a"
+        // "hey aprisha uh"
+        //
+        // These are NOT real commands.
+
+        const wakeCommandRaw =
+            String(
+                wake?.command ||
+                ""
+            )
+                .trim();
+
+
+        const wakeCommandNormalized =
+            normalize(
+                wakeCommandRaw
+            );
+
+
+        const wakeCommandLooksLikeNoise =
+            !wakeCommandNormalized ||
+            wakeCommandNormalized.length <= 2 ||
+            /^(?:a|i|uh|um|hm|hmm|ah|oh|hey|hi)$/i
+                .test(
+                    wakeCommandNormalized
+                );
+
+
+        const safeWakeCommand =
+            wakeCommandLooksLikeNoise
+                ? ""
+                : wakeCommandRaw;
+
+
         /*
          * MODE 1
          *
@@ -639,7 +678,7 @@
          */
         if (
             wake.found &&
-            wake.command
+            safeWakeCommand
         ) {
 
             extendSession();
@@ -647,12 +686,12 @@
 
             console.log(
                 "⚡ HEY APRISHA →",
-                wake.command
+                safeWakeCommand
             );
 
 
             await executeCommand(
-                wake.command
+                safeWakeCommand
             );
 
 
@@ -669,7 +708,7 @@
          */
         if (
             wake.found &&
-            !wake.command
+            !safeWakeCommand
         ) {
 
             stopRecognizer();
@@ -781,7 +820,7 @@
 
             score += 220;
 
-            if (wake.command) {
+            if (safeWakeCommand) {
                 score += 120;
             }
         }

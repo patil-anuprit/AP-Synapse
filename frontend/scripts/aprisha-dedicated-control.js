@@ -952,6 +952,28 @@
 
             const restartAprishaRecognition = () => {
 
+                // AP_APRISHA_BARGE_CAPTURE_GUARD_V11
+                //
+                // The interruption recognizer temporarily owns
+                // the microphone while Aprisha is speaking or
+                // while the user is finishing:
+                //
+                // "Aprisha wait, ..."
+                //
+                // Do not compete with it.
+                if (
+                    window.__AP_APRISHA_BARGE_CAPTURE_ACTIVE__
+                ) {
+
+                    window.__AP_APRISHA_RESTART_TIMER =
+                        setTimeout(
+                            restartAprishaRecognition,
+                            150
+                        );
+
+                    return;
+                }
+
                 if (
                     !window.__AP_APRISHA_SESSION_ACTIVE ||
                     window.__AP_APRISHA_MANUAL_STOP

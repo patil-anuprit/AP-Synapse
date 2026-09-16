@@ -305,6 +305,12 @@ RULES:
 - Maximum overall execution is six steps.
 - Read the previous ledger before choosing.
 - Never repeat a successful action unless repetition is explicitly required.
+- Preserve exact named targets from the user's goal.
+- If the user says "open Canvas", output "open Canvas", never "open app".
+- If the user says "open Code Studio", output "open Code Studio", never "open application".
+- Never substitute named apps, contacts, destinations, timers, or entities with generic placeholders.
+- Commands such as "open app", "call contact", "message person", or "go to location" are invalid.
+- Every executable command must contain enough concrete information for the device/action engine to execute it directly.
 - Never claim success unless the ledger shows success.
 - If a previous action was blocked, choose a safe alternative only if one exists.
 - Calls and messages require confirmation.
@@ -370,6 +376,81 @@ function aprishaV12AllowedCommand(value) {
 }
 
 
+
+// AP_APRISHA_V12_TARGET_HARDENING_V1
+
+function aprishaV12IsPlaceholderCommand(value) {
+
+    const command =
+        String(value || "")
+            .trim()
+            .toLowerCase()
+            .replace(/\s+/g, " ");
+
+
+    if (!command) {
+        return true;
+    }
+
+
+    /*
+     * Generic app placeholders are NEVER executable.
+     */
+    if (
+        /^(?:please\s+)?(?:open|launch|start)\s+(?:the\s+|an?\s+)?(?:app|application|program|software|thing|something)$/i
+            .test(command)
+    ) {
+
+        return true;
+    }
+
+
+    /*
+     * Generic navigation placeholders.
+     */
+    if (
+        /^(?:navigate to|directions to|take me to|go to)\s+(?:the\s+)?(?:place|location|destination|there)$/i
+            .test(command)
+    ) {
+
+        return true;
+    }
+
+
+    /*
+     * Generic person/contact placeholders.
+     */
+    if (
+        /^(?:call|phone|ring|message|text|sms)\s+(?:the\s+)?(?:person|contact|someone|somebody)$/i
+            .test(command)
+    ) {
+
+        return true;
+    }
+
+
+    return false;
+}
+
+
+function aprishaV12GroundedAllowedCommand(value) {
+
+    if (
+        aprishaV12IsPlaceholderCommand(
+            value
+        )
+    ) {
+
+        return false;
+    }
+
+
+    return aprishaV12AllowedCommand(
+        value
+    );
+}
+
+
 function aprishaV12Consequential(value) {
 
     const command =
@@ -388,7 +469,7 @@ router.post("/loop", async (req, res) => {
 
     // AP_APRISHA_V12_DETERMINISTIC_FASTPATH
     const controllerVersion =
-        "aprisha-v12.1-closed-loop";
+        "aprisha-v12.2-target-grounded";
 
 
     const goal =
@@ -462,6 +543,138 @@ router.post("/loop", async (req, res) => {
                         .toLowerCase()
                 )
         );
+
+
+
+    // =========================================================
+    // AP_APRISHA_V12_GENERIC_OPEN_CHAIN_V1
+    //
+    // Preserve real app/workspace/entity names from the goal.
+    // =========================================================
+
+    const openChainParts =
+        normalizedGoal
+            .split(
+                /\s+(?:and\s+then|then)\s+/i
+            )
+            .map((part) =>
+                String(part || "")
+                    .trim()
+            )
+            .filter(Boolean);
+
+
+    const openChainActions =
+        openChainParts
+            .map((part) => {
+
+                const match =
+                    part.match(
+                        /^(?:please\s+)?(?:open|launch|start)\s+(?:the\s+)?(.+?)\s*$/i
+                    );
+
+
+                if (!match) {
+
+                    return null;
+                }
+
+
+                const target =
+                    String(
+                        match[1] || ""
+                    )
+                        .replace(
+                            /\s+app$/i,
+                            ""
+                        )
+                        .trim();
+
+
+                if (
+                    !target ||
+                    /^(?:app|application|program|something|anything|it|that|thing)$/i
+                        .test(target)
+                ) {
+
+                    return null;
+                }
+
+
+                return {
+
+                    command:
+                        `open ${target}`,
+
+                    label:
+                        `Open ${target}`
+                };
+            });
+
+
+    const validOpenChain =
+        openChainActions.length >= 2 &&
+        openChainActions.every(Boolean);
+
+
+    if (validOpenChain) {
+
+        const nextAction =
+            openChainActions.find(
+                (action) =>
+                    !completedCommands.has(
+                        action.command
+                            .toLowerCase()
+                    )
+            );
+
+
+        if (nextAction) {
+
+            return res.json({
+
+                controller_version:
+                    controllerVersion,
+
+                type:
+                    "agent_step",
+
+                done:
+                    false,
+
+                summary:
+                    nextAction.label,
+
+                requires_confirmation:
+                    false,
+
+                action: {
+
+                    command:
+                        nextAction.command,
+
+                    label:
+                        nextAction.label
+                }
+            });
+        }
+
+
+        return res.json({
+
+            controller_version:
+                controllerVersion,
+
+            type:
+                "agent_step",
+
+            done:
+                true,
+
+            success_reply:
+                "Done."
+        });
+    }
 
 
     const youtubeThenTimer =
@@ -669,7 +882,7 @@ router.post("/loop", async (req, res) => {
                             ).trim()
                     }))
                     .find((item) =>
-                        aprishaV12AllowedCommand(
+                        aprishaV12GroundedAllowedCommand(
                             item.command
                         )
                     );
@@ -762,7 +975,7 @@ router.post("/loop", async (req, res) => {
 
         if (
             !command ||
-            !aprishaV12AllowedCommand(command)
+            !aprishaV12GroundedAllowedCommand(command)
         ) {
 
             if (ledger.length > 0) {

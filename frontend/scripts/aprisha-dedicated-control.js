@@ -696,6 +696,16 @@
         open(true);
         stop();
 
+        // AP_APRISHA_DEDICATED_MIC_CLAIM_V91
+        //
+        // Conversation mode becomes the exclusive
+        // SpeechRecognition microphone owner.
+        window.__AP_APRISHA_DEDICATED_MIC__ = true;
+
+        console.log(
+            "🎙 APRISHA MIC OWNER → CONVERSATION"
+        );
+
         const Speech =
             window.SpeechRecognition ||
             window.webkitSpeechRecognition;
@@ -712,7 +722,7 @@
 
         recognition.onstart = () => {
             setListening(true);
-            setState("Listeningâ€¦", "Speak naturally.");
+            setState("Listening…", "Speak naturally.");
         };
 
         recognition.onresult = (event) => {
@@ -902,6 +912,13 @@
 
                 setListening(false);
 
+                // AP_APRISHA_REAL_END_RELEASE_V91
+                window.__AP_APRISHA_DEDICATED_MIC__ = false;
+
+                console.log(
+                    "🎙 APRISHA MIC OWNER → WAKE AVAILABLE"
+                );
+
                 document.dispatchEvent(
                     new CustomEvent(
                         "ap:aprisha-listening-end"
@@ -1077,6 +1094,13 @@
     }
 
     function stop() {
+
+        // AP_APRISHA_DEDICATED_MIC_RELEASE_V91
+        window.__AP_APRISHA_DEDICATED_MIC__ = false;
+
+        console.log(
+            "🎙 APRISHA MIC OWNER → RELEASED"
+        );
 
         // AP APRISHA EXPLICIT STOP V8
         // This is one of the few conditions allowed to

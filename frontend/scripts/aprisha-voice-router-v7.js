@@ -881,6 +881,38 @@
 
 
         /*
+         * AP_APRISHA_SINGLE_MIC_OWNER_V91
+         *
+         * Exactly one SpeechRecognition instance may own
+         * Aprisha's microphone at a time.
+         *
+         * While the dedicated conversational session owns
+         * the microphone, Voice Router MUST NOT create or
+         * restart a competing recognizer.
+         */
+        if (
+            window.__AP_APRISHA_DEDICATED_MIC__ === true
+        ) {
+
+            running = false;
+            starting = false;
+
+            /*
+             * Lightweight retry only.
+             *
+             * This does NOT open another microphone.
+             * It simply checks again after the conversation
+             * releases ownership.
+             */
+            scheduleStart(
+                600
+            );
+
+            return false;
+        }
+
+
+        /*
          * Never listen to Aprisha's own voice.
          */
         if (

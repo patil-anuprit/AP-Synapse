@@ -1209,8 +1209,7 @@
         r.interimResults =
             true;
 
-        r.maxAlternatives =
-            3;
+        r.maxAlternatives = 5;
 
 
         r.onstart =
@@ -1441,13 +1440,210 @@
                         event.results[i];
 
 
-                    const piece =
-                        String(
-                            pieceResult?.[0]
-                                ?.transcript ||
-                            ""
-                        )
+                    const contextBeforePiece =
+                        [
+                            utterancePrefix,
+                            ...utteranceParts
+                        ]
+                            .filter(Boolean)
+                            .join(" ")
                             .trim();
+
+
+                    /*
+                     * AP_APRISHA_MULTI_ALT_V757
+                     *
+                     * Chrome may return several possible
+                     * transcriptions for the same sound.
+                     *
+                     * Previously Aprisha always used [0].
+                     *
+                     * Now choose the strongest alternative
+                     * using confidence + command continuity.
+                     */
+
+                    let piece = "";
+
+                    let bestAlternativeScore =
+                        -Infinity;
+
+
+                    const alternativeCount =
+                        Math.min(
+                            Math.max(
+                                Number(
+                                    pieceResult?.length
+                                ) || 1,
+                                1
+                            ),
+                            5
+                        );
+
+
+                    const debugAlternatives =
+                        [];
+
+
+                    for (
+                        let alternativeIndex = 0;
+                        alternativeIndex <
+                            alternativeCount;
+                        alternativeIndex++
+                    ) {
+
+                        const alternative =
+                            pieceResult?.[
+                                alternativeIndex
+                            ];
+
+
+                        const alternativeText =
+                            String(
+                                alternative?.transcript ||
+                                ""
+                            )
+                                .replace(/\s+/g, " ")
+                                .trim();
+
+
+                        if (!alternativeText) {
+                            continue;
+                        }
+
+
+                        const combinedCandidate =
+                            [
+                                contextBeforePiece,
+                                alternativeText
+                            ]
+                                .filter(Boolean)
+                                .join(" ")
+                                .replace(/\s+/g, " ")
+                                .trim();
+
+
+                        const confidence =
+                            Number(
+                                alternative?.confidence
+                            );
+
+
+                        let alternativeScore =
+                            commandScore(
+                                combinedCandidate
+                            );
+
+
+                        if (
+                            Number.isFinite(
+                                confidence
+                            )
+                        ) {
+
+                            alternativeScore +=
+                                confidence *
+                                120;
+                        }
+
+
+                        /*
+                         * Natural command endings commonly
+                         * used with Aprisha.
+                         */
+
+                        if (
+                            /\b(?:short|brief|briefly|detail|detailed|word|words|line|lines)\b/i
+                                .test(
+                                    alternativeText
+                                )
+                        ) {
+
+                            alternativeScore +=
+                                18;
+                        }
+
+
+                        /*
+                         * Prefer an alternative which cleanly
+                         * continues what the user already said.
+                         */
+
+                        if (
+                            contextBeforePiece &&
+                            normalize(
+                                combinedCandidate
+                            )
+                                .startsWith(
+                                    normalize(
+                                        contextBeforePiece
+                                    )
+                                )
+                        ) {
+
+                            alternativeScore +=
+                                12;
+                        }
+
+
+                        debugAlternatives.push({
+                            text:
+                                alternativeText,
+                            confidence:
+                                Number.isFinite(
+                                    confidence
+                                )
+                                    ? confidence
+                                    : null,
+                            score:
+                                alternativeScore
+                        });
+
+
+                        if (
+                            alternativeScore >
+                            bestAlternativeScore
+                        ) {
+
+                            bestAlternativeScore =
+                                alternativeScore;
+
+                            piece =
+                                alternativeText;
+                        }
+                    }
+
+
+                    /*
+                     * Defensive fallback.
+                     */
+
+                    if (!piece) {
+
+                        piece =
+                            String(
+                                pieceResult?.[0]
+                                    ?.transcript ||
+                                ""
+                            )
+                                .trim();
+                    }
+
+
+                    if (
+                        debugAlternatives.length >
+                        1
+                    ) {
+
+                        console.log(
+                            "🎯 Aprisha alternatives:",
+                            {
+                                chosen:
+                                    piece,
+                                alternatives:
+                                    debugAlternatives
+                            }
+                        );
+                    }
 
 
                     if (piece) {

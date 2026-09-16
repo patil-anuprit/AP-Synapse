@@ -1150,7 +1150,90 @@
                 }
 
 
-                /*
+                                /*
+                 * AP_APRISHA_WAKE_ONLY_LANE_V755
+                 *
+                 * While Aprisha is asleep, ordinary speech
+                 * must never enter the command accumulator.
+                 */
+
+                if (!sessionActive()) {
+
+                    const wakeParts = [];
+
+                    for (
+                        let wi = Math.max(
+                            0,
+                            Number(event.resultIndex) || 0
+                        );
+                        wi < event.results.length;
+                        wi++
+                    ) {
+
+                        const part = String(
+                            event.results[wi]?.[0]?.transcript || ""
+                        ).trim();
+
+                        if (part) {
+                            wakeParts.push(part);
+                        }
+                    }
+
+                    const wakeRaw =
+                        wakeParts
+                            .join(" ")
+                            .replace(/\s+/g, " ")
+                            .trim();
+
+                    const wakeNormalized =
+                        normalize(wakeRaw);
+
+                    const normalWake =
+                        detectWake(wakeRaw);
+
+                    const fuzzyWake =
+                        /\b(?:hey|hai|hi|hair)\s+(?:app?ree?s?h?a?|apree?s?h?a?|pree?s?h?a?|pri?s?h?a?)\b/i
+                            .test(wakeNormalized);
+
+                    if (
+                        normalWake.found ||
+                        fuzzyWake
+                    ) {
+
+                        console.log(
+                            "⚡ APRISHA FAST WAKE →",
+                            wakeRaw
+                        );
+
+                        latestText = "";
+                        utterancePrefix = "";
+                        utteranceResultStart = null;
+
+                        clearCommit();
+
+                        queueCommit(
+                            "hey aprisha",
+                            true
+                        );
+
+                        return;
+                    }
+
+                    /*
+                     * No wake phrase detected.
+                     * Discard all asleep speech immediately.
+                     */
+
+                    latestText = "";
+                    utterancePrefix = "";
+                    utteranceResultStart = null;
+
+                    clearCommit();
+
+                    return;
+                }
+
+/*
                  * AP_APRISHA_FULL_UTTERANCE_ASSEMBLY_V751
                  *
                  * Do not use only event.results[last].

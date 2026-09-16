@@ -58,7 +58,7 @@
     ) {
 
         console.warn(
-            "[APRISHA V11.1] Required browser audio APIs unavailable."
+            "[APRISHA V11.2] Required browser audio APIs unavailable."
         );
 
         return;
@@ -75,6 +75,11 @@
         vadFrame: 0,
 
         baseline: 0,
+
+        // AP_APRISHA_ANTI_SELF_TRIGGER_V112
+        leakPeak: 0,
+        stableThreshold: 0,
+
         voiceMs: 0,
         previousFrameTime: 0,
         calibrateUntil: 0,
@@ -438,7 +443,7 @@
                 catch (error) {
 
                     console.warn(
-                        "[APRISHA V11.1] Microphone permission unavailable:",
+                        "[APRISHA V11.2] Microphone permission unavailable:",
                         error
                     );
 
@@ -616,7 +621,7 @@
 
 
                 console.log(
-                    "[APRISHA V11.1] Selected microphone:",
+                    "[APRISHA V11.2] Selected microphone:",
                     state.streamLabel
                 );
 
@@ -762,6 +767,14 @@
             0;
 
 
+        state.leakPeak =
+            0;
+
+
+        state.stableThreshold =
+            0;
+
+
         state.voiceMs =
             0;
 
@@ -771,17 +784,21 @@
 
 
         /*
-         * Let browser echo cancellation learn Aprisha's current
-         * speaker output before evaluating user speech.
+         * AP_APRISHA_ANTI_SELF_TRIGGER_V112
+         *
+         * First learn Aprisha's own loudspeaker leakage.
+         *
+         * V11.1 used only 350ms and could mistake the beginning
+         * of Aprisha's own voice for a human interruption.
          */
 
         state.calibrateUntil =
             performance.now() +
-            350;
+            900;
 
 
         console.log(
-            "[APRISHA V11.1] Raw mic barge-in armed on:",
+            "[APRISHA V11.2] Raw mic barge-in armed on:",
             state.streamLabel
         );
 
@@ -841,6 +858,18 @@
                     }
 
 
+                    /*
+                     * Remember the strongest normal sound caused
+                     * by Aprisha's own speakers.
+                     */
+
+                    state.leakPeak =
+                        Math.max(
+                            state.leakPeak,
+                            rms
+                        );
+
+
                     state.vadFrame =
                         requestAnimationFrame(
                             loop
@@ -859,11 +888,56 @@
                  * rise above that baseline.
                  */
 
+                /*
+                 * AP_APRISHA_ANTI_SELF_TRIGGER_V112
+                 *
+                 * V11.1 example:
+                 *
+                 * speaker leakage = ~0.020
+                 * threshold       = 0.014
+                 *
+                 * Result: Aprisha interrupted herself.
+                 *
+                 * V11.2 requires a substantial increase above
+                 * BOTH the normal noise floor and Aprisha's
+                 * measured speaker leakage.
+                 */
+
+                if (
+                    !state.stableThreshold
+                ) {
+
+                    state.stableThreshold =
+                        Math.max(
+                            0.028,
+                            state.baseline *
+                                3.0,
+                            state.leakPeak *
+                                1.70
+                        );
+
+
+                    console.log(
+                        "[APRISHA V11.2] Anti-echo calibrated:",
+                        {
+                            baseline:
+                                state.baseline,
+
+                            speakerLeak:
+                                state.leakPeak,
+
+                            interruptionThreshold:
+                                state.stableThreshold
+                        }
+                    );
+                }
+
+
                 const threshold =
                     Math.max(
-                        0.014,
+                        state.stableThreshold,
                         state.baseline *
-                            2.4
+                            2.8
                     );
 
 
@@ -901,9 +975,14 @@
                 }
 
 
+                /*
+                 * Require sustained voice rather than one short
+                 * speaker/room transient.
+                 */
+
                 if (
                     state.voiceMs >=
-                    190
+                    300
                 ) {
 
                     interruptAprisha(
@@ -1072,7 +1151,7 @@
         if (!text) {
 
             console.log(
-                "[APRISHA V11.1] Speech stopped; no replacement command captured."
+                "[APRISHA V11.2] Speech stopped; no replacement command captured."
             );
 
 
@@ -1084,7 +1163,7 @@
 
 
         console.log(
-            "[APRISHA V11.1] INTERRUPTION COMMAND:",
+            "[APRISHA V11.2] INTERRUPTION COMMAND:",
             text
         );
 
@@ -1123,7 +1202,7 @@
         if (!input) {
 
             console.error(
-                "[APRISHA V11.1] Chat input unavailable."
+                "[APRISHA V11.2] Chat input unavailable."
             );
 
 
@@ -1195,7 +1274,7 @@
 
 
         console.log(
-            "[APRISHA V11.1] New request sent."
+            "[APRISHA V11.2] New request sent."
         );
 
 
@@ -1241,7 +1320,7 @@
 
 
         console.log(
-            "[APRISHA V11.1] Normal Aprisha listening released."
+            "[APRISHA V11.2] Normal Aprisha listening released."
         );
     }
 
@@ -1253,7 +1332,7 @@
         ) {
 
             console.warn(
-                "[APRISHA V11.1] SpeechRecognition unavailable after interruption."
+                "[APRISHA V11.2] SpeechRecognition unavailable after interruption."
             );
 
 
@@ -1318,7 +1397,7 @@
             () => {
 
                 console.log(
-                    "[APRISHA V11.1] Listening for replacement command..."
+                    "[APRISHA V11.2] Listening for replacement command..."
                 );
             };
 
@@ -1352,7 +1431,7 @@
 
 
                 console.log(
-                    "[APRISHA V11.1] Heard after interruption:",
+                    "[APRISHA V11.2] Heard after interruption:",
                     heard
                 );
 
@@ -1387,7 +1466,7 @@
                 ) {
 
                     console.warn(
-                        "[APRISHA V11.1] Replacement listener event:",
+                        "[APRISHA V11.2] Replacement listener event:",
                         code
                     );
                 }
@@ -1480,7 +1559,7 @@
 
 
             console.warn(
-                "[APRISHA V11.1] Replacement recognizer failed:",
+                "[APRISHA V11.2] Replacement recognizer failed:",
                 error
             );
 
@@ -1531,7 +1610,7 @@
 
 
         console.log(
-            "[APRISHA V11.1] USER VOICE DETECTED - INTERRUPTING.",
+            "[APRISHA V11.2] USER VOICE DETECTED - INTERRUPTING.",
             {
                 level: rms,
                 threshold
@@ -1638,7 +1717,7 @@
 
 
         console.log(
-            "[APRISHA V11.1] Aprisha speaking - TRUE barge-in preparing."
+            "[APRISHA V11.2] Aprisha speaking - TRUE barge-in preparing."
         );
 
 
@@ -1686,7 +1765,7 @@
 
 
         console.log(
-            "[APRISHA V11.1] TTS complete - normal listening continues."
+            "[APRISHA V11.2] TTS complete - normal listening continues."
         );
     }
 
@@ -1890,7 +1969,7 @@
                     stopCurrentStream();
 
                     console.log(
-                        "[APRISHA V11.1] Audio devices changed - microphone will be reselected."
+                        "[APRISHA V11.2] Audio devices changed - microphone will be reselected."
                     );
                 }
             );
@@ -1930,7 +2009,7 @@
 
 
     console.log(
-        "[APRISHA V11.1] TRUE BARGE-IN ENGINE READY"
+        "[APRISHA V11.2] TRUE BARGE-IN ENGINE READY"
     );
 
 })();

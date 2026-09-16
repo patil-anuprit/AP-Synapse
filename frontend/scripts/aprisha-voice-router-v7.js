@@ -873,7 +873,166 @@
         }
 
 
+
+
         /*
+         * AP_APRISHA_ACTIVE_WAKE_RESET_V756
+         *
+         * Aprisha may already be in conversation mode.
+         *
+         * If the user says "Hey Aprisha" again, Chrome can
+         * produce:
+         *
+         *   hey pre
+         *   hey pre ha
+         *   hey presha
+         *   hair pre ha
+         *
+         * Never send that phrase to the AI as a command.
+         */
+
+        if (
+            sessionActive()
+        ) {
+
+            const activeWakeNormalized =
+                normalize(
+                    candidate
+                );
+
+
+            const activeWake =
+                detectWake(
+                    candidate
+                );
+
+
+            const activeWakeFuzzy =
+                /\b(?:hey|hai|hi|hair)\s+(?:app?ree?s?h?a?|apree?s?h?a?|pree?s?h?a?|pri?s?h?a?)\b/i
+                    .test(
+                        activeWakeNormalized
+                    );
+
+
+            const activeWakeCommand =
+                String(
+                    activeWake?.command ||
+                    ""
+                )
+                    .trim();
+
+
+            const activeWakeCommandNormalized =
+                normalize(
+                    activeWakeCommand
+                );
+
+
+            const wakeOnly =
+                !activeWakeCommandNormalized ||
+                activeWakeCommandNormalized.length <=
+                    2 ||
+                /^(?:a|i|uh|um|hm|hmm|ah|oh)$/i
+                    .test(
+                        activeWakeCommandNormalized
+                    );
+
+
+            if (
+                (
+                    activeWake.found ||
+                    activeWakeFuzzy
+                ) &&
+                wakeOnly
+            ) {
+
+                clearCommit();
+
+
+                latestText =
+                    "";
+
+                utterancePrefix =
+                    "";
+
+                utteranceResultStart =
+                    null;
+
+
+                const now =
+                    Date.now();
+
+
+                const lockedUntil =
+                    Number(
+                        window
+                            .__AP_APRISHA_ACTIVE_WAKE_LOCK_V756__ ||
+                        0
+                    );
+
+
+                /*
+                 * Interim SpeechRecognition results may fire
+                 * repeatedly for one wake phrase.
+                 */
+
+                if (
+                    now <
+                    lockedUntil
+                ) {
+
+                    return;
+                }
+
+
+                window
+                    .__AP_APRISHA_ACTIVE_WAKE_LOCK_V756__ =
+                    now +
+                    1400;
+
+
+                console.log(
+                    "⚡ APRISHA ACTIVE WAKE RESET →",
+                    candidate
+                );
+
+
+                Promise
+                    .resolve()
+                    .then(
+                        () =>
+                            acknowledgeWake()
+                    )
+                    .then(
+                        () => {
+
+                            scheduleStart(
+                                180
+                            );
+                        }
+                    )
+                    .catch(
+                        error => {
+
+                            console.error(
+                                "Aprisha active wake reset failed:",
+                                error
+                            );
+
+
+                            scheduleStart(
+                                300
+                            );
+                        }
+                    );
+
+
+                return;
+            }
+        }
+
+
+/*
          * CRITICAL FIX:
          *
          * Keep the BEST transcript from the utterance,

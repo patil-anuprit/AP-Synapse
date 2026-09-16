@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
     "use strict";
 
     const BUTTON_ID = "apDedicatedAprishaButton";
@@ -215,7 +215,7 @@
                     <span>Aprisha</span>
                     <button class="ap-dedicated-aprisha-close"
                             type="button"
-                            aria-label="Close Aprisha">×</button>
+                            aria-label="Close Aprisha">Ã—</button>
                 </div>
 
                 <div class="ap-dedicated-aprisha-body">
@@ -712,7 +712,7 @@
 
         recognition.onstart = () => {
             setListening(true);
-            setState("Listening…", "Speak naturally.");
+            setState("Listeningâ€¦", "Speak naturally.");
         };
 
         recognition.onresult = (event) => {
@@ -731,29 +731,343 @@
             if (heard) setState("I heard you", heard);
             if (finalText.trim()) handleAprishaCommand(finalText.trim());
         };
+        // =====================================================
+        // AP APRISHA PERSISTENT CONVERSATION ENGINE V8
+        // Silence is NOT a stop.
+        // Natural Web Speech endings are NOT a stop.
+        // Only explicit user stop / fatal microphone errors stop.
+        // =====================================================
+
+        window.__AP_APRISHA_SESSION_ACTIVE = true;
+        window.__AP_APRISHA_MANUAL_STOP = false;
+        window.__AP_APRISHA_RESTART_ATTEMPT = 0;
+
+        if (window.__AP_APRISHA_RESTART_TIMER) {
+            clearTimeout(window.__AP_APRISHA_RESTART_TIMER);
+        }
+
 
         recognition.onerror = (event) => {
-            setListening(false);
 
-            const message =
-                event.error === "not-allowed"
-                    ? "Allow microphone permission and try again."
-                    : "Tap Speak to try again.";
+            const code = String(event?.error || "unknown");
 
-            setState("Voice stopped", message);
+            console.warn(
+                "🎙 APRISHA VOICE EVENT:",
+                code
+            );
+
+
+            // -------------------------------------------------
+            // Fatal microphone / permission failures
+            // -------------------------------------------------
+
+            if (
+                code === "not-allowed" ||
+                code === "service-not-allowed" ||
+                code === "audio-capture"
+            ) {
+
+                window.__AP_APRISHA_SESSION_ACTIVE = false;
+                window.__AP_APRISHA_MANUAL_STOP = true;
+
+                if (recognition) {
+                    recognition.__apTerminalError = true;
+                }
+
+                if (window.__AP_APRISHA_RESTART_TIMER) {
+                    clearTimeout(
+                        window.__AP_APRISHA_RESTART_TIMER
+                    );
+                }
+
+                setListening(false);
+
+                const message =
+                    code === "audio-capture"
+                        ? "No working microphone was detected."
+                        : "Allow microphone permission and try again.";
+
+                setState(
+                    "Microphone unavailable",
+                    message
+                );
+
+                console.error(
+                    "⛔ APRISHA TERMINAL VOICE ERROR:",
+                    code
+                );
+
+                return;
+            }
+
+
+            // -------------------------------------------------
+            // Manual abort is expected
+            // -------------------------------------------------
+
+            if (
+                code === "aborted" &&
+                window.__AP_APRISHA_MANUAL_STOP
+            ) {
+                return;
+            }
+
+
+            // -------------------------------------------------
+            // Recoverable browser speech conditions
+            //
+            // no-speech:
+            // User simply has not spoken yet.
+            //
+            // aborted:
+            // Recognition engine can recycle internally.
+            //
+            // network:
+            // Browser speech backend may momentarily disconnect.
+            // -------------------------------------------------
+
+            if (
+                code === "no-speech" ||
+                code === "aborted" ||
+                code === "network"
+            ) {
+
+                if (
+                    window.__AP_APRISHA_SESSION_ACTIVE &&
+                    !window.__AP_APRISHA_MANUAL_STOP
+                ) {
+
+                    setListening(true);
+
+                    setState(
+                        code === "network"
+                            ? "Reconnecting voice…"
+                            : "Listening…",
+                        code === "network"
+                            ? "Aprisha is reconnecting automatically."
+                            : "Speak naturally. Aprisha is still listening."
+                    );
+                }
+
+                return;
+            }
+
+
+            // -------------------------------------------------
+            // Unknown recoverable speech event
+            // Do not kill the Aprisha conversation.
+            // -------------------------------------------------
+
+            if (
+                window.__AP_APRISHA_SESSION_ACTIVE &&
+                !window.__AP_APRISHA_MANUAL_STOP
+            ) {
+
+                setListening(true);
+
+                setState(
+                    "Recovering voice…",
+                    "Aprisha is restoring the listening session."
+                );
+            }
         };
+
 
         recognition.onend = () => {
-            setListening(false);
+
+            const endedRecognition = recognition;
+
+            console.log(
+                "🎙 APRISHA RECOGNITION CYCLE ENDED",
+                {
+                    active:
+                        window.__AP_APRISHA_SESSION_ACTIVE,
+                    manualStop:
+                        window.__AP_APRISHA_MANUAL_STOP
+                }
+            );
+
+
+            // -------------------------------------------------
+            // REAL STOP
+            // -------------------------------------------------
+
+            if (
+                !window.__AP_APRISHA_SESSION_ACTIVE ||
+                window.__AP_APRISHA_MANUAL_STOP ||
+                endedRecognition?.__apTerminalError
+            ) {
+
+                recognition = null;
+
+                setListening(false);
+
+                document.dispatchEvent(
+                    new CustomEvent(
+                        "ap:aprisha-listening-end"
+                    )
+                );
+
+                console.log(
+                    "⏹ APRISHA VOICE SESSION CLOSED"
+                );
+
+                return;
+            }
+
+
+            // -------------------------------------------------
+            // NATURAL END
+            //
+            // Chrome is allowed to finish a speech-recognition
+            // cycle even when Aprisha must remain active.
+            // -------------------------------------------------
+
             recognition = null;
 
-            // AP_APRISHA_WAKE_SIGNAL_V63
-            document.dispatchEvent(
-                new CustomEvent(
-                    "ap:aprisha-listening-end"
-                )
+            setListening(true);
+
+            setState(
+                "Listening…",
+                "Speak naturally. Aprisha will keep listening."
             );
+
+
+            const restartAprishaRecognition = () => {
+
+                if (
+                    !window.__AP_APRISHA_SESSION_ACTIVE ||
+                    window.__AP_APRISHA_MANUAL_STOP
+                ) {
+                    return;
+                }
+
+
+                // ---------------------------------------------
+                // Do not listen to Aprisha's own browser TTS.
+                // Resume immediately after TTS finishes.
+                // ---------------------------------------------
+
+                if (
+                    window.speechSynthesis &&
+                    window.speechSynthesis.speaking
+                ) {
+
+                    window.__AP_APRISHA_RESTART_TIMER =
+                        setTimeout(
+                            restartAprishaRecognition,
+                            250
+                        );
+
+                    return;
+                }
+
+
+                try {
+
+                    recognition = endedRecognition;
+
+                    recognition.__apTerminalError = false;
+
+                    recognition.start();
+
+                    window.__AP_APRISHA_RESTART_ATTEMPT = 0;
+
+                    setListening(true);
+
+                    setState(
+                        "Listening…",
+                        "Speak naturally."
+                    );
+
+                    console.log(
+                        "✅ APRISHA LISTENING RESTORED"
+                    );
+
+                } catch (error) {
+
+                    if (
+                        error?.name === "InvalidStateError"
+                    ) {
+
+                        // Recognition may already be starting.
+                        // This is not a failure.
+
+                        console.log(
+                            "🎙 APRISHA RECOGNITION ALREADY ACTIVE"
+                        );
+
+                        return;
+                    }
+
+
+                    window.__AP_APRISHA_RESTART_ATTEMPT =
+                        Number(
+                            window.__AP_APRISHA_RESTART_ATTEMPT ||
+                            0
+                        ) + 1;
+
+
+                    const attempt =
+                        window.__AP_APRISHA_RESTART_ATTEMPT;
+
+
+                    // Controlled exponential recovery:
+                    // 250ms → 500ms → 1s → 2s max
+
+                    const delay =
+                        Math.min(
+                            2000,
+                            250 *
+                            Math.pow(
+                                2,
+                                Math.min(
+                                    attempt - 1,
+                                    3
+                                )
+                            )
+                        );
+
+
+                    console.warn(
+                        "🔄 APRISHA VOICE RECOVERY",
+                        {
+                            attempt,
+                            delay,
+                            error:
+                                error?.message ||
+                                String(error)
+                        }
+                    );
+
+
+                    if (
+                        window.__AP_APRISHA_SESSION_ACTIVE &&
+                        !window.__AP_APRISHA_MANUAL_STOP
+                    ) {
+
+                        setState(
+                            "Reconnecting voice…",
+                            "Aprisha is restoring microphone listening."
+                        );
+
+                        window.__AP_APRISHA_RESTART_TIMER =
+                            setTimeout(
+                                restartAprishaRecognition,
+                                delay
+                            );
+                    }
+                }
+            };
+
+
+            window.__AP_APRISHA_RESTART_TIMER =
+                setTimeout(
+                    restartAprishaRecognition,
+                    250
+                );
         };
+
 
         try {
             recognition.start();
@@ -763,6 +1077,26 @@
     }
 
     function stop() {
+
+        // AP APRISHA EXPLICIT STOP V8
+        // This is one of the few conditions allowed to
+        // permanently stop the active voice conversation.
+
+        window.__AP_APRISHA_SESSION_ACTIVE = false;
+        window.__AP_APRISHA_MANUAL_STOP = true;
+
+        if (window.__AP_APRISHA_RESTART_TIMER) {
+            clearTimeout(
+                window.__AP_APRISHA_RESTART_TIMER
+            );
+
+            window.__AP_APRISHA_RESTART_TIMER = null;
+        }
+
+        if (recognition) {
+            recognition.__apManualStop = true;
+        }
+
         setListening(false);
 
         if (recognition) {
@@ -925,3 +1259,4 @@
         boot();
     }
 })();
+

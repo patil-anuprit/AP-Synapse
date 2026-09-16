@@ -1,31 +1,64 @@
 ﻿(() => {
     "use strict";
 
+    /*
+     * =========================================================
+     * AP SYNAPSE
+     * APRISHA TRUE BARGE-IN V11.1
+     *
+     * Important design:
+     *
+     * We DO NOT attempt normal SpeechRecognition while Aprisha
+     * is talking.
+     *
+     * Chrome often refuses / suppresses recognition while its
+     * own SpeechSynthesis is active.
+     *
+     * Instead:
+     *
+     * 1. A real getUserMedia microphone stream remains open.
+     * 2. Web Audio detects genuine incoming voice activity.
+     * 3. User voice immediately cancels Aprisha TTS.
+     * 4. Only THEN normal SpeechRecognition starts.
+     * 5. Remaining user sentence becomes the new command.
+     *
+     * =========================================================
+     */
+
+
     if (
-        window.__AP_APRISHA_BARGE_IN_V11__
+        window.__AP_APRISHA_TRUE_BARGE_IN_V111__
     ) {
         return;
     }
 
-    window.__AP_APRISHA_BARGE_IN_V11__ =
+
+    window.__AP_APRISHA_TRUE_BARGE_IN_V111__ =
         true;
 
 
     const synth =
         window.speechSynthesis;
 
+
     const Recognition =
         window.SpeechRecognition ||
         window.webkitSpeechRecognition;
 
 
+    const AudioContextClass =
+        window.AudioContext ||
+        window.webkitAudioContext;
+
+
     if (
         !synth ||
-        !Recognition
+        !navigator.mediaDevices ||
+        !AudioContextClass
     ) {
 
         console.warn(
-            "[APRISHA V11] Barge-in unavailable in this browser."
+            "[APRISHA V11.1] Required browser audio APIs unavailable."
         );
 
         return;
@@ -35,28 +68,53 @@
     const state = {
 
         sequence: 0,
+        ttsToken: 0,
+        ttsActive: false,
 
-        activeToken: 0,
+        vadRunning: false,
+        vadFrame: 0,
 
-        recognition: null,
+        baseline: 0,
+        voiceMs: 0,
+        previousFrameTime: 0,
+        calibrateUntil: 0,
 
-        restartTimer: null,
+        stream: null,
+        streamLabel: "",
+        streamDeviceId: "",
 
-        commandTimer: null,
+        audioContext: null,
+        analyser: null,
+        source: null,
+        samples: null,
 
-        currentTtsText: "",
+        micPromise: null,
 
         interrupted: false,
 
-        pendingCommand: "",
+        commandRecognition: null,
+        commandText: "",
+        commandAttempts: 0,
+        commandDeadline: 0,
+        commandTimer: null,
 
-        finishing: false
+        previousDedicatedOwner: false
     };
 
 
-    function normalize(
-        value
-    ) {
+    function sleep(ms) {
+
+        return new Promise(
+            resolve =>
+                setTimeout(
+                    resolve,
+                    ms
+                )
+        );
+    }
+
+
+    function normalize(value) {
 
         return String(
             value || ""
@@ -75,46 +133,800 @@
     }
 
 
-    /*
-     * Explicit interruption phrase.
-     *
-     * Examples:
-     *
-     * Aprisha wait...
-     * Hey Aprisha wait...
-     * Aprisha stop...
-     * Aprisha hold on...
-     * Aprisha listen...
-     */
+    function deviceScore(device) {
 
-    const interruptionPattern =
-        /^\s*(?:hey\s+)?aprisha(?:\s|,)+(?:wait|stop|hold\s+on|listen)\b[\s,;:!?.-]*(.*)$/i;
+        const label =
+            normalize(
+                device?.label
+            );
 
 
-    function setCaptureActive(
-        value
+        if (!label) {
+            return 0;
+        }
+
+
+        /*
+         * These are playback / loopback sources,
+         * not normal human microphones.
+         */
+
+        if (
+            /\b(stereo mix|what u hear|loopback|monitor of|virtual cable|vb cable|cable output|output capture)\b/i
+                .test(
+                    label
+                )
+        ) {
+
+            return -10000;
+        }
+
+
+        let score = 0;
+
+
+        if (
+            /\bmicrophone array\b/i.test(
+                label
+            )
+        ) {
+            score += 600;
+        }
+
+
+        if (
+            /\b(headset|headphone|airpods|earbuds|bluetooth)\b/i.test(
+                label
+            )
+        ) {
+            score += 520;
+        }
+
+
+        if (
+            /\b(usb microphone|usb mic)\b/i.test(
+                label
+            )
+        ) {
+            score += 500;
+        }
+
+
+        if (
+            /\b(webcam|camera)\b/i.test(
+                label
+            )
+        ) {
+            score += 350;
+        }
+
+
+        if (
+            /\b(microphone|mic)\b/i.test(
+                label
+            )
+        ) {
+            score += 300;
+        }
+
+
+        if (
+            /\b(default)\b/i.test(
+                label
+            )
+        ) {
+            score += 20;
+        }
+
+
+        if (
+            /\b(communications)\b/i.test(
+                label
+            )
+        ) {
+            score += 15;
+        }
+
+
+        return score;
+    }
+
+
+    function audioConstraints(
+        deviceId = null
     ) {
 
-        window.__AP_APRISHA_BARGE_CAPTURE_ACTIVE__ =
-            Boolean(
-                value
+        const constraints = {
+
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true,
+            channelCount: 1
+        };
+
+
+        if (
+            deviceId &&
+            deviceId !== "default" &&
+            deviceId !== "communications"
+        ) {
+
+            constraints.deviceId = {
+                exact: deviceId
+            };
+        }
+
+
+        return constraints;
+    }
+
+
+    function streamAlive() {
+
+        const track =
+            state.stream
+                ?.getAudioTracks?.()[0];
+
+
+        return Boolean(
+            track &&
+            track.readyState === "live"
+        );
+    }
+
+
+    function stopCurrentStream() {
+
+        try {
+
+            state.stream
+                ?.getTracks?.()
+                .forEach(
+                    track =>
+                        track.stop()
+                );
+
+        }
+        catch {}
+
+
+        state.stream =
+            null;
+
+
+        try {
+
+            state.source
+                ?.disconnect?.();
+
+        }
+        catch {}
+
+
+        state.source =
+            null;
+
+        state.analyser =
+            null;
+
+        state.samples =
+            null;
+    }
+
+
+    async function setupAudioGraph(
+        stream
+    ) {
+
+        if (
+            !state.audioContext ||
+            state.audioContext.state === "closed"
+        ) {
+
+            state.audioContext =
+                new AudioContextClass();
+        }
+
+
+        try {
+
+            if (
+                state.audioContext.state ===
+                "suspended"
+            ) {
+
+                await state.audioContext.resume();
+            }
+
+        }
+        catch {}
+
+
+        if (
+            state.source
+        ) {
+
+            try {
+                state.source.disconnect();
+            }
+            catch {}
+        }
+
+
+        const source =
+            state.audioContext
+                .createMediaStreamSource(
+                    stream
+                );
+
+
+        const analyser =
+            state.audioContext
+                .createAnalyser();
+
+
+        analyser.fftSize =
+            1024;
+
+
+        analyser.smoothingTimeConstant =
+            0.15;
+
+
+        source.connect(
+            analyser
+        );
+
+
+        state.source =
+            source;
+
+
+        state.analyser =
+            analyser;
+
+
+        state.samples =
+            new Float32Array(
+                analyser.fftSize
             );
     }
 
 
-    function clearRestartTimer() {
+    async function ensureMicrophone() {
 
         if (
-            state.restartTimer
+            streamAlive() &&
+            state.analyser
         ) {
 
-            clearTimeout(
-                state.restartTimer
-            );
+            return state.stream;
+        }
 
-            state.restartTimer =
+
+        if (
+            state.micPromise
+        ) {
+
+            return state.micPromise;
+        }
+
+
+        state.micPromise =
+            (async () => {
+
+                /*
+                 * First permission probe.
+                 *
+                 * This exposes meaningful audio-device names
+                 * on browsers that hide them before permission.
+                 */
+
+                let probe = null;
+
+
+                try {
+
+                    probe =
+                        await navigator
+                            .mediaDevices
+                            .getUserMedia({
+                                audio: true
+                            });
+
+                }
+                catch (error) {
+
+                    console.warn(
+                        "[APRISHA V11.1] Microphone permission unavailable:",
+                        error
+                    );
+
+                    throw error;
+                }
+
+
+                try {
+
+                    probe
+                        .getTracks()
+                        .forEach(
+                            track =>
+                                track.stop()
+                        );
+
+                }
+                catch {}
+
+
+                const devices =
+                    await navigator
+                        .mediaDevices
+                        .enumerateDevices();
+
+
+                const inputs =
+                    devices
+                        .filter(
+                            device =>
+                                device.kind ===
+                                "audioinput"
+                        )
+                        .map(
+                            device => ({
+                                device,
+                                score:
+                                    deviceScore(
+                                        device
+                                    )
+                            })
+                        )
+                        .filter(
+                            item =>
+                                item.score >
+                                -10000
+                        )
+                        .sort(
+                            (a, b) =>
+                                b.score -
+                                a.score
+                        );
+
+
+                let selectedStream =
+                    null;
+
+
+                let selectedDevice =
+                    null;
+
+
+                /*
+                 * Prefer a physical microphone ID rather than
+                 * browser aliases such as "default".
+                 */
+
+                const physicalFirst = [
+                    ...inputs.filter(
+                        item =>
+                            item.device.deviceId !==
+                                "default" &&
+                            item.device.deviceId !==
+                                "communications"
+                    ),
+
+                    ...inputs.filter(
+                        item =>
+                            item.device.deviceId ===
+                                "default" ||
+                            item.device.deviceId ===
+                                "communications"
+                    )
+                ];
+
+
+                for (
+                    const item
+                    of physicalFirst
+                ) {
+
+                    if (
+                        item.score <= 0
+                    ) {
+                        continue;
+                    }
+
+
+                    try {
+
+                        selectedStream =
+                            await navigator
+                                .mediaDevices
+                                .getUserMedia({
+                                    audio:
+                                        audioConstraints(
+                                            item
+                                                .device
+                                                .deviceId
+                                        )
+                                });
+
+
+                        selectedDevice =
+                            item.device;
+
+
+                        break;
+
+                    }
+                    catch {}
+                }
+
+
+                /*
+                 * Last fallback:
+                 * browser-selected input, but still request
+                 * echo cancellation / noise suppression.
+                 */
+
+                if (
+                    !selectedStream
+                ) {
+
+                    selectedStream =
+                        await navigator
+                            .mediaDevices
+                            .getUserMedia({
+                                audio:
+                                    audioConstraints()
+                            });
+
+
+                    selectedDevice =
+                        null;
+                }
+
+
+                stopCurrentStream();
+
+
+                state.stream =
+                    selectedStream;
+
+
+                const liveTrack =
+                    selectedStream
+                        .getAudioTracks()[0];
+
+
+                state.streamLabel =
+                    liveTrack?.label ||
+                    selectedDevice?.label ||
+                    "Microphone";
+
+
+                state.streamDeviceId =
+                    selectedDevice?.deviceId ||
+                    "";
+
+
+                await setupAudioGraph(
+                    selectedStream
+                );
+
+
+                console.log(
+                    "[APRISHA V11.1] Selected microphone:",
+                    state.streamLabel
+                );
+
+
+                return selectedStream;
+
+            })();
+
+
+        try {
+
+            return await state.micPromise;
+
+        }
+        finally {
+
+            state.micPromise =
                 null;
         }
+    }
+
+
+    function stopVad() {
+
+        state.vadRunning =
+            false;
+
+
+        if (
+            state.vadFrame
+        ) {
+
+            cancelAnimationFrame(
+                state.vadFrame
+            );
+
+
+            state.vadFrame =
+                0;
+        }
+
+
+        state.voiceMs =
+            0;
+    }
+
+
+    function calculateRms() {
+
+        if (
+            !state.analyser ||
+            !state.samples
+        ) {
+
+            return 0;
+        }
+
+
+        state.analyser
+            .getFloatTimeDomainData(
+                state.samples
+            );
+
+
+        let sum = 0;
+
+
+        for (
+            let i = 0;
+            i < state.samples.length;
+            i++
+        ) {
+
+            const sample =
+                state.samples[i];
+
+
+            sum +=
+                sample *
+                sample;
+        }
+
+
+        return Math.sqrt(
+            sum /
+            state.samples.length
+        );
+    }
+
+
+    async function startVad(
+        token
+    ) {
+
+        if (
+            token !==
+            state.ttsToken
+        ) {
+            return;
+        }
+
+
+        try {
+
+            await ensureMicrophone();
+
+        }
+        catch {
+
+            return;
+        }
+
+
+        if (
+            token !== state.ttsToken ||
+            !state.ttsActive ||
+            !synth.speaking
+        ) {
+
+            return;
+        }
+
+
+        try {
+
+            if (
+                state.audioContext?.state ===
+                "suspended"
+            ) {
+
+                await state.audioContext.resume();
+            }
+
+        }
+        catch {}
+
+
+        state.vadRunning =
+            true;
+
+
+        state.baseline =
+            0;
+
+
+        state.voiceMs =
+            0;
+
+
+        state.previousFrameTime =
+            performance.now();
+
+
+        /*
+         * Let browser echo cancellation learn Aprisha's current
+         * speaker output before evaluating user speech.
+         */
+
+        state.calibrateUntil =
+            performance.now() +
+            350;
+
+
+        console.log(
+            "[APRISHA V11.1] Raw mic barge-in armed on:",
+            state.streamLabel
+        );
+
+
+        const loop =
+            now => {
+
+                if (
+                    !state.vadRunning ||
+                    token !==
+                        state.ttsToken ||
+                    !state.ttsActive
+                ) {
+
+                    return;
+                }
+
+
+                const rms =
+                    calculateRms();
+
+
+                const dt =
+                    Math.max(
+                        8,
+                        Math.min(
+                            60,
+                            now -
+                            state.previousFrameTime
+                        )
+                    );
+
+
+                state.previousFrameTime =
+                    now;
+
+
+                if (
+                    now <
+                    state.calibrateUntil
+                ) {
+
+                    if (
+                        state.baseline === 0
+                    ) {
+
+                        state.baseline =
+                            rms;
+                    }
+                    else {
+
+                        state.baseline =
+                            state.baseline *
+                                0.82 +
+                            rms *
+                                0.18;
+                    }
+
+
+                    state.vadFrame =
+                        requestAnimationFrame(
+                            loop
+                        );
+
+
+                    return;
+                }
+
+
+                /*
+                 * Dynamic threshold.
+                 *
+                 * Echo-cancelled TTS leakage becomes baseline.
+                 * Human speech should produce a substantial
+                 * rise above that baseline.
+                 */
+
+                const threshold =
+                    Math.max(
+                        0.014,
+                        state.baseline *
+                            2.4
+                    );
+
+
+                if (
+                    rms >
+                    threshold
+                ) {
+
+                    state.voiceMs +=
+                        dt;
+                }
+                else {
+
+                    state.voiceMs =
+                        Math.max(
+                            0,
+                            state.voiceMs -
+                            dt *
+                            0.8
+                        );
+
+
+                    if (
+                        rms <
+                        threshold *
+                        1.25
+                    ) {
+
+                        state.baseline =
+                            state.baseline *
+                                0.995 +
+                            rms *
+                                0.005;
+                    }
+                }
+
+
+                if (
+                    state.voiceMs >=
+                    190
+                ) {
+
+                    interruptAprisha(
+                        rms,
+                        threshold
+                    );
+
+
+                    return;
+                }
+
+
+                state.vadFrame =
+                    requestAnimationFrame(
+                        loop
+                    );
+            };
+
+
+        state.vadFrame =
+            requestAnimationFrame(
+                loop
+            );
     }
 
 
@@ -128,18 +940,20 @@
                 state.commandTimer
             );
 
+
             state.commandTimer =
                 null;
         }
     }
 
 
-    function abortRecognizer() {
+    function stopCommandRecognition() {
 
         const current =
-            state.recognition;
+            state.commandRecognition;
 
-        state.recognition =
+
+        state.commandRecognition =
             null;
 
 
@@ -150,19 +964,48 @@
 
         try {
 
-            current.onend =
+            current.onresult =
                 null;
 
             current.onerror =
                 null;
 
-            current.onresult =
+            current.onend =
                 null;
 
             current.abort();
 
         }
         catch {}
+    }
+
+
+    function cleanReplacementCommand(
+        raw
+    ) {
+
+        let text =
+            String(
+                raw || ""
+            )
+                .trim();
+
+
+        text =
+            text.replace(
+                /^\s*(?:hey\s+)?aprisha\b[\s,;:!?.-]*/i,
+                ""
+            );
+
+
+        text =
+            text.replace(
+                /^\s*(?:wait|stop|pause|listen|hold\s+on)\b[\s,;:!?.-]*/i,
+                ""
+            );
+
+
+        return text.trim();
     }
 
 
@@ -173,16 +1016,14 @@
 
         try {
 
-            const proto =
-                Object.getPrototypeOf(
-                    input
-                );
-
             const descriptor =
                 Object.getOwnPropertyDescriptor(
-                    proto,
+                    Object.getPrototypeOf(
+                        input
+                    ),
                     "value"
                 );
+
 
             if (
                 descriptor?.set
@@ -215,33 +1056,53 @@
                 }
             )
         );
-
-
-        input.dispatchEvent(
-            new Event(
-                "change",
-                {
-                    bubbles: true
-                }
-            )
-        );
     }
 
 
-    function submitToAPSynapse(
-        rawText
+    function submitCommand(
+        raw
     ) {
 
         const text =
-            String(
-                rawText || ""
-            )
-                .trim();
+            cleanReplacementCommand(
+                raw
+            );
 
 
         if (!text) {
-            return false;
+
+            console.log(
+                "[APRISHA V11.1] Speech stopped; no replacement command captured."
+            );
+
+
+            releaseCapture();
+
+
+            return;
         }
+
+
+        console.log(
+            "[APRISHA V11.1] INTERRUPTION COMMAND:",
+            text
+        );
+
+
+        window.__AP_APRISHA_LAST_BARGE_IN__ =
+            text;
+
+
+        document.dispatchEvent(
+            new CustomEvent(
+                "ap:aprisha-barge-in",
+                {
+                    detail: {
+                        text
+                    }
+                }
+            )
+        );
 
 
         const input =
@@ -262,24 +1123,13 @@
         if (!input) {
 
             console.error(
-                "[APRISHA V11] Chat input was not found.",
-                text
+                "[APRISHA V11.1] Chat input unavailable."
             );
 
 
-            document.dispatchEvent(
-                new CustomEvent(
-                    "ap:aprisha-barge-command",
-                    {
-                        detail: {
-                            text
-                        }
-                    }
-                )
-            );
+            releaseCapture();
 
-
-            return false;
+            return;
         }
 
 
@@ -287,12 +1137,6 @@
             input,
             text
         );
-
-
-        try {
-            input.focus();
-        }
-        catch {}
 
 
         const send =
@@ -317,251 +1161,140 @@
 
             send.click();
 
-            return true;
+        }
+        else {
+
+            const form =
+                input.closest(
+                    "form"
+                );
+
+
+            if (
+                form?.requestSubmit
+            ) {
+
+                form.requestSubmit();
+
+            }
+            else {
+
+                input.dispatchEvent(
+                    new KeyboardEvent(
+                        "keydown",
+                        {
+                            key: "Enter",
+                            code: "Enter",
+                            bubbles: true,
+                            cancelable: true
+                        }
+                    )
+                );
+            }
         }
 
 
-        const form =
-            input.closest(
-                "form"
-            );
-
-
-        if (
-            form?.requestSubmit
-        ) {
-
-            form.requestSubmit();
-
-            return true;
-        }
-
-
-        input.dispatchEvent(
-            new KeyboardEvent(
-                "keydown",
-                {
-                    key: "Enter",
-                    code: "Enter",
-                    bubbles: true,
-                    cancelable: true
-                }
-            )
+        console.log(
+            "[APRISHA V11.1] New request sent."
         );
 
 
-        return true;
+        setTimeout(
+            releaseCapture,
+            250
+        );
     }
 
 
-    function finishWithCommand(
-        command
-    ) {
+    function releaseCapture() {
 
-        const clean =
-            String(
-                command || ""
-            )
-                .trim();
+        clearCommandTimer();
+
+        stopCommandRecognition();
 
 
-        if (
-            !clean ||
-            state.finishing
-        ) {
-            return;
-        }
+        window.__AP_APRISHA_BARGE_CAPTURE_ACTIVE__ =
+            false;
 
 
-        state.finishing =
-            true;
+        /*
+         * Restore the microphone ownership state that existed
+         * before the interruption.
+         */
 
-        state.pendingCommand =
-            "";
+        window.__AP_APRISHA_DEDICATED_MIC__ =
+            Boolean(
+                state.previousDedicatedOwner
+            );
+
 
         state.interrupted =
             false;
 
 
-        clearCommandTimer();
-        clearRestartTimer();
+        state.commandText =
+            "";
 
 
-        setCaptureActive(
-            false
-        );
-
-
-        abortRecognizer();
-
-
-        window.__AP_APRISHA_LAST_BARGE_IN__ =
-            clean;
+        state.commandAttempts =
+            0;
 
 
         console.log(
-            "[APRISHA V11] INTERRUPTION COMMAND:",
-            clean
-        );
-
-
-        document.dispatchEvent(
-            new CustomEvent(
-                "ap:aprisha-barge-in",
-                {
-                    detail: {
-                        text: clean
-                    }
-                }
-            )
-        );
-
-
-        setTimeout(
-            () => {
-
-                const sent =
-                    submitToAPSynapse(
-                        clean
-                    );
-
-
-                console.log(
-                    sent
-                        ? "[APRISHA V11] New request sent."
-                        : "[APRISHA V11] Could not auto-submit request."
-                );
-
-
-                state.finishing =
-                    false;
-
-            },
-            100
+            "[APRISHA V11.1] Normal Aprisha listening released."
         );
     }
 
 
-    function armCommandTimeout() {
-
-        clearCommandTimer();
-
-
-        state.commandTimer =
-            setTimeout(
-                () => {
-
-                    if (
-                        !state.interrupted
-                    ) {
-                        return;
-                    }
-
-
-                    /*
-                     * User said only "Aprisha wait"
-                     * and then remained silent.
-                     *
-                     * Speech remains stopped and the normal
-                     * Aprisha listener may resume.
-                     */
-
-                    console.log(
-                        "[APRISHA V11] Interruption timed out; returning to normal listening."
-                    );
-
-
-                    state.interrupted =
-                        false;
-
-                    state.pendingCommand =
-                        "";
-
-                    setCaptureActive(
-                        false
-                    );
-
-
-                    abortRecognizer();
-
-                },
-                10000
-            );
-    }
-
-
-    function scheduleListenerRestart(
-        token
-    ) {
-
-        clearRestartTimer();
-
-
-        state.restartTimer =
-            setTimeout(
-                () => {
-
-                    if (
-                        token !==
-                        state.activeToken
-                    ) {
-                        return;
-                    }
-
-
-                    if (
-                        !synth.speaking &&
-                        !state.interrupted
-                    ) {
-
-                        setCaptureActive(
-                            false
-                        );
-
-                        return;
-                    }
-
-
-                    startBargeListener(
-                        token
-                    );
-
-                },
-                180
-            );
-    }
-
-
-    function startBargeListener(
-        token
-    ) {
+    function beginCommandRecognition() {
 
         if (
-            token !==
-            state.activeToken
+            !Recognition
         ) {
+
+            console.warn(
+                "[APRISHA V11.1] SpeechRecognition unavailable after interruption."
+            );
+
+
+            releaseCapture();
+
             return;
         }
 
 
         if (
-            state.recognition
+            !state.interrupted ||
+            state.commandRecognition
         ) {
+
             return;
         }
+
+
+        if (
+            performance.now() >
+            state.commandDeadline
+        ) {
+
+            submitCommand(
+                state.commandText
+            );
+
+
+            return;
+        }
+
+
+        state.commandAttempts++;
 
 
         const recognition =
             new Recognition();
 
 
-        state.recognition =
+        state.commandRecognition =
             recognition;
-
-
-        setCaptureActive(
-            true
-        );
 
 
         recognition.lang =
@@ -570,7 +1303,7 @@
 
 
         recognition.continuous =
-            true;
+            false;
 
 
         recognition.interimResults =
@@ -584,16 +1317,8 @@
         recognition.onstart =
             () => {
 
-                if (
-                    state.recognition !==
-                    recognition
-                ) {
-                    return;
-                }
-
-
                 console.log(
-                    "[APRISHA V11] Interruption listener armed."
+                    "[APRISHA V11.1] Listening for replacement command..."
                 );
             };
 
@@ -601,17 +1326,10 @@
         recognition.onresult =
             event => {
 
-                if (
-                    state.recognition !==
-                    recognition
-                ) {
-                    return;
-                }
-
-
                 const result =
                     event.results[
-                        event.results.length - 1
+                        event.results.length -
+                        1
                     ];
 
 
@@ -629,180 +1347,25 @@
                 }
 
 
-                /*
-                 * ------------------------------------------------
-                 * PHASE 1
-                 * Aprisha is still speaking.
-                 *
-                 * Ignore everything EXCEPT an explicit:
-                 *
-                 * "Aprisha wait..."
-                 * ------------------------------------------------
-                 */
+                state.commandText =
+                    heard;
+
+
+                console.log(
+                    "[APRISHA V11.1] Heard after interruption:",
+                    heard
+                );
+
 
                 if (
-                    !state.interrupted
+                    result.isFinal
                 ) {
 
-                    const match =
-                        heard.match(
-                            interruptionPattern
-                        );
+                    stopCommandRecognition();
 
 
-                    if (!match) {
-
-                        /*
-                         * Most recognition while TTS is playing
-                         * will be Aprisha hearing her own speaker.
-                         *
-                         * Do nothing.
-                         */
-
-                        return;
-                    }
-
-
-                    /*
-                     * Extra protection against the unlikely case
-                     * where Aprisha's own TTS itself contains the
-                     * interruption phrase.
-                     */
-
-                    const heardNormalized =
-                        normalize(
-                            heard
-                        );
-
-                    const ttsNormalized =
-                        normalize(
-                            state.currentTtsText
-                        );
-
-
-                    if (
-                        ttsNormalized &&
-                        heardNormalized.length > 15 &&
-                        ttsNormalized.includes(
-                            heardNormalized
-                        )
-                    ) {
-
-                        return;
-                    }
-
-
-                    state.interrupted =
-                        true;
-
-
-                    state.pendingCommand =
-                        String(
-                            match[1] ||
-                            ""
-                        )
-                            .trim();
-
-
-                    console.log(
-                        "[APRISHA V11] USER INTERRUPTED APRISHA:",
+                    submitCommand(
                         heard
-                    );
-
-
-                    /*
-                     * Stop Aprisha immediately.
-                     */
-
-                    try {
-
-                        synth.cancel();
-
-                    }
-                    catch {}
-
-
-                    state.currentTtsText =
-                        "";
-
-
-                    setCaptureActive(
-                        true
-                    );
-
-
-                    armCommandTimeout();
-
-
-                    /*
-                     * If Chrome already finalized the complete
-                     * sentence:
-                     *
-                     * "Aprisha wait explain this simply"
-                     *
-                     * execute immediately.
-                     */
-
-                    if (
-                        result.isFinal &&
-                        state.pendingCommand
-                    ) {
-
-                        finishWithCommand(
-                            state.pendingCommand
-                        );
-                    }
-
-
-                    return;
-                }
-
-
-                /*
-                 * ------------------------------------------------
-                 * PHASE 2
-                 * Aprisha has stopped speaking.
-                 *
-                 * Continue listening for the user's replacement
-                 * request.
-                 * ------------------------------------------------
-                 */
-
-
-                const repeatedTrigger =
-                    heard.match(
-                        interruptionPattern
-                    );
-
-
-                const command =
-                    repeatedTrigger
-                        ? String(
-                            repeatedTrigger[1] ||
-                            ""
-                        ).trim()
-                        : heard;
-
-
-                if (
-                    command
-                ) {
-
-                    state.pendingCommand =
-                        command;
-                }
-
-
-                armCommandTimeout();
-
-
-                if (
-                    result.isFinal &&
-                    state.pendingCommand
-                ) {
-
-                    finishWithCommand(
-                        state.pendingCommand
                     );
                 }
             };
@@ -824,7 +1387,7 @@
                 ) {
 
                     console.warn(
-                        "[APRISHA V11] Interruption listener event:",
+                        "[APRISHA V11.1] Replacement listener event:",
                         code
                     );
                 }
@@ -835,55 +1398,58 @@
             () => {
 
                 if (
-                    state.recognition !==
+                    state.commandRecognition ===
                     recognition
+                ) {
+
+                    state.commandRecognition =
+                        null;
+                }
+
+
+                if (
+                    !state.interrupted
                 ) {
                     return;
                 }
 
 
-                state.recognition =
-                    null;
+                if (
+                    state.commandText
+                ) {
+
+                    submitCommand(
+                        state.commandText
+                    );
+
+
+                    return;
+                }
 
 
                 /*
-                 * If we already captured useful words and Chrome
-                 * ended without marking them final, use them.
+                 * Chrome may need a moment after TTS cancellation.
+                 * Retry briefly rather than immediately giving up.
                  */
 
                 if (
-                    state.interrupted &&
-                    state.pendingCommand
+                    performance.now() <
+                        state.commandDeadline &&
+                    state.commandAttempts <
+                        4
                 ) {
 
-                    finishWithCommand(
-                        state.pendingCommand
+                    setTimeout(
+                        beginCommandRecognition,
+                        100
                     );
+
 
                     return;
                 }
 
 
-                if (
-                    token ===
-                        state.activeToken &&
-                    (
-                        synth.speaking ||
-                        state.interrupted
-                    )
-                ) {
-
-                    scheduleListenerRestart(
-                        token
-                    );
-
-                    return;
-                }
-
-
-                setCaptureActive(
-                    false
-                );
+                submitCommand("");
             };
 
 
@@ -894,26 +1460,152 @@
         }
         catch (error) {
 
-            state.recognition =
+            state.commandRecognition =
                 null;
 
 
             if (
-                error?.name !==
+                error?.name ===
                 "InvalidStateError"
             ) {
 
-                console.warn(
-                    "[APRISHA V11] Could not start interruption listener:",
-                    error
+                setTimeout(
+                    beginCommandRecognition,
+                    100
                 );
+
+
+                return;
             }
 
 
-            scheduleListenerRestart(
-                token
+            console.warn(
+                "[APRISHA V11.1] Replacement recognizer failed:",
+                error
             );
+
+
+            releaseCapture();
         }
+    }
+
+
+    function interruptAprisha(
+        rms,
+        threshold
+    ) {
+
+        if (
+            state.interrupted ||
+            !state.ttsActive
+        ) {
+
+            return;
+        }
+
+
+        state.interrupted =
+            true;
+
+
+        stopVad();
+
+
+        /*
+         * Prevent V8 and Voice Router from starting another
+         * SpeechRecognition during this handoff.
+         */
+
+        state.previousDedicatedOwner =
+            Boolean(
+                window.__AP_APRISHA_DEDICATED_MIC__
+            );
+
+
+        window.__AP_APRISHA_BARGE_CAPTURE_ACTIVE__ =
+            true;
+
+
+        window.__AP_APRISHA_DEDICATED_MIC__ =
+            true;
+
+
+        console.log(
+            "[APRISHA V11.1] USER VOICE DETECTED - INTERRUPTING.",
+            {
+                level: rms,
+                threshold
+            }
+        );
+
+
+        document.dispatchEvent(
+            new CustomEvent(
+                "ap:aprisha-user-interrupt"
+            )
+        );
+
+
+        /*
+         * Stop Aprisha immediately.
+         */
+
+        try {
+
+            synth.cancel();
+
+        }
+        catch {}
+
+
+        state.ttsActive =
+            false;
+
+
+        state.commandText =
+            "";
+
+
+        state.commandAttempts =
+            0;
+
+
+        state.commandDeadline =
+            performance.now() +
+            5500;
+
+
+        /*
+         * Give Chrome a short moment to fully release TTS,
+         * then use its normal speech recognizer for the
+         * remainder of the user's sentence.
+         */
+
+        setTimeout(
+            beginCommandRecognition,
+            90
+        );
+
+
+        clearCommandTimer();
+
+
+        state.commandTimer =
+            setTimeout(
+                () => {
+
+                    if (
+                        state.interrupted
+                    ) {
+
+                        submitCommand(
+                            state.commandText
+                        );
+                    }
+
+                },
+                6000
+            );
     }
 
 
@@ -922,61 +1614,36 @@
         token
     ) {
 
-        state.activeToken =
+        state.ttsToken =
             token;
 
-        state.currentTtsText =
-            String(
-                utterance?.text ||
-                ""
-            );
+
+        state.ttsActive =
+            true;
+
 
         state.interrupted =
             false;
 
-        state.pendingCommand =
+
+        state.commandText =
             "";
 
-        state.finishing =
-            false;
+
+        state.commandAttempts =
+            0;
 
 
-        clearCommandTimer();
+        stopVad();
 
 
         console.log(
-            "[APRISHA V11] Aprisha speaking - barge-in armed."
+            "[APRISHA V11.1] Aprisha speaking - TRUE barge-in preparing."
         );
 
 
-        /*
-         * A short delay lets the normal conversation recognizer
-         * finish its current cycle before the interruption
-         * listener takes ownership.
-         */
-
-        setTimeout(
-            () => {
-
-                if (
-                    token !==
-                    state.activeToken
-                ) {
-                    return;
-                }
-
-
-                if (
-                    synth.speaking
-                ) {
-
-                    startBargeListener(
-                        token
-                    );
-                }
-
-            },
-            120
+        startVad(
+            token
         );
     }
 
@@ -987,70 +1654,54 @@
 
         if (
             token !==
-            state.activeToken
+            state.ttsToken
         ) {
+
             return;
         }
 
 
-        state.currentTtsText =
-            "";
-
-
         /*
-         * If the user interrupted, keep listening even though
-         * speechSynthesis.cancel() caused TTS to finish.
+         * Cancellation caused by user interruption must NOT
+         * release the capture ownership yet.
          */
 
         if (
             state.interrupted
         ) {
+
             return;
         }
 
 
-        state.activeToken =
-            0;
+        state.ttsActive =
+            false;
 
 
-        clearRestartTimer();
-        clearCommandTimer();
+        stopVad();
 
 
-        setCaptureActive(
-            false
-        );
-
-
-        abortRecognizer();
+        window.__AP_APRISHA_BARGE_CAPTURE_ACTIVE__ =
+            false;
 
 
         console.log(
-            "[APRISHA V11] TTS complete - normal listening resumes."
+            "[APRISHA V11.1] TTS complete - normal listening continues."
         );
     }
 
 
     /*
      * =========================================================
-     * WRAP THE GLOBAL SPEECH SYNTHESIS OUTPUT
-     *
-     * This catches:
-     * - Dedicated Aprisha TTS
-     * - Voice Router TTS
-     * - Universal Aprisha TTS
-     * - Power Core Aprisha TTS
-     *
-     * without rewriting each subsystem.
+     * Wrap all Aprisha browser TTS through one common layer.
      * =========================================================
      */
 
-
     if (
-        !synth.__apAprishaBargeWrappedV11
+        !synth.__apAprishaTrueBargeWrappedV111
     ) {
 
-        synth.__apAprishaBargeWrappedV11 =
+        synth.__apAprishaTrueBargeWrappedV111 =
             true;
 
 
@@ -1070,6 +1721,10 @@
 
 
                 let started =
+                    false;
+
+
+                let finished =
                     false;
 
 
@@ -1094,6 +1749,15 @@
 
                 const finishOnce =
                     () => {
+
+                        if (finished) {
+                            return;
+                        }
+
+
+                        finished =
+                            true;
+
 
                         ttsFinished(
                             token
@@ -1143,9 +1807,8 @@
 
 
                 /*
-                 * Chrome occasionally delays or misses the
-                 * utterance start event. Use speaking state
-                 * as a fallback.
+                 * Fallback for Chrome builds that occasionally
+                 * miss SpeechSynthesisUtterance.onstart.
                  */
 
                 setTimeout(
@@ -1159,7 +1822,7 @@
                         }
 
                     },
-                    100
+                    80
                 );
 
 
@@ -1168,8 +1831,106 @@
     }
 
 
+    /*
+     * =========================================================
+     * PRE-WARM REAL MICROPHONE
+     *
+     * When a user intentionally interacts with Aprisha/Speak,
+     * get microphone permission and select the best real input
+     * before Aprisha later needs barge-in.
+     * =========================================================
+     */
+
+    document.addEventListener(
+        "click",
+        event => {
+
+            const button =
+                event.target
+                    ?.closest?.(
+                        "button,[role='button']"
+                    );
+
+
+            const text =
+                normalize(
+                    button?.textContent
+                );
+
+
+            if (
+                text.includes(
+                    "aprisha"
+                ) ||
+                text === "speak"
+            ) {
+
+                ensureMicrophone()
+                    .catch(
+                        () => {}
+                    );
+            }
+
+        },
+        true
+    );
+
+
+    /*
+     * If headset / USB microphone changes, rediscover next use.
+     */
+
+    try {
+
+        navigator.mediaDevices
+            .addEventListener(
+                "devicechange",
+                () => {
+
+                    stopCurrentStream();
+
+                    console.log(
+                        "[APRISHA V11.1] Audio devices changed - microphone will be reselected."
+                    );
+                }
+            );
+
+    }
+    catch {}
+
+
+    window.APAprishaBargeInV111 = {
+
+        ensureMicrophone,
+
+        getState() {
+
+            return {
+
+                microphone:
+                    state.streamLabel,
+
+                streamAlive:
+                    streamAlive(),
+
+                ttsActive:
+                    state.ttsActive,
+
+                interrupted:
+                    state.interrupted,
+
+                captureActive:
+                    Boolean(
+                        window.__AP_APRISHA_BARGE_CAPTURE_ACTIVE__
+                    )
+            };
+        }
+
+    };
+
+
     console.log(
-        "[APRISHA V11] Natural interruption engine ready."
+        "[APRISHA V11.1] TRUE BARGE-IN ENGINE READY"
     );
 
 })();

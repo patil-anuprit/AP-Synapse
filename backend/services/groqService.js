@@ -1,6 +1,14 @@
 import Groq from "groq-sdk";
 import dotenv from "dotenv";
 
+import {
+    createProviderAdmissionError,
+    prepareGroqMessages
+} from "./contextGovernor.js";
+import {
+    reserveProviderTokens
+} from "./providerTokenLedger.js";
+
 dotenv.config();
 
 if (!process.env.GROQ_API_KEY) {
@@ -12,47 +20,41 @@ const groq = new Groq({
 });
 
 export async function createStream(messages) {
-
     if (!Array.isArray(messages)) {
         throw new Error("Messages must be an array.");
     }
 
-    try {
+    const prepared = prepareGroqMessages(messages);
+    const reservedTokens =
+        prepared.promptTokens +
+        prepared.policy.maxCompletionTokens;
 
-        console.log("📤 Sending request to Groq...");
+    const capacity = await reserveProviderTokens({
+        provider: "groq",
+        tokens: reservedTokens,
+        tokenLimit:
+            prepared.policy.tokensPerMinute -
+            prepared.policy.safetyMarginTokens
+    });
 
-        const requestStart = performance.now();
-
-        const stream = await groq.chat.completions.create({
-
-            model:
-                process.env.GROQ_MODEL ||
-                "openai/gpt-oss-120b",
-
-            messages,
-
-            stream: true
-
-        });
-
-        const requestAccepted =
-            performance.now();
-
-        console.log(
-            `⚡ Groq stream accepted in ${
-                (requestAccepted - requestStart).toFixed(0)
-            } ms`
+    if (!capacity.admitted) {
+        throw createProviderAdmissionError(
+            "ORGANIZATION_TPM_CAPACITY_UNAVAILABLE",
+            {
+                provider: "groq",
+                retryAfterMs:
+                    capacity.retryAfterMs
+            }
         );
-
-        return stream;
-
-    } catch (error) {
-
-        console.error("❌ GROQ ERROR");
-        console.error(error);
-
-        throw error;
-
     }
 
+    return groq.chat.completions.create({
+        model:
+            process.env.GROQ_MODEL ||
+            "openai/gpt-oss-120b",
+        messages: prepared.messages,
+        max_completion_tokens:
+            prepared.policy.maxCompletionTokens,
+        stream: true
+    });
 }

@@ -62,6 +62,10 @@ function apProviderState(name) {
 
 function apIsRetryableProviderError(error) {
 
+    if (apIsProviderAdmissionError(error)) {
+        return false;
+    }
+
     const status = getErrorStatus(error);
 
     if (!status) {
@@ -72,7 +76,6 @@ function apIsRetryableProviderError(error) {
         408,
         409,
         425,
-        429,
         500,
         502,
         503,
@@ -81,8 +84,76 @@ function apIsRetryableProviderError(error) {
 }
 
 
+function apIsProviderAdmissionError(error) {
+
+    return (
+        error?.code ===
+            "AP_PROVIDER_ADMISSION_DENIED" ||
+        error?.name ===
+            "APProviderAdmissionError"
+    );
+}
+
+
+function apHeader(error, name) {
+
+    const headers =
+        error?.headers ||
+        error?.response?.headers;
+
+    if (!headers) {
+        return null;
+    }
+
+    if (typeof headers.get === "function") {
+        return headers.get(name);
+    }
+
+    return (
+        headers[name] ||
+        headers[name.toLowerCase()] ||
+        null
+    );
+}
+
+
+function apRetryAfterMs(error) {
+
+    const value =
+        apHeader(error, "retry-after");
+
+    if (!value) {
+        return AP_PROVIDER_COOLDOWN_MS;
+    }
+
+    const seconds = Number(value);
+
+    if (Number.isFinite(seconds)) {
+        return Math.max(
+            1000,
+            Math.ceil(seconds * 1000)
+        );
+    }
+
+    const date = Date.parse(value);
+
+    return Number.isFinite(date)
+        ? Math.max(1000, date - Date.now())
+        : AP_PROVIDER_COOLDOWN_MS;
+}
+
+
 
 function getErrorStatus(error) {
+
+    const directStatus = Number(
+        error?.status ||
+        error?.response?.status
+    );
+
+    if (Number.isFinite(directStatus)) {
+        return directStatus;
+    }
 
     const message =
         error?.message ||
@@ -164,6 +235,7 @@ async function tryProvider(
     }
 
     let lastError = null;
+    let failureAffectsHealth = true;
 
     for (
         let attempt = 1;
@@ -172,15 +244,6 @@ async function tryProvider(
     ) {
 
         try {
-
-            console.log(
-                "Trying " +
-                providerName +
-                " — attempt " +
-                attempt +
-                "/" +
-                AP_PROVIDER_RETRIES
-            );
 
             const stream =
                 await apWithTimeout(
@@ -198,17 +261,48 @@ async function tryProvider(
             state.failures = 0;
             state.openUntil = 0;
 
-            console.log(
-                providerName +
-                " accepted the request."
-            );
-
             return stream;
 
         }
         catch (error) {
 
             lastError = error;
+
+            if (
+                apIsProviderAdmissionError(
+                    error
+                )
+            ) {
+                // This is a normal routing decision, not a provider
+                // outage. The invalid/over-budget request was never sent.
+                return null;
+            }
+
+            const status =
+                getErrorStatus(error);
+
+            if (status === 413) {
+                // Admission control should make this unreachable. Never
+                // retry the same invalid payload or poison provider health.
+                failureAffectsHealth = false;
+
+                console.error(
+                    providerName +
+                    " rejected a payload after admission control."
+                );
+
+                return null;
+            }
+
+            if (status === 429) {
+                // Respect the provider's cooldown and immediately route the
+                // user to another provider instead of retrying too early.
+                state.openUntil =
+                    Date.now() +
+                    apRetryAfterMs(error);
+
+                return null;
+            }
 
             console.error(
                 providerName +
@@ -233,6 +327,10 @@ async function tryProvider(
                 Math.pow(2, attempt - 1)
             );
         }
+    }
+
+    if (!failureAffectsHealth) {
+        return null;
     }
 
     state.failures += 1;

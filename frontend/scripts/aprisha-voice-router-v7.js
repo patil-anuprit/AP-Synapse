@@ -29,6 +29,17 @@
 
     let latestText = "";
 
+    // AP_APRISHA_COMPLETE_COMMAND_V751
+    //
+    // Chrome may divide one natural sentence into several
+    // SpeechRecognition result fragments or speech bursts.
+    //
+    // Keep enough state to rebuild the entire command before
+    // executing it.
+    let utteranceResultStart = null;
+
+    let utterancePrefix = "";
+
     let lastExecuted = "";
     let lastExecutedAt = 0;
 
@@ -812,9 +823,33 @@
          * Keep the BEST transcript from the utterance,
          * not simply the newest transcript.
          */
+        const candidateNormalized =
+            normalize(
+                candidate
+            );
+
+
+        const latestNormalized =
+            normalize(
+                latestText
+            );
+
+
+        const extendsCurrent =
+            Boolean(
+                latestNormalized &&
+                candidateNormalized
+                    .startsWith(
+                        latestNormalized +
+                        " "
+                    )
+            );
+
+
         if (
             !latestText ||
-            commandScore(candidate) >
+            extendsCurrent ||
+            commandScore(candidate) >=
                 commandScore(latestText)
         ) {
 
@@ -837,8 +872,8 @@
          */
         const delay =
             final
-                ? 320
-                : 900;
+                ? 850
+                : 1200;
 
 
         commitTimer =
@@ -980,8 +1015,25 @@
         r.onspeechstart =
             () => {
 
-                latestText =
-                    "";
+                // AP_APRISHA_CROSS_BURST_CONTINUATION_V751
+
+                utterancePrefix =
+                    String(
+                        latestText || ""
+                    )
+                        .trim();
+
+
+                utteranceResultStart =
+                    null;
+
+
+                /*
+                 * A new burst arrived before commit().
+                 * Cancel the pending execution, but preserve
+                 * the existing sentence so the new words can
+                 * extend it.
+                 */
 
                 clearCommit();
             };
@@ -1009,26 +1061,135 @@
 
 
                 /*
-                 * Use the newest result only.
+                 * AP_APRISHA_FULL_UTTERANCE_ASSEMBLY_V751
                  *
-                 * Avoid accumulating previous phrases
-                 * such as:
+                 * Do not use only event.results[last].
                  *
-                 * "operation open YouTube"
+                 * Chrome can produce:
+                 *
+                 * result 0: "explain India"
+                 * result 1: "in short"
+                 *
+                 * Reconstruct every result belonging to this
+                 * current speech burst.
                  */
-                const result =
-                    event.results[
-                        event.results.length - 1
-                    ];
 
+                if (
+                    utteranceResultStart ===
+                    null
+                ) {
+
+                    utteranceResultStart =
+                        Math.max(
+                            0,
+                            Number(
+                                event.resultIndex
+                            ) || 0
+                        );
+                }
+
+
+                const utteranceParts =
+                    [];
+
+
+                let utteranceFinal =
+                    true;
+
+
+                for (
+                    let i =
+                        utteranceResultStart;
+                    i <
+                        event.results.length;
+                    i++
+                ) {
+
+                    const pieceResult =
+                        event.results[i];
+
+
+                    const piece =
+                        String(
+                            pieceResult?.[0]
+                                ?.transcript ||
+                            ""
+                        )
+                            .trim();
+
+
+                    if (piece) {
+
+                        utteranceParts.push(
+                            piece
+                        );
+                    }
+
+
+                    if (
+                        !pieceResult?.isFinal
+                    ) {
+
+                        utteranceFinal =
+                            false;
+                    }
+                }
+
+
+                const currentBurst =
+                    utteranceParts
+                        .join(" ")
+                        .replace(
+                            /s+/g,
+                            " "
+                        )
+                        .trim();
+
+
+                const prefixNormalized =
+                    normalize(
+                        utterancePrefix
+                    );
+
+
+                const burstNormalized =
+                    normalize(
+                        currentBurst
+                    );
+
+
+                /*
+                 * If Chrome already revised the new result into
+                 * the entire sentence, do not duplicate prefix.
+                 *
+                 * Otherwise append the new burst.
+                 */
 
                 const text =
-                    String(
-                        result?.[0]
-                            ?.transcript ||
-                        ""
+                    (
+                        utterancePrefix &&
+                        currentBurst &&
+                        !burstNormalized
+                            .startsWith(
+                                prefixNormalized
+                            )
                     )
-                    .trim();
+                        ? (
+                            utterancePrefix +
+                            " " +
+                            currentBurst
+                        )
+                            .replace(
+                                /s+/g,
+                                " "
+                            )
+                            .trim()
+                        : (
+                            currentBurst ||
+                            utterancePrefix
+                        );
+
+
 
 
                 if (!text) {
@@ -1064,7 +1225,7 @@
 
                 queueCommit(
                     text,
-                    !!result.isFinal
+                    utteranceFinal
                 );
             };
 

@@ -58,7 +58,7 @@
     ) {
 
         console.warn(
-            "[APRISHA V11.2] Required browser audio APIs unavailable."
+            "[APRISHA V11.2.1] Required browser audio APIs unavailable."
         );
 
         return;
@@ -443,7 +443,7 @@
                 catch (error) {
 
                     console.warn(
-                        "[APRISHA V11.2] Microphone permission unavailable:",
+                        "[APRISHA V11.2.1] Microphone permission unavailable:",
                         error
                     );
 
@@ -621,7 +621,7 @@
 
 
                 console.log(
-                    "[APRISHA V11.2] Selected microphone:",
+                    "[APRISHA V11.2.1] Selected microphone:",
                     state.streamLabel
                 );
 
@@ -798,7 +798,7 @@
 
 
         console.log(
-            "[APRISHA V11.2] Raw mic barge-in armed on:",
+            "[APRISHA V11.2.1] Raw mic barge-in armed on:",
             state.streamLabel
         );
 
@@ -918,7 +918,7 @@
 
 
                     console.log(
-                        "[APRISHA V11.2] Anti-echo calibrated:",
+                        "[APRISHA V11.2.1] Anti-echo calibrated:",
                         {
                             baseline:
                                 state.baseline,
@@ -1151,7 +1151,7 @@
         if (!text) {
 
             console.log(
-                "[APRISHA V11.2] Speech stopped; no replacement command captured."
+                "[APRISHA V11.2.1] Speech stopped; no replacement command captured."
             );
 
 
@@ -1163,7 +1163,7 @@
 
 
         console.log(
-            "[APRISHA V11.2] INTERRUPTION COMMAND:",
+            "[APRISHA V11.2.1] INTERRUPTION COMMAND:",
             text
         );
 
@@ -1184,6 +1184,67 @@
         );
 
 
+
+        // AP_APRISHA_DIRECT_INTERRUPT_ROUTE_V1121
+        //
+        // Never convert an Aprisha interruption into a visible
+        // AP Synapse chat conversation.
+        //
+        // Route the replacement request through the same direct
+        // Aprisha intelligence executor used by normal voice.
+
+        if (
+            window.APAprisha &&
+            typeof window.APAprisha.execute ===
+                "function"
+        ) {
+
+            console.log(
+                "[APRISHA V11.2.1] DIRECT INTERRUPTION →",
+                text
+            );
+
+
+            Promise
+                .resolve(
+                    window.APAprisha.execute(
+                        text
+                    )
+                )
+                .catch(
+                    error => {
+
+                        console.error(
+                            "[APRISHA V11.2.1] Direct interruption failed:",
+                            error
+                        );
+                    }
+                )
+                .finally(
+                    () => {
+
+                        setTimeout(
+                            releaseCapture,
+                            250
+                        );
+                    }
+                );
+
+
+            return;
+        }
+
+
+        console.error(
+            "[APRISHA V11.2.1] Direct Aprisha executor unavailable."
+        );
+
+
+        releaseCapture();
+
+        return;
+
+
         const input =
             document.querySelector(
                 "#userInput"
@@ -1202,7 +1263,7 @@
         if (!input) {
 
             console.error(
-                "[APRISHA V11.2] Chat input unavailable."
+                "[APRISHA V11.2.1] Chat input unavailable."
             );
 
 
@@ -1274,7 +1335,7 @@
 
 
         console.log(
-            "[APRISHA V11.2] New request sent."
+            "[APRISHA V11.2.1] New request sent."
         );
 
 
@@ -1320,7 +1381,7 @@
 
 
         console.log(
-            "[APRISHA V11.2] Normal Aprisha listening released."
+            "[APRISHA V11.2.1] Normal Aprisha listening released."
         );
     }
 
@@ -1332,7 +1393,7 @@
         ) {
 
             console.warn(
-                "[APRISHA V11.2] SpeechRecognition unavailable after interruption."
+                "[APRISHA V11.2.1] SpeechRecognition unavailable after interruption."
             );
 
 
@@ -1397,7 +1458,7 @@
             () => {
 
                 console.log(
-                    "[APRISHA V11.2] Listening for replacement command..."
+                    "[APRISHA V11.2.1] Listening for replacement command..."
                 );
             };
 
@@ -1431,7 +1492,7 @@
 
 
                 console.log(
-                    "[APRISHA V11.2] Heard after interruption:",
+                    "[APRISHA V11.2.1] Heard after interruption:",
                     heard
                 );
 
@@ -1466,7 +1527,7 @@
                 ) {
 
                     console.warn(
-                        "[APRISHA V11.2] Replacement listener event:",
+                        "[APRISHA V11.2.1] Replacement listener event:",
                         code
                     );
                 }
@@ -1559,7 +1620,7 @@
 
 
             console.warn(
-                "[APRISHA V11.2] Replacement recognizer failed:",
+                "[APRISHA V11.2.1] Replacement recognizer failed:",
                 error
             );
 
@@ -1610,7 +1671,7 @@
 
 
         console.log(
-            "[APRISHA V11.2] USER VOICE DETECTED - INTERRUPTING.",
+            "[APRISHA V11.2.1] USER VOICE DETECTED - INTERRUPTING.",
             {
                 level: rms,
                 threshold
@@ -1716,8 +1777,62 @@
         stopVad();
 
 
+        // AP_APRISHA_SHORT_TTS_GUARD_V1121
+
+        const spokenText =
+            String(
+                utterance?.text ||
+                ""
+            ).trim();
+
+
+        const spokenWords =
+            spokenText
+                .split(/\s+/)
+                .filter(Boolean)
+                .length;
+
+
+        /*
+         * Do NOT open the raw barge-in microphone for tiny
+         * acknowledgements such as "Yes?".
+         *
+         * This was the exact reason V11.2 cancelled Aprisha
+         * before the user could hear her.
+         */
+
+        const bargeEligible =
+            spokenText.length >= 60 ||
+            spokenWords >= 10;
+
+
+        if (
+            !bargeEligible
+        ) {
+
+            state.ttsActive =
+                false;
+
+
+            stopVad();
+
+
+            window.__AP_APRISHA_BARGE_CAPTURE_ACTIVE__ =
+                false;
+
+
+            console.log(
+                "[APRISHA V11.2.1] Short TTS protected:",
+                spokenText
+            );
+
+
+            return;
+        }
+
+
         console.log(
-            "[APRISHA V11.2] Aprisha speaking - TRUE barge-in preparing."
+            "[APRISHA V11.2.1] Long Aprisha response - TRUE barge-in preparing."
         );
 
 
@@ -1765,7 +1880,7 @@
 
 
         console.log(
-            "[APRISHA V11.2] TTS complete - normal listening continues."
+            "[APRISHA V11.2.1] TTS complete - normal listening continues."
         );
     }
 
@@ -1969,7 +2084,7 @@
                     stopCurrentStream();
 
                     console.log(
-                        "[APRISHA V11.2] Audio devices changed - microphone will be reselected."
+                        "[APRISHA V11.2.1] Audio devices changed - microphone will be reselected."
                     );
                 }
             );
@@ -2009,7 +2124,7 @@
 
 
     console.log(
-        "[APRISHA V11.2] TRUE BARGE-IN ENGINE READY"
+        "[APRISHA V11.2.1] TRUE BARGE-IN ENGINE READY"
     );
 
 })();

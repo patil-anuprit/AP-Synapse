@@ -1,0 +1,16 @@
+{
+  "name": "AP Unified Intelligence Stage 5",
+  "base_checkpoint": "aa19a44",
+  "router_feature_flag": "AP_UNIFIED_INTELLIGENCE_ENABLED",
+  "surface_allowlist": "AP_UNIFIED_INTELLIGENCE_SURFACES",
+  "default_surfaces": [
+    "chat"
+  ],
+  "unified_timeout_env": "AP_UNIFIED_INTELLIGENCE_TIMEOUT_MS",
+  "legacy_provider_fallback_preserved": true,
+  "vision_route_preserved": true,
+  "image_generation_route_preserved": true,
+  "aprisha_android_modified": false,
+  "aprisha_desktop_modified": false,
+  "deployment_performed": false
+}

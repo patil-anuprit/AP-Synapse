@@ -1646,7 +1646,46 @@ Remain professional.
 
        const aiStart = performance.now();
 
-const stream = await createAIStream(messages);
+// AP_UNIFIED_CHAT_SURFACE_STAGE5
+const stream = await createAIStream(
+    messages,
+    {
+        /*
+         * The normal /chat request explicitly opts into the
+         * feature-flagged AP Unified surface.
+         *
+         * The server has already assembled conversation memory
+         * and personalization into messages, so Stage 5 disables
+         * duplicate lookups here.
+         *
+         * Existing web search continues in parallel below and
+         * remains responsible for the frontend source payload.
+         */
+        surface:
+            "chat",
+
+        sessionId,
+
+        identityId:
+            apPersonalizationIdentity
+                .identityId,
+
+        query:
+            originalMessage,
+
+        document:
+            uploadedDocument,
+
+        conversationEnabled:
+            false,
+
+        personalizationEnabled:
+            false,
+
+        webSearch:
+            false
+    }
+);
 
 const streamReady = performance.now();
 

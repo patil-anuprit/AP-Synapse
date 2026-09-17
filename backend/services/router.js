@@ -2,12 +2,96 @@ import { createStream as groq } from "./groqService.js";
 import { createStream as gemini } from "./geminiService.js";
 import { createStream as openrouter } from "./openrouterService.js";
 import { createStream as deepseek } from "./deepseekService.js";
+import { createStream as apIntegrated } from "./apIntegratedIntelligenceService.js";
 import { generateImage as generateGeminiImage } from "./geminiImageService.js";
 import {
     apErrorFields,
     apLog,
     createAPRequestId
 } from "./observability.js";
+
+// ============================================================
+// AP_UNIFIED_ROUTER_STAGE5
+// Feature-flagged AP Integrated Intelligence.
+// Default scope is chat only. Existing vision/image/Aprisha
+// routes remain on their established behavior unless a caller
+// explicitly opts into an allowed surface.
+// ============================================================
+
+function apEnvEnabled(value) {
+    return /^(?:1|true|yes|on)$/i.test(
+        String(value || "").trim()
+    );
+}
+
+export function apUnifiedRouterEnabled(
+    requestContext = {}
+) {
+    if (
+        !apEnvEnabled(
+            process.env
+                .AP_UNIFIED_INTELLIGENCE_ENABLED
+        )
+    ) {
+        return false;
+    }
+
+    const surface =
+        String(
+            requestContext?.surface ||
+            ""
+        )
+            .trim()
+            .toLowerCase();
+
+    if (!surface) {
+        return false;
+    }
+
+    const surfaces =
+        String(
+            process.env
+                .AP_UNIFIED_INTELLIGENCE_SURFACES ||
+            "chat"
+        )
+            .split(",")
+            .map(
+                item =>
+                    item
+                        .trim()
+                        .toLowerCase()
+            )
+            .filter(Boolean);
+
+    return (
+        surfaces.includes("*") ||
+        surfaces.includes(surface)
+    );
+}
+
+function apUnifiedRouterTimeoutMs() {
+    const requested =
+        Number(
+            process.env
+                .AP_UNIFIED_INTELLIGENCE_TIMEOUT_MS ||
+            120000
+        );
+
+    if (
+        !Number.isFinite(requested)
+    ) {
+        return 120000;
+    }
+
+    return Math.min(
+        300000,
+        Math.max(
+            5000,
+            Math.floor(requested)
+        )
+    );
+}
+
 
 // ============================================================
 // AP_RESILIENCE_CORE_V1
@@ -798,7 +882,7 @@ async function* apFailoverStream(
 }
 
 
-export async function createAIStream(messages) {
+export async function createAIStream(messages, requestContext = {}) {
 
     if (!Array.isArray(messages)) {
 
@@ -953,7 +1037,90 @@ export async function createAIStream(messages) {
             "Groq>Gemini>DeepSeek>OpenRouter"
     });
 
-    return apFailoverStream(
+
+    // ============================================================
+    // AP_UNIFIED_ROUTER_STAGE5_TEXT_PRIMARY
+    // Only normal text callers that explicitly opt into an
+    // enabled surface reach AP Integrated Intelligence.
+    // On any setup/inference failure, execution falls through
+    // to the original provider failover chain below.
+    // ============================================================
+
+    if (
+        apUnifiedRouterEnabled(
+            requestContext
+        )
+    ) {
+        const unifiedStarted =
+            performance.now();
+
+        try {
+            apLog(
+                "info",
+                "route.ap_unified_started",
+                {
+                    request:
+                        requestId,
+                    mode:
+                        "text",
+                    surface:
+                        String(
+                            requestContext
+                                ?.surface ||
+                            ""
+                        )
+                }
+            );
+
+            const unifiedStream =
+                await apWithTimeout(
+                    apIntegrated(
+                        messages,
+                        requestContext
+                    ),
+                    apUnifiedRouterTimeoutMs(),
+                    "AP Unified Intelligence timed out."
+                );
+
+            apLog(
+                "info",
+                "route.ap_unified_ready",
+                {
+                    request:
+                        requestId,
+                    ready_ms:
+                        Math.round(
+                            performance.now() -
+                            unifiedStarted
+                        )
+                }
+            );
+
+            return unifiedStream;
+        }
+        catch (error) {
+            apLog(
+                "warn",
+                "route.ap_unified_fallback",
+                {
+                    request:
+                        requestId,
+                    fallback:
+                        "existing-provider-chain",
+                    ...apErrorFields(
+                        error
+                    )
+                }
+            );
+
+            /*
+             * Deliberately continue into the exact existing
+             * Groq -> Gemini -> DeepSeek -> OpenRouter path.
+             */
+        }
+    }
+
+return apFailoverStream(
         [
             {
                 name: "Groq",

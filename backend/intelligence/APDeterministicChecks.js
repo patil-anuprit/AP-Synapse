@@ -91,6 +91,9 @@ function arithmeticCheck(
     const result =
         String(answer || "");
 
+    const normalizedResult =
+        result.replace(/,/g, "");
+
     const multiply =
         source.match(
             /\b(-?\d+(?:\.\d+)?)\s*[x×*]\s*(-?\d+(?:\.\d+)?)\b/i
@@ -104,9 +107,7 @@ function arithmeticCheck(
         return {
             checked: true,
             ok:
-                result.includes(
-                    String(expected)
-                ),
+                normalizedResult.includes(String(expected)),
             expected,
             reason:
                 "simple-multiplication"
@@ -129,9 +130,7 @@ function arithmeticCheck(
         return {
             checked: true,
             ok:
-                result.includes(
-                    String(expected)
-                ),
+                normalizedResult.includes(String(expected)),
             expected,
             reason:
                 "simple-division"

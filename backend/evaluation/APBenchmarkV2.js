@@ -13,7 +13,7 @@ const cases = [
         assert:
             answer =>
                 /\b3478\b/.test(
-                    answer
+                    String(answer).replace(/,/g, "")
                 )
     },
     {

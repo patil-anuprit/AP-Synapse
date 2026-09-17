@@ -25,6 +25,9 @@ import {
 import {
     lastUserText
 } from "./APUtils.js";
+import {
+    prepareAPContext
+} from "./APContextEngine.js";
 
 export async function solveAP(
     messages,
@@ -42,10 +45,19 @@ export async function solveAP(
     const started =
         Date.now();
 
-    const prompt =
+    const originalPrompt =
         lastUserText(
             messages
         );
+
+    const prepared =
+        await prepareAPContext(
+            messages,
+            options
+        );
+
+    const workingMessages =
+        prepared.messages;
 
     const intent =
         classifyIntent(
@@ -66,7 +78,7 @@ export async function solveAP(
 
     const candidates =
         await runCouncil(
-            messages,
+            workingMessages,
             route.councilRoles,
             plan
         );
@@ -80,7 +92,7 @@ export async function solveAP(
 
     const answer =
         await synthesizeAnswer(
-            messages,
+            workingMessages,
             candidates,
             verification,
             intent
@@ -99,7 +111,7 @@ export async function solveAP(
         evaluateAnswerQuality(
             answer,
             intent,
-            prompt
+            originalPrompt
         );
 
     const finalAnswer =
@@ -117,7 +129,7 @@ export async function solveAP(
         evaluateAnswerQuality(
             finalAnswer,
             intent,
-            prompt
+            originalPrompt
         );
 
     const confidence =
@@ -143,6 +155,47 @@ export async function solveAP(
 
         quality:
             finalQuality,
+
+        context: {
+            knowledgeCount:
+                prepared
+                    .context
+                    .knowledge
+                    .length,
+
+            memoryCount:
+                prepared
+                    .context
+                    .memories
+                    .length,
+
+            documentCount:
+                prepared
+                    .context
+                    .documents
+                    .length,
+
+            toolCount:
+                prepared
+                    .context
+                    .tools
+                    .length,
+
+            tools:
+                prepared
+                    .context
+                    .tools
+                    .map(
+                        item => ({
+                            tool:
+                                item.tool,
+                            input:
+                                item.input,
+                            output:
+                                item.output
+                        })
+                    )
+        },
 
         verification: {
             method:

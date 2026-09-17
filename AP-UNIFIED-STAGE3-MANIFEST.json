@@ -1,0 +1,13 @@
+{
+  "name": "AP Unified Intelligence Stage 3",
+  "features": [
+    "local lexical RAG",
+    "identity-scoped persistent memory",
+    "document context retrieval",
+    "safe calculator tool",
+    "unified context engine",
+    "V2 regression test"
+  ],
+  "production_modified": false,
+  "deployment_performed": false
+}

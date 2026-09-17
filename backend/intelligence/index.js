@@ -38,3 +38,13 @@ export {
 export {
     prepareAPContext
 } from "./APContextEngine.js";
+
+export {
+    buildAPRealContext,
+    inspectRealIntegrationContracts
+} from "./APRealContextBridge.js";
+
+export {
+    solveAPIntegrated,
+    createAPIntegratedStream
+} from "./APIntegratedIntelligence.js";

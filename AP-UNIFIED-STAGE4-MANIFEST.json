@@ -1,0 +1,15 @@
+{
+  "name": "AP Unified Intelligence Stage 4",
+  "base_checkpoint": "dec688d",
+  "integrations": [
+    "conversationStore.getConversation",
+    "personalizationService.getPersonalizationContext",
+    "webSources.searchWebSources",
+    "documentReader.readDocument contract",
+    "session document memory normalization"
+  ],
+  "router_modified": false,
+  "aprisha_execution_modified": false,
+  "production_modified": false,
+  "deployment_performed": false
+}

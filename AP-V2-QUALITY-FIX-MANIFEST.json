@@ -1,0 +1,13 @@
+{
+  "name": "AP V2 Quality Gate Final Fix",
+  "replaces": [
+    "backend/intelligence/APQualityGate.js",
+    "backend/intelligence/APVerifier.js",
+    "backend/intelligence/APIntelligenceCore.js"
+  ],
+  "adds": [
+    "scripts/Test-APUnifiedV2-Final.ps1"
+  ],
+  "production_modified": false,
+  "deployment_performed": false
+}

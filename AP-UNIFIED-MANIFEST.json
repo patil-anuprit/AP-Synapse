@@ -1,0 +1,33 @@
+{
+  "name": "AP Synapse Unified Intelligence Core V1",
+  "created_files": [
+    ".env.ap-unified.example",
+    "README-AP-UNIFIED-INTELLIGENCE.md",
+    "backend/evaluation/APBenchmark.js",
+    "backend/evaluation/APIndependenceTest.js",
+    "backend/evaluation/APSmokeTest.js",
+    "backend/intelligence/APConfidence.js",
+    "backend/intelligence/APCouncil.js",
+    "backend/intelligence/APIntelligenceCore.js",
+    "backend/intelligence/APIntentEngine.js",
+    "backend/intelligence/APRouter.js",
+    "backend/intelligence/APStreamAdapter.js",
+    "backend/intelligence/APSynthesizer.js",
+    "backend/intelligence/APUtils.js",
+    "backend/intelligence/APVerifier.js",
+    "backend/intelligence/index.js",
+    "backend/models/APModelClient.js",
+    "backend/models/APModelRegistry.js",
+    "backend/models/APOllamaProvider.js",
+    "backend/models/APOpenAICompatibleProvider.js",
+    "backend/services/apUnifiedIntelligenceService.js",
+    "scripts/Connect-APUnifiedToRouter-LATER.ps1",
+    "scripts/Prepare-APUnifiedIntelligence.ps1",
+    "scripts/Run-APUnifiedLocal.ps1"
+  ],
+  "production_modified": false,
+  "deployment_performed": false,
+  "default_local_runtime": "ollama",
+  "default_local_model": "qwen3.5:4b",
+  "cloud_runtime_supported": "vLLM/OpenAI-compatible"
+}

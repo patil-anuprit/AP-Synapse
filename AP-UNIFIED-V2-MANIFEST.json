@@ -1,0 +1,16 @@
+{
+  "name": "AP Unified Intelligence V2 Fixed Overlay",
+  "files": [
+    "backend/evaluation/APBenchmarkV2.js",
+    "backend/intelligence/APCouncil.js",
+    "backend/intelligence/APDeterministicChecks.js",
+    "backend/intelligence/APIntelligenceCore.js",
+    "backend/intelligence/APPlanner.js",
+    "backend/intelligence/APQualityGate.js",
+    "backend/intelligence/APVerifier.js",
+    "scripts/Validate-APUnifiedV2.ps1"
+  ],
+  "production_modified": false,
+  "deployment_performed": false,
+  "purpose": "Direct file overlay replacing failed PowerShell here-string installer."
+}

@@ -577,6 +577,28 @@
             clean
         );
 
+        /*
+         * AP_APRISHA_V4_THINKING_BRIDGE
+         * Visual-only transition.
+         */
+
+        try {
+
+            window
+                .APAprishaPresenceV4
+                ?.thinking?.();
+
+        }
+        catch (
+            presenceError
+        ) {
+
+            console.warn(
+                "Aprisha V4 thinking visual failed:",
+                presenceError
+            );
+        }
+
 
         try {
 
@@ -748,6 +770,34 @@
             console.log(
                 "⚡ HEY APRISHA — session opened"
             );
+
+            /*
+             * AP_APRISHA_V4_REAL_WAKE_BRIDGE
+             *
+             * VISUAL ONLY.
+             * This is deliberately attached to the real
+             * Aprisha session-open event.
+             *
+             * It does not control recognition, TTS,
+             * microphone ownership, execution or barge-in.
+             */
+
+            try {
+
+                window
+                    .APAprishaPresenceV4
+                    ?.wake?.();
+
+            }
+            catch (
+                presenceError
+            ) {
+
+                console.warn(
+                    "Aprisha V4 wake visual failed:",
+                    presenceError
+                );
+            }
 
 
             await acknowledgeWake();

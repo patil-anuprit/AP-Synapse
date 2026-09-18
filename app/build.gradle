@@ -232,7 +232,7 @@ repositories {
 }
 
 dependencies {
-    implementation files('libs/sherpa-onnx-1.13.4.aar')
+    implementation 'com.github.k2-fsa:sherpa-onnx:1.13.4'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     
         implementation 'com.google.androidbrowserhelper:locationdelegation:1.1.2'

@@ -13,6 +13,12 @@
     const referrer = String(document.referrer || "");
 
     const isAndroid = /Android/i.test(ua);
+    // AP_APRISHA_EVERYWHERE_AUTODISMISS_V41
+    const INLINE_DISMISS_MS =
+        isAndroid ? 12000 : 6500;
+
+    let inlineDismissed = false;
+    let inlineDismissTimer = null;
     const isAndroidApp = referrer.startsWith("android-app://");
 
     function runtimeState() {
@@ -403,13 +409,74 @@
         );
     }
 
+
+    function dismissInlineCard() {
+        if (inlineDismissed) return;
+
+        const card =
+            document.getElementById(CARD_ID);
+
+        if (!card) {
+            inlineDismissed = true;
+            return;
+        }
+
+        inlineDismissed = true;
+
+        card.style.transition =
+            "opacity .42s ease, transform .42s ease, filter .42s ease";
+
+        card.style.opacity = "0";
+        card.style.transform =
+            "translateY(-10px) scale(.985)";
+        card.style.filter = "blur(2px)";
+
+        setTimeout(
+            () => card.remove(),
+            450
+        );
+    }
+
+    function scheduleInlineDismiss() {
+        if (inlineDismissed) return;
+
+        clearTimeout(inlineDismissTimer);
+
+        inlineDismissTimer =
+            setTimeout(
+                dismissInlineCard,
+                INLINE_DISMISS_MS
+            );
+    }
+
     function mountCard() {
+        if (inlineDismissed) return;
         if (document.getElementById(CARD_ID)) return;
 
         const host = findHost();
         if (!host) return;
 
-        host.prepend(createShell(false));
+        const card =
+            createShell(false);
+
+        card.style.opacity = "0";
+        card.style.transform =
+            "translateY(-6px) scale(.992)";
+
+        host.prepend(card);
+
+        requestAnimationFrame(
+            () => {
+                card.style.transition =
+                    "opacity .32s ease, transform .32s ease";
+
+                card.style.opacity = "1";
+                card.style.transform =
+                    "translateY(0) scale(1)";
+            }
+        );
+
+        scheduleInlineDismiss();
     }
 
     function ensureModal() {
@@ -465,7 +532,7 @@
                 localStorage.getItem(SEEN_KEY) === "1";
         } catch {}
 
-        if (!seen) {
+        if (!seen && isAndroid) {
             setTimeout(openModal, 1100);
         }
 

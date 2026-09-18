@@ -10300,6 +10300,271 @@ window.__AP_EXTERNAL_COMMAND_MIC__ = true;
 </style>
 
 <!-- AP_APRISHA_CLASSIC_V42_END -->
+
+
+<!-- AP_APRISHA_EXACT_CENTER_V421_START -->
+
+<style id="apAprishaExactCenterV421">
+
+/*
+==========================================================
+ APRISHA V4.2.1 — ABSOLUTE VIEWPORT CENTER LOCK
+
+ This deliberately uses the independent CSS `translate`
+ property rather than transform.
+
+ Result:
+ - x = exact viewport midpoint
+ - y = exact viewport midpoint
+ - animations can scale/pulse without moving the stage
+==========================================================
+*/
+
+
+#apAprishaPresenceV4 .ap4-stage {
+
+    position:
+        absolute !important;
+
+
+    /*
+     * Mathematical center of the Presence viewport.
+     */
+
+    left:
+        50% !important;
+
+    top:
+        50% !important;
+
+
+    right:
+        auto !important;
+
+    bottom:
+        auto !important;
+
+
+    /*
+     * Kill inherited offsets from all earlier visual layers.
+     */
+
+    margin:
+        0 !important;
+
+    padding:
+        0 !important;
+
+
+    /*
+     * IMPORTANT:
+     *
+     * Do not use transform for positioning.
+     * Core/listening/speaking animations can then never
+     * accidentally shift Aprisha away from center.
+     */
+
+    transform:
+        none !important;
+
+
+    translate:
+        -50%
+        -50% !important;
+
+
+    width:
+        min(
+            520px,
+            92vw
+        ) !important;
+
+
+    display:
+        flex !important;
+
+    flex-direction:
+        column !important;
+
+    align-items:
+        center !important;
+
+    justify-content:
+        center !important;
+
+
+    text-align:
+        center !important;
+
+
+    box-sizing:
+        border-box !important;
+
+
+    transform-origin:
+        center center !important;
+
+
+    animation:
+        ap421ExactCenterEntrance
+        .58s
+        cubic-bezier(.16,1,.3,1)
+        both !important;
+}
+
+
+
+/*
+ Core itself is locked to the stage midpoint.
+ */
+
+#apAprishaPresenceV4 .ap4-core {
+
+    align-self:
+        center !important;
+
+
+    margin-left:
+        auto !important;
+
+    margin-right:
+        auto !important;
+
+
+    transform-origin:
+        center center !important;
+}
+
+
+
+/*
+ Every text element is centered against exactly
+ the same viewport axis as the orb.
+ */
+
+#apAprishaPresenceV4 .ap4-eyebrow,
+#apAprishaPresenceV4 .ap4-title,
+#apAprishaPresenceV4 .ap4-subtitle,
+#apAprishaPresenceV4 .ap4-wave {
+
+    align-self:
+        center !important;
+
+    text-align:
+        center !important;
+
+    margin-left:
+        auto !important;
+
+    margin-right:
+        auto !important;
+}
+
+
+
+/*
+ Keep the intelligence field centered on exactly
+ the same x/y coordinates.
+ */
+
+#apAprishaPresenceV4 .ap4-field {
+
+    left:
+        50% !important;
+
+    top:
+        50% !important;
+
+
+    right:
+        auto !important;
+
+    bottom:
+        auto !important;
+
+
+    translate:
+        -50%
+        -50% !important;
+
+
+    transform-origin:
+        center center !important;
+}
+
+
+
+/*
+ Stage entrance now changes opacity/scale only.
+ It does NOT alter x/y coordinates.
+ */
+
+@keyframes ap421ExactCenterEntrance {
+
+    from {
+
+        opacity:
+            0;
+
+        scale:
+            .93;
+    }
+
+
+    to {
+
+        opacity:
+            1;
+
+        scale:
+            1;
+    }
+}
+
+
+
+/*
+ Wake animation stays centered.
+ */
+
+#apAprishaPresenceV4[data-state="wake"]
+.ap4-stage {
+
+    animation:
+        ap421ExactCenterEntrance
+        .58s
+        cubic-bezier(.16,1,.3,1)
+        both !important;
+}
+
+
+
+/*
+ Mobile uses exactly the same geometric center.
+ */
+
+@media (max-width:720px) {
+
+    #apAprishaPresenceV4 .ap4-stage {
+
+        left:
+            50% !important;
+
+        top:
+            50% !important;
+
+        translate:
+            -50%
+            -50% !important;
+
+        width:
+            92vw !important;
+    }
+}
+
+</style>
+
+<!-- AP_APRISHA_EXACT_CENTER_V421_END -->
 </body>
 </html>
 

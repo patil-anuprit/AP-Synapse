@@ -8928,6 +8928,1136 @@ window.__AP_EXTERNAL_COMMAND_MIC__ = true;
 
 <!-- AP_APRISHA_PRESENCE_V4_END -->
 
+
+<!-- AP_APRISHA_CLASSIC_V41_START -->
+
+<style id="apAprishaClassicV41">
+
+/*
+==============================================================
+ AP SYNAPSE — APRISHA CLASSIC PRESENCE V4.1
+
+ Minimal.
+ Fluid.
+ Ambient.
+ Voice-first.
+
+ VISUAL OVERRIDE ONLY.
+ No microphone / recognition / TTS ownership.
+==============================================================
+*/
+
+
+:root {
+
+    --ap41-gold:
+        #e5c875;
+
+    --ap41-ivory:
+        #faf7f0;
+
+    --ap41-blue:
+        #82c8ff;
+
+    --ap41-violet:
+        #b9a2ff;
+
+    --ap41-rose:
+        #f0a8ce;
+
+    --ap41-ease:
+        cubic-bezier(.16,1,.3,1);
+}
+
+
+
+/* ==========================================================
+   PRESERVE THE WORKSPACE
+   ========================================================== */
+
+#apAprishaPresenceV4
+.ap4-backdrop {
+
+    background:
+        radial-gradient(
+            ellipse
+            at 50% 100%,
+
+            rgba(130,200,255,.055)
+            0%,
+
+            rgba(185,162,255,.035)
+            21%,
+
+            rgba(229,200,117,.025)
+            37%,
+
+            rgba(0,0,0,.12)
+            66%,
+
+            rgba(0,0,0,.20)
+            100%
+        );
+
+
+    backdrop-filter:
+        blur(1.8px)
+        brightness(.83)
+        saturate(.84);
+
+
+    -webkit-backdrop-filter:
+        blur(1.8px)
+        brightness(.83)
+        saturate(.84);
+}
+
+
+
+/* ==========================================================
+   VERY SUBTLE SCREEN AWAKENING
+   ========================================================== */
+
+#apAprishaPresenceV4
+.ap4-frame {
+
+    inset: 0;
+
+    border: 0;
+
+    border-radius: 0;
+
+
+    box-shadow:
+
+        inset 0 -2px 34px
+        rgba(130,200,255,.055),
+
+        inset 0 -4px 70px
+        rgba(185,162,255,.035),
+
+        inset 0 0 130px
+        rgba(229,200,117,.018);
+}
+
+
+#apAprishaPresenceV4
+.ap4-frame::before {
+
+    display: none;
+}
+
+
+#apAprishaPresenceV4
+.ap4-frame::after {
+
+    display: block;
+
+    left: 50%;
+
+    top: auto;
+    bottom: 0;
+
+
+    width: 44%;
+    height: 2px;
+
+
+    transform:
+        translateX(-50%);
+
+
+    background:
+
+        linear-gradient(
+            90deg,
+
+            transparent 0%,
+
+            rgba(130,200,255,.55)
+            17%,
+
+            rgba(185,162,255,.82)
+            37%,
+
+            rgba(250,247,240,.96)
+            50%,
+
+            rgba(240,168,206,.72)
+            63%,
+
+            rgba(229,200,117,.52)
+            82%,
+
+            transparent 100%
+        );
+
+
+    filter:
+        blur(.15px)
+        drop-shadow(
+            0 0 12px
+            rgba(185,162,255,.38)
+        );
+
+
+    animation:
+        ap41EdgeAlive
+        3.7s
+        ease-in-out
+        infinite;
+}
+
+
+
+/* ==========================================================
+   REMOVE THE HUGE CENTRAL DASHBOARD FEEL
+   ========================================================== */
+
+#apAprishaPresenceV4
+.ap4-stars {
+
+    opacity: .075;
+}
+
+
+#apAprishaPresenceV4
+.ap4-field {
+
+    left: 50%;
+
+    top: auto;
+
+    bottom: -180px;
+
+
+    width: 520px;
+
+
+    opacity: .26;
+
+
+    transform:
+        translateX(-50%);
+
+
+    background:
+
+        radial-gradient(
+            circle,
+
+            rgba(130,200,255,.075),
+
+            rgba(185,162,255,.042)
+            28%,
+
+            rgba(229,200,117,.018)
+            49%,
+
+            transparent
+            71%
+        );
+
+
+    animation:
+        ap41FieldBreath
+        4.8s
+        ease-in-out
+        infinite;
+}
+
+
+#apAprishaPresenceV4
+.ap4-field::before {
+
+    inset: 20%;
+
+    border-color:
+        rgba(250,247,240,.045);
+}
+
+
+#apAprishaPresenceV4
+.ap4-field::after {
+
+    inset: 33%;
+
+    border-color:
+        rgba(185,162,255,.06);
+}
+
+
+
+/* ==========================================================
+   NO FLOATING STATUS PILL
+   ========================================================== */
+
+#apAprishaPresenceV4
+.ap4-status {
+
+    display: none !important;
+}
+
+
+
+/* ==========================================================
+   COMPACT BOTTOM-CENTER VOICE PRESENCE
+   ========================================================== */
+
+#apAprishaPresenceV4
+.ap4-stage {
+
+    left: 50%;
+
+    top: auto;
+
+    bottom:
+        max(
+            26px,
+            env(safe-area-inset-bottom)
+        );
+
+
+    width:
+        min(
+            520px,
+            94vw
+        );
+
+
+    transform:
+        translateX(-50%);
+
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+
+    animation:
+        ap41PresenceRise
+        .58s
+        var(--ap41-ease)
+        both;
+}
+
+
+
+/* ==========================================================
+   REMOVE LABEL NOISE
+   ========================================================== */
+
+#apAprishaPresenceV4
+.ap4-eyebrow {
+
+    display: none;
+}
+
+
+
+/* ==========================================================
+   SMALL HUMAN TEXT — NOT A GIANT HEADING
+   ========================================================== */
+
+#apAprishaPresenceV4
+.ap4-title {
+
+    order: 1;
+
+
+    margin: 0;
+
+
+    color:
+        rgba(250,247,240,.96);
+
+
+    font-size:
+        clamp(
+            24px,
+            2.7vw,
+            34px
+        );
+
+
+    font-weight: 510;
+
+
+    line-height: 1.08;
+
+
+    letter-spacing:
+        -.035em;
+
+
+    text-shadow:
+
+        0 4px 20px
+        rgba(0,0,0,.62),
+
+        0 0 25px
+        rgba(250,247,240,.06);
+}
+
+
+#apAprishaPresenceV4
+.ap4-subtitle {
+
+    order: 2;
+
+
+    margin-top:
+        5px;
+
+
+    color:
+        rgba(250,247,240,.47);
+
+
+    font-size:
+        12px;
+
+
+    font-weight:
+        430;
+
+
+    letter-spacing:
+        .015em;
+}
+
+
+
+/* ==========================================================
+   LIQUID INTELLIGENCE ORB
+   ========================================================== */
+
+#apAprishaPresenceV4
+.ap4-core {
+
+    order: 3;
+
+
+    width: 122px;
+    height: 122px;
+
+
+    margin:
+
+        18px
+        0
+        7px;
+
+
+    filter:
+
+        drop-shadow(
+            0 18px 35px
+            rgba(0,0,0,.48)
+        );
+}
+
+
+
+/* LARGE DIFFUSED AURA */
+
+#apAprishaPresenceV4
+.ap4-aura {
+
+    inset: -54px;
+
+
+    background:
+
+        radial-gradient(
+            circle,
+
+            rgba(250,247,240,.12)
+            0%,
+
+            rgba(130,200,255,.11)
+            17%,
+
+            rgba(185,162,255,.09)
+            32%,
+
+            rgba(240,168,206,.055)
+            44%,
+
+            rgba(229,200,117,.035)
+            57%,
+
+            transparent
+            72%
+        );
+
+
+    filter:
+        blur(24px);
+
+
+    animation:
+        ap41Aura
+        3.4s
+        ease-in-out
+        infinite;
+}
+
+
+
+/* IRIDESCENT OUTER LIQUID RING */
+
+#apAprishaPresenceV4
+.ap4-ring {
+
+    inset: 0;
+
+
+    background:
+
+        conic-gradient(
+            from 0deg,
+
+            rgba(130,200,255,.20),
+
+            rgba(130,200,255,.95)
+            58deg,
+
+            rgba(250,247,240,.96)
+            105deg,
+
+            rgba(185,162,255,.95)
+            166deg,
+
+            rgba(240,168,206,.88)
+            221deg,
+
+            rgba(229,200,117,.92)
+            284deg,
+
+            rgba(130,200,255,.20)
+            360deg
+        );
+
+
+    filter:
+
+        drop-shadow(
+            0 0 8px
+            rgba(130,200,255,.34)
+        )
+
+        drop-shadow(
+            0 0 15px
+            rgba(185,162,255,.20)
+        );
+
+
+    animation:
+        ap41LiquidRotate
+        6.8s
+        linear
+        infinite;
+}
+
+
+
+/* INNER ORBIT */
+
+#apAprishaPresenceV4
+.ap4-ring2 {
+
+    inset: 10px;
+
+
+    border:
+
+        1px solid
+        rgba(250,247,240,.16);
+
+
+    box-shadow:
+
+        inset 0 0 18px
+        rgba(250,247,240,.025),
+
+        0 0 14px
+        rgba(185,162,255,.055);
+
+
+    animation:
+        ap41RingBreathe
+        2.9s
+        ease-in-out
+        infinite;
+}
+
+
+#apAprishaPresenceV4
+.ap4-ring2::before {
+
+    width: 5px;
+    height: 5px;
+
+
+    top: -3px;
+
+
+    background:
+        rgba(250,247,240,.98);
+
+
+    box-shadow:
+
+        0 0 8px
+        rgba(250,247,240,.90),
+
+        0 0 16px
+        rgba(130,200,255,.65);
+}
+
+
+
+/* LIQUID GLASS CENTER */
+
+#apAprishaPresenceV4
+.ap4-disc {
+
+    inset: 22px;
+
+
+    background:
+
+        radial-gradient(
+            circle
+            at 36% 28%,
+
+            rgba(255,255,255,.18),
+
+            rgba(130,200,255,.10)
+            23%,
+
+            rgba(185,162,255,.10)
+            42%,
+
+            rgba(240,168,206,.07)
+            58%,
+
+            rgba(14,14,16,.82)
+            79%
+        );
+
+
+    border:
+
+        1px solid
+        rgba(255,255,255,.13);
+
+
+    box-shadow:
+
+        inset 0 1px 0
+        rgba(255,255,255,.18),
+
+        inset 0 -14px 28px
+        rgba(0,0,0,.24),
+
+        0 12px 32px
+        rgba(0,0,0,.47);
+
+
+    backdrop-filter:
+        blur(18px)
+        saturate(1.25);
+
+
+    -webkit-backdrop-filter:
+        blur(18px)
+        saturate(1.25);
+}
+
+
+
+/* AP MARK — QUIET, NOT DOMINANT */
+
+#apAprishaPresenceV4
+.ap4-mark {
+
+    font-size:
+        27px;
+
+
+    font-weight:
+        540;
+
+
+    color:
+        rgba(250,247,240,.92);
+
+
+    letter-spacing:
+        -.055em;
+
+
+    text-shadow:
+
+        0 0 14px
+        rgba(250,247,240,.12);
+}
+
+
+
+/* ==========================================================
+   TINY VOICE RESPONSE
+   ========================================================== */
+
+#apAprishaPresenceV4
+.ap4-wave {
+
+    order: 4;
+
+
+    height: 18px;
+
+
+    margin-top:
+        4px;
+
+
+    gap:
+        4px;
+}
+
+
+#apAprishaPresenceV4
+.ap4-wave span {
+
+    width:
+        2px;
+
+
+    max-height:
+        15px;
+
+
+    background:
+
+        linear-gradient(
+            180deg,
+
+            rgba(250,247,240,.95),
+
+            rgba(130,200,255,.62),
+
+            rgba(185,162,255,.36)
+        );
+
+
+    box-shadow:
+
+        0 0 7px
+        rgba(130,200,255,.22);
+
+
+    animation:
+        ap41Wave
+        1.05s
+        ease-in-out
+        infinite;
+}
+
+
+
+/* ==========================================================
+   WAKE
+   ========================================================== */
+
+#apAprishaPresenceV4[data-state="wake"]
+.ap4-core {
+
+    animation:
+        ap41Wake
+        .72s
+        var(--ap41-ease)
+        both;
+}
+
+
+
+/* ==========================================================
+   LISTENING
+   ========================================================== */
+
+#apAprishaPresenceV4[data-state="listening"]
+.ap4-aura {
+
+    animation-duration:
+        2.65s;
+}
+
+
+
+/* ==========================================================
+   THINKING
+   ========================================================== */
+
+#apAprishaPresenceV4[data-state="thinking"]
+.ap4-ring {
+
+    animation-duration:
+        1.75s;
+}
+
+
+#apAprishaPresenceV4[data-state="thinking"]
+.ap4-ring2 {
+
+    animation-duration:
+        1.30s;
+}
+
+
+#apAprishaPresenceV4[data-state="thinking"]
+.ap4-disc {
+
+    filter:
+        brightness(1.08)
+        saturate(1.15);
+}
+
+
+
+/* ==========================================================
+   SPEAKING
+   ========================================================== */
+
+#apAprishaPresenceV4[data-state="speaking"]
+.ap4-core {
+
+    animation:
+        ap41Speaking
+        1.15s
+        ease-in-out
+        infinite;
+}
+
+
+#apAprishaPresenceV4[data-state="speaking"]
+.ap4-wave span {
+
+    animation-duration:
+        .56s;
+}
+
+
+
+/* ==========================================================
+   ANIMATION
+   ========================================================== */
+
+@keyframes ap41PresenceRise {
+
+    from {
+
+        opacity: 0;
+
+
+        transform:
+            translateX(-50%)
+            translateY(22px)
+            scale(.94);
+    }
+
+
+    to {
+
+        opacity: 1;
+
+
+        transform:
+            translateX(-50%)
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+
+@keyframes ap41Wake {
+
+    0% {
+
+        transform:
+            scale(.62);
+
+        opacity:
+            .15;
+    }
+
+
+    65% {
+
+        transform:
+            scale(1.07);
+    }
+
+
+    100% {
+
+        transform:
+            scale(1);
+
+        opacity:
+            1;
+    }
+}
+
+
+
+@keyframes ap41Aura {
+
+    0%,
+    100% {
+
+        transform:
+            scale(.90);
+
+        opacity:
+            .40;
+    }
+
+
+    50% {
+
+        transform:
+            scale(1.13);
+
+        opacity:
+            .90;
+    }
+}
+
+
+
+@keyframes ap41LiquidRotate {
+
+    to {
+
+        transform:
+            rotate(360deg);
+    }
+}
+
+
+
+@keyframes ap41RingBreathe {
+
+    0%,
+    100% {
+
+        transform:
+            scale(.96);
+
+        opacity:
+            .55;
+    }
+
+
+    50% {
+
+        transform:
+            scale(1.035);
+
+        opacity:
+            1;
+    }
+}
+
+
+
+@keyframes ap41FieldBreath {
+
+    0%,
+    100% {
+
+        transform:
+            translateX(-50%)
+            scale(.92);
+
+        opacity:
+            .18;
+    }
+
+
+    50% {
+
+        transform:
+            translateX(-50%)
+            scale(1.10);
+
+        opacity:
+            .34;
+    }
+}
+
+
+
+@keyframes ap41EdgeAlive {
+
+    0%,
+    100% {
+
+        width:
+            28%;
+
+        opacity:
+            .35;
+    }
+
+
+    50% {
+
+        width:
+            54%;
+
+        opacity:
+            .88;
+    }
+}
+
+
+
+@keyframes ap41Wave {
+
+    0%,
+    100% {
+
+        height:
+            3px;
+
+        opacity:
+            .38;
+    }
+
+
+    50% {
+
+        height:
+            14px;
+
+        opacity:
+            1;
+    }
+}
+
+
+
+@keyframes ap41Speaking {
+
+    0%,
+    100% {
+
+        transform:
+            scale(.985);
+    }
+
+
+    50% {
+
+        transform:
+            scale(1.055);
+    }
+}
+
+
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+
+@media (
+    max-width: 720px
+) {
+
+    #apAprishaPresenceV4
+    .ap4-stage {
+
+        bottom:
+            max(
+                20px,
+                env(safe-area-inset-bottom)
+            );
+    }
+
+
+    #apAprishaPresenceV4
+    .ap4-core {
+
+        width:
+            106px;
+
+        height:
+            106px;
+
+
+        margin-top:
+            14px;
+    }
+
+
+    #apAprishaPresenceV4
+    .ap4-disc {
+
+        inset:
+            19px;
+    }
+
+
+    #apAprishaPresenceV4
+    .ap4-title {
+
+        font-size:
+            25px;
+    }
+
+
+    #apAprishaPresenceV4
+    .ap4-subtitle {
+
+        font-size:
+            11px;
+    }
+}
+
+
+
+/* ==========================================================
+   REDUCED MOTION
+   ========================================================== */
+
+@media (
+    prefers-reduced-motion:
+    reduce
+) {
+
+    #apAprishaPresenceV4 *,
+    #apAprishaPresenceV4 *::before,
+    #apAprishaPresenceV4 *::after {
+
+        animation-duration:
+            .001ms !important;
+
+        animation-iteration-count:
+            1 !important;
+    }
+}
+
+</style>
+
+<!-- AP_APRISHA_CLASSIC_V41_END -->
+
 </body>
 </html>
 

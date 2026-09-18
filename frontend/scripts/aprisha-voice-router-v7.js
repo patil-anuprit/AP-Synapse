@@ -1,6 +1,274 @@
 (() => {
     "use strict";
 
+    /*
+     * =========================================================
+     * AP_APRISHA_COMPANION_V5
+     *
+     * Real-time companion layer.
+     *
+     * Goals:
+     * - wake visual EVERY time
+     * - begin visual immediately on wake recognition
+     * - keep AI chat path invisible
+     * - execute known direct actions locally
+     * - speak action acknowledgements through Aprisha
+     * =========================================================
+     */
+
+
+    let apCompanionLastVisualWakeAt =
+        0;
+
+
+    function apCompanionVisualWake(
+        source = "wake"
+    ) {
+
+        try {
+
+            const presence =
+                window
+                    .APAprishaPresenceV4;
+
+
+            if (
+                !presence ||
+                typeof presence.wake !==
+                    "function"
+            ) {
+
+                return;
+            }
+
+
+            const now =
+                Date.now();
+
+
+            /*
+             * Initial fast wake and session-open happen
+             * almost together.
+             *
+             * Treat them as one awakening.
+             */
+
+            if (
+                source !==
+                    "active-reset" &&
+                now -
+                    apCompanionLastVisualWakeAt <
+                    650
+            ) {
+
+                return;
+            }
+
+
+            apCompanionLastVisualWakeAt =
+                now;
+
+
+            /*
+             * Force animation restart.
+             *
+             * This solves the "visual only appears once"
+             * problem when Presence is already in listening
+             * state from the previous interaction.
+             */
+
+            try {
+
+                presence
+                    .hide?.();
+
+            }
+            catch {}
+
+
+            requestAnimationFrame(
+                () => {
+
+                    requestAnimationFrame(
+                        () => {
+
+                            try {
+
+                                presence
+                                    .wake();
+
+                            }
+                            catch {}
+                        }
+                    );
+                }
+            );
+
+
+            console.log(
+                "✦ APRISHA COMPANION WAKE VISUAL →",
+                source
+            );
+
+        }
+        catch (
+            error
+        ) {
+
+            console.warn(
+                "Aprisha wake visual unavailable:",
+                error
+            );
+        }
+    }
+
+
+    function apCompanionNormalize(
+        text
+    ) {
+
+        return String(
+            text || ""
+        )
+            .toLowerCase()
+            .replace(
+                /[^a-z0-9\s.-]/g,
+                " "
+            )
+            .replace(
+                /\s+/g,
+                " "
+            )
+            .trim();
+    }
+
+
+    function apCompanionIsLocalAction(
+        text
+    ) {
+
+        const command =
+            apCompanionNormalize(
+                text
+            );
+
+
+        /*
+         * Known web/app destinations already supported
+         * by the existing Aprisha command controller.
+         */
+
+        const directOpen =
+            /^(?:open|launch|start|visit|go to)\s+(?:youtube|whatsapp|gmail|google drive|drive|google calendar|calendar|github)\b/i
+                .test(
+                    command
+                );
+
+
+        const youtubeSearch =
+            /^(?:search|find)\s+(?:on\s+)?youtube\s+(?:for\s+)?\S+/i
+                .test(
+                    command
+                );
+
+
+        const googleSearch =
+            /^(?:search|google)\s+(?:for\s+)?\S+/i
+                .test(
+                    command
+                );
+
+
+        const deviceAction =
+            /^(?:call|phone|ring|send (?:a )?(?:message|text|sms)|(?:set|start) (?:a )?(?:timer|alarm|reminder)|remind me|(?:what is|what's|tell me) my battery|battery level|turn (?:on|off) (?:the )?(?:flashlight|torch|wifi|wi fi|bluetooth)|volume (?:up|down)|mute|unmute|open camera|take (?:a )?(?:photo|picture)|record video)\b/i
+                .test(
+                    command
+                );
+
+
+        return (
+            directOpen ||
+            youtubeSearch ||
+            googleSearch ||
+            deviceAction
+        );
+    }
+
+
+    function apCompanionTryLocalAction(
+        text
+    ) {
+
+        if (
+            !apCompanionIsLocalAction(
+                text
+            )
+        ) {
+
+            return false;
+        }
+
+
+        if (
+            !window.Aprisha ||
+            typeof window
+                .Aprisha
+                .command !==
+                "function"
+        ) {
+
+            return false;
+        }
+
+
+        try {
+
+            /*
+             * Existing Aprisha command controller handles
+             * the spoken acknowledgement:
+             *
+             * "Opening YouTube"
+             *
+             * before performing the action.
+             */
+
+            window
+                .APAprishaPresenceV4
+                ?.thinking?.();
+
+
+            window
+                .Aprisha
+                .command(
+                    text
+                );
+
+
+            console.log(
+                "⚡ APRISHA COMPANION ACTION →",
+                text
+            );
+
+
+            return true;
+
+        }
+        catch (
+            error
+        ) {
+
+            console.warn(
+                "Aprisha local action failed:",
+                error
+            );
+
+
+            return false;
+        }
+    }
+
+
+
     if (window.__AP_APRISHA_VOICE_ROUTER_V7__) {
         return;
     }
@@ -532,6 +800,51 @@
         }
 
 
+
+
+        /*
+         * =====================================================
+         * APRISHA COMPANION — ACTION FIRST
+         *
+         * Known executable commands do not need an AI roundtrip.
+         *
+         * Example:
+         *
+         * User: "Open YouTube"
+         *
+         * Aprisha:
+         *   "Opening YouTube."
+         *
+         * Then the existing controller opens YouTube.
+         *
+         * Ordinary questions still continue directly through
+         * APAprisha.execute() and stay out of visible chat.
+         * =====================================================
+         */
+
+        if (
+            apCompanionTryLocalAction(
+                clean
+            )
+        ) {
+
+            lastExecuted =
+                normalized;
+
+
+            lastExecutedAt =
+                Date.now();
+
+
+            scheduleStart(
+                320
+            );
+
+
+            return;
+        }
+
+
         if (
             !window.APAprisha ||
             typeof window.APAprisha
@@ -769,6 +1082,10 @@
 
             console.log(
                 "⚡ HEY APRISHA — session opened"
+            );
+
+            apCompanionVisualWake(
+                "session-open"
             );
 
             /*
@@ -1194,6 +1511,15 @@
                     candidate
                 );
 
+                /*
+                 * A new wake phrase during an already-open
+                 * conversation is still a NEW awakening.
+                 */
+
+                apCompanionVisualWake(
+                    "active-reset"
+                );
+
 
                 Promise
                     .resolve()
@@ -1291,9 +1617,7 @@
 
 
         const delay =
-            fastWake
-                ? 120
-                : (
+            fastWake ? 55 : (
                     final
                         ? 850
                         : 1200
@@ -1559,6 +1883,16 @@
                         console.log(
                             "⚡ APRISHA FAST WAKE →",
                             wakeRaw
+                        );
+
+                        /*
+                         * Presence starts at the moment the
+                         * wake phrase is recognized —
+                         * not after the rest of the pipeline.
+                         */
+
+                        apCompanionVisualWake(
+                            "fast-wake"
                         );
 
                         latestText = "";

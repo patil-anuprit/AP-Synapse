@@ -6,6 +6,7 @@ import {
 import { generateCloudflareImageEdit } from "./services/cloudflareImageEditService.js";
 import express from "express";
 import cors from "cors";
+import { installAPProductionSecurity } from "./security/APProductionSecurity.js";
 import dotenv from "dotenv";
 import { generateImage } from "./services/imageService.js";
 import https from "https";
@@ -65,6 +66,7 @@ import {
 } from "./memory/index.js";
 
 import { createAIStream } from "./services/router.js";
+import { createStream as createAPLocalSpecialistStream } from "./services/localOllamaSpecialistService.js";
 import aprishaAgentRouter from "./services/aprishaAgentRouter.js";
 import aprishaDesktopRouter from "./services/aprishaDesktopRouter.js";
 import shareV2Router from "./services/shareV2Router.js";
@@ -100,6 +102,108 @@ import * as APPersonalization
     from "./services/personalizationService.js";
 
 
+
+// ============================================================
+// AP_STREAM_TEXT_EXTRACTOR_V1
+// Accept canonical OpenAI chunks plus AP-native stream forms.
+// ============================================================
+
+function apExtractVisibleStreamText(
+    chunk
+) {
+
+    if (
+        typeof chunk === "string"
+    ) {
+        return chunk;
+    }
+
+    if (!chunk) {
+        return "";
+    }
+
+    return (
+        chunk?.choices?.[0]?.delta?.content ??
+        chunk?.choices?.[0]?.message?.content ??
+        chunk?.choices?.[0]?.text ??
+        chunk?.delta?.content ??
+        chunk?.message?.content ??
+        chunk?.content ??
+        chunk?.text ??
+        ""
+    );
+}
+
+
+
+// ============================================================
+// AP_ABSOLUTE_CHAT_FALLBACK_V1
+//
+// Final safety net for normal text chat.
+// A completed /chat request is never allowed to produce
+// an empty assistant bubble.
+//
+// Primary path:
+//   AP Unified Intelligence
+//
+// Emergency path:
+//   AP Local Specialist
+//
+// Last-resort visible reply:
+//   deterministic service-status message
+// ============================================================
+
+async function apGenerateEmergencyVisibleReply(
+    messages = []
+) {
+
+    try {
+
+        const stream =
+            createAPLocalSpecialistStream(
+                messages
+            );
+
+        let result = "";
+
+        for await (
+            const chunk of stream
+        ) {
+
+            result +=
+                apExtractVisibleStreamText(
+                    chunk
+                );
+        }
+
+        if (
+            result.trim()
+        ) {
+
+            console.log(
+                `[AP] absolute.fallback.success chars=${result.length}`
+            );
+
+            return result;
+        }
+
+    } catch (error) {
+
+        console.error(
+            "[AP] absolute.fallback.failed",
+            error?.message ||
+            String(error)
+        );
+    }
+
+
+    return (
+        "I could not complete that response correctly. " +
+        "Please send the request again."
+    );
+}
+
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -127,7 +231,7 @@ const AP_SCHEDULER_ENABLED =
 
 
 
-app.use(cors());
+installAPProductionSecurity(app);
 // AP_DIRECT_ATTACHMENT_BODY_LIMIT_V4
 app.use(express.json({ limit: "12mb" }));
 app.use("/aprisha", aprishaAgentRouter);
@@ -824,6 +928,444 @@ ${sample}`;
 
         }
 
+    }
+);
+
+
+// ============================================================
+// AP_LOCAL_QWEN_DIRECT_CHAT_V2
+// Local preview only. Existing production router is preserved.
+// ============================================================
+
+app.post(
+    "/chat",
+    async (req, res, next) => {
+
+        const enabled =
+            ["1", "true", "yes", "on"].includes(
+                String(
+                    process.env.AP_LOCAL_QWEN_DIRECT || ""
+                )
+                    .trim()
+                    .toLowerCase()
+            );
+
+
+        if (!enabled) {
+            return next();
+        }
+
+
+        const message =
+            String(
+                req.body?.message || ""
+            ).trim();
+
+
+        if (!message) {
+            return next();
+        }
+
+
+        console.log(
+            "[AP] local.qwen.direct_started"
+        );
+
+
+        const controller =
+            new AbortController();
+
+
+        const timeout =
+            setTimeout(
+                () => controller.abort(),
+                90000
+            );
+
+
+        let wroteAnyText =
+            false;
+
+
+        try {
+
+            const upstream =
+                await fetch(
+                    "http://127.0.0.1:11434/api/chat",
+                    {
+                        method:
+                            "POST",
+
+                        headers: {
+                            "content-type":
+                                "application/json"
+                        },
+
+                        signal:
+                            controller.signal,
+
+                        body:
+                            JSON.stringify({
+                                model:
+                                    "ap-synapse-runtime:v1",
+
+                                stream:
+                                    true,
+
+                                think:
+                                    false,
+
+                                keep_alive:
+                                    "30m",
+
+                                messages: [
+                                    {
+                                        role:
+                                            "user",
+
+                                        content:
+                                            message
+                                    }
+                                ],
+
+                                options: {
+                                    temperature:
+                                        0.35,
+
+                                    top_p:
+                                        0.90,
+
+                                    num_ctx:
+                                        2048,
+
+                                    num_predict:
+                                        240
+                                }
+                            })
+                    }
+                );
+
+
+            if (
+                !upstream.ok ||
+                !upstream.body
+            ) {
+
+                throw new Error(
+                    "AP Synapse local runtime HTTP " +
+                    upstream.status
+                );
+            }
+
+
+            res.status(200);
+
+            res.setHeader(
+                "Content-Type",
+                "text/plain; charset=utf-8"
+            );
+
+            res.setHeader(
+                "Cache-Control",
+                "no-cache, no-transform"
+            );
+
+            res.setHeader(
+                "X-Accel-Buffering",
+                "no"
+            );
+
+
+            if (
+                typeof res.flushHeaders ===
+                "function"
+            ) {
+
+                res.flushHeaders();
+            }
+
+
+            const reader =
+                upstream.body.getReader();
+
+
+            const decoder =
+                new TextDecoder();
+
+
+            let buffer =
+                "";
+
+
+            let fullReply =
+                "";
+
+
+            let firstToken =
+                false;
+
+
+            async function handleLine(raw) {
+
+                const line =
+                    String(raw || "").trim();
+
+
+                if (!line) {
+                    return;
+                }
+
+
+                let data;
+
+
+                try {
+
+                    data =
+                        JSON.parse(line);
+
+                }
+                catch {
+
+                    return;
+                }
+
+
+                const text =
+                    String(
+                        data?.message?.content ||
+                        data?.response ||
+                        ""
+                    );
+
+
+                if (!text) {
+                    return;
+                }
+
+
+                if (!firstToken) {
+
+                    firstToken =
+                        true;
+
+
+                    console.log(
+                        "[AP] local.qwen.first_token"
+                    );
+                }
+
+
+                wroteAnyText =
+                    true;
+
+
+                fullReply +=
+                    text;
+
+
+                res.write(
+                    text
+                );
+            }
+
+
+            while (true) {
+
+                const packet =
+                    await reader.read();
+
+
+                if (packet.done) {
+                    break;
+                }
+
+
+                buffer +=
+                    decoder.decode(
+                        packet.value,
+                        {
+                            stream:
+                                true
+                        }
+                    );
+
+
+                const lines =
+                    buffer.split(/\r?\n/);
+
+
+                buffer =
+                    lines.pop() || "";
+
+
+                for (
+                    const line
+                    of lines
+                ) {
+
+                    await handleLine(
+                        line
+                    );
+                }
+            }
+
+
+            buffer +=
+                decoder.decode();
+
+
+            if (buffer.trim()) {
+
+                await handleLine(
+                    buffer
+                );
+            }
+
+
+            fullReply =
+                fullReply.trim();
+
+
+            if (!fullReply) {
+
+                throw new Error(
+                    "AP Synapse runtime completed without visible text."
+                );
+            }
+
+
+            console.log(
+                "[AP] local.qwen.direct_ready output_characters=" +
+                fullReply.length
+            );
+
+
+            // ================================================
+            // AP-FM EXPERIENCE CAPTURE
+            // ================================================
+
+            const captureEnabled =
+                ["1", "true", "yes", "on"].includes(
+                    String(
+                        process.env.AP_SYNAPSE_EXPERIENCE_CAPTURE ||
+                        ""
+                    )
+                        .trim()
+                        .toLowerCase()
+                );
+
+
+            if (captureEnabled) {
+
+                try {
+
+                    const experience =
+                        await import(
+                            "./intelligence/runtime/APSynapseExperienceEngine.js"
+                        );
+
+
+                    if (
+                        typeof experience
+                            .recordAPSynapseExperience ===
+                        "function"
+                    ) {
+
+                        const result =
+                            await experience
+                                .recordAPSynapseExperience({
+                                    prompt:
+                                        message,
+
+                                    answer:
+                                        fullReply,
+
+                                    accepted:
+                                        true,
+
+                                    domain:
+                                        "live"
+                                });
+
+
+                        console.log(
+                            "[AP] experience.capture recorded=" +
+                            Boolean(
+                                result?.recorded
+                            )
+                        );
+                    }
+
+                }
+                catch (error) {
+
+                    console.warn(
+                        "[AP] experience.capture_failed",
+                        error?.message ||
+                        String(error)
+                    );
+                }
+            }
+
+
+            clearTimeout(
+                timeout
+            );
+
+
+            if (!res.writableEnded) {
+                res.end();
+            }
+
+
+            return;
+
+        }
+        catch (error) {
+
+            clearTimeout(
+                timeout
+            );
+
+
+            console.error(
+                "[AP] local.qwen.direct_failed",
+                error?.message ||
+                String(error)
+            );
+
+
+            /*
+             * If Qwen failed before sending anything,
+             * preserve the existing AP Synapse router.
+             */
+
+            if (!wroteAnyText) {
+
+                if (!res.headersSent) {
+                    return next();
+                }
+
+
+                if (!res.writableEnded) {
+
+                    res.write(
+                        "AP Synapse could not complete the local response."
+                    );
+
+                    res.end();
+                }
+
+
+                return;
+            }
+
+
+            if (!res.writableEnded) {
+                res.end();
+            }
+        }
     }
 );
 
@@ -1699,7 +2241,9 @@ let fullReply = "";
 for await (const chunk of stream) {
 
     const text =
-        chunk.choices?.[0]?.delta?.content || "";
+        apExtractVisibleStreamText(
+            chunk
+        );
 
     if (!text) continue;
 
@@ -1718,6 +2262,43 @@ for await (const chunk of stream) {
 
     res.write(text);
 }
+
+// ============================================================
+// AP_CHAT_NONBLANK_FINAL_GATE_V1
+// ============================================================
+
+if (
+    !fullReply.trim()
+) {
+
+    console.warn(
+        "[AP] chat.primary_empty -> absolute fallback"
+    );
+
+    const emergencyReply =
+        await apGenerateEmergencyVisibleReply(
+            messages
+        );
+
+    if (
+        emergencyReply &&
+        emergencyReply.trim()
+    ) {
+
+        fullReply =
+            emergencyReply;
+
+        if (
+            !res.writableEnded
+        ) {
+
+            res.write(
+                emergencyReply
+            );
+        }
+    }
+}
+
 
 const totalTime =
     performance.now() - requestStart;

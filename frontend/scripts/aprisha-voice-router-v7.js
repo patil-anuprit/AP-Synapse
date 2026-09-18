@@ -1,6 +1,144 @@
 (() => {
     "use strict";
 
+    /*
+     * AP_APRISHA_PRESENCE_V2_SIGNAL
+     *
+     * Passive visual bridge.
+     *
+     * Never controls:
+     * microphone,
+     * recognition,
+     * synthesis,
+     * AI execution,
+     * barge-in.
+     */
+
+    function apPresenceV2Signal(
+        state
+    ) {
+
+        try {
+
+            const activate =
+                () => {
+
+                    const presence =
+                        window
+                            .APAprishaPresenceV2;
+
+
+                    if (!presence) {
+                        return;
+                    }
+
+
+                    if (
+                        state ===
+                        "wake"
+                    ) {
+
+                        presence
+                            .wake?.();
+
+                        return;
+                    }
+
+
+                    presence[
+                        state
+                    ]?.();
+                };
+
+
+            if (
+                window
+                    .APAprishaPresenceV2
+            ) {
+
+                activate();
+
+                return;
+            }
+
+
+            const id =
+                "ap-aprisha-presence-v2-loader";
+
+
+            const existing =
+                document
+                    .getElementById(
+                        id
+                    );
+
+
+            if (existing) {
+
+                existing
+                    .addEventListener(
+                        "load",
+                        activate,
+                        {
+                            once: true
+                        }
+                    );
+
+                return;
+            }
+
+
+            const script =
+                document
+                    .createElement(
+                        "script"
+                    );
+
+
+            script.id =
+                id;
+
+
+            script.src =
+                "./scripts/aprisha-presence-v2.js?v=2.0.0";
+
+
+            script.async =
+                true;
+
+
+            script.onload =
+                activate;
+
+
+            script.onerror =
+                () => {
+
+                    console.warn(
+                        "Aprisha Presence visual unavailable. Voice remains active."
+                    );
+                };
+
+
+            document.head
+                .appendChild(
+                    script
+                );
+
+        }
+        catch (
+            error
+        ) {
+
+            console.warn(
+                "Aprisha Presence signal failed:",
+                error
+            );
+        }
+    }
+
+
+
     if (window.__AP_APRISHA_VOICE_ROUTER_V7__) {
         return;
     }
@@ -577,6 +715,10 @@
             clean
         );
 
+        apPresenceV2Signal(
+            "thinking"
+        );
+
 
         try {
 
@@ -747,6 +889,10 @@
 
             console.log(
                 "⚡ HEY APRISHA — session opened"
+            );
+
+            apPresenceV2Signal(
+                "wake"
             );
 
 

@@ -4998,6 +4998,12 @@ apWbPageObserver.observe(
         ) {
             return;
         }
+        if (
+            target.dataset?.apHistoryV183 === "undo" ||
+            target.dataset?.apHistoryV183 === "redo"
+        ) {
+            return;
+        }
 
         if (
             target.closest(
@@ -6507,5 +6513,751 @@ apWbPageObserver.observe(
 
     console.log(
         "∞ AP INFINITE CANVAS V1.8.2 VIEWPORT FIT READY"
+    );
+})();
+// ============================================================
+// AP_INFINITE_CANVAS_V183
+// Reliable history controls + true viewport-height whiteboard.
+// ============================================================
+
+(() => {
+    "use strict";
+
+    if (window.__AP_INFINITE_CANVAS_V183__) {
+        return;
+    }
+
+    window.__AP_INFINITE_CANVAS_V183__ = true;
+
+    const ANCHOR_ID =
+        "apInfiniteCanvasViewportAnchor";
+
+    let historyToolbar =
+        null;
+
+    let historyCaptureHandler =
+        null;
+
+    let fitFrame =
+        0;
+
+    let resizeObserver =
+        null;
+
+    let toolbarObserver =
+        null;
+
+    function visible(element) {
+        if (!element) {
+            return false;
+        }
+
+        const style =
+            getComputedStyle(
+                element
+            );
+
+        const rect =
+            element.getBoundingClientRect();
+
+        return (
+            style.display !==
+                "none" &&
+            style.visibility !==
+                "hidden" &&
+            rect.width > 0 &&
+            rect.height > 0
+        );
+    }
+
+    function getCanvasParts() {
+        const page =
+            document.getElementById(
+                "canvasPage"
+            );
+
+        const shell =
+            page?.querySelector(
+                ".whiteboard-shell.ap-infinite-shell"
+            );
+
+        const canvas =
+            page?.querySelector(
+                "#apCanvas.ap-infinite-canvas"
+            );
+
+        return {
+            page,
+            shell,
+            canvas
+        };
+    }
+
+    function ensureAnchor(
+        shell
+    ) {
+        let anchor =
+            document.getElementById(
+                ANCHOR_ID
+            );
+
+        if (
+            anchor &&
+            anchor.parentElement !==
+                shell.parentElement
+        ) {
+            anchor.remove();
+            anchor = null;
+        }
+
+        if (!anchor) {
+            anchor =
+                document.createElement(
+                    "div"
+                );
+
+            anchor.id =
+                ANCHOR_ID;
+
+            anchor.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+            anchor.style.cssText =
+                "display:block;width:100%;height:0;margin:0;padding:0;border:0;pointer-events:none;";
+
+            shell.parentElement
+                ?.insertBefore(
+                    anchor,
+                    shell
+                );
+        }
+
+        return anchor;
+    }
+
+    function fitBoardNow() {
+        const {
+            page,
+            shell,
+            canvas
+        } =
+            getCanvasParts();
+
+        if (
+            !page ||
+            !shell ||
+            !canvas ||
+            !visible(page)
+        ) {
+            return false;
+        }
+
+        const anchor =
+            ensureAnchor(
+                shell
+            );
+
+        const pageRect =
+            page.getBoundingClientRect();
+
+        const anchorRect =
+            anchor.getBoundingClientRect();
+
+        const viewportHeight =
+            Math.max(
+                1,
+                Number(
+                    window.visualViewport
+                        ?.height
+                ) ||
+                document.documentElement
+                    .clientHeight ||
+                window.innerHeight ||
+                0
+            );
+
+        const top =
+            Math.max(
+                0,
+                Math.round(
+                    anchorRect.top
+                )
+            );
+
+        const left =
+            Math.round(
+                pageRect.left
+            );
+
+        const width =
+            Math.max(
+                1,
+                Math.round(
+                    pageRect.width
+                )
+            );
+
+        const height =
+            Math.max(
+                360,
+                Math.ceil(
+                    viewportHeight -
+                    top
+                )
+            );
+
+        /*
+         * Fixed to the viewport only while Canvas is visible.
+         * This bypasses all older finite-board height/max-height
+         * rules and guarantees the white surface reaches bottom.
+         */
+        shell.style.setProperty(
+            "position",
+            "fixed",
+            "important"
+        );
+
+        shell.style.setProperty(
+            "top",
+            `${top}px`,
+            "important"
+        );
+
+        shell.style.setProperty(
+            "left",
+            `${left}px`,
+            "important"
+        );
+
+        shell.style.setProperty(
+            "right",
+            "auto",
+            "important"
+        );
+
+        shell.style.setProperty(
+            "bottom",
+            "0",
+            "important"
+        );
+
+        shell.style.setProperty(
+            "width",
+            `${width}px`,
+            "important"
+        );
+
+        shell.style.setProperty(
+            "height",
+            `${height}px`,
+            "important"
+        );
+
+        shell.style.setProperty(
+            "min-height",
+            `${height}px`,
+            "important"
+        );
+
+        shell.style.setProperty(
+            "max-height",
+            "none",
+            "important"
+        );
+
+        shell.style.setProperty(
+            "margin",
+            "0",
+            "important"
+        );
+
+        shell.style.setProperty(
+            "z-index",
+            "20",
+            "important"
+        );
+
+        canvas.style.setProperty(
+            "width",
+            "100%",
+            "important"
+        );
+
+        canvas.style.setProperty(
+            "height",
+            "100%",
+            "important"
+        );
+
+        canvas.style.setProperty(
+            "min-height",
+            "100%",
+            "important"
+        );
+
+        canvas.style.setProperty(
+            "max-height",
+            "none",
+            "important"
+        );
+
+        canvas.style.setProperty(
+            "margin",
+            "0",
+            "important"
+        );
+
+        canvas.style.setProperty(
+            "border-radius",
+            "0",
+            "important"
+        );
+
+        page.style.setProperty(
+            "padding-bottom",
+            "0",
+            "important"
+        );
+
+        /*
+         * V1.8 already observes shell size; this explicit resize
+         * event is a second signal for backing-buffer resizing.
+         */
+        window.dispatchEvent(
+            new CustomEvent(
+                "ap:canvas-v183-fit",
+                {
+                    detail: {
+                        top,
+                        left,
+                        width,
+                        height
+                    }
+                }
+            )
+        );
+
+        return true;
+    }
+
+    function scheduleFit() {
+        cancelAnimationFrame(
+            fitFrame
+        );
+
+        fitFrame =
+            requestAnimationFrame(
+                fitBoardNow
+            );
+    }
+
+    function findHistoryButtons() {
+        const toolbar =
+            document.querySelector(
+                "#canvasPage .ap-wb-pro-toolbar"
+            );
+
+        if (
+            !toolbar ||
+            !visible(toolbar)
+        ) {
+            return null;
+        }
+
+        const buttons =
+            Array.from(
+                toolbar.querySelectorAll(
+                    "button"
+                )
+            )
+                .filter(
+                    visible
+                );
+
+        let share =
+            toolbar.querySelector(
+                ".ap-wb-share"
+            );
+
+        if (
+            !share ||
+            !visible(share)
+        ) {
+            share =
+                buttons[
+                    buttons.length -
+                    1
+                ];
+        }
+
+        const shareIndex =
+            buttons.indexOf(
+                share
+            );
+
+        if (shareIndex < 3) {
+            return null;
+        }
+
+        /*
+         * Current right-side AP toolbar order:
+         * Undo | Redo | Clear | Share
+         */
+        const undoButton =
+            buttons[
+                shareIndex - 3
+            ];
+
+        const redoButton =
+            buttons[
+                shareIndex - 2
+            ];
+
+        const clearButton =
+            buttons[
+                shareIndex - 1
+            ];
+
+        if (
+            !undoButton ||
+            !redoButton ||
+            !clearButton
+        ) {
+            return null;
+        }
+
+        return {
+            toolbar,
+            undoButton,
+            redoButton
+        };
+    }
+
+    function wireHistoryButtons() {
+        const found =
+            findHistoryButtons();
+
+        if (!found) {
+            return false;
+        }
+
+        const {
+            toolbar,
+            undoButton,
+            redoButton
+        } =
+            found;
+
+        undoButton.dataset.apHistoryV183 =
+            "undo";
+
+        redoButton.dataset.apHistoryV183 =
+            "redo";
+
+        if (
+            historyToolbar ===
+                toolbar &&
+            historyCaptureHandler
+        ) {
+            return true;
+        }
+
+        if (
+            historyToolbar &&
+            historyCaptureHandler
+        ) {
+            historyToolbar
+                .removeEventListener(
+                    "click",
+                    historyCaptureHandler,
+                    true
+                );
+        }
+
+        historyToolbar =
+            toolbar;
+
+        historyCaptureHandler =
+            event => {
+                const button =
+                    event.target?.closest?.(
+                        "button[data-ap-history-v183]"
+                    );
+
+                if (
+                    !button ||
+                    !toolbar.contains(
+                        button
+                    )
+                ) {
+                    return;
+                }
+
+                event.preventDefault();
+                event.stopPropagation();
+                event.stopImmediatePropagation();
+
+                const action =
+                    button.dataset
+                        .apHistoryV183;
+
+                if (
+                    action === "undo"
+                ) {
+                    window.APInfiniteCanvas
+                        ?.undo?.();
+                }
+
+                else if (
+                    action === "redo"
+                ) {
+                    window.APInfiniteCanvas
+                        ?.redo?.();
+                }
+            };
+
+        toolbar.addEventListener(
+            "click",
+            historyCaptureHandler,
+            true
+        );
+
+        return true;
+    }
+
+    function hideLegacyCanvasToolbox() {
+        const page =
+            document.getElementById(
+                "canvasPage"
+            );
+
+        if (!page) {
+            return;
+        }
+
+        page
+            .querySelector(
+                ".workspace-toolbox"
+            )
+            ?.style.setProperty(
+                "display",
+                "none",
+                "important"
+            );
+
+        for (
+            const id of
+            [
+                "canvasPen",
+                "canvasErase",
+                "canvasClear"
+            ]
+        ) {
+            page
+                .querySelector(
+                    `#${id}`
+                )
+                ?.style.setProperty(
+                    "display",
+                    "none",
+                    "important"
+                );
+        }
+    }
+
+    function repair() {
+        hideLegacyCanvasToolbox();
+        wireHistoryButtons();
+        scheduleFit();
+    }
+
+    window.addEventListener(
+        "resize",
+        repair,
+        {
+            passive: true
+        }
+    );
+
+    window.visualViewport
+        ?.addEventListener(
+            "resize",
+            repair,
+            {
+                passive: true
+            }
+        );
+
+    window.visualViewport
+        ?.addEventListener(
+            "scroll",
+            repair,
+            {
+                passive: true
+            }
+        );
+
+    /*
+     * ResizeObserver is essential because Canvas is usually
+     * initialized while its page is hidden, then shown later.
+     */
+    function installResizeObserver() {
+        const {
+            page,
+            shell
+        } =
+            getCanvasParts();
+
+        if (
+            !page ||
+            !shell
+        ) {
+            return;
+        }
+
+        resizeObserver
+            ?.disconnect();
+
+        resizeObserver =
+            new ResizeObserver(
+                () => {
+                    if (
+                        visible(page)
+                    ) {
+                        scheduleFit();
+                    }
+                }
+            );
+
+        resizeObserver.observe(
+            page
+        );
+
+        resizeObserver.observe(
+            shell.parentElement ||
+            shell
+        );
+    }
+
+    function installToolbarObserver() {
+        const toolbar =
+            document.querySelector(
+                "#canvasPage .ap-wb-pro-toolbar"
+            );
+
+        if (!toolbar) {
+            return;
+        }
+
+        toolbarObserver
+            ?.disconnect();
+
+        toolbarObserver =
+            new MutationObserver(
+                () => {
+                    wireHistoryButtons();
+                }
+            );
+
+        toolbarObserver.observe(
+            toolbar,
+            {
+                childList: true,
+                subtree: true,
+                attributes: true
+            }
+        );
+    }
+
+    const rootObserver =
+        new MutationObserver(
+            () => {
+                const {
+                    page
+                } =
+                    getCanvasParts();
+
+                if (
+                    page &&
+                    visible(page)
+                ) {
+                    repair();
+                    installResizeObserver();
+                    installToolbarObserver();
+                }
+            }
+        );
+
+    rootObserver.observe(
+        document.documentElement,
+        {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: [
+                "style",
+                "class"
+            ]
+        }
+    );
+
+    /*
+     * Low-frequency safety check for route/page switches.
+     * It only performs work while Canvas is actually visible.
+     */
+    setInterval(
+        () => {
+            const {
+                page
+            } =
+                getCanvasParts();
+
+            if (
+                page &&
+                visible(page)
+            ) {
+                repair();
+            }
+        },
+        700
+    );
+
+    setTimeout(
+        () => {
+            repair();
+            installResizeObserver();
+            installToolbarObserver();
+        },
+        0
+    );
+
+    setTimeout(
+        repair,
+        150
+    );
+
+    setTimeout(
+        repair,
+        600
+    );
+
+    window.APInfiniteCanvasRepairV183 =
+        {
+            version:
+                "1.8.3",
+
+            repair,
+
+            fit:
+                fitBoardNow,
+
+            wireHistory:
+                wireHistoryButtons
+        };
+
+    console.log(
+        "∞ AP INFINITE CANVAS V1.8.3 READY"
     );
 })();

@@ -3,84 +3,163 @@
 
     const ID = "ap-intelligence-note";
 
-    function mount() {
-        const existing = document.getElementById(ID);
-        if (existing?.isConnected) return;
+    let note = null;
+    let composer = null;
+    let raf = 0;
 
+    function findComposer() {
         const input = document.querySelector("#userInput");
-        if (!input) return;
+        if (!input) return null;
 
-        const composer =
+        return (
             input.closest(".command-bar") ||
             input.closest("form") ||
-            input.parentElement;
+            input.parentElement
+        );
+    }
 
-        if (!composer || !composer.parentElement) return;
+    function createNote() {
+        if (document.getElementById(ID)) {
+            note = document.getElementById(ID);
+            return note;
+        }
 
-        const note = document.createElement("div");
+        const el = document.createElement("div");
 
-        note.id = ID;
-        note.setAttribute("aria-hidden", "true");
+        el.id = ID;
+        el.setAttribute("aria-hidden", "true");
 
-        note.innerHTML = `
+        el.innerHTML = `
             <span class="ap-intelligence-note-star">✦</span>
             <span>Think without limits. Validate with care.</span>
         `;
 
-        Object.assign(note.style, {
-            width: "100%",
-            boxSizing: "border-box",
+        Object.assign(el.style, {
+            position: "fixed",
+            zIndex: "80",
             textAlign: "center",
-            marginTop: "9px",
-            padding: "0 16px 2px",
+            boxSizing: "border-box",
+            padding: "0 14px",
+            margin: "0",
             fontSize: "11px",
-            lineHeight: "1.45",
+            lineHeight: "1.35",
             fontWeight: "500",
             letterSpacing: "0.025em",
-            color: "inherit",
-            opacity: "0",
-            transform: "translateY(3px)",
+            color: "rgba(255,255,255,.40)",
             userSelect: "none",
             pointerEvents: "none",
-            filter: "saturate(.9)",
+            whiteSpace: "nowrap",
+            opacity: "0",
+            transform: "translateY(3px)",
             transition:
-                "opacity .35s ease, transform .35s ease"
+                "opacity .28s ease, transform .28s ease"
         });
 
         const star =
-            note.querySelector(".ap-intelligence-note-star");
+            el.querySelector(".ap-intelligence-note-star");
 
         if (star) {
             Object.assign(star.style, {
                 display: "inline-block",
                 marginRight: "6px",
-                color: "rgba(214,177,91,.78)",
+                color: "rgba(214,177,91,.72)",
                 textShadow:
-                    "0 0 12px rgba(214,177,91,.18)"
+                    "0 0 10px rgba(214,177,91,.18)"
             });
         }
 
-        composer.parentElement.insertBefore(
-            note,
-            composer.nextSibling
-        );
+        document.body.appendChild(el);
 
         requestAnimationFrame(() => {
-            note.style.opacity = "0.38";
-            note.style.transform = "translateY(0)";
+            el.style.opacity = "1";
+            el.style.transform = "translateY(0)";
         });
+
+        note = el;
+        return el;
+    }
+
+    function place() {
+        raf = 0;
+
+        composer = findComposer();
+
+        if (!composer) {
+            if (note) note.style.display = "none";
+            return;
+        }
+
+        const el = createNote();
+        const rect = composer.getBoundingClientRect();
+
+        if (
+            rect.width < 160 ||
+            rect.bottom < 0 ||
+            rect.top > window.innerHeight
+        ) {
+            el.style.display = "none";
+            return;
+        }
+
+        el.style.display = "block";
+
+        const desiredTop = rect.bottom + 8;
+        const bottomSafe = window.innerHeight - 18;
+
+        el.style.left = `${Math.round(rect.left)}px`;
+        el.style.width = `${Math.round(rect.width)}px`;
+        el.style.top =
+            `${Math.round(Math.min(desiredTop, bottomSafe))}px`;
+
+        if (window.innerWidth <= 640) {
+            el.style.fontSize = "10px";
+            el.style.whiteSpace = "normal";
+            el.style.padding = "0 10px";
+        } else {
+            el.style.fontSize = "11px";
+            el.style.whiteSpace = "nowrap";
+            el.style.padding = "0 14px";
+        }
+    }
+
+    function schedulePlace() {
+        if (raf) return;
+
+        raf =
+            requestAnimationFrame(place);
     }
 
     function boot() {
-        mount();
+        place();
 
-        const observer =
-            new MutationObserver(() => mount());
+        window.addEventListener(
+            "resize",
+            schedulePlace,
+            { passive: true }
+        );
 
-        observer.observe(document.documentElement, {
-            childList: true,
-            subtree: true
-        });
+        window.addEventListener(
+            "scroll",
+            schedulePlace,
+            { passive: true }
+        );
+
+        new MutationObserver(schedulePlace)
+            .observe(document.documentElement, {
+                childList: true,
+                subtree: true,
+                attributes: true
+            });
+
+        if ("ResizeObserver" in window) {
+            const ro =
+                new ResizeObserver(schedulePlace);
+
+            const current =
+                findComposer();
+
+            if (current) ro.observe(current);
+        }
     }
 
     if (document.readyState === "loading") {

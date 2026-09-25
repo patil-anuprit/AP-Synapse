@@ -452,6 +452,229 @@ function compactError(error) {
         .slice(0, 260);
 }
 
+
+// AP_CANVAS_KLEIN_V16
+const CLOUDFLARE_ACCOUNT_ID =
+    process.env.CLOUDFLARE_ACCOUNT_ID || "";
+
+const CLOUDFLARE_API_TOKEN =
+    process.env.CLOUDFLARE_API_TOKEN || "";
+
+const CLOUDFLARE_KLEIN_MODEL =
+    "@cf/black-forest-labs/flux-2-klein-4b";
+
+function apCanvasDataUrlToBlob(dataUrl) {
+    const match =
+        /^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/s.exec(
+            String(dataUrl || "")
+        );
+
+    if (!match) {
+        throw new Error(
+            "Invalid Canvas sketch data."
+        );
+    }
+
+    const mimeType =
+        match[1];
+
+    const buffer =
+        Buffer.from(
+            match[2],
+            "base64"
+        );
+
+    return {
+        mimeType,
+        blob:
+            new Blob(
+                [buffer],
+                {
+                    type:
+                        mimeType
+                }
+            )
+    };
+}
+
+async function beautifyWithCloudflareKlein({
+    sketchDataUrl,
+    prompt
+}) {
+    if (
+        !CLOUDFLARE_ACCOUNT_ID ||
+        !CLOUDFLARE_API_TOKEN
+    ) {
+        throw new Error(
+            "Cloudflare Workers AI credentials are not configured."
+        );
+    }
+
+    console.log(
+        "AP Canvas -> Cloudflare FLUX.2 Klein 4B edit"
+    );
+
+    const {
+        mimeType,
+        blob
+    } =
+        apCanvasDataUrlToBlob(
+            sketchDataUrl
+        );
+
+    const form =
+        new FormData();
+
+    form.append(
+        "prompt",
+        prompt
+    );
+
+    form.append(
+        "input_image_0",
+        blob,
+        `canvas-sketch.${
+            mimeType.includes("jpeg")
+                ? "jpg"
+                : mimeType.includes("webp")
+                    ? "webp"
+                    : "png"
+        }`
+    );
+
+    form.append(
+        "width",
+        "1024"
+    );
+
+    form.append(
+        "height",
+        "1024"
+    );
+
+    form.append(
+        "guidance",
+        "4"
+    );
+
+    const endpoint =
+        `https://api.cloudflare.com/client/v4/accounts/${encodeURIComponent(
+            CLOUDFLARE_ACCOUNT_ID
+        )}/ai/run/${CLOUDFLARE_KLEIN_MODEL}`;
+
+    const response =
+        await fetch(
+            endpoint,
+            {
+                method:
+                    "POST",
+
+                headers: {
+                    Authorization:
+                        `Bearer ${CLOUDFLARE_API_TOKEN}`
+                },
+
+                body:
+                    form
+            }
+        );
+
+    const contentType =
+        String(
+            response.headers.get(
+                "content-type"
+            ) || ""
+        )
+            .toLowerCase();
+
+    if (!response.ok) {
+        const errorText =
+            await response.text();
+
+        throw new Error(
+            `Cloudflare Klein ${response.status}: ${
+                errorText ||
+                response.statusText
+            }`
+        );
+    }
+
+    if (
+        contentType.startsWith(
+            "image/"
+        )
+    ) {
+        const bytes =
+            Buffer.from(
+                await response.arrayBuffer()
+            );
+
+        return {
+            ok: true,
+            type: "image",
+            status: "completed",
+            engine:
+                "cloudflare-flux-2-klein-4b",
+            imageUrl:
+                `data:${contentType.split(";")[0]};base64,${bytes.toString("base64")}`,
+            width: 1024,
+            height: 1024,
+            description: "",
+            requestId: null
+        };
+    }
+
+    const raw =
+        await response.text();
+
+    let data = null;
+
+    try {
+        data =
+            JSON.parse(raw);
+    }
+    catch (_) {
+        data = null;
+    }
+
+    const base64 =
+        data?.result?.image ||
+        data?.image ||
+        data?.result?.images?.[0] ||
+        "";
+
+    if (!base64) {
+        throw new Error(
+            `Cloudflare Klein returned no image: ${
+                raw.slice(0, 300)
+            }`
+        );
+    }
+
+    const cleanBase64 =
+        String(base64)
+            .replace(
+                /^data:image\/[a-zA-Z0-9.+-]+;base64,/,
+                ""
+            );
+
+    return {
+        ok: true,
+        type: "image",
+        status: "completed",
+        engine:
+            "cloudflare-flux-2-klein-4b",
+        imageUrl:
+            `data:image/png;base64,${cleanBase64}`,
+        width: 1024,
+        height: 1024,
+        description: "",
+        requestId:
+            data?.result?.request_id ||
+            null
+    };
+}
+
 export async function beautifyCanvasSketch({
     sketchDataUrl,
     style = "auto",
@@ -477,6 +700,15 @@ export async function beautifyCanvasSketch({
 
     const providers = [
         {
+            name: "cloudflare-klein",
+            run:
+                () =>
+                    beautifyWithCloudflareKlein({
+                        sketchDataUrl,
+                        prompt
+                    })
+        },
+{
             name: "gemini",
             run:
                 () =>

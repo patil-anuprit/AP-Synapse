@@ -215,8 +215,7 @@
             );
         }
 
-        const maxSide =
-            1280;
+        const maxSide = 480;
 
         const scale =
             Math.min(

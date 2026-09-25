@@ -68,6 +68,7 @@ import { createAIStream } from "./services/router.js";
 import aprishaAgentRouter from "./services/aprishaAgentRouter.js";
 import aprishaDesktopRouter from "./services/aprishaDesktopRouter.js";
 import shareV2Router from "./services/shareV2Router.js";
+import canvasBeautifyRouter from "./routes/canvasBeautify.js";
 import { generateAPVideo } from "./services/apVideoService.js";
 import { generateAP3D } from "./services/ap3DService.js";
 
@@ -133,6 +134,7 @@ app.use(express.json({ limit: "12mb" }));
 app.use("/aprisha", aprishaAgentRouter);
 app.use("/aprisha-desktop", aprishaDesktopRouter);
 app.use("/share-v2", shareV2Router);
+app.use("/canvas", canvasBeautifyRouter);
 
 // AP_APRISHA_LIVE_ROUTER_V1
 app.post("/aprisha/route", (req, res) => {

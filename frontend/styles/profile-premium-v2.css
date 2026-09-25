@@ -1,0 +1,953 @@
+/* ============================================================
+   AP SYNAPSE — PREMIUM IDENTITY PROFILE V2
+   High-density identity panel without changing auth logic.
+   ============================================================ */
+
+#profileCard.ap-profile-premium-v2 {
+    --ap-profile-gold: #e3b75a;
+    --ap-profile-gold-2: #f1d28a;
+    --ap-profile-text: #f6f4ef;
+    --ap-profile-muted: rgba(232, 232, 234, .58);
+    --ap-profile-border: rgba(255,255,255,.085);
+    --ap-profile-soft: rgba(255,255,255,.035);
+
+    position: fixed !important;
+    top: 86px !important;
+    right: 18px !important;
+
+    width: min(486px, calc(100vw - 36px)) !important;
+    max-height: calc(100dvh - 104px) !important;
+
+    padding: 0 !important;
+
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+
+    border:
+        1px solid
+        rgba(226,181,88,.22) !important;
+
+    border-radius:
+        22px !important;
+
+    background:
+        radial-gradient(
+            circle at 18% -8%,
+            rgba(226,181,88,.13),
+            transparent 31%
+        ),
+        radial-gradient(
+            circle at 100% 28%,
+            rgba(255,255,255,.035),
+            transparent 30%
+        ),
+        linear-gradient(
+            180deg,
+            rgba(20,21,23,.985) 0%,
+            rgba(12,13,15,.992) 100%
+        ) !important;
+
+    box-shadow:
+        0 34px 90px rgba(0,0,0,.54),
+        0 10px 30px rgba(0,0,0,.30),
+        inset 0 1px 0 rgba(255,255,255,.055) !important;
+
+    backdrop-filter:
+        blur(26px)
+        saturate(125%) !important;
+
+    -webkit-backdrop-filter:
+        blur(26px)
+        saturate(125%) !important;
+
+    color:
+        var(--ap-profile-text) !important;
+
+    scrollbar-width:
+        thin;
+
+    scrollbar-color:
+        rgba(227,183,90,.36)
+        transparent;
+}
+
+#profileCard.ap-profile-premium-v2::-webkit-scrollbar {
+    width: 7px;
+}
+
+#profileCard.ap-profile-premium-v2::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#profileCard.ap-profile-premium-v2::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background:
+        rgba(227,183,90,.30);
+}
+
+/* ---------- Header ---------- */
+
+#profileCard.ap-profile-premium-v2 > .popup-header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 60 !important;
+
+    min-height: 76px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+
+    padding: 16px 18px 14px !important;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.065) !important;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(18,19,21,.98),
+            rgba(18,19,21,.91)
+        ) !important;
+
+    backdrop-filter:
+        blur(22px) !important;
+
+    -webkit-backdrop-filter:
+        blur(22px) !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.popup-header > div:first-child {
+    min-width: 0;
+}
+
+#profileCard.ap-profile-premium-v2
+.popup-kicker {
+    display: block !important;
+
+    margin-bottom: 4px !important;
+
+    color:
+        rgba(227,183,90,.72) !important;
+
+    font-size: 9px !important;
+    font-weight: 800 !important;
+    letter-spacing: .21em !important;
+    line-height: 1.15 !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.popup-header h2 {
+    margin: 0 !important;
+
+    font-size: 21px !important;
+    font-weight: 720 !important;
+    letter-spacing: -.025em !important;
+    line-height: 1.12 !important;
+
+    color: #faf9f6 !important;
+}
+
+#profileCard.ap-profile-premium-v2
+#closeProfile {
+    width: 38px !important;
+    height: 38px !important;
+
+    flex: 0 0 38px !important;
+
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border:
+        1px solid
+        rgba(255,255,255,.09) !important;
+
+    border-radius:
+        12px !important;
+
+    background:
+        rgba(255,255,255,.045) !important;
+
+    color:
+        rgba(255,255,255,.68) !important;
+
+    font-size: 22px !important;
+    line-height: 1 !important;
+
+    transition:
+        transform .16s ease,
+        background .16s ease,
+        color .16s ease,
+        border-color .16s ease !important;
+}
+
+#profileCard.ap-profile-premium-v2
+#closeProfile:hover {
+    transform:
+        translateY(-1px);
+
+    color: #fff !important;
+
+    background:
+        rgba(255,255,255,.08) !important;
+
+    border-color:
+        rgba(227,183,90,.28) !important;
+}
+
+/* ---------- Identity hero ---------- */
+
+#profileCard.ap-profile-premium-v2
+.profile-hero {
+    position: relative !important;
+
+    display: grid !important;
+    grid-template-columns:
+        76px minmax(0,1fr) !important;
+
+    align-items: center !important;
+    gap: 16px !important;
+
+    margin: 16px 16px 12px !important;
+    padding: 17px !important;
+
+    border:
+        1px solid
+        rgba(255,255,255,.075) !important;
+
+    border-radius:
+        18px !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.018)
+        ) !important;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.035) !important;
+
+    overflow: hidden !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.profile-hero::after {
+    content: "";
+
+    position: absolute;
+    right: -52px;
+    top: -74px;
+
+    width: 165px;
+    height: 165px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(227,183,90,.15),
+            transparent 67%
+        );
+
+    pointer-events: none;
+}
+
+#profileCard.ap-profile-premium-v2
+#profileAvatar {
+    position: relative !important;
+
+    width: 72px !important;
+    height: 72px !important;
+
+    display: grid !important;
+    place-items: center !important;
+
+    margin: 0 !important;
+
+    border:
+        1px solid
+        rgba(239,202,122,.52) !important;
+
+    border-radius:
+        20px !important;
+
+    background:
+        radial-gradient(
+            circle at 32% 25%,
+            rgba(255,255,255,.11),
+            transparent 36%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(229,184,91,.19),
+            rgba(229,184,91,.045)
+        ) !important;
+
+    box-shadow:
+        0 12px 30px rgba(0,0,0,.30),
+        inset 0 1px 0 rgba(255,255,255,.08) !important;
+
+    color:
+        var(--ap-profile-gold-2) !important;
+
+    font-size: 18px !important;
+    font-weight: 850 !important;
+    letter-spacing: .08em !important;
+}
+
+#profileCard.ap-profile-premium-v2
+#profileAvatar::before {
+    content: "";
+
+    position: absolute;
+    inset: -5px;
+
+    border:
+        1px solid
+        rgba(227,183,90,.12);
+
+    border-radius:
+        24px;
+
+    pointer-events: none;
+}
+
+#profileCard.ap-profile-premium-v2
+.profile-identity {
+    position: relative;
+    z-index: 2;
+
+    min-width: 0 !important;
+}
+
+#profileCard.ap-profile-premium-v2
+#profileName {
+    margin: 0 0 5px !important;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    color: #fbfaf7 !important;
+
+    font-size: 19px !important;
+    font-weight: 750 !important;
+    letter-spacing: -.022em !important;
+    line-height: 1.18 !important;
+}
+
+#profileCard.ap-profile-premium-v2
+#profileEmail {
+    margin: 0 0 9px !important;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    color:
+        rgba(234,234,236,.50) !important;
+
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+}
+
+#profileCard.ap-profile-premium-v2
+#authenticatedStatus {
+    width: fit-content !important;
+    max-width: 100% !important;
+
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+
+    margin: 0 !important;
+    padding: 6px 9px !important;
+
+    border:
+        1px solid
+        rgba(227,183,90,.16) !important;
+
+    border-radius:
+        999px !important;
+
+    background:
+        rgba(227,183,90,.065) !important;
+
+    color:
+        rgba(236,204,134,.84) !important;
+
+    font-size: 10px !important;
+    font-weight: 720 !important;
+    line-height: 1 !important;
+
+    white-space: nowrap !important;
+}
+
+#profileCard.ap-profile-premium-v2
+#authenticatedStatus::before {
+    content: "";
+
+    width: 6px;
+    height: 6px;
+
+    flex: 0 0 6px;
+
+    border-radius: 50%;
+
+    background:
+        currentColor;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(227,183,90,.08);
+}
+
+#profileCard.ap-profile-premium-v2
+#authenticatedStatus[data-auth-state="connected"] {
+    border-color:
+        rgba(93,213,151,.20) !important;
+
+    background:
+        rgba(93,213,151,.065) !important;
+
+    color:
+        rgba(128,230,174,.90) !important;
+}
+
+/* ---------- Runtime presence ---------- */
+
+#profileCard.ap-profile-premium-v2
+.profile-status {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+
+    margin: 0 16px 13px !important;
+    padding: 0 2px !important;
+
+    color:
+        rgba(235,235,237,.48) !important;
+
+    font-size: 10px !important;
+    font-weight: 650 !important;
+    letter-spacing: .03em !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.profile-status .status-dot {
+    width: 7px !important;
+    height: 7px !important;
+
+    border-radius: 50% !important;
+
+    background:
+        #74d99f !important;
+
+    box-shadow:
+        0 0 0 4px rgba(116,217,159,.08),
+        0 0 12px rgba(116,217,159,.24) !important;
+}
+
+/* ---------- Stats ---------- */
+
+#profileCard.ap-profile-premium-v2
+.profile-details {
+    display: grid !important;
+    grid-template-columns:
+        repeat(4,minmax(0,1fr)) !important;
+    gap: 8px !important;
+
+    margin: 0 16px 16px !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.profile-details > div {
+    min-width: 0 !important;
+    min-height: 68px !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+
+    padding: 11px !important;
+
+    border:
+        1px solid
+        rgba(255,255,255,.065) !important;
+
+    border-radius:
+        14px !important;
+
+    background:
+        rgba(255,255,255,.026) !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.profile-details > div > span {
+    color:
+        rgba(230,230,232,.36) !important;
+
+    font-size: 9px !important;
+    font-weight: 680 !important;
+    letter-spacing: .065em !important;
+    text-transform: uppercase !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.profile-details > div > strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    color:
+        rgba(239,203,128,.92) !important;
+
+    font-size: 12px !important;
+    font-weight: 720 !important;
+    line-height: 1.2 !important;
+}
+
+/* ---------- Section labels ---------- */
+
+#profileCard.ap-profile-premium-v2
+.profile-section-label {
+    margin:
+        0 16px 8px !important;
+
+    color:
+        rgba(226,226,229,.34) !important;
+
+    font-size: 9px !important;
+    font-weight: 780 !important;
+    letter-spacing: .13em !important;
+    text-transform: uppercase !important;
+}
+
+/* ---------- Capabilities ---------- */
+
+#profileCard.ap-profile-premium-v2
+.profile-capabilities {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 7px !important;
+
+    margin:
+        0 16px 16px !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.profile-capabilities > span {
+    position: relative !important;
+
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+
+    padding: 7px 10px !important;
+
+    border:
+        1px solid
+        rgba(227,183,90,.12) !important;
+
+    border-radius:
+        999px !important;
+
+    background:
+        rgba(227,183,90,.045) !important;
+
+    color:
+        rgba(239,210,150,.76) !important;
+
+    font-size: 10px !important;
+    font-weight: 650 !important;
+    line-height: 1 !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.profile-capabilities > span::before {
+    content: "✦";
+
+    color:
+        rgba(239,199,112,.60);
+
+    font-size: 8px;
+}
+
+/* ---------- Google identity ---------- */
+
+#profileCard.ap-profile-premium-v2
+.google-identity-section {
+    margin:
+        0 16px 12px !important;
+    padding:
+        13px !important;
+
+    border:
+        1px solid
+        rgba(255,255,255,.065) !important;
+
+    border-radius:
+        16px !important;
+
+    background:
+        rgba(255,255,255,.025) !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.google-identity-header {
+    display: grid !important;
+    grid-template-columns:
+        36px minmax(0,1fr) !important;
+    align-items: center !important;
+    gap: 11px !important;
+
+    margin: 0 !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.google-identity-mark {
+    width: 36px !important;
+    height: 36px !important;
+
+    display: grid !important;
+    place-items: center !important;
+
+    border:
+        1px solid
+        rgba(255,255,255,.08) !important;
+
+    border-radius:
+        11px !important;
+
+    background:
+        rgba(255,255,255,.045) !important;
+
+    color:
+        rgba(244,244,245,.82) !important;
+
+    font-size: 12px !important;
+    font-weight: 800 !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.google-identity-eyebrow {
+    display: none !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.google-identity-copy h4 {
+    margin:
+        0 0 3px !important;
+
+    color:
+        rgba(246,246,247,.88) !important;
+
+    font-size: 12px !important;
+    font-weight: 720 !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.google-identity-copy p {
+    margin: 0 !important;
+
+    color:
+        rgba(230,230,232,.40) !important;
+
+    font-size: 10px !important;
+    line-height: 1.42 !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.google-identity-account {
+    margin-top: 11px !important;
+    padding-top: 11px !important;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.055) !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.google-account-status {
+    display: flex !important;
+    align-items: center !important;
+    gap: 9px !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.google-connection-indicator {
+    color:
+        rgba(227,183,90,.72) !important;
+
+    font-size: 9px !important;
+}
+
+#profileCard.ap-profile-premium-v2[data-google-state="connected"]
+.google-connection-indicator {
+    color:
+        #73d89e !important;
+}
+
+#profileCard.ap-profile-premium-v2
+#googleConnectionStatus {
+    color:
+        rgba(244,244,245,.76) !important;
+
+    font-size: 11px !important;
+    font-weight: 680 !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.google-signin-section {
+    margin:
+        0 16px 13px !important;
+    padding:
+        0 !important;
+}
+
+#profileCard.ap-profile-premium-v2
+#googleSignInButton {
+    width: 100% !important;
+    overflow: hidden !important;
+
+    border-radius:
+        12px !important;
+}
+
+/* ---------- Account controls ---------- */
+
+#profileCard.ap-profile-premium-v2
+.profile-account-section {
+    position: sticky !important;
+    bottom: 0 !important;
+    z-index: 50 !important;
+
+    margin: 6px 0 0 !important;
+    padding:
+        13px 16px 16px !important;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.065) !important;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(13,14,16,.88),
+            rgba(13,14,16,.99) 34%
+        ) !important;
+
+    backdrop-filter:
+        blur(22px) !important;
+
+    -webkit-backdrop-filter:
+        blur(22px) !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.profile-account-section
+.profile-section-label {
+    margin:
+        0 0 9px !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.profile-account-actions,
+#profileCard.ap-profile-premium-v2
+.synapse-account-actions {
+    display: grid !important;
+    grid-template-columns:
+        1fr 1fr !important;
+    gap: 8px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border: 0 !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.synapse-account-action,
+#profileCard.ap-profile-premium-v2
+.profile-account-actions button {
+    min-width: 0 !important;
+    min-height: 42px !important;
+
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+
+    padding:
+        10px 12px !important;
+
+    border:
+        1px solid
+        rgba(255,255,255,.075) !important;
+
+    border-radius:
+        12px !important;
+
+    background:
+        rgba(255,255,255,.035) !important;
+
+    color:
+        rgba(243,243,244,.72) !important;
+
+    font-size:
+        11px !important;
+    font-weight:
+        650 !important;
+
+    transition:
+        transform .16s ease,
+        background .16s ease,
+        border-color .16s ease,
+        color .16s ease !important;
+}
+
+#profileCard.ap-profile-premium-v2
+.synapse-account-action:hover,
+#profileCard.ap-profile-premium-v2
+.profile-account-actions button:hover {
+    transform:
+        translateY(-1px);
+
+    background:
+        rgba(255,255,255,.065) !important;
+
+    border-color:
+        rgba(227,183,90,.22) !important;
+
+    color:
+        #fff !important;
+}
+
+#profileCard.ap-profile-premium-v2
+#synapseSignOutBtn {
+    color:
+        rgba(240,190,190,.72) !important;
+}
+
+/* ---------- Light mode ---------- */
+
+body.light-mode
+#profileCard.ap-profile-premium-v2,
+[data-theme="light"]
+#profileCard.ap-profile-premium-v2 {
+    --ap-profile-text:
+        #181818;
+    --ap-profile-muted:
+        rgba(25,25,25,.54);
+
+    border-color:
+        rgba(123,89,26,.18) !important;
+
+    background:
+        radial-gradient(
+            circle at 14% -10%,
+            rgba(190,143,52,.10),
+            transparent 34%
+        ),
+        linear-gradient(
+            180deg,
+            rgba(246,244,239,.985),
+            rgba(234,231,224,.985)
+        ) !important;
+
+    color:
+        #171717 !important;
+
+    box-shadow:
+        0 30px 80px rgba(39,31,18,.20),
+        inset 0 1px 0 rgba(255,255,255,.8) !important;
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 720px) {
+
+    #profileCard.ap-profile-premium-v2 {
+        top: auto !important;
+        right: 8px !important;
+        left: 8px !important;
+        bottom: 8px !important;
+
+        width: auto !important;
+        max-height:
+            min(82dvh, 760px) !important;
+
+        border-radius:
+            22px !important;
+    }
+
+    #profileCard.ap-profile-premium-v2
+    > .popup-header {
+        min-height:
+            68px !important;
+
+        padding:
+            14px 14px 12px !important;
+    }
+
+    #profileCard.ap-profile-premium-v2
+    .profile-hero {
+        grid-template-columns:
+            62px minmax(0,1fr) !important;
+
+        margin:
+            12px 12px 10px !important;
+
+        padding:
+            14px !important;
+    }
+
+    #profileCard.ap-profile-premium-v2
+    #profileAvatar {
+        width: 58px !important;
+        height: 58px !important;
+
+        border-radius:
+            17px !important;
+    }
+
+    #profileCard.ap-profile-premium-v2
+    .profile-details {
+        grid-template-columns:
+            1fr 1fr !important;
+
+        margin:
+            0 12px 14px !important;
+    }
+
+    #profileCard.ap-profile-premium-v2
+    .profile-capabilities,
+    #profileCard.ap-profile-premium-v2
+    .google-identity-section,
+    #profileCard.ap-profile-premium-v2
+    .google-signin-section {
+        margin-left:
+            12px !important;
+        margin-right:
+            12px !important;
+    }
+
+    #profileCard.ap-profile-premium-v2
+    .profile-section-label {
+        margin-left:
+            12px !important;
+        margin-right:
+            12px !important;
+    }
+
+    #profileCard.ap-profile-premium-v2
+    .profile-account-section {
+        padding:
+            12px !important;
+    }
+}

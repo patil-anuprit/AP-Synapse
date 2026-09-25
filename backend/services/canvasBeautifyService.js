@@ -10,6 +10,13 @@ import {
     generateFlux2ProImage
 } from "./flux2ProImageService.js";
 
+const GEMINI_API_KEY =
+    process.env.GEMINI_API_KEY || "";
+
+const GEMINI_IMAGE_MODEL =
+    process.env.GEMINI_IMAGE_MODEL ||
+    "gemini-3.1-flash-image";
+
 const FAL_KEY =
     process.env.FAL_KEY || "";
 
@@ -62,9 +69,7 @@ function clean(
     value,
     max = 1200
 ) {
-    return String(
-        value || ""
-    )
+    return String(value || "")
         .replace(/\s+/g, " ")
         .trim()
         .slice(0, max);
@@ -83,10 +88,7 @@ function buildBeautifyPrompt({
             : "auto";
 
     const userDescription =
-        clean(
-            description,
-            1200
-        );
+        clean(description, 1200);
 
     return `
 You are AP Synapse Canvas Intelligence.
@@ -124,6 +126,24 @@ into a beautiful final artwork.
 `.trim();
 }
 
+function parseDataUrl(dataUrl) {
+    const match =
+        /^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/s.exec(
+            String(dataUrl || "")
+        );
+
+    if (!match) {
+        throw new Error(
+            "Invalid sketch image data."
+        );
+    }
+
+    return {
+        mimeType: match[1],
+        base64: match[2]
+    };
+}
+
 function bufferToDataUrl(
     buffer,
     mimeType = "image/jpeg"
@@ -140,6 +160,146 @@ function bufferToDataUrl(
         ";base64," +
         buffer.toString("base64")
     );
+}
+
+async function beautifyWithGemini({
+    sketchDataUrl,
+    prompt
+}) {
+    if (!GEMINI_API_KEY) {
+        throw new Error(
+            "GEMINI_API_KEY is not configured."
+        );
+    }
+
+    const {
+        mimeType,
+        base64
+    } =
+        parseDataUrl(
+            sketchDataUrl
+        );
+
+    console.log(
+        `AP Canvas -> Gemini image edit (${GEMINI_IMAGE_MODEL})`
+    );
+
+    const endpoint =
+        `https://generativelanguage.googleapis.com/v1/models/${encodeURIComponent(
+            GEMINI_IMAGE_MODEL
+        )}:generateContent`;
+
+    const response =
+        await fetch(
+            endpoint,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/json",
+                    "x-goog-api-key":
+                        GEMINI_API_KEY
+                },
+                body:
+                    JSON.stringify({
+                        contents: [
+                            {
+                                role: "user",
+                                parts: [
+                                    {
+                                        text: prompt
+                                    },
+                                    {
+                                        inline_data: {
+                                            mime_type:
+                                                mimeType,
+                                            data:
+                                                base64
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        generationConfig: {
+                            responseModalities: [
+                                "IMAGE"
+                            ]
+                        }
+                    })
+            }
+        );
+
+    const raw =
+        await response.text();
+
+    let data = null;
+
+    try {
+        data =
+            JSON.parse(raw);
+    }
+    catch (_) {
+        data = null;
+    }
+
+    if (!response.ok) {
+        throw new Error(
+            `Gemini image edit ${response.status}: ${
+                data?.error?.message ||
+                raw ||
+                response.statusText
+            }`
+        );
+    }
+
+    const parts =
+        data?.candidates?.[0]
+            ?.content?.parts ||
+        [];
+
+    const imagePart =
+        parts.find(part =>
+            Boolean(
+                part?.inlineData?.data ||
+                part?.inline_data?.data
+            )
+        );
+
+    const inline =
+        imagePart?.inlineData ||
+        imagePart?.inline_data;
+
+    if (!inline?.data) {
+        const finishReason =
+            data?.candidates?.[0]
+                ?.finishReason ||
+            data?.candidates?.[0]
+                ?.finish_reason ||
+            "unknown";
+
+        throw new Error(
+            `Gemini returned no image. Finish reason: ${finishReason}`
+        );
+    }
+
+    const outputMime =
+        inline.mimeType ||
+        inline.mime_type ||
+        "image/png";
+
+    return {
+        ok: true,
+        type: "image",
+        status: "completed",
+        engine:
+            `google-${GEMINI_IMAGE_MODEL}`,
+        imageUrl:
+            `data:${outputMime};base64,${inline.data}`,
+        width: null,
+        height: null,
+        description: "",
+        requestId: null
+    };
 }
 
 async function beautifyWithCloudflare({
@@ -220,7 +380,7 @@ async function beautifyWithFal({
 }) {
     if (!FAL_KEY) {
         throw new Error(
-            "fal.ai fallback is not configured."
+            "FAL_KEY is not configured."
         );
     }
 
@@ -289,7 +449,7 @@ function compactError(error) {
         "failed"
     )
         .replace(/\s+/g, " ")
-        .slice(0, 220);
+        .slice(0, 260);
 }
 
 export async function beautifyCanvasSketch({
@@ -315,60 +475,71 @@ export async function beautifyCanvasSketch({
             description
         });
 
+    const providers = [
+        {
+            name: "gemini",
+            run:
+                () =>
+                    beautifyWithGemini({
+                        sketchDataUrl,
+                        prompt
+                    })
+        },
+        {
+            name: "cloudflare",
+            run:
+                () =>
+                    beautifyWithCloudflare({
+                        sketchDataUrl,
+                        prompt
+                    })
+        },
+        {
+            name: "flux",
+            run:
+                () =>
+                    beautifyWithFlux({
+                        sketchDataUrl,
+                        prompt
+                    })
+        },
+        {
+            name: "fal",
+            run:
+                () =>
+                    beautifyWithFal({
+                        sketchDataUrl,
+                        prompt
+                    })
+        }
+    ];
+
     const failures = [];
 
-    try {
-        return await beautifyWithCloudflare({
-            sketchDataUrl,
-            prompt
-        });
-    }
-    catch (error) {
-        failures.push(
-            "cloudflare=" +
-            compactError(error)
-        );
+    for (const provider of providers) {
+        try {
+            const result =
+                await provider.run();
 
-        console.warn(
-            "AP Canvas Cloudflare failed:",
-            compactError(error)
-        );
-    }
+            console.log(
+                `AP Canvas provider succeeded: ${provider.name}`
+            );
 
-    try {
-        return await beautifyWithFlux({
-            sketchDataUrl,
-            prompt
-        });
-    }
-    catch (error) {
-        failures.push(
-            "flux=" +
-            compactError(error)
-        );
+            return result;
+        }
+        catch (error) {
+            const message =
+                compactError(error);
 
-        console.warn(
-            "AP Canvas FLUX.2 Pro failed:",
-            compactError(error)
-        );
-    }
+            failures.push(
+                `${provider.name}=${message}`
+            );
 
-    try {
-        return await beautifyWithFal({
-            sketchDataUrl,
-            prompt
-        });
-    }
-    catch (error) {
-        failures.push(
-            "fal=" +
-            compactError(error)
-        );
-
-        console.warn(
-            "AP Canvas Nano Banana failed:",
-            compactError(error)
-        );
+            console.warn(
+                `AP Canvas ${provider.name} failed:`,
+                message
+            );
+        }
     }
 
     console.error(

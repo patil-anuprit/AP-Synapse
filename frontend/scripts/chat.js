@@ -3674,17 +3674,7 @@ if(profileBtn){
 
 profileBtn.addEventListener("click",()=>{
 
-alert(`
-AP Synapse
-
-Creator:
-Anuprit Harshal Patil
-
-Version 1.0
-
-Status:
-Online
-`);
+/* Legacy browser profile alert removed; premium profile panel handles this click. */
 
 });
 

@@ -6,6 +6,10 @@ import {
     generateCloudflareImageEdit
 } from "./cloudflareImageEditService.js";
 
+import {
+    generateFlux2ProImage
+} from "./flux2ProImageService.js";
+
 const FAL_KEY =
     process.env.FAL_KEY || "";
 
@@ -126,7 +130,7 @@ function bufferToDataUrl(
 ) {
     if (!Buffer.isBuffer(buffer)) {
         throw new Error(
-            "Image edit provider returned no image buffer."
+            "Image provider returned no image buffer."
         );
     }
 
@@ -143,7 +147,7 @@ async function beautifyWithCloudflare({
     prompt
 }) {
     console.log(
-        "AP Canvas Make Beautiful -> Cloudflare image edit"
+        "AP Canvas -> Cloudflare image edit"
     );
 
     const result =
@@ -154,14 +158,40 @@ async function beautifyWithCloudflare({
             ]
         );
 
-    const mimeType =
-        result?.mimeType ||
-        "image/jpeg";
+    return {
+        ok: true,
+        type: "image",
+        status: "completed",
+        engine:
+            result?.engine ||
+            "cloudflare-image-edit",
+        imageUrl:
+            bufferToDataUrl(
+                result?.buffer,
+                result?.mimeType ||
+                    "image/jpeg"
+            ),
+        width: null,
+        height: null,
+        description: "",
+        requestId: null
+    };
+}
 
-    const imageUrl =
-        bufferToDataUrl(
-            result?.buffer,
-            mimeType
+async function beautifyWithFlux({
+    sketchDataUrl,
+    prompt
+}) {
+    console.log(
+        "AP Canvas -> FLUX.2 Pro image edit"
+    );
+
+    const result =
+        await generateFlux2ProImage(
+            prompt,
+            [
+                sketchDataUrl
+            ]
         );
 
     return {
@@ -170,8 +200,13 @@ async function beautifyWithCloudflare({
         status: "completed",
         engine:
             result?.engine ||
-            "cloudflare-image-edit",
-        imageUrl,
+            "flux-2-pro",
+        imageUrl:
+            bufferToDataUrl(
+                result?.buffer,
+                result?.mimeType ||
+                    "image/jpeg"
+            ),
         width: null,
         height: null,
         description: "",
@@ -190,7 +225,7 @@ async function beautifyWithFal({
     }
 
     console.log(
-        "AP Canvas Make Beautiful -> Nano Banana 2 Edit fallback"
+        "AP Canvas -> Nano Banana 2 Edit"
     );
 
     const result =
@@ -247,6 +282,16 @@ async function beautifyWithFal({
     };
 }
 
+function compactError(error) {
+    return String(
+        error?.message ||
+        error?.name ||
+        "failed"
+    )
+        .replace(/\s+/g, " ")
+        .slice(0, 220);
+}
+
 export async function beautifyCanvasSketch({
     sketchDataUrl,
     style = "auto",
@@ -270,8 +315,7 @@ export async function beautifyCanvasSketch({
             description
         });
 
-    let cloudflareError =
-        null;
+    const failures = [];
 
     try {
         return await beautifyWithCloudflare({
@@ -280,14 +324,32 @@ export async function beautifyCanvasSketch({
         });
     }
     catch (error) {
-        cloudflareError =
-            error;
+        failures.push(
+            "cloudflare=" +
+            compactError(error)
+        );
 
         console.warn(
-            "AP Canvas Cloudflare edit failed:",
-            error?.message ||
-            error?.name ||
-            "Unknown error"
+            "AP Canvas Cloudflare failed:",
+            compactError(error)
+        );
+    }
+
+    try {
+        return await beautifyWithFlux({
+            sketchDataUrl,
+            prompt
+        });
+    }
+    catch (error) {
+        failures.push(
+            "flux=" +
+            compactError(error)
+        );
+
+        console.warn(
+            "AP Canvas FLUX.2 Pro failed:",
+            compactError(error)
         );
     }
 
@@ -297,28 +359,24 @@ export async function beautifyCanvasSketch({
             prompt
         });
     }
-    catch (falError) {
-        console.error(
-            "AP Canvas fal.ai fallback failed:",
-            falError?.message ||
-            falError?.name ||
-            "Unknown error"
+    catch (error) {
+        failures.push(
+            "fal=" +
+            compactError(error)
         );
 
-        const finalError =
-            new Error(
-                "AP Synapse could not transform this sketch right now. Please try again."
-            );
-
-        finalError.cause = {
-            cloudflare:
-                cloudflareError?.message ||
-                "failed",
-            fal:
-                falError?.message ||
-                "failed"
-        };
-
-        throw finalError;
+        console.warn(
+            "AP Canvas Nano Banana failed:",
+            compactError(error)
+        );
     }
+
+    console.error(
+        "AP Canvas all providers failed:",
+        failures.join(" | ")
+    );
+
+    throw new Error(
+        "AP Synapse could not transform this sketch right now. Please try again."
+    );
 }

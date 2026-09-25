@@ -6850,3 +6850,353 @@ if (
         "↶ ↷ AP INFINITE CANVAS V1.8.4.1 HISTORY READY"
     );
 })();
+// ============================================================
+// AP_MOBILE_WB_TOOLBAR_V191
+// Mobile-only minimize/restore control.
+// Deliberately avoids MutationObserver to prevent refresh loops.
+// ============================================================
+
+(() => {
+    "use strict";
+
+    if (window.__AP_MOBILE_WB_TOOLBAR_V191__) {
+        return;
+    }
+
+    window.__AP_MOBILE_WB_TOOLBAR_V191__ = true;
+
+    const MOBILE_MAX = 760;
+    const BUTTON_ID = "apWbMobileMinimizeV191";
+    const STORAGE_KEY = "ap-wb-mobile-minimized-v191";
+
+    let minimized = false;
+    let lastToolbar = null;
+    let lastRenderedState = null;
+    let intervalId = null;
+
+    function isMobile() {
+        return window.innerWidth <= MOBILE_MAX;
+    }
+
+    function page() {
+        return document.getElementById("canvasPage");
+    }
+
+    function toolbar() {
+        return document.querySelector(
+            "#canvasPage .ap-wb-pro-toolbar"
+        );
+    }
+
+    function readStoredState() {
+        try {
+            return localStorage.getItem(STORAGE_KEY) === "1";
+        }
+        catch (_) {
+            return false;
+        }
+    }
+
+    function saveStoredState() {
+        try {
+            localStorage.setItem(
+                STORAGE_KEY,
+                minimized ? "1" : "0"
+            );
+        }
+        catch (_) {}
+    }
+
+    function buttonMarkup() {
+        if (minimized) {
+            return `
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M5 7h14M5 12h14M5 17h14"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"/>
+                </svg>
+            `;
+        }
+
+        return `
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 9l6 6 6-6"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"/>
+            </svg>
+        `;
+    }
+
+    function ensureButton() {
+        const root = page();
+
+        if (!root) {
+            return null;
+        }
+
+        let button = document.getElementById(BUTTON_ID);
+
+        if (!button) {
+            button = document.createElement("button");
+            button.id = BUTTON_ID;
+            button.type = "button";
+            button.className = "ap-wb-mobile-minimize-v191";
+
+            button.addEventListener(
+                "click",
+                event => {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    if (!isMobile()) {
+                        return;
+                    }
+
+                    minimized = !minimized;
+                    saveStoredState();
+                    render(true);
+                },
+                {
+                    passive: false
+                }
+            );
+
+            root.appendChild(button);
+        }
+
+        return button;
+    }
+
+    function positionButton(button, bar) {
+        if (!button || !isMobile()) {
+            return;
+        }
+
+        if (minimized || !bar) {
+            button.style.setProperty(
+                "top",
+                "auto",
+                "important"
+            );
+
+            button.style.setProperty(
+                "right",
+                "12px",
+                "important"
+            );
+
+            button.style.setProperty(
+                "bottom",
+                "16px",
+                "important"
+            );
+
+            return;
+        }
+
+        const rect = bar.getBoundingClientRect();
+
+        const top = Math.max(
+            10,
+            Math.round(rect.top - 48)
+        );
+
+        button.style.setProperty(
+            "top",
+            `${top}px`,
+            "important"
+        );
+
+        button.style.setProperty(
+            "right",
+            "12px",
+            "important"
+        );
+
+        button.style.setProperty(
+            "bottom",
+            "auto",
+            "important"
+        );
+    }
+
+    function render(force = false) {
+        const root = page();
+        const bar = toolbar();
+        const button = ensureButton();
+
+        if (!root || !bar || !button) {
+            return;
+        }
+
+        const mobile = isMobile();
+
+        if (!mobile) {
+            bar.classList.remove(
+                "ap-wb-mobile-minimized-v191"
+            );
+
+            button.hidden = true;
+            lastRenderedState = "desktop";
+            lastToolbar = bar;
+            return;
+        }
+
+        const stateKey =
+            `${minimized ? "min" : "open"}:${bar === lastToolbar}`;
+
+        if (
+            force ||
+            stateKey !== lastRenderedState
+        ) {
+            bar.classList.toggle(
+                "ap-wb-mobile-minimized-v191",
+                minimized
+            );
+
+            button.hidden = false;
+            button.innerHTML = buttonMarkup();
+
+            button.setAttribute(
+                "aria-expanded",
+                String(!minimized)
+            );
+
+            button.setAttribute(
+                "aria-label",
+                minimized
+                    ? "Open whiteboard tools"
+                    : "Minimize whiteboard tools"
+            );
+
+            button.setAttribute(
+                "title",
+                minimized
+                    ? "Open tools"
+                    : "Minimize tools"
+            );
+
+            lastRenderedState = stateKey;
+            lastToolbar = bar;
+        }
+
+        positionButton(button, bar);
+    }
+
+    minimized = readStoredState();
+
+    function safeTick() {
+        if (!document.hidden) {
+            render(false);
+        }
+    }
+
+    window.addEventListener(
+        "resize",
+        () => render(true),
+        {
+            passive: true
+        }
+    );
+
+    window.visualViewport
+        ?.addEventListener(
+            "resize",
+            () => render(true),
+            {
+                passive: true
+            }
+        );
+
+    window.visualViewport
+        ?.addEventListener(
+            "scroll",
+            () => {
+                const button =
+                    document.getElementById(BUTTON_ID);
+
+                positionButton(
+                    button,
+                    toolbar()
+                );
+            },
+            {
+                passive: true
+            }
+        );
+
+    document.addEventListener(
+        "visibilitychange",
+        () => {
+            if (!document.hidden) {
+                render(true);
+            }
+        }
+    );
+
+    render(true);
+
+    setTimeout(
+        () => render(true),
+        150
+    );
+
+    setTimeout(
+        () => render(true),
+        600
+    );
+
+    intervalId =
+        setInterval(
+            safeTick,
+            1500
+        );
+
+    window.APCanvasMobileToolsV191 = {
+        version: "1.9.1",
+
+        minimize() {
+            minimized = true;
+            saveStoredState();
+            render(true);
+        },
+
+        open() {
+            minimized = false;
+            saveStoredState();
+            render(true);
+        },
+
+        toggle() {
+            minimized = !minimized;
+            saveStoredState();
+            render(true);
+        },
+
+        status() {
+            return {
+                mobile: isMobile(),
+                minimized,
+                button:
+                    Boolean(
+                        document.getElementById(
+                            BUTTON_ID
+                        )
+                    ),
+                toolbar:
+                    Boolean(
+                        toolbar()
+                    )
+            };
+        }
+    };
+
+    console.log(
+        "✅ AP CANVAS MOBILE MINIMIZE V1.9.1 READY"
+    );
+})();

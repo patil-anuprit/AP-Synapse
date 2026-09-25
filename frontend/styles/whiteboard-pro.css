@@ -1784,3 +1784,86 @@
     overflow: hidden !important;
     opacity: 0 !important;
 }
+/* ============================================================
+   AP_MOBILE_WB_TOOLBAR_V191
+   Mobile-only toolbar minimize control.
+   ============================================================ */
+
+.ap-wb-mobile-minimize-v191 {
+    display: none;
+}
+
+@media (max-width: 760px) {
+
+    #canvasPage
+    .ap-wb-pro-toolbar.ap-wb-mobile-minimized-v191 {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+
+        transform:
+            translateY(
+                calc(100% + 24px)
+            ) !important;
+
+        transition:
+            opacity .16s ease,
+            transform .16s ease !important;
+    }
+
+    #canvasPage
+    .ap-wb-mobile-minimize-v191 {
+        position: fixed !important;
+        z-index: 2147483000 !important;
+
+        width: 42px !important;
+        height: 42px !important;
+        min-width: 42px !important;
+        min-height: 42px !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        border:
+            1px solid
+            rgba(231, 183, 92, .52) !important;
+
+        border-radius:
+            13px !important;
+
+        background:
+            rgba(15, 16, 18, .96) !important;
+
+        color:
+            #e7b75c !important;
+
+        box-shadow:
+            0 10px 26px
+            rgba(0, 0, 0, .32),
+            inset 0 1px 0
+            rgba(255,255,255,.06) !important;
+
+        cursor:
+            pointer !important;
+
+        touch-action:
+            manipulation !important;
+    }
+
+    #canvasPage
+    .ap-wb-mobile-minimize-v191[hidden] {
+        display: none !important;
+    }
+
+    #canvasPage
+    .ap-wb-mobile-minimize-v191 svg {
+        width: 20px !important;
+        height: 20px !important;
+        display: block !important;
+        pointer-events: none !important;
+    }
+}

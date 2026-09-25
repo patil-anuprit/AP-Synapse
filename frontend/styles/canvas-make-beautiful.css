@@ -436,3 +436,7 @@
         grid-template-columns: 1fr;
     }
 }
+/* AP_CANVAS_RESULT_VISIBILITY_FIX_V13 */
+.ap-cmb-result-grid[hidden] {
+    display: none !important;
+}

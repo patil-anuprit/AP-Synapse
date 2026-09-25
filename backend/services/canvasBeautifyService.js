@@ -1,9 +1,15 @@
 import "dotenv/config";
+
 import { fal } from "@fal-ai/client";
 
-const FAL_KEY = process.env.FAL_KEY;
+import {
+    generateCloudflareImageEdit
+} from "./cloudflareImageEditService.js";
 
-const EDIT_MODEL =
+const FAL_KEY =
+    process.env.FAL_KEY || "";
+
+const FAL_EDIT_MODEL =
     "fal-ai/nano-banana-2/edit";
 
 if (FAL_KEY) {
@@ -12,51 +18,49 @@ if (FAL_KEY) {
     });
 }
 
-const STYLE_DIRECTIONS = Object.freeze({
-    auto: `
+const STYLE_DIRECTIONS =
+    Object.freeze({
+        auto: `
 Choose the most visually appropriate professional style for the subject.
 Make it colourful, polished, coherent, detailed and aesthetically exceptional.
 `,
-    realistic: `
+        realistic: `
 Create a photorealistic, believable, beautifully lit interpretation with
 natural materials, refined colours, depth, texture and professional detail.
 `,
-    storybook: `
+        storybook: `
 Create a warm, colourful, premium storybook illustration with charming detail,
 beautiful lighting, expressive shapes, refined colour harmony and a magical finish.
 `,
-    architecture: `
+        architecture: `
 Create a sophisticated architectural visualization. Preserve the building idea,
 improve proportions and details, and add premium materials, landscaping, light and depth.
 `,
-    "3d": `
+        "3d": `
 Create a polished premium 3D-rendered interpretation with excellent materials,
 soft global illumination, dimensional depth, refined geometry and rich colour.
 `,
-    watercolor: `
+        watercolor: `
 Create an elegant colourful watercolor artwork with expressive brushwork,
 beautiful pigments, soft atmospheric depth and a refined hand-painted finish.
 `,
-    cartoon: `
+        cartoon: `
 Create a clean, colourful, highly polished cartoon illustration with appealing
 forms, strong composition, expressive detail and professional visual finish.
 `,
-    fantasy: `
+        fantasy: `
 Create a spectacular fantasy interpretation with rich colour, cinematic light,
 imaginative detail, atmospheric depth and premium concept-art quality.
 `
-});
+    });
 
-function requireFal() {
-    if (!FAL_KEY) {
-        throw new Error(
-            "Visual Forge is unavailable because FAL_KEY is not configured."
-        );
-    }
-}
-
-function clean(value, max = 1200) {
-    return String(value || "")
+function clean(
+    value,
+    max = 1200
+) {
+    return String(
+        value || ""
+    )
         .replace(/\s+/g, " ")
         .trim()
         .slice(0, max);
@@ -75,76 +79,123 @@ function buildBeautifyPrompt({
             : "auto";
 
     const userDescription =
-        clean(description, 1200);
+        clean(
+            description,
+            1200
+        );
 
     return `
 You are AP Synapse Canvas Intelligence.
 
-Transform the provided rough hand-drawn sketch into a beautiful, colourful,
+Transform the supplied rough hand-drawn sketch into a beautiful, colourful,
 professional finished artwork.
 
-CRITICAL SOURCE-PRESERVATION RULES:
-- use the supplied sketch as the structural source and visual blueprint
-- preserve the main subject, recognizable composition, relative placement,
-  silhouette and key objects from the sketch
-- understand imperfect rough lines intelligently instead of copying their defects
-- do not turn the drawing into an unrelated scene
-- do not add text, labels, logos, signatures or watermarks unless explicitly requested
+SOURCE PRESERVATION:
+- treat the sketch as the visual blueprint
+- preserve the main subject and recognizable composition
+- preserve relative placement, silhouette and key objects
+- understand rough or imperfect lines intelligently
+- do not replace the drawing with an unrelated scene
 - preserve the user's idea while dramatically improving execution
+- do not add text, labels, signatures, logos or watermarks unless requested
 
 BEAUTIFICATION:
 - convert rough lines into coherent finished forms
 - add appropriate colours, materials, textures and refined details
-- create excellent lighting and depth
-- add a suitable background/environment only when it improves the scene
-- use attractive but believable proportions
-- create strong visual hierarchy and balanced composition
-- make the result feel deliberately art-directed
-- avoid malformed objects, warped geometry, duplicate objects and visual artifacts
-- output one polished final image
+- create attractive lighting and dimensional depth
+- add a suitable environment only when it improves the result
+- improve proportions without losing the original concept
+- create polished professional visual quality
+- avoid malformed objects, duplicate objects, warped geometry and artifacts
+- output one finished image
 
-STYLE DIRECTION:
+STYLE:
 ${STYLE_DIRECTIONS[styleKey]}
 
 USER DESCRIPTION:
 ${userDescription || "No extra description. Infer the intended subject from the sketch and beautify it intelligently."}
 
-The final result should clearly feel like the user's original sketch transformed
-into a finished premium artwork rather than replaced by a different idea.
+The finished image must clearly feel like the user's own rough sketch transformed
+into a beautiful final artwork.
 `.trim();
 }
 
-export async function beautifyCanvasSketch({
-    sketchDataUrl,
-    style = "auto",
-    description = ""
-} = {}) {
-    requireFal();
-
-    if (
-        typeof sketchDataUrl !== "string" ||
-        !/^data:image\/(png|jpeg|jpg|webp);base64,/i.test(
-            sketchDataUrl
-        )
-    ) {
+function bufferToDataUrl(
+    buffer,
+    mimeType = "image/jpeg"
+) {
+    if (!Buffer.isBuffer(buffer)) {
         throw new Error(
-            "A valid sketch image data URL is required."
+            "Image edit provider returned no image buffer."
         );
     }
 
-    const prompt =
-        buildBeautifyPrompt({
-            style,
-            description
-        });
+    return (
+        "data:" +
+        mimeType +
+        ";base64," +
+        buffer.toString("base64")
+    );
+}
+
+async function beautifyWithCloudflare({
+    sketchDataUrl,
+    prompt
+}) {
+    console.log(
+        "AP Canvas Make Beautiful -> Cloudflare image edit"
+    );
+
+    const result =
+        await generateCloudflareImageEdit(
+            prompt,
+            [
+                sketchDataUrl
+            ]
+        );
+
+    const mimeType =
+        result?.mimeType ||
+        "image/jpeg";
+
+    const imageUrl =
+        bufferToDataUrl(
+            result?.buffer,
+            mimeType
+        );
+
+    return {
+        ok: true,
+        type: "image",
+        status: "completed",
+        engine:
+            result?.engine ||
+            "cloudflare-image-edit",
+        imageUrl,
+        width: null,
+        height: null,
+        description: "",
+        requestId: null
+    };
+}
+
+async function beautifyWithFal({
+    sketchDataUrl,
+    prompt
+}) {
+    if (!FAL_KEY) {
+        throw new Error(
+            "fal.ai fallback is not configured."
+        );
+    }
 
     console.log(
-        "AP Canvas Make Beautiful -> Nano Banana 2 Edit"
+        "AP Canvas Make Beautiful -> Nano Banana 2 Edit fallback"
     );
 
     const result =
         await fal.subscribe(
-            EDIT_MODEL,
+            FAL_EDIT_MODEL,
             {
                 input: {
                     prompt,
@@ -152,10 +203,14 @@ export async function beautifyCanvasSketch({
                         sketchDataUrl
                     ],
                     num_images: 1,
-                    aspect_ratio: "auto",
-                    output_format: "png",
-                    resolution: "1K",
-                    limit_generations: true
+                    aspect_ratio:
+                        "auto",
+                    output_format:
+                        "png",
+                    resolution:
+                        "1K",
+                    limit_generations:
+                        true
                 },
                 logs: false
             }
@@ -168,13 +223,8 @@ export async function beautifyCanvasSketch({
         image?.url;
 
     if (!imageUrl) {
-        console.error(
-            "Canvas beautify response:",
-            result?.data
-        );
-
         throw new Error(
-            "Canvas Intelligence returned no image."
+            "fal.ai returned no edited image."
         );
     }
 
@@ -182,13 +232,93 @@ export async function beautifyCanvasSketch({
         ok: true,
         type: "image",
         status: "completed",
-        engine: "fal-nano-banana-2-edit",
+        engine:
+            "fal-nano-banana-2-edit",
         imageUrl,
-        width: image?.width || null,
-        height: image?.height || null,
+        width:
+            image?.width || null,
+        height:
+            image?.height || null,
         description:
-            result?.data?.description || "",
+            result?.data?.description ||
+            "",
         requestId:
             result?.requestId || null
     };
+}
+
+export async function beautifyCanvasSketch({
+    sketchDataUrl,
+    style = "auto",
+    description = ""
+} = {}) {
+    if (
+        typeof sketchDataUrl !==
+            "string" ||
+        !/^data:image\/(png|jpeg|jpg|webp);base64,/i.test(
+            sketchDataUrl
+        )
+    ) {
+        throw new Error(
+            "A valid sketch image is required."
+        );
+    }
+
+    const prompt =
+        buildBeautifyPrompt({
+            style,
+            description
+        });
+
+    let cloudflareError =
+        null;
+
+    try {
+        return await beautifyWithCloudflare({
+            sketchDataUrl,
+            prompt
+        });
+    }
+    catch (error) {
+        cloudflareError =
+            error;
+
+        console.warn(
+            "AP Canvas Cloudflare edit failed:",
+            error?.message ||
+            error?.name ||
+            "Unknown error"
+        );
+    }
+
+    try {
+        return await beautifyWithFal({
+            sketchDataUrl,
+            prompt
+        });
+    }
+    catch (falError) {
+        console.error(
+            "AP Canvas fal.ai fallback failed:",
+            falError?.message ||
+            falError?.name ||
+            "Unknown error"
+        );
+
+        const finalError =
+            new Error(
+                "AP Synapse could not transform this sketch right now. Please try again."
+            );
+
+        finalError.cause = {
+            cloudflare:
+                cloudflareError?.message ||
+                "failed",
+            fal:
+                falError?.message ||
+                "failed"
+        };
+
+        throw finalError;
+    }
 }

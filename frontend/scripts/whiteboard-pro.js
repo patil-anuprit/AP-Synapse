@@ -6244,3 +6244,268 @@ apWbPageObserver.observe(
         );
     }
 })();
+// ============================================================
+// AP_INFINITE_CANVAS_V182
+// Exact viewport-bottom fitter.
+// ============================================================
+
+(() => {
+    "use strict";
+
+    if (window.__AP_INFINITE_CANVAS_V182__) {
+        return;
+    }
+
+    window.__AP_INFINITE_CANVAS_V182__ = true;
+
+    let frame = 0;
+
+    function fitInfiniteCanvasToViewport() {
+        const page =
+            document.getElementById(
+                "canvasPage"
+            );
+
+        const shell =
+            page?.querySelector(
+                ".whiteboard-shell.ap-infinite-shell"
+            );
+
+        const canvas =
+            page?.querySelector(
+                "#apCanvas.ap-infinite-canvas"
+            );
+
+        if (
+            !page ||
+            !shell ||
+            !canvas
+        ) {
+            return false;
+        }
+
+        const pageRect =
+            page.getBoundingClientRect();
+
+        const shellRect =
+            shell.getBoundingClientRect();
+
+        const viewportHeight =
+            Math.max(
+                1,
+                Number(
+                    window.visualViewport
+                        ?.height
+                ) ||
+                document.documentElement
+                    .clientHeight ||
+                window.innerHeight ||
+                0
+            );
+
+        /*
+         * Use actual viewport coordinates instead of old CSS
+         * height rules. Give a tiny 2px breathing space so no
+         * black strip appears from rounding.
+         */
+        const desiredHeight =
+            Math.max(
+                560,
+                Math.ceil(
+                    viewportHeight -
+                    shellRect.top +
+                    2
+                )
+            );
+
+        shell.style.setProperty(
+            "height",
+            `${desiredHeight}px`,
+            "important"
+        );
+
+        shell.style.setProperty(
+            "min-height",
+            `${desiredHeight}px`,
+            "important"
+        );
+
+        shell.style.setProperty(
+            "max-height",
+            "none",
+            "important"
+        );
+
+        canvas.style.setProperty(
+            "height",
+            `${desiredHeight}px`,
+            "important"
+        );
+
+        canvas.style.setProperty(
+            "min-height",
+            `${desiredHeight}px`,
+            "important"
+        );
+
+        canvas.style.setProperty(
+            "max-height",
+            "none",
+            "important"
+        );
+
+        page.style.setProperty(
+            "padding-bottom",
+            "0",
+            "important"
+        );
+
+        page.style.setProperty(
+            "margin-bottom",
+            "0",
+            "important"
+        );
+
+        page.style.setProperty(
+            "min-height",
+            `${
+                Math.max(
+                    desiredHeight,
+                    Math.ceil(
+                        shellRect.top -
+                        pageRect.top +
+                        desiredHeight
+                    )
+                )
+            }px`,
+            "important"
+        );
+
+        /*
+         * Infinite Canvas V1.8 internally resizes the backing
+         * bitmap when its shell changes. Trigger a normal
+         * browser resize so that renderer sees this exact size.
+         */
+        window.dispatchEvent(
+            new CustomEvent(
+                "ap:infinite-canvas-fit",
+                {
+                    detail: {
+                        desiredHeight
+                    }
+                }
+            )
+        );
+
+        return true;
+    }
+
+    function scheduleFit() {
+        cancelAnimationFrame(
+            frame
+        );
+
+        frame =
+            requestAnimationFrame(
+                () => {
+                    fitInfiniteCanvasToViewport();
+                }
+            );
+    }
+
+    window.addEventListener(
+        "resize",
+        scheduleFit,
+        {
+            passive: true
+        }
+    );
+
+    window.visualViewport
+        ?.addEventListener(
+            "resize",
+            scheduleFit,
+            {
+                passive: true
+            }
+        );
+
+    window.visualViewport
+        ?.addEventListener(
+            "scroll",
+            scheduleFit,
+            {
+                passive: true
+            }
+        );
+
+    document.addEventListener(
+        "visibilitychange",
+        () => {
+            if (
+                document.visibilityState ===
+                "visible"
+            ) {
+                scheduleFit();
+            }
+        }
+    );
+
+    const observer =
+        new MutationObserver(
+            () => {
+                if (
+                    document.querySelector(
+                        "#canvasPage #apCanvas.ap-infinite-canvas"
+                    )
+                ) {
+                    scheduleFit();
+                }
+            }
+        );
+
+    observer.observe(
+        document.documentElement,
+        {
+            childList: true,
+            subtree: true
+        }
+    );
+
+    /*
+     * Run after the original Whiteboard Pro CSS and all of the
+     * UI repair scripts have had time to settle.
+     */
+    setTimeout(
+        scheduleFit,
+        0
+    );
+
+    setTimeout(
+        scheduleFit,
+        100
+    );
+
+    setTimeout(
+        scheduleFit,
+        350
+    );
+
+    setTimeout(
+        scheduleFit,
+        900
+    );
+
+    window.APInfiniteCanvasFit =
+        {
+            version:
+                "1.8.2",
+
+            fit:
+                fitInfiniteCanvasToViewport
+        };
+
+    console.log(
+        "∞ AP INFINITE CANVAS V1.8.2 VIEWPORT FIT READY"
+    );
+})();

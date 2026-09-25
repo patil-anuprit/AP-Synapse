@@ -1704,3 +1704,55 @@
 #canvasPage [data-ap-infinite-ghost-hidden="true"] {
     display: none !important;
 }
+/* ============================================================
+   AP_INFINITE_CANVAS_V182
+   Exact viewport fill + clean toolbar.
+   ============================================================ */
+
+#canvasPage.ap-infinite-board-active {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+    min-height: 100dvh !important;
+}
+
+/*
+ * The three circled "buttons" are actually old grouped toolbar
+ * surfaces protruding below the toolbar. Flatten the containers;
+ * keep every real pen/color/undo/redo/share button intact.
+ */
+#canvasPage .ap-wb-pro-toolbar {
+    overflow: hidden !important;
+    clip-path: inset(0 round 0 0 12px 12px);
+}
+
+#canvasPage .ap-wb-pro-toolbar > .ap-wb-group,
+#canvasPage .ap-wb-pro-toolbar .ap-wb-group {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+
+    transform: none !important;
+    translate: none !important;
+
+    background: transparent !important;
+    box-shadow: none !important;
+
+    border-top-color: transparent !important;
+    border-bottom-color: transparent !important;
+
+    border-radius: 0 !important;
+}
+
+/*
+ * Defeat the older fixed board-height rules with the live
+ * V1.8.2 inline height and allow the canvas to reach the bottom.
+ */
+#canvasPage .whiteboard-shell.ap-infinite-shell,
+#canvasPage #apCanvas.ap-infinite-canvas {
+    max-height: none !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+#canvasPage .whiteboard-shell.ap-infinite-shell {
+    overflow: hidden !important;
+}

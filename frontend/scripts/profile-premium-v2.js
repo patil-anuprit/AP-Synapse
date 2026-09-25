@@ -285,3 +285,382 @@
         "✦ AP SYNAPSE PREMIUM IDENTITY PROFILE V2 READY"
     );
 })();
+// ============================================================
+// AP_PROFILE_GUEST_GOOGLE_V21
+// Professional signed-out identity + automatic Google identity.
+// ============================================================
+
+(() => {
+    "use strict";
+
+    if (window.__AP_PROFILE_GUEST_GOOGLE_V21__) {
+        return;
+    }
+
+    window.__AP_PROFILE_GUEST_GOOGLE_V21__ = true;
+
+    let lastMode = "";
+    let timer = null;
+
+    function clean(value) {
+        return String(value || "")
+            .replace(/\s+/g, " ")
+            .trim();
+    }
+
+    function hasRealEmail(value) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+            .test(clean(value));
+    }
+
+    function authenticated(card) {
+        const auth =
+            document.getElementById(
+                "authenticatedStatus"
+            );
+
+        const email =
+            document.getElementById(
+                "profileEmail"
+            );
+
+        const google =
+            document.getElementById(
+                "googleConnectionStatus"
+            );
+
+        const authText =
+            clean(auth?.textContent)
+                .toLowerCase();
+
+        const googleText =
+            clean(google?.textContent)
+                .toLowerCase();
+
+        let stored = false;
+
+        try {
+            stored =
+                localStorage.getItem(
+                    "apSynapseAuthenticated"
+                ) === "true";
+        }
+        catch (_) {}
+
+        const positiveAuthText =
+            authText === "authenticated" ||
+            authText.includes("google verified") ||
+            authText.includes("verified account");
+
+        const positiveGoogle =
+            Boolean(googleText) &&
+            !googleText.includes("not connected") &&
+            !googleText.includes("disconnected");
+
+        return Boolean(
+            stored ||
+            positiveAuthText ||
+            positiveGoogle ||
+            hasRealEmail(
+                email?.textContent
+            )
+        );
+    }
+
+    function initials(name) {
+        const parts =
+            clean(name)
+                .split(" ")
+                .filter(Boolean);
+
+        if (!parts.length) {
+            return "U";
+        }
+
+        if (parts.length === 1) {
+            return parts[0][0]
+                .toUpperCase();
+        }
+
+        return (
+            parts[0][0] +
+            parts[parts.length - 1][0]
+        ).toUpperCase();
+    }
+
+    function moveGoogleButtonBelowIdentity(card) {
+        const hero =
+            card.querySelector(
+                ".profile-hero"
+            );
+
+        const signIn =
+            card.querySelector(
+                ".google-signin-section"
+            );
+
+        if (
+            hero &&
+            signIn &&
+            hero.nextElementSibling !== signIn
+        ) {
+            hero.insertAdjacentElement(
+                "afterend",
+                signIn
+            );
+        }
+    }
+
+    function applySignedOut(card) {
+        const name =
+            document.getElementById(
+                "profileName"
+            );
+
+        const email =
+            document.getElementById(
+                "profileEmail"
+            );
+
+        const avatar =
+            document.getElementById(
+                "profileAvatar"
+            );
+
+        const signIn =
+            card.querySelector(
+                ".google-signin-section"
+            );
+
+        card.classList.add(
+            "ap-profile-signed-out-v21"
+        );
+
+        card.classList.remove(
+            "ap-profile-signed-in-v21"
+        );
+
+        if (
+            name &&
+            clean(name.textContent) !== "User"
+        ) {
+            name.textContent =
+                "User";
+        }
+
+        if (email) {
+            const copy =
+                "Sign in with Google to personalize your AP Synapse identity.";
+
+            if (
+                clean(email.textContent) !==
+                copy
+            ) {
+                email.textContent =
+                    copy;
+            }
+        }
+
+        if (avatar) {
+            if (
+                avatar.tagName !== "IMG"
+            ) {
+                if (
+                    clean(avatar.textContent) !== "U"
+                ) {
+                    avatar.textContent =
+                        "U";
+                }
+            }
+
+            avatar.setAttribute(
+                "aria-label",
+                "User profile"
+            );
+        }
+
+        if (signIn) {
+            signIn.style.removeProperty(
+                "display"
+            );
+        }
+
+        moveGoogleButtonBelowIdentity(
+            card
+        );
+    }
+
+    function applySignedIn(card) {
+        const name =
+            document.getElementById(
+                "profileName"
+            );
+
+        const avatar =
+            document.getElementById(
+                "profileAvatar"
+            );
+
+        card.classList.remove(
+            "ap-profile-signed-out-v21"
+        );
+
+        card.classList.add(
+            "ap-profile-signed-in-v21"
+        );
+
+        /*
+         * Do NOT write name/email here.
+         * Existing Google authentication owns those fields and
+         * updates them from the signed-in account automatically.
+         */
+        if (
+            name &&
+            avatar &&
+            avatar.tagName !== "IMG"
+        ) {
+            const realName =
+                clean(
+                    name.textContent
+                );
+
+            if (
+                realName &&
+                realName !== "User"
+            ) {
+                avatar.textContent =
+                    initials(
+                        realName
+                    );
+
+                avatar.setAttribute(
+                    "aria-label",
+                    `${realName} profile`
+                );
+            }
+        }
+    }
+
+    function sync() {
+        const card =
+            document.getElementById(
+                "profileCard"
+            );
+
+        if (!card) {
+            return;
+        }
+
+        const signedIn =
+            authenticated(card);
+
+        const mode =
+            signedIn
+                ? "signed-in"
+                : "signed-out";
+
+        if (
+            mode === "signed-out"
+        ) {
+            applySignedOut(card);
+        }
+        else {
+            applySignedIn(card);
+        }
+
+        if (mode !== lastMode) {
+            lastMode = mode;
+
+            console.log(
+                `AP Profile identity mode: ${mode}`
+            );
+        }
+    }
+
+    function boot() {
+        sync();
+
+        /*
+         * Low-frequency sync only. No MutationObserver.
+         * Existing Google sign-in code updates the real profile
+         * fields; this simply reflects the new state.
+         */
+        if (!timer) {
+            timer =
+                setInterval(
+                    sync,
+                    900
+                );
+        }
+    }
+
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+        document.addEventListener(
+            "DOMContentLoaded",
+            boot,
+            {
+                once: true
+            }
+        );
+    }
+    else {
+        boot();
+    }
+
+    document.addEventListener(
+        "click",
+        event => {
+            if (
+                event.target?.closest?.(
+                    "#profileBtn, #apRailProfile, .profile-button, [aria-label='Profile'], [data-tooltip='Profile']"
+                )
+            ) {
+                setTimeout(
+                    sync,
+                    0
+                );
+
+                setTimeout(
+                    sync,
+                    180
+                );
+            }
+        },
+        true
+    );
+
+    window.APProfileIdentityV21 = {
+        version:
+            "2.1.0",
+
+        refresh:
+            sync,
+
+        status() {
+            const card =
+                document.getElementById(
+                    "profileCard"
+                );
+
+            return {
+                ready:
+                    Boolean(card),
+
+                mode:
+                    card?.classList
+                        .contains(
+                            "ap-profile-signed-in-v21"
+                        )
+                        ? "signed-in"
+                        : "signed-out"
+            };
+        }
+    };
+
+    console.log(
+        "✦ AP SYNAPSE PROFILE IDENTITY V2.1 READY"
+    );
+})();

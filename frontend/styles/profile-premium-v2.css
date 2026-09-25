@@ -951,3 +951,158 @@ body.light-mode
             12px !important;
     }
 }
+/* ============================================================
+   AP_PROFILE_GUEST_GOOGLE_V21
+   Signed-out identity is generic and professional.
+   Real Google identity appears only after authentication.
+   ============================================================ */
+
+#profileCard.ap-profile-premium-v2.ap-profile-signed-out-v21
+.profile-hero {
+    margin-bottom:
+        10px !important;
+}
+
+#profileCard.ap-profile-premium-v2.ap-profile-signed-out-v21
+#profileName {
+    color:
+        #faf9f6 !important;
+
+    font-size:
+        20px !important;
+
+    font-weight:
+        760 !important;
+}
+
+#profileCard.ap-profile-premium-v2.ap-profile-signed-out-v21
+#profileEmail {
+    max-width:
+        290px !important;
+
+    color:
+        rgba(236,236,238,.48) !important;
+
+    font-size:
+        11px !important;
+
+    line-height:
+        1.45 !important;
+
+    white-space:
+        normal !important;
+}
+
+#profileCard.ap-profile-premium-v2.ap-profile-signed-out-v21
+#profileAvatar {
+    color:
+        rgba(242,205,128,.94) !important;
+}
+
+/*
+ * Before sign-in, the Google identity/status card has no useful
+ * account information yet, so keep the panel clean.
+ */
+#profileCard.ap-profile-premium-v2.ap-profile-signed-out-v21
+.google-identity-section {
+    display:
+        none !important;
+}
+
+/*
+ * Sign in with Google sits immediately below the User identity.
+ */
+#profileCard.ap-profile-premium-v2.ap-profile-signed-out-v21
+.google-signin-section {
+    display:
+        block !important;
+
+    margin:
+        0 16px 15px !important;
+
+    padding:
+        12px !important;
+
+    border:
+        1px solid
+        rgba(255,255,255,.065) !important;
+
+    border-radius:
+        15px !important;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.032),
+            rgba(255,255,255,.018)
+        ) !important;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.025) !important;
+}
+
+#profileCard.ap-profile-premium-v2.ap-profile-signed-out-v21
+#googleSignInButton {
+    width:
+        100% !important;
+
+    min-height:
+        42px !important;
+
+    margin:
+        0 !important;
+
+    border-radius:
+        11px !important;
+
+    overflow:
+        hidden !important;
+}
+
+/*
+ * Sign-out/switch-account controls are irrelevant before sign-in.
+ */
+#profileCard.ap-profile-premium-v2.ap-profile-signed-out-v21
+.profile-account-section {
+    display:
+        none !important;
+}
+
+/*
+ * Authenticated state:
+ * existing Google logic owns name, email and account controls.
+ */
+#profileCard.ap-profile-premium-v2.ap-profile-signed-in-v21
+.google-identity-section {
+    display:
+        block !important;
+}
+
+#profileCard.ap-profile-premium-v2.ap-profile-signed-in-v21
+.profile-account-section {
+    display:
+        block !important;
+}
+
+/*
+ * Existing Google code already hides the sign-in button after
+ * authentication. Keep the section out of the way when hidden.
+ */
+#profileCard.ap-profile-premium-v2.ap-profile-signed-in-v21
+.google-signin-section:has(#googleSignInButton[style*="display: none"]) {
+    display:
+        none !important;
+}
+
+@media (max-width: 720px) {
+
+    #profileCard.ap-profile-premium-v2.ap-profile-signed-out-v21
+    .google-signin-section {
+        margin-left:
+            12px !important;
+
+        margin-right:
+            12px !important;
+    }
+}

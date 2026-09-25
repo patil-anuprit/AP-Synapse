@@ -1756,3 +1756,31 @@
 #canvasPage .whiteboard-shell.ap-infinite-shell {
     overflow: hidden !important;
 }
+
+/* ============================================================
+   AP_INFINITE_CANVAS_V1841
+   Remove the original finite-canvas 3-button toolbox.
+   ============================================================ */
+
+#canvasPage .workspace-toolbox,
+#canvasPage #canvasPen,
+#canvasPage #canvasErase,
+#canvasPage #canvasClear {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+
+    width: 0 !important;
+    height: 0 !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-width: 0 !important;
+    max-height: 0 !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+
+    overflow: hidden !important;
+    opacity: 0 !important;
+}

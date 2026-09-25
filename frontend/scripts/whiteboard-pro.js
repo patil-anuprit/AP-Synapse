@@ -6508,3 +6508,345 @@ if (
         "∞ AP INFINITE CANVAS V1.8.2 VIEWPORT FIT READY"
     );
 })();
+
+// ============================================================
+// AP_INFINITE_CANVAS_V1841
+// Exact history bridge for verified live controls:
+//   #apWbUndo
+//   #apWbRedo
+// Also hides the original legacy 3-button toolbox.
+// ============================================================
+
+(() => {
+    "use strict";
+
+    if (window.__AP_INFINITE_CANVAS_V1841__) {
+        return;
+    }
+
+    window.__AP_INFINITE_CANVAS_V1841__ = true;
+
+    const HISTORY_IDS =
+        new Map([
+            [
+                "apWbUndo",
+                "undo"
+            ],
+            [
+                "apWbRedo",
+                "redo"
+            ]
+        ]);
+
+    let lastPointerAction =
+        null;
+
+    function historyTarget(event) {
+        const button =
+            event.target?.closest?.(
+                "button"
+            );
+
+        if (!button) {
+            return null;
+        }
+
+        const action =
+            HISTORY_IDS.get(
+                button.id
+            );
+
+        if (!action) {
+            return null;
+        }
+
+        return {
+            button,
+            action
+        };
+    }
+
+    function executeHistory(
+        action
+    ) {
+        const api =
+            window.APInfiniteCanvas;
+
+        const fn =
+            action === "undo"
+                ? api?.undo
+                : api?.redo;
+
+        if (
+            typeof fn !==
+            "function"
+        ) {
+            console.warn(
+                `AP Canvas ${action}: Infinite Canvas history API unavailable`
+            );
+
+            return false;
+        }
+
+        fn.call(
+            api
+        );
+
+        console.log(
+            `AP Canvas ${action.toUpperCase()}`
+        );
+
+        return true;
+    }
+
+    /*
+     * Pointerdown is used deliberately.
+     * It occurs before the later synthetic click and before
+     * the older click-routing layers can interfere.
+     */
+    window.addEventListener(
+        "pointerdown",
+        event => {
+            const hit =
+                historyTarget(
+                    event
+                );
+
+            if (!hit) {
+                return;
+            }
+
+            if (
+                event.button !==
+                    undefined &&
+                event.button !== 0
+            ) {
+                return;
+            }
+
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+
+            const success =
+                executeHistory(
+                    hit.action
+                );
+
+            if (success) {
+                lastPointerAction = {
+                    id:
+                        hit.button.id,
+
+                    time:
+                        performance.now()
+                };
+            }
+        },
+        {
+            capture: true,
+            passive: false
+        }
+    );
+
+    /*
+     * Swallow the click generated after pointerdown BEFORE
+     * document-level legacy click handlers receive it.
+     * Keyboard-triggered click still performs exactly one action.
+     */
+    window.addEventListener(
+        "click",
+        event => {
+            const hit =
+                historyTarget(
+                    event
+                );
+
+            if (!hit) {
+                return;
+            }
+
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+
+            const recentlyHandled =
+                lastPointerAction &&
+                lastPointerAction.id ===
+                    hit.button.id &&
+                (
+                    performance.now() -
+                    lastPointerAction.time
+                ) <
+                    1200;
+
+            if (recentlyHandled) {
+                lastPointerAction =
+                    null;
+
+                return;
+            }
+
+            executeHistory(
+                hit.action
+            );
+        },
+        {
+            capture: true,
+            passive: false
+        }
+    );
+
+    function hideLegacyToolbox() {
+        const page =
+            document.getElementById(
+                "canvasPage"
+            );
+
+        if (!page) {
+            return;
+        }
+
+        const toolbox =
+            page.querySelector(
+                ".workspace-toolbox"
+            );
+
+        toolbox?.style.setProperty(
+            "display",
+            "none",
+            "important"
+        );
+
+        for (
+            const id of
+            [
+                "canvasPen",
+                "canvasErase",
+                "canvasClear"
+            ]
+        ) {
+            page
+                .querySelector(
+                    `#${id}`
+                )
+                ?.style.setProperty(
+                    "display",
+                    "none",
+                    "important"
+                );
+        }
+    }
+
+    function labelHistoryButtons() {
+        const undo =
+            document.getElementById(
+                "apWbUndo"
+            );
+
+        const redo =
+            document.getElementById(
+                "apWbRedo"
+            );
+
+        if (undo) {
+            undo.title =
+                "Undo";
+
+            undo.setAttribute(
+                "aria-label",
+                "Undo"
+            );
+        }
+
+        if (redo) {
+            redo.title =
+                "Redo";
+
+            redo.setAttribute(
+                "aria-label",
+                "Redo"
+            );
+        }
+    }
+
+    function repair() {
+        hideLegacyToolbox();
+        labelHistoryButtons();
+    }
+
+    repair();
+
+    const observer =
+        new MutationObserver(
+            repair
+        );
+
+    observer.observe(
+        document.documentElement,
+        {
+            childList: true,
+            subtree: true
+        }
+    );
+
+    setTimeout(
+        repair,
+        100
+    );
+
+    setTimeout(
+        repair,
+        500
+    );
+
+    window.APInfiniteCanvasHistoryV1841 =
+        {
+            version:
+                "1.8.4.1",
+
+            undo() {
+                return executeHistory(
+                    "undo"
+                );
+            },
+
+            redo() {
+                return executeHistory(
+                    "redo"
+                );
+            },
+
+            status() {
+                return {
+                    undoButton:
+                        Boolean(
+                            document.getElementById(
+                                "apWbUndo"
+                            )
+                        ),
+
+                    redoButton:
+                        Boolean(
+                            document.getElementById(
+                                "apWbRedo"
+                            )
+                        ),
+
+                    apiUndo:
+                        typeof window
+                            .APInfiniteCanvas
+                            ?.undo,
+
+                    apiRedo:
+                        typeof window
+                            .APInfiniteCanvas
+                            ?.redo
+                };
+            }
+        };
+
+    console.log(
+        "↶ ↷ AP INFINITE CANVAS V1.8.4.1 HISTORY READY"
+    );
+})();

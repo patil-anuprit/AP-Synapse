@@ -1081,15 +1081,54 @@
         return button;
     }
 
-    function mount() {
-        if (
-            document.getElementById(
-                BUTTON_ID
-            )
-        ) {
+    // AP_CANVAS_VISIBLE_BUTTON_V171
+    function placeVisibleButton(button) {
+        const root = page();
+
+        if (!root || !button) {
             return;
         }
 
+        if (
+            getComputedStyle(root).position ===
+            "static"
+        ) {
+            root.style.position =
+                "relative";
+        }
+
+        const bar =
+            toolbar();
+
+        const rootRect =
+            root.getBoundingClientRect();
+
+        let top =
+            18;
+
+        if (bar) {
+            const barRect =
+                bar.getBoundingClientRect();
+
+            top =
+                Math.max(
+                    18,
+                    barRect.bottom -
+                    rootRect.top +
+                    14
+                );
+        }
+
+        button.style.top =
+            `${Math.round(top)}px`;
+
+        button.style.right =
+            window.innerWidth <= 720
+                ? "12px"
+                : "22px";
+    }
+
+    function mount() {
         const root =
             page();
 
@@ -1097,41 +1136,80 @@
             return;
         }
 
+        const existing =
+            document.getElementById(
+                BUTTON_ID
+            );
+
+        if (existing) {
+            if (
+                existing.parentElement !==
+                root
+            ) {
+                root.appendChild(
+                    existing
+                );
+            }
+
+            existing.classList.add(
+                "ap-cmb-visible-action"
+            );
+
+            placeVisibleButton(
+                existing
+            );
+
+            return;
+        }
+
         const button =
             makeButton();
 
-        const bar =
-            toolbar();
+        button.classList.add(
+            "ap-cmb-visible-action"
+        );
 
-        if (bar) {
-            bar.appendChild(
-                button
-            );
-        }
-        else {
-            button.classList.add(
-                "ap-cmb-floating"
-            );
+        root.appendChild(
+            button
+        );
 
-            if (
-                getComputedStyle(
-                    root
-                ).position ===
-                "static"
-            ) {
-                root.style.position =
-                    "relative";
-            }
-
-            root.appendChild(
-                button
-            );
-        }
+        placeVisibleButton(
+            button
+        );
     }
-
     function boot() {
         mount();
 
+
+        const reposition =
+            () => {
+                const button =
+                    document.getElementById(
+                        BUTTON_ID
+                    );
+
+                if (button) {
+                    placeVisibleButton(
+                        button
+                    );
+                }
+            };
+
+        window.addEventListener(
+            "resize",
+            reposition,
+            {
+                passive: true
+            }
+        );
+
+        window.addEventListener(
+            "scroll",
+            reposition,
+            {
+                passive: true
+            }
+        );
         const observer =
             new MutationObserver(
                 mount

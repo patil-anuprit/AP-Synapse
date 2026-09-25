@@ -440,3 +440,104 @@
 .ap-cmb-result-grid[hidden] {
     display: none !important;
 }
+/* ============================================================
+   AP_CANVAS_VISIBLE_BUTTON_V171
+   Always-visible premium Canvas AI action.
+   ============================================================ */
+
+#canvasPage #apCanvasMakeBeautiful.ap-cmb-visible-action {
+    position: absolute !important;
+    z-index: 120 !important;
+
+    width: auto !important;
+    min-width: 160px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+
+    padding: 0 18px !important;
+    margin: 0 !important;
+
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+
+    flex: 0 0 auto !important;
+    overflow: visible !important;
+
+    border:
+        1px solid
+        rgba(255, 220, 136, .78) !important;
+
+    border-radius: 14px !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f2cc72 0%,
+            #dda947 58%,
+            #c4862e 100%
+        ) !important;
+
+    color: #171107 !important;
+
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    line-height: 1 !important;
+    letter-spacing: .012em !important;
+    white-space: nowrap !important;
+
+    box-shadow:
+        0 16px 42px rgba(0,0,0,.30),
+        0 6px 22px rgba(216,162,57,.26),
+        inset 0 1px 0 rgba(255,255,255,.36) !important;
+
+    cursor: pointer !important;
+
+    transform: translateZ(0);
+    transition:
+        transform .18s ease,
+        filter .18s ease,
+        box-shadow .18s ease !important;
+}
+
+#canvasPage #apCanvasMakeBeautiful.ap-cmb-visible-action:hover {
+    transform:
+        translateY(-2px)
+        translateZ(0) !important;
+
+    filter:
+        brightness(1.06);
+
+    box-shadow:
+        0 19px 48px rgba(0,0,0,.34),
+        0 8px 26px rgba(216,162,57,.32),
+        inset 0 1px 0 rgba(255,255,255,.42) !important;
+}
+
+#canvasPage #apCanvasMakeBeautiful.ap-cmb-visible-action:active {
+    transform:
+        translateY(0)
+        translateZ(0) !important;
+}
+
+#canvasPage #apCanvasMakeBeautiful.ap-cmb-visible-action .ap-cmb-spark {
+    color: #211708 !important;
+    font-size: 15px !important;
+    filter: none !important;
+}
+
+@media (max-width: 720px) {
+    #canvasPage #apCanvasMakeBeautiful.ap-cmb-visible-action {
+        min-width: 136px !important;
+        height: 40px !important;
+        min-height: 40px !important;
+        padding: 0 13px !important;
+        border-radius: 12px !important;
+        font-size: 10.5px !important;
+    }
+
+    #canvasPage #apCanvasMakeBeautiful.ap-cmb-visible-action .ap-cmb-spark {
+        font-size: 13px !important;
+    }
+}

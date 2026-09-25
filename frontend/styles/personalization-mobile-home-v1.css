@@ -1,0 +1,100 @@
+/* ============================================================
+   AP SYNAPSE — PERSONALIZATION MOBILE HOME V1
+   Mobile only. Desktop personalization remains unchanged.
+   ============================================================ */
+
+.ap-personalization-mobile-home {
+    display: none;
+}
+
+@media (max-width: 720px) {
+
+    .ap-personalization-workspace-header-inner,
+    .ap-personalization-workspace-header {
+        position: relative !important;
+    }
+
+    .ap-personalization-mobile-home {
+        position: absolute !important;
+        top: 10px !important;
+        right: 10px !important;
+
+        z-index: 30 !important;
+
+        height: 34px !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 6px !important;
+
+        padding:
+            0 10px !important;
+
+        border:
+            1px solid
+            rgba(225,181,89,.25) !important;
+
+        border-radius:
+            11px !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(29,30,32,.96),
+                rgba(18,19,21,.98)
+            ) !important;
+
+        color:
+            rgba(240,204,129,.94) !important;
+
+        box-shadow:
+            0 8px 22px
+            rgba(0,0,0,.24),
+            inset 0 1px 0
+            rgba(255,255,255,.045) !important;
+
+        font-size:
+            10px !important;
+
+        font-weight:
+            720 !important;
+
+        letter-spacing:
+            .015em !important;
+
+        line-height:
+            1 !important;
+
+        cursor:
+            pointer !important;
+
+        touch-action:
+            manipulation !important;
+    }
+
+    .ap-personalization-mobile-home[hidden] {
+        display: none !important;
+    }
+
+    .ap-personalization-mobile-home svg {
+        width: 15px !important;
+        height: 15px !important;
+
+        flex:
+            0 0 15px !important;
+
+        pointer-events:
+            none !important;
+    }
+
+    .ap-personalization-mobile-home span {
+        pointer-events:
+            none !important;
+    }
+
+    .ap-personalization-mobile-home:active {
+        transform:
+            scale(.97) !important;
+    }
+}

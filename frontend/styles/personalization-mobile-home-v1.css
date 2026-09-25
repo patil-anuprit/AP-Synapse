@@ -98,3 +98,26 @@
             scale(.97) !important;
     }
 }
+/* ============================================================
+   AP_PERSONALIZATION_MOBILE_HOME_FIX_V11
+   The Assistant router can open correctly while the dynamically
+   created Personalization workspace is still painted on top.
+   Hide only the Personalization layers marked by the V1.1 bridge.
+   ============================================================ */
+
+@media (max-width: 720px) {
+
+    [data-ap-personalization-mobile-home-hidden="true"] {
+        display:
+            none !important;
+
+        visibility:
+            hidden !important;
+
+        opacity:
+            0 !important;
+
+        pointer-events:
+            none !important;
+    }
+}

@@ -283,3 +283,335 @@
         "⌂ AP SYNAPSE PERSONALIZATION MOBILE HOME READY"
     );
 })();
+// ============================================================
+// AP_PERSONALIZATION_MOBILE_HOME_FIX_V11
+// V1 routed to Assistant correctly but left the dynamic
+// Personalization workspace visible above it on mobile.
+// This capture-phase bridge exits that workspace first.
+// ============================================================
+
+(() => {
+    "use strict";
+
+    if (
+        window.__AP_PERSONALIZATION_MOBILE_HOME_FIX_V11__
+    ) {
+        return;
+    }
+
+    window.__AP_PERSONALIZATION_MOBILE_HOME_FIX_V11__ =
+        true;
+
+    const HIDDEN_ATTR =
+        "data-ap-personalization-mobile-home-hidden";
+
+    function isMobile() {
+        return (
+            window.innerWidth <=
+            720
+        );
+    }
+
+    function personalizationShell() {
+        return document.querySelector(
+            ".ap-personalization-workspace-shell"
+        );
+    }
+
+    function collectPersonalizationLayers() {
+        const layers =
+            new Set();
+
+        const shell =
+            personalizationShell();
+
+        if (shell) {
+            layers.add(
+                shell
+            );
+
+            let node =
+                shell.parentElement;
+
+            let depth =
+                0;
+
+            while (
+                node &&
+                node !== document.body &&
+                depth < 5
+            ) {
+                const signature =
+                    (
+                        `${node.id || ""} ${node.className || ""}`
+                    )
+                        .toLowerCase();
+
+                /*
+                 * Only mark ancestors that clearly belong to
+                 * Personalization. Never hide generic app/main
+                 * containers that may also contain Assistant.
+                 */
+                if (
+                    signature.includes(
+                        "personalization"
+                    )
+                ) {
+                    layers.add(
+                        node
+                    );
+                }
+
+                node =
+                    node.parentElement;
+
+                depth +=
+                    1;
+            }
+        }
+
+        const page =
+            document.getElementById(
+                "personalizationPage"
+            );
+
+        if (page) {
+            layers.add(
+                page
+            );
+        }
+
+        return [
+            ...layers
+        ];
+    }
+
+    function concealPersonalization() {
+        const layers =
+            collectPersonalizationLayers();
+
+        layers.forEach(
+            element => {
+                element.setAttribute(
+                    HIDDEN_ATTR,
+                    "true"
+                );
+
+                element.setAttribute(
+                    "aria-hidden",
+                    "true"
+                );
+            }
+        );
+
+        document.body.classList.add(
+            "ap-personalization-mobile-home-exited"
+        );
+
+        return layers.length;
+    }
+
+    function revealPersonalization() {
+        document
+            .querySelectorAll(
+                `[${HIDDEN_ATTR}="true"]`
+            )
+            .forEach(
+                element => {
+                    element.removeAttribute(
+                        HIDDEN_ATTR
+                    );
+
+                    element.removeAttribute(
+                        "aria-hidden"
+                    );
+                }
+            );
+
+        document.body.classList.remove(
+            "ap-personalization-mobile-home-exited"
+        );
+    }
+
+    function navigateAssistant() {
+        const assistant =
+            document.getElementById(
+                "assistantBtn"
+            );
+
+        if (assistant) {
+            assistant.click();
+            return true;
+        }
+
+        const fallback =
+            document.querySelector(
+                '[data-page="assistant"], [data-workspace="assistant"]'
+            );
+
+        if (fallback) {
+            fallback.click();
+            return true;
+        }
+
+        return false;
+    }
+
+    function fixedGoHome() {
+        const hiddenCount =
+            concealPersonalization();
+
+        const navigated =
+            navigateAssistant();
+
+        window.dispatchEvent(
+            new CustomEvent(
+                "ap-personalization-mobile-home",
+                {
+                    detail: {
+                        destination:
+                            "assistant",
+
+                        hiddenLayers:
+                            hiddenCount,
+
+                        navigated
+                    }
+                }
+            )
+        );
+
+        /*
+         * Run once more after the router finishes its DOM work.
+         * This prevents the Personalization workspace from
+         * reasserting itself during the same navigation frame.
+         */
+        requestAnimationFrame(
+            () => {
+                concealPersonalization();
+
+                window.scrollTo({
+                    top: 0,
+                    left: 0,
+                    behavior: "auto"
+                });
+            }
+        );
+
+        setTimeout(
+            () => {
+                concealPersonalization();
+            },
+            80
+        );
+
+        console.log(
+            "⌂ AP SYNAPSE — PERSONALIZATION MOBILE HOME EXITED",
+            {
+                hiddenLayers:
+                    hiddenCount,
+
+                navigated
+            }
+        );
+
+        return navigated;
+    }
+
+    function isPersonalizationOpener(
+        target
+    ) {
+        return Boolean(
+            target?.closest?.(
+                "#personalizationBtn, #apRailPersonalization, [data-page='personalization'], [data-workspace='personalization']"
+            )
+        );
+    }
+
+    document.addEventListener(
+        "click",
+        event => {
+            if (!isMobile()) {
+                return;
+            }
+
+            const home =
+                event.target?.closest?.(
+                    "#apPersonalizationMobileHome"
+                );
+
+            if (home) {
+                /*
+                 * Capture phase intentionally takes ownership before
+                 * the original V1 target listener can run.
+                 */
+                event.preventDefault();
+                event.stopPropagation();
+                event.stopImmediatePropagation();
+
+                fixedGoHome();
+
+                return;
+            }
+
+            if (
+                isPersonalizationOpener(
+                    event.target
+                )
+            ) {
+                /*
+                 * Make the existing Personalization workspace visible
+                 * again before its normal open handler runs.
+                 */
+                revealPersonalization();
+
+                setTimeout(
+                    () => {
+                        window
+                            .APPersonalizationMobileHome
+                            ?.mount?.();
+                    },
+                    0
+                );
+            }
+        },
+        true
+    );
+
+    window.AP_PERSONALIZATION_MOBILE_HOME_FIX_V11 = {
+        version:
+            "1.1.0",
+
+        goHome:
+            fixedGoHome,
+
+        conceal:
+            concealPersonalization,
+
+        reveal:
+            revealPersonalization,
+
+        status() {
+            return {
+                mobile:
+                    isMobile(),
+
+                shell:
+                    Boolean(
+                        personalizationShell()
+                    ),
+
+                hidden:
+                    document
+                        .querySelectorAll(
+                            `[${HIDDEN_ATTR}="true"]`
+                        )
+                        .length
+            };
+        }
+    };
+
+    console.log(
+        "✅ AP SYNAPSE PERSONALIZATION MOBILE HOME V1.1 FIX READY"
+    );
+})();

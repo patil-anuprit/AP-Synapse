@@ -1756,28 +1756,3 @@
 #canvasPage .whiteboard-shell.ap-infinite-shell {
     overflow: hidden !important;
 }
-/* ============================================================
-   AP_INFINITE_CANVAS_V183
-   True full-height board + legacy-control cleanup.
-   ============================================================ */
-
-#canvasPage .workspace-toolbox,
-#canvasPage #canvasPen,
-#canvasPage #canvasErase,
-#canvasPage #canvasClear {
-    display: none !important;
-}
-
-#canvasPage .whiteboard-shell.ap-infinite-shell {
-    max-width: none !important;
-    max-height: none !important;
-    overflow: hidden !important;
-}
-
-#canvasPage #apCanvas.ap-infinite-canvas {
-    width: 100% !important;
-    height: 100% !important;
-    max-width: none !important;
-    max-height: none !important;
-    margin: 0 !important;
-}

@@ -2888,3 +2888,3085 @@ apWbPageObserver.observe(
     }
 
 })();
+// ============================================================
+// AP_INFINITE_CANVAS_V18
+// Practically unbounded vector whiteboard with persistent state.
+// ============================================================
+
+(() => {
+    "use strict";
+
+    if (window.__AP_INFINITE_CANVAS_V18__) {
+        return;
+    }
+
+    window.__AP_INFINITE_CANVAS_V18__ = true;
+
+    const DB_NAME =
+        "ap-synapse-infinite-canvas";
+
+    const DB_VERSION = 1;
+
+    const BOARD_STORE =
+        "boards";
+
+    const ARCHIVE_STORE =
+        "archives";
+
+    const BOARD_KEY =
+        "default-board-v1";
+
+    const MIN_ZOOM =
+        0.001;
+
+    const MAX_ZOOM =
+        256;
+
+    const MAX_UNDO =
+        60;
+
+    const SAVE_DELAY_MS =
+        300;
+
+    let page = null;
+    let shell = null;
+    let canvas = null;
+    let ctx = null;
+    let dpr = 1;
+
+    let board = {
+        version: 1,
+        items: [],
+        view: {
+            tx: 0,
+            ty: 0,
+            zoom: 1
+        },
+        updatedAt: Date.now()
+    };
+
+    let mode =
+        "pen";
+
+    let color =
+        "#111111";
+
+    let lineWidth =
+        4;
+
+    let activeItem =
+        null;
+
+    let previewItem =
+        null;
+
+    let eraseCheckpointed =
+        false;
+
+    let spaceHeld =
+        false;
+
+    let renderQueued =
+        false;
+
+    let saveTimer =
+        null;
+
+    let dbPromise =
+        null;
+
+    const pointers =
+        new Map();
+
+    let gesture =
+        null;
+
+    const undoStack =
+        [];
+
+    const redoStack =
+        [];
+
+    const imageCache =
+        new Map();
+
+    let hud =
+        null;
+
+    let zoomLabel =
+        null;
+
+    let saveLabel =
+        null;
+
+    function cloneItems() {
+        return JSON.parse(
+            JSON.stringify(
+                board.items
+            )
+        );
+    }
+
+    function checkpoint() {
+        undoStack.push(
+            cloneItems()
+        );
+
+        if (
+            undoStack.length >
+            MAX_UNDO
+        ) {
+            undoStack.shift();
+        }
+
+        redoStack.length = 0;
+    }
+
+    function undo() {
+        if (!undoStack.length) {
+            return;
+        }
+
+        redoStack.push(
+            cloneItems()
+        );
+
+        board.items =
+            undoStack.pop();
+
+        saveSoon();
+        queueRender();
+    }
+
+    function redo() {
+        if (!redoStack.length) {
+            return;
+        }
+
+        undoStack.push(
+            cloneItems()
+        );
+
+        board.items =
+            redoStack.pop();
+
+        saveSoon();
+        queueRender();
+    }
+
+    function clamp(
+        value,
+        min,
+        max
+    ) {
+        return Math.min(
+            max,
+            Math.max(
+                min,
+                value
+            )
+        );
+    }
+
+    function uid(prefix = "item") {
+        return (
+            prefix +
+            "-" +
+            Date.now().toString(36) +
+            "-" +
+            Math.random()
+                .toString(36)
+                .slice(2, 9)
+        );
+    }
+
+    function openDb() {
+        if (dbPromise) {
+            return dbPromise;
+        }
+
+        dbPromise =
+            new Promise(
+                (resolve, reject) => {
+                    const request =
+                        indexedDB.open(
+                            DB_NAME,
+                            DB_VERSION
+                        );
+
+                    request.onupgradeneeded =
+                        () => {
+                            const db =
+                                request.result;
+
+                            if (
+                                !db.objectStoreNames
+                                    .contains(
+                                        BOARD_STORE
+                                    )
+                            ) {
+                                db.createObjectStore(
+                                    BOARD_STORE,
+                                    {
+                                        keyPath:
+                                            "key"
+                                    }
+                                );
+                            }
+
+                            if (
+                                !db.objectStoreNames
+                                    .contains(
+                                        ARCHIVE_STORE
+                                    )
+                            ) {
+                                db.createObjectStore(
+                                    ARCHIVE_STORE,
+                                    {
+                                        keyPath:
+                                            "id"
+                                    }
+                                );
+                            }
+                        };
+
+                    request.onsuccess =
+                        () =>
+                            resolve(
+                                request.result
+                            );
+
+                    request.onerror =
+                        () =>
+                            reject(
+                                request.error
+                            );
+                }
+            );
+
+        return dbPromise;
+    }
+
+    async function loadBoard() {
+        try {
+            const db =
+                await openDb();
+
+            const saved =
+                await new Promise(
+                    (resolve, reject) => {
+                        const tx =
+                            db.transaction(
+                                BOARD_STORE,
+                                "readonly"
+                            );
+
+                        const request =
+                            tx
+                                .objectStore(
+                                    BOARD_STORE
+                                )
+                                .get(
+                                    BOARD_KEY
+                                );
+
+                        request.onsuccess =
+                            () =>
+                                resolve(
+                                    request.result ||
+                                    null
+                                );
+
+                        request.onerror =
+                            () =>
+                                reject(
+                                    request.error
+                                );
+                    }
+                );
+
+            if (
+                saved &&
+                Array.isArray(
+                    saved.items
+                ) &&
+                saved.view
+            ) {
+                board = {
+                    version:
+                        Number(
+                            saved.version
+                        ) || 1,
+
+                    items:
+                        saved.items,
+
+                    view: {
+                        tx:
+                            Number(
+                                saved.view.tx
+                            ) || 0,
+
+                        ty:
+                            Number(
+                                saved.view.ty
+                            ) || 0,
+
+                        zoom:
+                            clamp(
+                                Number(
+                                    saved.view.zoom
+                                ) || 1,
+                                MIN_ZOOM,
+                                MAX_ZOOM
+                            )
+                    },
+
+                    updatedAt:
+                        Number(
+                            saved.updatedAt
+                        ) ||
+                        Date.now()
+                };
+            }
+        }
+        catch (error) {
+            console.warn(
+                "AP Infinite Canvas load failed:",
+                error
+            );
+        }
+    }
+
+    async function saveNow() {
+        clearTimeout(
+            saveTimer
+        );
+
+        saveTimer = null;
+
+        board.updatedAt =
+            Date.now();
+
+        if (saveLabel) {
+            saveLabel.textContent =
+                "Saving…";
+        }
+
+        try {
+            const db =
+                await openDb();
+
+            await new Promise(
+                (resolve, reject) => {
+                    const tx =
+                        db.transaction(
+                            BOARD_STORE,
+                            "readwrite"
+                        );
+
+                    tx
+                        .objectStore(
+                            BOARD_STORE
+                        )
+                        .put({
+                            key:
+                                BOARD_KEY,
+
+                            version:
+                                board.version,
+
+                            items:
+                                board.items,
+
+                            view:
+                                board.view,
+
+                            updatedAt:
+                                board.updatedAt
+                        });
+
+                    tx.oncomplete =
+                        resolve;
+
+                    tx.onerror =
+                        () =>
+                            reject(
+                                tx.error
+                            );
+
+                    tx.onabort =
+                        () =>
+                            reject(
+                                tx.error
+                            );
+                }
+            );
+
+            if (saveLabel) {
+                saveLabel.textContent =
+                    "Saved";
+            }
+        }
+        catch (error) {
+            console.warn(
+                "AP Infinite Canvas save failed:",
+                error
+            );
+
+            if (saveLabel) {
+                saveLabel.textContent =
+                    "Local save unavailable";
+            }
+        }
+    }
+
+    function saveSoon() {
+        if (saveLabel) {
+            saveLabel.textContent =
+                "Saving…";
+        }
+
+        clearTimeout(
+            saveTimer
+        );
+
+        saveTimer =
+            setTimeout(
+                saveNow,
+                SAVE_DELAY_MS
+            );
+    }
+
+    async function archiveBoard(
+        reason = "manual-clear"
+    ) {
+        if (!board.items.length) {
+            return;
+        }
+
+        try {
+            const db =
+                await openDb();
+
+            await new Promise(
+                (resolve, reject) => {
+                    const tx =
+                        db.transaction(
+                            ARCHIVE_STORE,
+                            "readwrite"
+                        );
+
+                    tx
+                        .objectStore(
+                            ARCHIVE_STORE
+                        )
+                        .put({
+                            id:
+                                Date.now(),
+
+                            reason,
+
+                            items:
+                                cloneItems(),
+
+                            view:
+                                {
+                                    ...board.view
+                                },
+
+                            createdAt:
+                                Date.now()
+                        });
+
+                    tx.oncomplete =
+                        resolve;
+
+                    tx.onerror =
+                        () =>
+                            reject(
+                                tx.error
+                            );
+                }
+            );
+        }
+        catch (error) {
+            console.warn(
+                "AP Canvas archive failed:",
+                error
+            );
+        }
+    }
+
+    function queueRender() {
+        if (renderQueued) {
+            return;
+        }
+
+        renderQueued = true;
+
+        requestAnimationFrame(
+            () => {
+                renderQueued =
+                    false;
+
+                render();
+            }
+        );
+    }
+
+    function screenPoint(
+        clientX,
+        clientY
+    ) {
+        const rect =
+            canvas.getBoundingClientRect();
+
+        return {
+            x:
+                clientX -
+                rect.left,
+
+            y:
+                clientY -
+                rect.top
+        };
+    }
+
+    function screenToWorld(
+        sx,
+        sy
+    ) {
+        return {
+            x:
+                (
+                    sx -
+                    board.view.tx
+                ) /
+                board.view.zoom,
+
+            y:
+                (
+                    sy -
+                    board.view.ty
+                ) /
+                board.view.zoom
+        };
+    }
+
+    function clientToWorld(
+        clientX,
+        clientY
+    ) {
+        const s =
+            screenPoint(
+                clientX,
+                clientY
+            );
+
+        return screenToWorld(
+            s.x,
+            s.y
+        );
+    }
+
+    function zoomText() {
+        const percentage =
+            board.view.zoom *
+            100;
+
+        if (
+            percentage >= 1000
+        ) {
+            return (
+                Math.round(
+                    percentage
+                ) +
+                "%"
+            );
+        }
+
+        if (
+            percentage >= 10
+        ) {
+            return (
+                percentage
+                    .toFixed(0) +
+                "%"
+            );
+        }
+
+        if (
+            percentage >= 1
+        ) {
+            return (
+                percentage
+                    .toFixed(1) +
+                "%"
+            );
+        }
+
+        return (
+            percentage
+                .toFixed(2) +
+            "%"
+        );
+    }
+
+    function updateHud() {
+        if (zoomLabel) {
+            zoomLabel.textContent =
+                zoomText();
+        }
+
+        if (canvas) {
+            canvas.dataset.apCanvasMode =
+                mode;
+        }
+    }
+
+    function zoomAtScreen(
+        sx,
+        sy,
+        targetZoom
+    ) {
+        const before =
+            screenToWorld(
+                sx,
+                sy
+            );
+
+        const nextZoom =
+            clamp(
+                targetZoom,
+                MIN_ZOOM,
+                MAX_ZOOM
+            );
+
+        board.view.zoom =
+            nextZoom;
+
+        board.view.tx =
+            sx -
+            before.x *
+            nextZoom;
+
+        board.view.ty =
+            sy -
+            before.y *
+            nextZoom;
+
+        updateHud();
+        saveSoon();
+        queueRender();
+    }
+
+    function zoomCenter(
+        factor
+    ) {
+        const rect =
+            canvas.getBoundingClientRect();
+
+        zoomAtScreen(
+            rect.width / 2,
+            rect.height / 2,
+            board.view.zoom *
+                factor
+        );
+    }
+
+    function resetView() {
+        const rect =
+            canvas.getBoundingClientRect();
+
+        board.view.zoom = 1;
+        board.view.tx =
+            rect.width / 2;
+        board.view.ty =
+            rect.height / 2;
+
+        updateHud();
+        saveSoon();
+        queueRender();
+    }
+
+    function drawItem(
+        item
+    ) {
+        if (!item) {
+            return;
+        }
+
+        ctx.save();
+
+        ctx.lineCap =
+            "round";
+
+        ctx.lineJoin =
+            "round";
+
+        ctx.strokeStyle =
+            item.color ||
+            "#111111";
+
+        ctx.fillStyle =
+            item.color ||
+            "#111111";
+
+        ctx.lineWidth =
+            Number(
+                item.width
+            ) || 4;
+
+        if (
+            item.type ===
+            "stroke"
+        ) {
+            const points =
+                item.points ||
+                [];
+
+            if (!points.length) {
+                ctx.restore();
+                return;
+            }
+
+            ctx.beginPath();
+            ctx.moveTo(
+                points[0].x,
+                points[0].y
+            );
+
+            for (
+                let i = 1;
+                i < points.length;
+                i++
+            ) {
+                ctx.lineTo(
+                    points[i].x,
+                    points[i].y
+                );
+            }
+
+            ctx.stroke();
+        }
+
+        else if (
+            item.type ===
+            "line"
+        ) {
+            ctx.beginPath();
+            ctx.moveTo(
+                item.x1,
+                item.y1
+            );
+            ctx.lineTo(
+                item.x2,
+                item.y2
+            );
+            ctx.stroke();
+        }
+
+        else if (
+            item.type ===
+            "rect"
+        ) {
+            const x =
+                Math.min(
+                    item.x1,
+                    item.x2
+                );
+
+            const y =
+                Math.min(
+                    item.y1,
+                    item.y2
+                );
+
+            const w =
+                Math.abs(
+                    item.x2 -
+                    item.x1
+                );
+
+            const h =
+                Math.abs(
+                    item.y2 -
+                    item.y1
+                );
+
+            ctx.strokeRect(
+                x,
+                y,
+                w,
+                h
+            );
+        }
+
+        else if (
+            item.type ===
+            "ellipse"
+        ) {
+            const cx =
+                (
+                    item.x1 +
+                    item.x2
+                ) / 2;
+
+            const cy =
+                (
+                    item.y1 +
+                    item.y2
+                ) / 2;
+
+            const rx =
+                Math.abs(
+                    item.x2 -
+                    item.x1
+                ) / 2;
+
+            const ry =
+                Math.abs(
+                    item.y2 -
+                    item.y1
+                ) / 2;
+
+            ctx.beginPath();
+
+            ctx.ellipse(
+                cx,
+                cy,
+                Math.max(
+                    rx,
+                    0.01
+                ),
+                Math.max(
+                    ry,
+                    0.01
+                ),
+                0,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.stroke();
+        }
+
+        else if (
+            item.type ===
+            "text"
+        ) {
+            ctx.font =
+                `${Number(
+                    item.size
+                ) || 24}px Inter, Arial, sans-serif`;
+
+            ctx.textBaseline =
+                "top";
+
+            ctx.fillText(
+                item.text ||
+                "",
+                item.x,
+                item.y
+            );
+        }
+
+        else if (
+            item.type ===
+            "image"
+        ) {
+            const src =
+                item.src;
+
+            if (src) {
+                let image =
+                    imageCache.get(
+                        src
+                    );
+
+                if (!image) {
+                    image =
+                        new Image();
+
+                    image.onload =
+                        queueRender;
+
+                    image.src =
+                        src;
+
+                    imageCache.set(
+                        src,
+                        image
+                    );
+                }
+
+                if (
+                    image.complete &&
+                    image.naturalWidth
+                ) {
+                    ctx.drawImage(
+                        image,
+                        item.x,
+                        item.y,
+                        item.w,
+                        item.h
+                    );
+                }
+            }
+        }
+
+        ctx.restore();
+    }
+
+    function renderGrid(
+        width,
+        height
+    ) {
+        const zoom =
+            board.view.zoom;
+
+        if (
+            zoom <
+            0.08
+        ) {
+            return;
+        }
+
+        let worldStep =
+            40;
+
+        while (
+            worldStep *
+            zoom <
+            28
+        ) {
+            worldStep *= 2;
+        }
+
+        while (
+            worldStep *
+            zoom >
+            100
+        ) {
+            worldStep /= 2;
+        }
+
+        const screenStep =
+            worldStep *
+            zoom;
+
+        const startX =
+            (
+                (
+                    board.view.tx %
+                    screenStep
+                ) +
+                screenStep
+            ) %
+            screenStep;
+
+        const startY =
+            (
+                (
+                    board.view.ty %
+                    screenStep
+                ) +
+                screenStep
+            ) %
+            screenStep;
+
+        ctx.save();
+
+        ctx.fillStyle =
+            "rgba(15,17,20,.055)";
+
+        for (
+            let x = startX;
+            x < width;
+            x += screenStep
+        ) {
+            for (
+                let y = startY;
+                y < height;
+                y += screenStep
+            ) {
+                ctx.beginPath();
+                ctx.arc(
+                    x * dpr,
+                    y * dpr,
+                    Math.max(
+                        0.65,
+                        0.7 * dpr
+                    ),
+                    0,
+                    Math.PI * 2
+                );
+                ctx.fill();
+            }
+        }
+
+        ctx.restore();
+    }
+
+    function render() {
+        if (!ctx || !canvas) {
+            return;
+        }
+
+        const rect =
+            canvas.getBoundingClientRect();
+
+        const cssWidth =
+            rect.width;
+
+        const cssHeight =
+            rect.height;
+
+        if (
+            !cssWidth ||
+            !cssHeight
+        ) {
+            return;
+        }
+
+        ctx.setTransform(
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+        );
+
+        ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        ctx.fillStyle =
+            "#ffffff";
+
+        ctx.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        renderGrid(
+            cssWidth,
+            cssHeight
+        );
+
+        ctx.save();
+
+        ctx.setTransform(
+            dpr *
+                board.view.zoom,
+            0,
+            0,
+            dpr *
+                board.view.zoom,
+            dpr *
+                board.view.tx,
+            dpr *
+                board.view.ty
+        );
+
+        for (
+            const item of
+            board.items
+        ) {
+            drawItem(
+                item
+            );
+        }
+
+        if (previewItem) {
+            ctx.save();
+
+            ctx.globalAlpha =
+                0.72;
+
+            drawItem(
+                previewItem
+            );
+
+            ctx.restore();
+        }
+
+        if (activeItem) {
+            drawItem(
+                activeItem
+            );
+        }
+
+        ctx.restore();
+
+        updateHud();
+    }
+
+    function resizeBoard() {
+        if (
+            !canvas ||
+            !shell
+        ) {
+            return;
+        }
+
+        const shellTop =
+            shell
+                .getBoundingClientRect()
+                .top;
+
+        const available =
+            Math.max(
+                540,
+                window.innerHeight -
+                    shellTop -
+                    12
+            );
+
+        shell.style.height =
+            `${Math.round(
+                available
+            )}px`;
+
+        shell.style.minHeight =
+            "540px";
+
+        canvas.style.width =
+            "100%";
+
+        canvas.style.height =
+            "100%";
+
+        const rect =
+            canvas.getBoundingClientRect();
+
+        dpr =
+            clamp(
+                window.devicePixelRatio ||
+                    1,
+                1,
+                2
+            );
+
+        const targetWidth =
+            Math.max(
+                1,
+                Math.round(
+                    rect.width *
+                    dpr
+                )
+            );
+
+        const targetHeight =
+            Math.max(
+                1,
+                Math.round(
+                    rect.height *
+                    dpr
+                )
+            );
+
+        if (
+            canvas.width !==
+                targetWidth ||
+            canvas.height !==
+                targetHeight
+        ) {
+            canvas.width =
+                targetWidth;
+
+            canvas.height =
+                targetHeight;
+        }
+
+        queueRender();
+    }
+
+    function pointDistanceToSegment(
+        px,
+        py,
+        x1,
+        y1,
+        x2,
+        y2
+    ) {
+        const dx =
+            x2 - x1;
+
+        const dy =
+            y2 - y1;
+
+        if (
+            dx === 0 &&
+            dy === 0
+        ) {
+            return Math.hypot(
+                px - x1,
+                py - y1
+            );
+        }
+
+        const t =
+            clamp(
+                (
+                    (
+                        px - x1
+                    ) * dx +
+                    (
+                        py - y1
+                    ) * dy
+                ) /
+                (
+                    dx * dx +
+                    dy * dy
+                ),
+                0,
+                1
+            );
+
+        const x =
+            x1 +
+            t * dx;
+
+        const y =
+            y1 +
+            t * dy;
+
+        return Math.hypot(
+            px - x,
+            py - y
+        );
+    }
+
+    function itemHit(
+        item,
+        p,
+        radius
+    ) {
+        if (
+            item.type ===
+            "stroke"
+        ) {
+            const points =
+                item.points ||
+                [];
+
+            for (
+                let i = 1;
+                i < points.length;
+                i++
+            ) {
+                if (
+                    pointDistanceToSegment(
+                        p.x,
+                        p.y,
+                        points[i - 1].x,
+                        points[i - 1].y,
+                        points[i].x,
+                        points[i].y
+                    ) <= radius
+                ) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        if (
+            item.type ===
+            "line"
+        ) {
+            return (
+                pointDistanceToSegment(
+                    p.x,
+                    p.y,
+                    item.x1,
+                    item.y1,
+                    item.x2,
+                    item.y2
+                ) <=
+                radius
+            );
+        }
+
+        if (
+            item.type ===
+                "rect" ||
+            item.type ===
+                "ellipse"
+        ) {
+            const minX =
+                Math.min(
+                    item.x1,
+                    item.x2
+                ) -
+                radius;
+
+            const maxX =
+                Math.max(
+                    item.x1,
+                    item.x2
+                ) +
+                radius;
+
+            const minY =
+                Math.min(
+                    item.y1,
+                    item.y2
+                ) -
+                radius;
+
+            const maxY =
+                Math.max(
+                    item.y1,
+                    item.y2
+                ) +
+                radius;
+
+            return (
+                p.x >= minX &&
+                p.x <= maxX &&
+                p.y >= minY &&
+                p.y <= maxY
+            );
+        }
+
+        if (
+            item.type ===
+            "text"
+        ) {
+            return (
+                Math.abs(
+                    p.x -
+                    item.x
+                ) <=
+                    140 /
+                    board.view.zoom &&
+                Math.abs(
+                    p.y -
+                    item.y
+                ) <=
+                    50 /
+                    board.view.zoom
+            );
+        }
+
+        if (
+            item.type ===
+            "image"
+        ) {
+            return (
+                p.x >=
+                    item.x -
+                        radius &&
+                p.x <=
+                    item.x +
+                        item.w +
+                        radius &&
+                p.y >=
+                    item.y -
+                        radius &&
+                p.y <=
+                    item.y +
+                        item.h +
+                        radius
+            );
+        }
+
+        return false;
+    }
+
+    function eraseAt(
+        p
+    ) {
+        const radius =
+            18 /
+            board.view.zoom;
+
+        const before =
+            board.items.length;
+
+        board.items =
+            board.items.filter(
+                item =>
+                    !itemHit(
+                        item,
+                        p,
+                        radius
+                    )
+            );
+
+        if (
+            board.items.length !==
+            before
+        ) {
+            saveSoon();
+            queueRender();
+        }
+    }
+
+    function beginShape(
+        type,
+        p
+    ) {
+        previewItem = {
+            id:
+                uid(type),
+
+            type,
+
+            x1:
+                p.x,
+
+            y1:
+                p.y,
+
+            x2:
+                p.x,
+
+            y2:
+                p.y,
+
+            color,
+
+            width:
+                lineWidth
+        };
+    }
+
+    function firstTwoPointers() {
+        return Array.from(
+            pointers.values()
+        ).slice(
+            0,
+            2
+        );
+    }
+
+    function distance(
+        a,
+        b
+    ) {
+        return Math.hypot(
+            b.x - a.x,
+            b.y - a.y
+        );
+    }
+
+    function center(
+        a,
+        b
+    ) {
+        return {
+            x:
+                (
+                    a.x +
+                    b.x
+                ) / 2,
+
+            y:
+                (
+                    a.y +
+                    b.y
+                ) / 2
+        };
+    }
+
+    function startPinch() {
+        if (
+            pointers.size <
+            2
+        ) {
+            return;
+        }
+
+        activeItem = null;
+        previewItem = null;
+        eraseCheckpointed =
+            false;
+
+        const [
+            a,
+            b
+        ] =
+            firstTwoPointers();
+
+        const c =
+            center(
+                a,
+                b
+            );
+
+        const world =
+            screenToWorld(
+                c.x,
+                c.y
+            );
+
+        gesture = {
+            type:
+                "pinch",
+
+            startDistance:
+                Math.max(
+                    1,
+                    distance(
+                        a,
+                        b
+                    )
+                ),
+
+            startZoom:
+                board.view.zoom,
+
+            worldX:
+                world.x,
+
+            worldY:
+                world.y
+        };
+    }
+
+    function onPointerDown(
+        event
+    ) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const s =
+            screenPoint(
+                event.clientX,
+                event.clientY
+            );
+
+        pointers.set(
+            event.pointerId,
+            {
+                x:
+                    s.x,
+
+                y:
+                    s.y,
+
+                pointerType:
+                    event.pointerType
+            }
+        );
+
+        try {
+            canvas.setPointerCapture(
+                event.pointerId
+            );
+        }
+        catch (_) {}
+
+        if (
+            pointers.size >=
+            2
+        ) {
+            startPinch();
+            return;
+        }
+
+        const wantsPan =
+            mode === "pan" ||
+            spaceHeld ||
+            event.button === 1 ||
+            event.button === 2;
+
+        if (wantsPan) {
+            gesture = {
+                type:
+                    "pan",
+
+                startX:
+                    s.x,
+
+                startY:
+                    s.y,
+
+                startTx:
+                    board.view.tx,
+
+                startTy:
+                    board.view.ty
+            };
+
+            return;
+        }
+
+        const p =
+            screenToWorld(
+                s.x,
+                s.y
+            );
+
+        if (
+            mode ===
+            "erase"
+        ) {
+            checkpoint();
+
+            eraseCheckpointed =
+                true;
+
+            eraseAt(
+                p
+            );
+
+            return;
+        }
+
+        if (
+            mode ===
+            "line" ||
+            mode ===
+            "rect" ||
+            mode ===
+            "ellipse"
+        ) {
+            checkpoint();
+
+            beginShape(
+                mode,
+                p
+            );
+
+            return;
+        }
+
+        if (
+            mode ===
+            "text"
+        ) {
+            const text =
+                window.prompt(
+                    "Enter text for the canvas:"
+                );
+
+            if (
+                text &&
+                text.trim()
+            ) {
+                checkpoint();
+
+                board.items.push({
+                    id:
+                        uid(
+                            "text"
+                        ),
+
+                    type:
+                        "text",
+
+                    x:
+                        p.x,
+
+                    y:
+                        p.y,
+
+                    text:
+                        text.trim(),
+
+                    color,
+
+                    size:
+                        Math.max(
+                            18,
+                            lineWidth *
+                                5
+                        )
+                });
+
+                saveSoon();
+                queueRender();
+            }
+
+            return;
+        }
+
+        checkpoint();
+
+        activeItem = {
+            id:
+                uid(
+                    "stroke"
+                ),
+
+            type:
+                "stroke",
+
+            color,
+
+            width:
+                lineWidth,
+
+            points: [
+                p
+            ]
+        };
+
+        queueRender();
+    }
+
+    function onPointerMove(
+        event
+    ) {
+        if (
+            !pointers.has(
+                event.pointerId
+            )
+        ) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const s =
+            screenPoint(
+                event.clientX,
+                event.clientY
+            );
+
+        pointers.set(
+            event.pointerId,
+            {
+                x:
+                    s.x,
+
+                y:
+                    s.y,
+
+                pointerType:
+                    event.pointerType
+            }
+        );
+
+        if (
+            pointers.size >=
+            2
+        ) {
+            if (
+                !gesture ||
+                gesture.type !==
+                    "pinch"
+            ) {
+                startPinch();
+            }
+
+            const [
+                a,
+                b
+            ] =
+                firstTwoPointers();
+
+            const c =
+                center(
+                    a,
+                    b
+                );
+
+            const dist =
+                Math.max(
+                    1,
+                    distance(
+                        a,
+                        b
+                    )
+                );
+
+            const nextZoom =
+                clamp(
+                    gesture.startZoom *
+                        (
+                            dist /
+                            gesture.startDistance
+                        ),
+                    MIN_ZOOM,
+                    MAX_ZOOM
+                );
+
+            board.view.zoom =
+                nextZoom;
+
+            board.view.tx =
+                c.x -
+                gesture.worldX *
+                    nextZoom;
+
+            board.view.ty =
+                c.y -
+                gesture.worldY *
+                    nextZoom;
+
+            updateHud();
+            saveSoon();
+            queueRender();
+
+            return;
+        }
+
+        if (
+            gesture?.type ===
+            "pan"
+        ) {
+            board.view.tx =
+                gesture.startTx +
+                (
+                    s.x -
+                    gesture.startX
+                );
+
+            board.view.ty =
+                gesture.startTy +
+                (
+                    s.y -
+                    gesture.startY
+                );
+
+            saveSoon();
+            queueRender();
+
+            return;
+        }
+
+        const p =
+            screenToWorld(
+                s.x,
+                s.y
+            );
+
+        if (
+            mode ===
+            "erase" &&
+            eraseCheckpointed
+        ) {
+            eraseAt(
+                p
+            );
+
+            return;
+        }
+
+        if (activeItem) {
+            const points =
+                activeItem.points;
+
+            const previous =
+                points[
+                    points.length -
+                    1
+                ];
+
+            if (
+                !previous ||
+                Math.hypot(
+                    p.x -
+                        previous.x,
+                    p.y -
+                        previous.y
+                ) >
+                    0.75 /
+                    board.view.zoom
+            ) {
+                points.push(
+                    p
+                );
+
+                queueRender();
+            }
+
+            return;
+        }
+
+        if (previewItem) {
+            previewItem.x2 =
+                p.x;
+
+            previewItem.y2 =
+                p.y;
+
+            queueRender();
+        }
+    }
+
+    function onPointerUp(
+        event
+    ) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        pointers.delete(
+            event.pointerId
+        );
+
+        try {
+            canvas.releasePointerCapture(
+                event.pointerId
+            );
+        }
+        catch (_) {}
+
+        if (
+            gesture?.type ===
+                "pinch"
+        ) {
+            if (
+                pointers.size <
+                2
+            ) {
+                gesture = null;
+            }
+
+            saveSoon();
+            return;
+        }
+
+        if (
+            gesture?.type ===
+                "pan"
+        ) {
+            gesture = null;
+            saveSoon();
+            return;
+        }
+
+        if (activeItem) {
+            if (
+                activeItem.points
+                    .length >=
+                1
+            ) {
+                board.items.push(
+                    activeItem
+                );
+            }
+
+            activeItem = null;
+
+            saveSoon();
+            queueRender();
+        }
+
+        if (previewItem) {
+            board.items.push(
+                previewItem
+            );
+
+            previewItem = null;
+
+            saveSoon();
+            queueRender();
+        }
+
+        eraseCheckpointed =
+            false;
+    }
+
+    function onWheel(
+        event
+    ) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const s =
+            screenPoint(
+                event.clientX,
+                event.clientY
+            );
+
+        if (
+            event.ctrlKey ||
+            event.metaKey
+        ) {
+            const factor =
+                Math.exp(
+                    -event.deltaY *
+                    0.002
+                );
+
+            zoomAtScreen(
+                s.x,
+                s.y,
+                board.view.zoom *
+                    factor
+            );
+
+            return;
+        }
+
+        board.view.tx -=
+            event.deltaX;
+
+        board.view.ty -=
+            event.deltaY;
+
+        saveSoon();
+        queueRender();
+    }
+
+    function descriptorFor(
+        element
+    ) {
+        return [
+            element?.dataset?.tool,
+            element?.dataset?.action,
+            element?.getAttribute?.(
+                "title"
+            ),
+            element?.getAttribute?.(
+                "aria-label"
+            ),
+            element?.id,
+            element?.textContent
+        ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase();
+    }
+
+    function setMode(
+        nextMode
+    ) {
+        mode =
+            nextMode;
+
+        updateHud();
+    }
+
+    async function clearBoard() {
+        if (!board.items.length) {
+            return;
+        }
+
+        const okay =
+            window.confirm(
+                "Clear the visible AP Canvas board?\n\nA recovery archive will be saved first."
+            );
+
+        if (!okay) {
+            return;
+        }
+
+        await archiveBoard(
+            "manual-clear"
+        );
+
+        checkpoint();
+
+        board.items =
+            [];
+
+        saveSoon();
+        queueRender();
+    }
+
+    function toolbarClick(
+        event
+    ) {
+        const target =
+            event.target?.closest?.(
+                "button, [role='button']"
+            );
+
+        if (
+            !target ||
+            !target.closest(
+                "#canvasPage"
+            )
+        ) {
+            return;
+        }
+
+        if (
+            target.closest(
+                "#apCanvasMakeBeautiful"
+            )
+        ) {
+            return;
+        }
+
+        const description =
+            descriptorFor(
+                target
+            );
+
+        if (
+            target.matches(
+                ".ap-wb-color"
+            ) ||
+            target.dataset?.color
+        ) {
+            const candidate =
+                target.dataset?.color ||
+                target.style
+                    ?.backgroundColor ||
+                getComputedStyle(
+                    target
+                ).backgroundColor;
+
+            if (candidate) {
+                color =
+                    candidate;
+            }
+
+            return;
+        }
+
+        if (
+            /undo/.test(
+                description
+            )
+        ) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            undo();
+            return;
+        }
+
+        if (
+            /redo/.test(
+                description
+            )
+        ) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            redo();
+            return;
+        }
+
+        if (
+            /clear|trash|delete all/.test(
+                description
+            )
+        ) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            clearBoard();
+            return;
+        }
+
+        if (
+            /eras/.test(
+                description
+            )
+        ) {
+            setMode(
+                "erase"
+            );
+            return;
+        }
+
+        if (
+            /hand|pan|move canvas/.test(
+                description
+            )
+        ) {
+            setMode(
+                "pan"
+            );
+            return;
+        }
+
+        if (
+            /rectangle|square|rect/.test(
+                description
+            )
+        ) {
+            setMode(
+                "rect"
+            );
+            return;
+        }
+
+        if (
+            /circle|ellipse|oval/.test(
+                description
+            )
+        ) {
+            setMode(
+                "ellipse"
+            );
+            return;
+        }
+
+        if (
+            /\bline\b/.test(
+                description
+            )
+        ) {
+            setMode(
+                "line"
+            );
+            return;
+        }
+
+        if (
+            /\btext\b|\btype\b/.test(
+                description
+            )
+        ) {
+            setMode(
+                "text"
+            );
+            return;
+        }
+
+        if (
+            /pen|pencil|brush|draw/.test(
+                description
+            )
+        ) {
+            setMode(
+                "pen"
+            );
+        }
+    }
+
+    function toolbarInput(
+        event
+    ) {
+        const target =
+            event.target;
+
+        if (
+            !target?.closest?.(
+                "#canvasPage"
+            )
+        ) {
+            return;
+        }
+
+        if (
+            target.matches(
+                "input[type='color']"
+            )
+        ) {
+            color =
+                target.value ||
+                color;
+
+            return;
+        }
+
+        if (
+            target.matches(
+                ".ap-wb-size, input[type='range']"
+            )
+        ) {
+            const value =
+                Number(
+                    target.value
+                );
+
+            if (
+                Number.isFinite(
+                    value
+                ) &&
+                value > 0
+            ) {
+                lineWidth =
+                    clamp(
+                        value,
+                        1,
+                        80
+                    );
+            }
+        }
+    }
+
+    function createHud() {
+        document
+            .getElementById(
+                "apInfiniteCanvasHud"
+            )
+            ?.remove();
+
+        hud =
+            document.createElement(
+                "div"
+            );
+
+        hud.id =
+            "apInfiniteCanvasHud";
+
+        hud.innerHTML = `
+            <button
+                type="button"
+                class="ap-inf-brand"
+                title="AP Infinite Canvas"
+                aria-label="AP Infinite Canvas"
+            >
+                ∞
+            </button>
+
+            <button
+                type="button"
+                data-ap-inf="pan"
+                title="Pan canvas"
+                aria-label="Pan canvas"
+            >
+                ✋
+            </button>
+
+            <button
+                type="button"
+                data-ap-inf="out"
+                title="Zoom out"
+                aria-label="Zoom out"
+            >
+                −
+            </button>
+
+            <button
+                type="button"
+                class="ap-inf-zoom"
+                data-ap-inf="reset-zoom"
+                title="Reset zoom to 100%"
+            >
+                100%
+            </button>
+
+            <button
+                type="button"
+                data-ap-inf="in"
+                title="Zoom in"
+                aria-label="Zoom in"
+            >
+                +
+            </button>
+
+            <button
+                type="button"
+                data-ap-inf="home"
+                title="Return to board origin"
+                aria-label="Return to board origin"
+            >
+                ⌂
+            </button>
+
+            <span
+                class="ap-inf-save"
+                title="Canvas autosave status"
+            >
+                Saved
+            </span>
+        `;
+
+        page.appendChild(
+            hud
+        );
+
+        zoomLabel =
+            hud.querySelector(
+                ".ap-inf-zoom"
+            );
+
+        saveLabel =
+            hud.querySelector(
+                ".ap-inf-save"
+            );
+
+        hud.addEventListener(
+            "click",
+            event => {
+                const button =
+                    event.target.closest(
+                        "button"
+                    );
+
+                if (!button) {
+                    return;
+                }
+
+                const action =
+                    button.dataset
+                        .apInf;
+
+                if (
+                    action ===
+                    "pan"
+                ) {
+                    setMode(
+                        mode === "pan"
+                            ? "pen"
+                            : "pan"
+                    );
+                }
+
+                else if (
+                    action ===
+                    "out"
+                ) {
+                    zoomCenter(
+                        0.8
+                    );
+                }
+
+                else if (
+                    action ===
+                    "in"
+                ) {
+                    zoomCenter(
+                        1.25
+                    );
+                }
+
+                else if (
+                    action ===
+                    "reset-zoom"
+                ) {
+                    const rect =
+                        canvas.getBoundingClientRect();
+
+                    zoomAtScreen(
+                        rect.width / 2,
+                        rect.height / 2,
+                        1
+                    );
+                }
+
+                else if (
+                    action ===
+                    "home"
+                ) {
+                    resetView();
+                }
+            }
+        );
+
+        updateHud();
+    }
+
+    function bindEvents() {
+        canvas.style.touchAction =
+            "none";
+
+        canvas.addEventListener(
+            "pointerdown",
+            onPointerDown,
+            {
+                capture: true,
+                passive: false
+            }
+        );
+
+        canvas.addEventListener(
+            "pointermove",
+            onPointerMove,
+            {
+                capture: true,
+                passive: false
+            }
+        );
+
+        canvas.addEventListener(
+            "pointerup",
+            onPointerUp,
+            {
+                capture: true,
+                passive: false
+            }
+        );
+
+        canvas.addEventListener(
+            "pointercancel",
+            onPointerUp,
+            {
+                capture: true,
+                passive: false
+            }
+        );
+
+        canvas.addEventListener(
+            "wheel",
+            onWheel,
+            {
+                passive: false
+            }
+        );
+
+        canvas.addEventListener(
+            "contextmenu",
+            event =>
+                event.preventDefault()
+        );
+
+        document.addEventListener(
+            "click",
+            toolbarClick,
+            true
+        );
+
+        document.addEventListener(
+            "input",
+            toolbarInput,
+            true
+        );
+
+        window.addEventListener(
+            "keydown",
+            event => {
+                const tag =
+                    document.activeElement
+                        ?.tagName
+                        ?.toLowerCase();
+
+                const editingText =
+                    tag === "input" ||
+                    tag === "textarea" ||
+                    document.activeElement
+                        ?.isContentEditable;
+
+                if (
+                    event.code ===
+                        "Space" &&
+                    !editingText
+                ) {
+                    spaceHeld =
+                        true;
+
+                    canvas.classList.add(
+                        "ap-inf-space-pan"
+                    );
+
+                    event.preventDefault();
+                }
+
+                if (
+                    !editingText &&
+                    (
+                        event.ctrlKey ||
+                        event.metaKey
+                    ) &&
+                    event.key
+                        .toLowerCase() ===
+                        "z"
+                ) {
+                    event.preventDefault();
+
+                    if (
+                        event.shiftKey
+                    ) {
+                        redo();
+                    }
+                    else {
+                        undo();
+                    }
+                }
+
+                if (
+                    !editingText &&
+                    (
+                        event.ctrlKey ||
+                        event.metaKey
+                    ) &&
+                    event.key
+                        .toLowerCase() ===
+                        "y"
+                ) {
+                    event.preventDefault();
+                    redo();
+                }
+            },
+            true
+        );
+
+        window.addEventListener(
+            "keyup",
+            event => {
+                if (
+                    event.code ===
+                    "Space"
+                ) {
+                    spaceHeld =
+                        false;
+
+                    canvas.classList.remove(
+                        "ap-inf-space-pan"
+                    );
+                }
+            },
+            true
+        );
+
+        window.addEventListener(
+            "resize",
+            resizeBoard,
+            {
+                passive: true
+            }
+        );
+
+        document.addEventListener(
+            "visibilitychange",
+            () => {
+                if (
+                    document.visibilityState ===
+                    "hidden"
+                ) {
+                    saveNow();
+                }
+            }
+        );
+
+        canvas.addEventListener(
+            "ap:canvas-beautified",
+            event => {
+                const src =
+                    event.detail
+                        ?.imageUrl;
+
+                if (!src) {
+                    return;
+                }
+
+                checkpoint();
+
+                const rect =
+                    canvas.getBoundingClientRect();
+
+                const topLeft =
+                    screenToWorld(
+                        rect.width *
+                            0.1,
+                        rect.height *
+                            0.1
+                    );
+
+                const bottomRight =
+                    screenToWorld(
+                        rect.width *
+                            0.9,
+                        rect.height *
+                            0.9
+                    );
+
+                board.items.push({
+                    id:
+                        uid(
+                            "image"
+                        ),
+
+                    type:
+                        "image",
+
+                    src,
+
+                    x:
+                        topLeft.x,
+
+                    y:
+                        topLeft.y,
+
+                    w:
+                        bottomRight.x -
+                        topLeft.x,
+
+                    h:
+                        bottomRight.y -
+                        topLeft.y
+                });
+
+                saveSoon();
+                queueRender();
+            }
+        );
+    }
+
+    function snapshotLegacyCanvas(
+        oldCanvas
+    ) {
+        try {
+            const width =
+                oldCanvas.width;
+
+            const height =
+                oldCanvas.height;
+
+            if (
+                !width ||
+                !height
+            ) {
+                return null;
+            }
+
+            const oldCtx =
+                oldCanvas.getContext(
+                    "2d",
+                    {
+                        willReadFrequently:
+                            true
+                    }
+                );
+
+            if (!oldCtx) {
+                return null;
+            }
+
+            const sampleX =
+                Math.max(
+                    1,
+                    Math.floor(
+                        width / 48
+                    )
+                );
+
+            const sampleY =
+                Math.max(
+                    1,
+                    Math.floor(
+                        height / 48
+                    )
+                );
+
+            const data =
+                oldCtx.getImageData(
+                    0,
+                    0,
+                    width,
+                    height
+                ).data;
+
+            let ink =
+                false;
+
+            for (
+                let y = 0;
+                y < height &&
+                    !ink;
+                y += sampleY
+            ) {
+                for (
+                    let x = 0;
+                    x < width;
+                    x += sampleX
+                ) {
+                    const i =
+                        (
+                            y *
+                            width +
+                            x
+                        ) *
+                        4;
+
+                    const a =
+                        data[
+                            i + 3
+                        ];
+
+                    const r =
+                        data[i];
+
+                    const g =
+                        data[
+                            i + 1
+                        ];
+
+                    const b =
+                        data[
+                            i + 2
+                        ];
+
+                    if (
+                        a > 30 &&
+                        (
+                            r < 235 ||
+                            g < 235 ||
+                            b < 235
+                        )
+                    ) {
+                        ink =
+                            true;
+                        break;
+                    }
+                }
+            }
+
+            if (!ink) {
+                return null;
+            }
+
+            return {
+                src:
+                    oldCanvas
+                        .toDataURL(
+                            "image/png"
+                        ),
+
+                cssWidth:
+                    oldCanvas
+                        .getBoundingClientRect()
+                        .width,
+
+                cssHeight:
+                    oldCanvas
+                        .getBoundingClientRect()
+                        .height
+            };
+        }
+        catch (_) {
+            return null;
+        }
+    }
+
+    async function init() {
+        const oldCanvas =
+            document.getElementById(
+                "apCanvas"
+            );
+
+        page =
+            document.getElementById(
+                "canvasPage"
+            );
+
+        if (
+            !oldCanvas ||
+            !page
+        ) {
+            return;
+        }
+
+        shell =
+            oldCanvas.closest(
+                ".whiteboard-shell"
+            ) ||
+            oldCanvas.parentElement;
+
+        if (!shell) {
+            return;
+        }
+
+        const legacy =
+            snapshotLegacyCanvas(
+                oldCanvas
+            );
+
+        const replacement =
+            oldCanvas.cloneNode(
+                true
+            );
+
+        replacement.removeAttribute(
+            "width"
+        );
+
+        replacement.removeAttribute(
+            "height"
+        );
+
+        replacement.classList.add(
+            "ap-infinite-canvas"
+        );
+
+        replacement.style.maxWidth =
+            "none";
+
+        replacement.style.maxHeight =
+            "none";
+
+        replacement.style.margin =
+            "0";
+
+        replacement.style.touchAction =
+            "none";
+
+        oldCanvas.replaceWith(
+            replacement
+        );
+
+        canvas =
+            replacement;
+
+        ctx =
+            canvas.getContext(
+                "2d",
+                {
+                    alpha:
+                        false,
+
+                    desynchronized:
+                        true
+                }
+            );
+
+        if (!ctx) {
+            return;
+        }
+
+        page.classList.add(
+            "ap-infinite-board-active"
+        );
+
+        shell.classList.add(
+            "ap-infinite-shell"
+        );
+
+        await loadBoard();
+
+        resizeBoard();
+
+        if (
+            board.view.tx === 0 &&
+            board.view.ty === 0
+        ) {
+            const rect =
+                canvas.getBoundingClientRect();
+
+            board.view.tx =
+                rect.width / 2;
+
+            board.view.ty =
+                rect.height / 2;
+        }
+
+        if (
+            legacy &&
+            !board.items.length
+        ) {
+            const rect =
+                canvas.getBoundingClientRect();
+
+            const world =
+                screenToWorld(
+                    0,
+                    0
+                );
+
+            board.items.push({
+                id:
+                    uid(
+                        "legacy"
+                    ),
+
+                type:
+                    "image",
+
+                src:
+                    legacy.src,
+
+                x:
+                    world.x,
+
+                y:
+                    world.y,
+
+                w:
+                    (
+                        legacy.cssWidth ||
+                        rect.width
+                    ) /
+                    board.view.zoom,
+
+                h:
+                    (
+                        legacy.cssHeight ||
+                        rect.height
+                    ) /
+                    board.view.zoom
+            });
+
+            saveSoon();
+        }
+
+        createHud();
+        bindEvents();
+        resizeBoard();
+        queueRender();
+
+        const resizeObserver =
+            new ResizeObserver(
+                () => {
+                    resizeBoard();
+                }
+            );
+
+        resizeObserver.observe(
+            shell
+        );
+
+        window.APInfiniteCanvas = {
+            version:
+                "1.8.0",
+
+            save:
+                saveNow,
+
+            resetView,
+
+            undo,
+
+            redo,
+
+            setMode,
+
+            status() {
+                return {
+                    items:
+                        board.items
+                            .length,
+
+                    zoom:
+                        board.view.zoom,
+
+                    mode,
+
+                    persistent:
+                        "indexeddb",
+
+                    minZoom:
+                        MIN_ZOOM,
+
+                    maxZoom:
+                        MAX_ZOOM
+                };
+            },
+
+            exportBoard() {
+                return JSON.parse(
+                    JSON.stringify(
+                        board
+                    )
+                );
+            }
+        };
+
+        console.log(
+            "∞ AP SYNAPSE INFINITE CANVAS V1.8 READY"
+        );
+    }
+
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+        document.addEventListener(
+            "DOMContentLoaded",
+            () => {
+                setTimeout(
+                    init,
+                    0
+                );
+            },
+            {
+                once: true
+            }
+        );
+    }
+    else {
+        setTimeout(
+            init,
+            0
+        );
+    }
+})();

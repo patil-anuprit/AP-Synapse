@@ -1470,3 +1470,213 @@
     }
 
 }
+/* ============================================================
+   AP_INFINITE_CANVAS_V18
+   Full-height, practically unbounded persistent whiteboard.
+   ============================================================ */
+
+#canvasPage.ap-infinite-board-active {
+    overflow: hidden !important;
+    padding-bottom: 0 !important;
+}
+
+#canvasPage .whiteboard-shell.ap-infinite-shell {
+    position: relative !important;
+
+    width: 100% !important;
+    max-width: none !important;
+
+    min-height: 540px !important;
+
+    margin-bottom: 0 !important;
+
+    overflow: hidden !important;
+
+    border-radius:
+        0 0 18px 18px !important;
+}
+
+#canvasPage #apCanvas.ap-infinite-canvas {
+    display: block !important;
+
+    width: 100% !important;
+    max-width: none !important;
+
+    height: 100% !important;
+    max-height: none !important;
+    min-height: 0 !important;
+
+    margin: 0 !important;
+
+    border-radius:
+        0 0 18px 18px !important;
+
+    background: #ffffff !important;
+
+    touch-action: none !important;
+
+    overscroll-behavior: none !important;
+
+    cursor: crosshair !important;
+}
+
+#canvasPage #apCanvas.ap-infinite-canvas[data-ap-canvas-mode="pan"],
+#canvasPage #apCanvas.ap-infinite-canvas.ap-inf-space-pan {
+    cursor: grab !important;
+}
+
+#canvasPage #apCanvas.ap-infinite-canvas[data-ap-canvas-mode="erase"] {
+    cursor: cell !important;
+}
+
+#apInfiniteCanvasHud {
+    position: absolute;
+
+    left: 18px;
+    bottom: 18px;
+
+    z-index: 130;
+
+    min-height: 42px;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    padding: 5px;
+
+    border:
+        1px solid
+        rgba(20, 20, 22, .10);
+
+    border-radius: 14px;
+
+    background:
+        rgba(20, 20, 22, .88);
+
+    box-shadow:
+        0 14px 34px
+        rgba(0, 0, 0, .18);
+
+    backdrop-filter:
+        blur(16px);
+
+    -webkit-backdrop-filter:
+        blur(16px);
+
+    color:
+        rgba(255,255,255,.88);
+
+    user-select: none;
+}
+
+#apInfiniteCanvasHud button {
+    appearance: none;
+
+    min-width: 32px;
+    height: 32px;
+
+    padding: 0 8px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+    border-radius: 10px;
+
+    background:
+        rgba(255,255,255,.055);
+
+    color:
+        rgba(255,255,255,.82);
+
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform .16s ease,
+        background .16s ease,
+        border-color .16s ease;
+}
+
+#apInfiniteCanvasHud button:hover {
+    transform:
+        translateY(-1px);
+
+    background:
+        rgba(255,255,255,.095);
+
+    border-color:
+        rgba(255,255,255,.15);
+}
+
+#apInfiniteCanvasHud .ap-inf-brand {
+    color: #e7ba57;
+
+    border-color:
+        rgba(231,186,87,.24);
+
+    background:
+        rgba(231,186,87,.09);
+
+    font-size: 18px;
+    font-weight: 800;
+}
+
+#apInfiniteCanvasHud .ap-inf-zoom {
+    min-width: 64px;
+
+    color:
+        rgba(255,255,255,.90);
+}
+
+#apInfiniteCanvasHud .ap-inf-save {
+    min-width: 48px;
+
+    margin: 0 5px 0 3px;
+
+    color:
+        rgba(255,255,255,.43);
+
+    font-size: 10px;
+    font-weight: 650;
+
+    white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+    #canvasPage .whiteboard-shell.ap-infinite-shell {
+        min-height:
+            520px !important;
+    }
+
+    #apInfiniteCanvasHud {
+        left: 10px;
+        bottom: 10px;
+
+        max-width:
+            calc(100vw - 28px);
+
+        overflow-x: auto;
+
+        border-radius: 12px;
+    }
+
+    #apInfiniteCanvasHud button {
+        min-width: 30px;
+        height: 30px;
+
+        border-radius: 9px;
+    }
+
+    #apInfiniteCanvasHud .ap-inf-save {
+        display: none;
+    }
+}

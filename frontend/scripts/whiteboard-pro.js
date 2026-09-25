@@ -4024,19 +4024,31 @@ apWbPageObserver.observe(
 
         const available =
             Math.max(
-                540,
+                560,
                 window.innerHeight -
                     shellTop -
-                    12
+                    4
             );
 
-        shell.style.height =
+        shell.style.setProperty(
+            "height",
             `${Math.round(
                 available
-            )}px`;
+            )}px`,
+            "important"
+        );
 
-        shell.style.minHeight =
-            "540px";
+        shell.style.setProperty(
+            "min-height",
+            "560px",
+            "important"
+        );
+
+        shell.style.setProperty(
+            "max-height",
+            "none",
+            "important"
+        );
 
         canvas.style.width =
             "100%";
@@ -5347,6 +5359,250 @@ apWbPageObserver.observe(
         updateHud();
     }
 
+    // AP_INFINITE_CANVAS_V181
+    // Reconnect the visible Whiteboard Pro history controls
+    // to the new persistent vector history engine.
+    function wireLegacyHistoryButtons() {
+        const toolbar =
+            document.querySelector(
+                "#canvasPage .ap-wb-pro-toolbar"
+            );
+
+        if (!toolbar) {
+            return false;
+        }
+
+        const buttons =
+            Array.from(
+                toolbar.querySelectorAll(
+                    "button"
+                )
+            )
+                .filter(button => {
+                    const style =
+                        getComputedStyle(
+                            button
+                        );
+
+                    return (
+                        style.display !==
+                            "none" &&
+                        style.visibility !==
+                            "hidden"
+                    );
+                });
+
+        if (buttons.length < 4) {
+            return false;
+        }
+
+        let shareButton =
+            toolbar.querySelector(
+                ".ap-wb-share"
+            );
+
+        if (!shareButton) {
+            shareButton =
+                buttons.find(button =>
+                    /share|export/.test(
+                        descriptorFor(
+                            button
+                        )
+                    )
+                ) ||
+                buttons[
+                    buttons.length -
+                    1
+                ];
+        }
+
+        const shareIndex =
+            buttons.indexOf(
+                shareButton
+            );
+
+        if (shareIndex < 3) {
+            return false;
+        }
+
+        let clearIndex =
+            buttons.findIndex(button =>
+                /clear|trash|delete all/.test(
+                    descriptorFor(
+                        button
+                    )
+                )
+            );
+
+        if (
+            clearIndex < 2 ||
+            clearIndex >=
+                shareIndex
+        ) {
+            // Current AP toolbar order at the right edge is:
+            // Undo, Redo, Clear, Share.
+            clearIndex =
+                shareIndex - 1;
+        }
+
+        const undoButton =
+            buttons[
+                clearIndex - 2
+            ];
+
+        const redoButton =
+            buttons[
+                clearIndex - 1
+            ];
+
+        if (
+            !undoButton ||
+            !redoButton
+        ) {
+            return false;
+        }
+
+        undoButton.dataset.action =
+            "undo";
+
+        redoButton.dataset.action =
+            "redo";
+
+        undoButton.dataset
+            .apInfiniteHistory =
+            "undo";
+
+        redoButton.dataset
+            .apInfiniteHistory =
+            "redo";
+
+        undoButton.setAttribute(
+            "title",
+            "Undo"
+        );
+
+        redoButton.setAttribute(
+            "title",
+            "Redo"
+        );
+
+        undoButton.setAttribute(
+            "aria-label",
+            "Undo"
+        );
+
+        redoButton.setAttribute(
+            "aria-label",
+            "Redo"
+        );
+
+        return true;
+    }
+
+    // Remove the three legacy pill-shaped controls that are
+    // visually left underneath the floating Whiteboard Pro toolbar.
+    // We identify them geometrically so this remains safe even if
+    // their old generated class names change.
+    function removeGhostUnderlayControls() {
+        const toolbar =
+            document.querySelector(
+                "#canvasPage .ap-wb-pro-toolbar"
+            );
+
+        if (
+            !toolbar ||
+            !page
+        ) {
+            return 0;
+        }
+
+        const toolbarRect =
+            toolbar.getBoundingClientRect();
+
+        const candidates =
+            Array.from(
+                page.querySelectorAll(
+                    "button, [role='button']"
+                )
+            )
+                .filter(element => {
+                    if (
+                        element.closest(
+                            ".ap-wb-pro-toolbar"
+                        ) ||
+                        element.closest(
+                            "#apInfiniteCanvasHud"
+                        ) ||
+                        element.closest(
+                            "#apCanvasMakeBeautiful"
+                        )
+                    ) {
+                        return false;
+                    }
+
+                    const rect =
+                        element.getBoundingClientRect();
+
+                    if (
+                        !rect.width ||
+                        !rect.height
+                    ) {
+                        return false;
+                    }
+
+                    const horizontallyNearToolbar =
+                        rect.right >=
+                            toolbarRect.left &&
+                        rect.left <=
+                            toolbarRect.right;
+
+                    const verticallyUnderToolbar =
+                        rect.top >=
+                            toolbarRect.bottom -
+                                14 &&
+                        rect.top <=
+                            toolbarRect.bottom +
+                                34;
+
+                    const pillSized =
+                        rect.width >= 54 &&
+                        rect.width <= 190 &&
+                        rect.height >= 18 &&
+                        rect.height <= 52;
+
+                    return (
+                        horizontallyNearToolbar &&
+                        verticallyUnderToolbar &&
+                        pillSized
+                    );
+                })
+                .slice(
+                    0,
+                    3
+                );
+
+        for (
+            const element of
+            candidates
+        ) {
+            element.dataset
+                .apInfiniteGhostHidden =
+                "true";
+
+            element.style.setProperty(
+                "display",
+                "none",
+                "important"
+            );
+        }
+
+        return candidates.length;
+    }
+
+    function repairCanvasChrome() {
+        wireLegacyHistoryButtons();
+        removeGhostUnderlayControls();
+    }
     function bindEvents() {
         canvas.style.touchAction =
             "none";
@@ -5501,7 +5757,10 @@ apWbPageObserver.observe(
 
         window.addEventListener(
             "resize",
-            resizeBoard,
+            () => {
+                resizeBoard();
+                repairCanvasChrome();
+            },
             {
                 passive: true
             }
@@ -5881,8 +6140,23 @@ apWbPageObserver.observe(
 
         createHud();
         bindEvents();
+        repairCanvasChrome();
         resizeBoard();
         queueRender();
+
+        requestAnimationFrame(
+            repairCanvasChrome
+        );
+
+        setTimeout(
+            repairCanvasChrome,
+            120
+        );
+
+        setTimeout(
+            repairCanvasChrome,
+            600
+        );
 
         const resizeObserver =
             new ResizeObserver(

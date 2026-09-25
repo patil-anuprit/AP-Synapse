@@ -1680,3 +1680,27 @@
         display: none;
     }
 }
+/* ============================================================
+   AP_INFINITE_CANVAS_V181
+   Full-height hardening + ghost-control cleanup.
+   ============================================================ */
+
+#canvasPage.ap-infinite-board-active {
+    min-height: 100dvh !important;
+    padding-bottom: 0 !important;
+}
+
+#canvasPage .whiteboard-shell.ap-infinite-shell {
+    max-height: none !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+#canvasPage #apCanvas.ap-infinite-canvas {
+    max-height: none !important;
+    margin-bottom: 0 !important;
+}
+
+#canvasPage [data-ap-infinite-ghost-hidden="true"] {
+    display: none !important;
+}

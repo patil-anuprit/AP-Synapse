@@ -1,17 +1,19 @@
 (() => {
 "use strict";
 
-const VERSION = "1.1.0";
-const MARKER = "AP_APRISHA_HUMAN_INTERFACE_FINAL_V3_LEARNING";
+const VERSION = "1.2.0";
+const MARKER = "AP_APRISHA_HUMAN_INTERFACE_FINAL_V3_1_ROBUST_LEARNING";
 const STORAGE_KEY = "ap_aprisha_human_interface_v2";
 const ROOT_ID = "apAprishaHumanInterfaceV2";
 const STYLE_ID = "apAprishaHumanInterfaceV2Style";
-const FRAME_INTERVAL = 90;
-const TRAINING_COUNTDOWN_MS = 900;
-const TRAINING_CAPTURE_MS = 2400;
-const TRAINING_MIN_SAMPLES = 14;
+const FRAME_INTERVAL = 80;
+const TRAINING_COUNTDOWN_MS = 1200;
+const TRAINING_TARGET_SAMPLES = 28;
+const TRAINING_MIN_SAMPLES = 16;
+const TRAINING_MAX_WAIT_MS = 10000;
+const TRAINING_SAMPLE_INTERVAL_MS = 80;
 const TRAINING_SEQUENCE_POINTS = 18;
-const HAND_HISTORY_MS = 3600;
+const HAND_HISTORY_MS = 4200;
 
 if (window.__AP_APRISHA_HUMAN_INTERFACE_V2__) return;
 window.__AP_APRISHA_HUMAN_INTERFACE_V2__ = true;
@@ -96,6 +98,7 @@ const state = {
   modelsReady: false,
   stream: null,
   gestureRecognizer: null,
+  handLandmarker: null,
   faceLandmarker: null,
   raf: 0,
   lastFrame: 0,
@@ -353,7 +356,7 @@ function mount() {
     node("div", {
       class: "aphi-teach-status",
       dataset: { role: "teachStatus" }
-    }, "Enter a command, press Teach gesture, then perform one clear hand gesture after the countdown.")
+    }, "Enter a command, press Teach gesture, then show one hand. Aprisha waits until it has enough clear samples.")
   );
 
   const note = node(
@@ -687,9 +690,25 @@ async function ensureModels() {
           },
           runningMode: "VIDEO",
           numHands: 2,
-          minHandDetectionConfidence: 0.55,
-          minHandPresenceConfidence: 0.55,
-          minTrackingConfidence: 0.55
+          minHandDetectionConfidence: 0.28,
+          minHandPresenceConfidence: 0.28,
+          minTrackingConfidence: 0.28
+        }
+      );
+
+    state.handLandmarker =
+      await visionTasks.HandLandmarker.createFromOptions(
+        vision,
+        {
+          baseOptions: {
+            modelAssetPath:
+              "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task"
+          },
+          runningMode: "VIDEO",
+          numHands: 2,
+          minHandDetectionConfidence: 0.22,
+          minHandPresenceConfidence: 0.22,
+          minTrackingConfidence: 0.22
         }
       );
 
@@ -965,7 +984,7 @@ function updateTeachUI() {
   if (!training) {
     button.disabled = false;
     button.textContent = "Teach gesture";
-    status.textContent = "Enter a command, press Teach gesture, then perform one clear hand gesture after the countdown.";
+    status.textContent = "Enter a command, press Teach gesture, then show one hand. Aprisha waits until it has enough clear samples.";
     return;
   }
 
@@ -974,15 +993,15 @@ function updateTeachUI() {
     const seconds = Math.max(1, Math.ceil((training.start - now) / 1000));
     button.disabled = true;
     button.textContent = `Get ready ${seconds}`;
-    status.textContent = "Keep one hand visible. Recording starts automatically after the countdown.";
+    status.textContent = "Keep one hand visible. Aprisha starts only after it actually detects your hand.";
     return;
   }
 
-  const progress = clamp((now - training.start) / (training.end - training.start), 0, 1);
+  const progress = clamp(training.samples.length / TRAINING_TARGET_SAMPLES, 0, 1);
   button.disabled = true;
-  button.textContent = `Learning ${Math.round(progress * 100)}%`;
+  button.textContent = `Learning ${training.samples.length}/${TRAINING_TARGET_SAMPLES}`;
   status.textContent = training.handProblem ||
-    `Perform the gesture naturally · ${training.samples.length} clear samples captured.`;
+    `Hand locked · perform the gesture naturally · ${Math.round(progress * 100)}% captured.`;
 }
 
 function teachSignal() {
@@ -1022,13 +1041,14 @@ function teachSignal() {
     replaceId: existing?.id || null,
     samples: [],
     start: now + TRAINING_COUNTDOWN_MS,
-    end: now + TRAINING_COUNTDOWN_MS + TRAINING_CAPTURE_MS,
+    deadline: now + TRAINING_COUNTDOWN_MS + TRAINING_MAX_WAIT_MS,
+    firstSampleAt: 0,
     lastSampleAt: 0,
     handProblem: ""
   };
 
   updateTeachUI();
-  toast("Get ready. Recording starts automatically.");
+  toast("Get ready. Aprisha will wait for one clear hand, then learn automatically.");
 }
 
 function finishTeaching() {
@@ -1039,7 +1059,7 @@ function finishTeaching() {
   updateTeachUI();
 
   if (training.samples.length < TRAINING_MIN_SAMPLES) {
-    toast("I could not see one clear hand long enough. Teach it again.");
+    toast(`Hand detector captured only ${training.samples.length}/${TRAINING_MIN_SAMPLES} usable samples. Move one hand closer to the camera and teach again.`);
     return;
   }
 
@@ -1316,8 +1336,19 @@ async function processFrame(now) {
         timestamp
       );
 
-    const hands = gestureResult?.landmarks || [];
-    const gestureSets = gestureResult?.gestures || [];
+    let hands = gestureResult?.landmarks || [];
+    let gestureSets = gestureResult?.gestures || [];
+
+    // GestureRecognizer can occasionally miss a hand even when the camera is fine.
+    // Fall back to the dedicated HandLandmarker so teaching does not fail silently.
+    if (!hands.length && state.handLandmarker) {
+      const handFallback = state.handLandmarker.detectForVideo(video, timestamp);
+      if (handFallback?.landmarks?.length) {
+        hands = handFallback.landmarks;
+        gestureSets = [];
+      }
+    }
+
     const frameNow = performance.now();
 
     for (let index = 0; index < hands.length; index += 1) {
@@ -1358,15 +1389,21 @@ async function processFrame(now) {
     if (state.training) {
       if (frameNow < state.training.start) {
         state.training.handProblem = "";
-      } else if (frameNow <= state.training.end) {
+      } else if (frameNow <= state.training.deadline) {
         if (hands.length === 0) {
-          state.training.handProblem = "Waiting for one hand — keep it clearly inside the camera frame.";
+          state.training.handProblem =
+            `Waiting for one hand · ${state.training.samples.length}/${TRAINING_TARGET_SAMPLES} samples. Put your full hand inside the camera view.`;
         } else if (hands.length > 1) {
           state.training.handProblem = "Show only one hand while teaching this gesture.";
-        } else if (primaryFrame && frameNow - state.training.lastSampleAt >= 70) {
+        } else if (primaryFrame && frameNow - state.training.lastSampleAt >= TRAINING_SAMPLE_INTERVAL_MS) {
           state.training.handProblem = "";
+          if (!state.training.firstSampleAt) state.training.firstSampleAt = frameNow;
           state.training.samples.push(primaryFrame);
           state.training.lastSampleAt = frameNow;
+
+          if (state.training.samples.length >= TRAINING_TARGET_SAMPLES) {
+            finishTeaching();
+          }
         }
       } else {
         finishTeaching();
@@ -1451,7 +1488,7 @@ function renderSignals() {
     const now = performance.now();
     const label = now < state.training.start
       ? `Get ready · ${Math.max(1, Math.ceil((state.training.start - now) / 1000))}`
-      : state.training.handProblem || `Learning ${state.training.name} · ${state.training.samples.length} samples`;
+      : state.training.handProblem || `Learning ${state.training.name} · ${state.training.samples.length}/${TRAINING_TARGET_SAMPLES} samples`;
     host.appendChild(node("span", { class: "aphi-chip" }, label));
   }
 

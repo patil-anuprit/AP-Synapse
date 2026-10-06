@@ -47,6 +47,11 @@ import {
 } from "./services/communicationScheduler.js";
 
 import brain from "./core/index.js";
+import {
+    buildCreatorProfileAnswer
+} from "./core/creatorProfile.js";
+
+// AP_CREATOR_INTELLIGENCE_V13
 import { routeAprishaIntent } from "./services/aprishaIntentRouter.js";
 
 import {
@@ -837,6 +842,29 @@ app.post("/chat", async (req, res) => {
 
         let message =
             req.body?.message?.trim();
+        /*
+         * AP_CREATOR_INTELLIGENCE_V13
+         *
+         * Direct creator/founder/Anuprit questions bypass provider
+         * variation and receive the verified creator profile.
+         */
+        const creatorProfileAnswer =
+            buildCreatorProfileAnswer(
+                message || ""
+            );
+
+        if (creatorProfileAnswer) {
+            res.setHeader(
+                "Content-Type",
+                "text/plain; charset=utf-8"
+            );
+
+            return res
+                .status(200)
+                .send(
+                    creatorProfileAnswer
+                );
+        }
 
         const originalMessage =
             message;

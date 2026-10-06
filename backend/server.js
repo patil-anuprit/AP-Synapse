@@ -1,3 +1,6 @@
+import adminWeeklyIntelligenceRouter from "./routes/adminWeeklyIntelligence.js";
+
+// AP_WEEKLY_ADMIN_TRIGGER_V1
 import {
     persistVerifiedGoogleAudience
 } from "./services/weeklyIntelligenceNetwork.js";
@@ -2183,6 +2186,11 @@ app.get("/image", async (req, res) => {
     });
 });
 
+// AP_WEEKLY_ADMIN_TRIGGER_V1
+app.use(
+    "/admin/weekly-intelligence",
+    adminWeeklyIntelligenceRouter
+);
 app.post("/auth/google", async (req, res) => {
     try {
         console.log("ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â Google authentication request received.");

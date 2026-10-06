@@ -1,12 +1,17 @@
 (() => {
 "use strict";
 
-const VERSION = "1.0.0";
-const MARKER = "AP_APRISHA_HUMAN_INTERFACE_FINAL_V2";
+const VERSION = "1.1.0";
+const MARKER = "AP_APRISHA_HUMAN_INTERFACE_FINAL_V3_LEARNING";
 const STORAGE_KEY = "ap_aprisha_human_interface_v2";
 const ROOT_ID = "apAprishaHumanInterfaceV2";
 const STYLE_ID = "apAprishaHumanInterfaceV2Style";
-const FRAME_INTERVAL = 110;
+const FRAME_INTERVAL = 90;
+const TRAINING_COUNTDOWN_MS = 900;
+const TRAINING_CAPTURE_MS = 2400;
+const TRAINING_MIN_SAMPLES = 14;
+const TRAINING_SEQUENCE_POINTS = 18;
+const HAND_HISTORY_MS = 3600;
 
 if (window.__AP_APRISHA_HUMAN_INTERFACE_V2__) return;
 window.__AP_APRISHA_HUMAN_INTERFACE_V2__ = true;
@@ -99,6 +104,8 @@ const state = {
   trackers: new Map(),
   calibration: { active: false, samples: [], base: null },
   training: null,
+  handHistory: [],
+  lastHandSeenAt: 0,
   config: loadConfig()
 };
 
@@ -168,6 +175,8 @@ function ensureStyles() {
 #${ROOT_ID} .aphi-check{width:18px;height:18px;accent-color:#f0f2f5}
 #${ROOT_ID} .aphi-remove{width:36px;height:36px;padding:0}
 #${ROOT_ID} .aphi-teach{padding:11px;display:grid;grid-template-columns:1fr auto auto;gap:8px}
+#${ROOT_ID} .aphi-teach-status{grid-column:1/-1;font-size:10px;line-height:1.45;color:rgba(255,255,255,.58);min-height:15px}
+#${ROOT_ID} .aphi-teach button:disabled{opacity:.55;cursor:default}
 #${ROOT_ID} .aphi-note{font-size:10px;line-height:1.55;color:rgba(255,255,255,.52);margin:11px 0 0}
 #${ROOT_ID} .aphi-toast{position:absolute;left:50%;bottom:24px;transform:translate(-50%,10px);opacity:0;padding:11px 14px;border:1px solid rgba(255,255,255,.13);border-radius:13px;background:rgba(10,11,13,.96);font-size:11px;box-shadow:0 18px 55px rgba(0,0,0,.5);transition:.18s;pointer-events:none}
 #${ROOT_ID} .aphi-toast.show{opacity:1;transform:translate(-50%,0)}
@@ -322,31 +331,35 @@ function mount() {
     dataset: { role: "rules" }
   });
 
-  const teachTitle = node("h3", {}, "Teach Aprisha · personalized one-hand signal");
+  const teachTitle = node("h3", {}, "Teach Aprisha · bind a hand gesture or motion to a command");
   const teach = node("div", { class: "aphi-teach" });
   teach.append(
     node("input", {
       type: "text",
-      placeholder: "Signal name — e.g. Study Sign",
-      maxlength: 60,
+      placeholder: "Command — e.g. open gmail",
+      maxlength: 120,
       dataset: { role: "teachName" }
     }),
     node("button", {
       class: "aphi-primary",
       type: "button",
-      dataset: { action: "teach" }
-    }, "Teach signal"),
+      dataset: { action: "teach", role: "teachButton" }
+    }, "Teach gesture"),
     node("button", {
       class: "aphi-danger",
       type: "button",
       dataset: { action: "clear" }
-    }, "Clear learned")
+    }, "Clear learned"),
+    node("div", {
+      class: "aphi-teach-status",
+      dataset: { role: "teachStatus" }
+    }, "Enter a command, press Teach gesture, then perform one clear hand gesture after the countdown.")
   );
 
   const note = node(
     "p",
     { class: "aphi-note" },
-    "Camera permission is requested only when you enable the interface. Camera frames are processed in the browser. Learned pose templates stay in this browser. New mappings are disabled by default. Confirmation, hold time and cooldown help prevent accidental execution. System-wide app control still uses Aprisha's native/action runtime where the operating system permits it."
+    "Camera permission is requested only when you enable the interface. Camera frames are processed in the browser. Learned gesture templates stay in this browser. Teaching automatically creates an enabled Aprisha-command mapping for the learned gesture; you can edit or disable it below. Hold time and cooldown help prevent accidental execution. System-wide app control still uses Aprisha's native/action runtime where the operating system permits it."
   );
 
   body.append(
@@ -599,10 +612,17 @@ function removeMapping(id) {
 }
 
 function clearLearned() {
+  const ids = new Set(state.config.learned.map((item) => `custom:${item.id}`));
   state.config.learned = [];
+  state.config.mappings = state.config.mappings.filter(
+    (mapping) => !ids.has(mapping.primary) && !ids.has(mapping.secondary)
+  );
+  state.handHistory = [];
+  state.training = null;
   saveConfig();
   renderRules();
-  toast("Learned signals cleared from this browser.");
+  updateTeachUI();
+  toast("Learned gestures and their automatic mappings were cleared.");
 }
 
 function exportMappings() {
@@ -754,6 +774,8 @@ function disable() {
   state.externalSignals.clear();
   state.trackers.clear();
   state.training = null;
+  state.handHistory = [];
+  state.lastHandSeenAt = 0;
 
   const video = root()?.querySelector('[data-role="video"]');
   if (video) video.srcObject = null;
@@ -777,15 +799,13 @@ function calibrate() {
   toast("Face forward naturally for neutral calibration.");
 }
 
-function normalizeHand(landmarks) {
-  if (!landmarks || landmarks.length < 21) return null;
-
+function handScale(landmarks) {
+  if (!landmarks || landmarks.length < 21) return 0;
   const wrist = landmarks[0];
   const middle = landmarks[9];
   const indexBase = landmarks[5];
   const pinkyBase = landmarks[17];
-
-  const scale = Math.max(
+  return Math.max(
     Math.hypot(
       middle.x - wrist.x,
       middle.y - wrist.y,
@@ -798,6 +818,14 @@ function normalizeHand(landmarks) {
     ),
     0.001
   );
+}
+
+function normalizeHand(landmarks) {
+  if (!landmarks || landmarks.length < 21) return null;
+
+  const wrist = landmarks[0];
+  const middle = landmarks[9];
+  const scale = handScale(landmarks);
 
   const angle =
     Math.atan2(
@@ -806,7 +834,7 @@ function normalizeHand(landmarks) {
     );
 
   const c = Math.cos(-angle);
-  const s = Math.sin(-angle);
+  const sin = Math.sin(-angle);
   const vector = [];
 
   for (const point of landmarks) {
@@ -815,13 +843,86 @@ function normalizeHand(landmarks) {
     const z = ((point.z || 0) - (wrist.z || 0)) / scale;
 
     vector.push(
-      x * c - y * s,
-      x * s + y * c,
+      x * c - y * sin,
+      x * sin + y * c,
       z
     );
   }
 
   return vector;
+}
+
+function makeHandFrame(landmarks, time = performance.now()) {
+  const shape = normalizeHand(landmarks);
+  if (!shape) return null;
+  const wrist = landmarks[0];
+  return {
+    t: time,
+    shape,
+    x: Number(wrist.x || 0),
+    y: Number(wrist.y || 0),
+    scale: handScale(landmarks)
+  };
+}
+
+function resampleFrames(frames, count = TRAINING_SEQUENCE_POINTS) {
+  if (!Array.isArray(frames) || frames.length < 2) return [];
+  const first = frames[0];
+  const baseScale = Math.max(first.scale || 0, 0.001);
+  const out = [];
+
+  for (let i = 0; i < count; i += 1) {
+    const position = (i / Math.max(1, count - 1)) * (frames.length - 1);
+    const lo = Math.floor(position);
+    const hi = Math.min(frames.length - 1, Math.ceil(position));
+    const mix = position - lo;
+    const a = frames[lo];
+    const b = frames[hi];
+    const shape = a.shape.map(
+      (value, index) => value + (b.shape[index] - value) * mix
+    );
+    const x = a.x + (b.x - a.x) * mix;
+    const y = a.y + (b.y - a.y) * mix;
+
+    out.push({
+      shape,
+      dx: (x - first.x) / baseScale,
+      dy: (y - first.y) / baseScale
+    });
+  }
+
+  return out;
+}
+
+function sequenceDistance(a, b) {
+  if (!a?.length || !b?.length || a.length !== b.length) return Infinity;
+  let sum = 0;
+
+  for (let i = 0; i < a.length; i += 1) {
+    const shape = vectorDistance(a[i].shape, b[i].shape);
+    const travel = Math.hypot(a[i].dx - b[i].dx, a[i].dy - b[i].dy);
+    sum += shape * 0.58 + Math.min(travel, 2.5) * 0.42;
+  }
+
+  return sum / a.length;
+}
+
+function gestureMotionStats(frames) {
+  if (!frames?.length) return { travelRadius: 0, shapeSpan: 0 };
+  const first = frames[0];
+  const baseScale = Math.max(first.scale || 0, 0.001);
+  let travelRadius = 0;
+  let shapeSpan = 0;
+
+  for (const frame of frames) {
+    travelRadius = Math.max(
+      travelRadius,
+      Math.hypot(frame.x - first.x, frame.y - first.y) / baseScale
+    );
+    shapeSpan = Math.max(shapeSpan, vectorDistance(frame.shape, first.shape));
+  }
+
+  return { travelRadius, shapeSpan };
 }
 
 function vectorDistance(a, b) {
@@ -854,9 +955,44 @@ function centroid(vectors) {
   return out;
 }
 
+function updateTeachUI() {
+  const button = root()?.querySelector('[data-role="teachButton"]');
+  const status = root()?.querySelector('[data-role="teachStatus"]');
+  const training = state.training;
+
+  if (!button || !status) return;
+
+  if (!training) {
+    button.disabled = false;
+    button.textContent = "Teach gesture";
+    status.textContent = "Enter a command, press Teach gesture, then perform one clear hand gesture after the countdown.";
+    return;
+  }
+
+  const now = performance.now();
+  if (now < training.start) {
+    const seconds = Math.max(1, Math.ceil((training.start - now) / 1000));
+    button.disabled = true;
+    button.textContent = `Get ready ${seconds}`;
+    status.textContent = "Keep one hand visible. Recording starts automatically after the countdown.";
+    return;
+  }
+
+  const progress = clamp((now - training.start) / (training.end - training.start), 0, 1);
+  button.disabled = true;
+  button.textContent = `Learning ${Math.round(progress * 100)}%`;
+  status.textContent = training.handProblem ||
+    `Perform the gesture naturally · ${training.samples.length} clear samples captured.`;
+}
+
 function teachSignal() {
   if (!state.enabled) {
     toast("Enable the interface first.");
+    return;
+  }
+
+  if (state.training) {
+    toast("Aprisha is already learning a gesture.");
     return;
   }
 
@@ -864,24 +1000,35 @@ function teachSignal() {
   const name = clean(input?.value);
 
   if (!name) {
-    toast("Name the signal first.");
+    toast("Enter the command this gesture should perform.");
     input?.focus();
     return;
   }
 
-  if (state.config.learned.length >= 24) {
-    toast("Maximum 24 learned signals reached.");
+  const existing = state.config.learned.find(
+    (item) => clean(item.name).toLowerCase() === name.toLowerCase()
+  );
+
+  if (!existing && state.config.learned.length >= 24) {
+    toast("Maximum 24 learned gestures reached.");
     return;
   }
 
+  const now = performance.now();
+  state.handHistory = [];
   state.training = {
-    id: newId(),
+    id: existing?.id || newId(),
     name,
+    replaceId: existing?.id || null,
     samples: [],
-    end: performance.now() + 2800
+    start: now + TRAINING_COUNTDOWN_MS,
+    end: now + TRAINING_COUNTDOWN_MS + TRAINING_CAPTURE_MS,
+    lastSampleAt: 0,
+    handProblem: ""
   };
 
-  toast("Hold your custom hand pose naturally for about 3 seconds.");
+  updateTeachUI();
+  toast("Get ready. Recording starts automatically.");
 }
 
 function finishTeaching() {
@@ -889,34 +1036,87 @@ function finishTeaching() {
   if (!training) return;
 
   state.training = null;
+  updateTeachUI();
 
-  if (training.samples.length < 10) {
-    toast("Not enough clear samples. Teach it again.");
+  if (training.samples.length < TRAINING_MIN_SAMPLES) {
+    toast("I could not see one clear hand long enough. Teach it again.");
     return;
   }
 
-  const center = centroid(training.samples);
-  const distances =
-    training.samples.map((sample) => vectorDistance(sample, center));
+  const trim = Math.max(1, Math.floor(training.samples.length * 0.08));
+  const usable = training.samples.slice(trim, training.samples.length - trim || undefined);
 
-  const mean =
-    distances.reduce((sum, value) => sum + value, 0) /
-    distances.length;
+  if (usable.length < TRAINING_MIN_SAMPLES - 2) {
+    toast("Not enough stable hand samples. Teach it again.");
+    return;
+  }
 
-  state.config.learned.push({
-    id: training.id,
-    name: training.name,
-    centroid: center,
-    threshold: clamp(mean * 2.6 + 0.055, 0.08, 0.32)
-  });
+  const stats = gestureMotionStats(usable);
+  const isMotion = stats.travelRadius >= 0.42 || stats.shapeSpan >= 0.105;
+  let learned;
+
+  if (isMotion) {
+    const sequence = resampleFrames(usable, TRAINING_SEQUENCE_POINTS);
+    learned = {
+      id: training.id,
+      name: training.name,
+      kind: "motion",
+      sequence,
+      durationMs: Math.max(650, usable[usable.length - 1].t - usable[0].t),
+      threshold: 0.28,
+      createdAt: Date.now()
+    };
+  } else {
+    const shapes = usable.map((frame) => frame.shape);
+    const center = centroid(shapes);
+    const distances = shapes.map((sample) => vectorDistance(sample, center));
+    const mean = distances.reduce((sum, value) => sum + value, 0) / distances.length;
+
+    learned = {
+      id: training.id,
+      name: training.name,
+      kind: "pose",
+      centroid: center,
+      threshold: clamp(mean * 3.0 + 0.065, 0.09, 0.34),
+      createdAt: Date.now()
+    };
+  }
+
+  const existingIndex = state.config.learned.findIndex((item) => item.id === training.id);
+  if (existingIndex >= 0) state.config.learned[existingIndex] = learned;
+  else state.config.learned.push(learned);
+
+  const signal = `custom:${training.id}`;
+  let mapping = state.config.mappings.find((item) => item.primary === signal);
+
+  if (!mapping) {
+    mapping = {
+      id: newId(),
+      enabled: true,
+      primary: signal,
+      secondary: "",
+      actionType: "aprisha",
+      actionValue: training.name,
+      context: "*",
+      holdMs: isMotion ? 250 : Math.max(450, state.config.holdMs),
+      cooldownMs: Math.max(1500, state.config.cooldownMs),
+      confirm: false
+    };
+    state.config.mappings.push(mapping);
+  } else {
+    mapping.enabled = true;
+  }
 
   saveConfig();
   renderRules();
+  state.handHistory = [];
 
   const input = root()?.querySelector('[data-role="teachName"]');
   if (input) input.value = "";
 
-  toast(`Aprisha learned “${training.name}”.`);
+  toast(
+    `Learned “${training.name}” as a ${isMotion ? "motion" : "pose"} and armed its command.`
+  );
 }
 
 function detectLearnedPose(vector) {
@@ -925,18 +1125,42 @@ function detectLearnedPose(vector) {
   let best = null;
 
   for (const learned of state.config.learned) {
+    if (learned.kind === "motion" || !Array.isArray(learned.centroid)) continue;
     const distance = vectorDistance(vector, learned.centroid);
     const threshold = clamp(learned.threshold || 0.18, 0.06, 0.38);
     const score = clamp(1 - distance / threshold, 0, 1);
 
-    if (
-      distance <= threshold &&
-      (!best || score > best.score)
-    ) {
-      best = {
-        signal: `custom:${learned.id}`,
-        score
-      };
+    if (distance <= threshold && (!best || score > best.score)) {
+      best = { signal: `custom:${learned.id}`, score };
+    }
+  }
+
+  return best;
+}
+
+function detectLearnedMotion(now) {
+  if (state.handHistory.length < 7) return null;
+  let best = null;
+
+  for (const learned of state.config.learned) {
+    if (learned.kind !== "motion" || !Array.isArray(learned.sequence)) continue;
+    const baseDuration = clamp(learned.durationMs || 1800, 650, 3200);
+
+    for (const factor of [0.72, 0.86, 1, 1.16, 1.3]) {
+      const duration = baseDuration * factor;
+      const frames = state.handHistory.filter((frame) => frame.t >= now - duration);
+      if (frames.length < 7) continue;
+      const span = frames[frames.length - 1].t - frames[0].t;
+      if (span < duration * 0.58) continue;
+
+      const candidate = resampleFrames(frames, learned.sequence.length);
+      const distance = sequenceDistance(candidate, learned.sequence);
+      const threshold = clamp(learned.threshold || 0.28, 0.16, 0.42);
+      const score = clamp(1 - distance / threshold, 0, 1);
+
+      if (distance <= threshold && (!best || score > best.score)) {
+        best = { signal: `custom:${learned.id}`, score };
+      }
     }
   }
 
@@ -1094,6 +1318,7 @@ async function processFrame(now) {
 
     const hands = gestureResult?.landmarks || [];
     const gestureSets = gestureResult?.gestures || [];
+    const frameNow = performance.now();
 
     for (let index = 0; index < hands.length; index += 1) {
       const hand = hands[index];
@@ -1106,43 +1331,58 @@ async function processFrame(now) {
         gestureName !== "None" &&
         gestureConfidence >= state.config.confidence
       ) {
-        signals.set(
-          `gesture:${gestureName}`,
-          gestureConfidence
-        );
+        signals.set(`gesture:${gestureName}`, gestureConfidence);
       }
 
       const pinch = pinchScore(hand);
-
-      if (pinch >= state.config.confidence) {
-        signals.set("gesture:Pinch", pinch);
-      }
+      if (pinch >= state.config.confidence) signals.set("gesture:Pinch", pinch);
 
       const vector = normalizeHand(hand);
-
-      if (
-        state.training &&
-        performance.now() <= state.training.end &&
-        vector
-      ) {
-        state.training.samples.push(vector);
-      }
-
       const learned = detectLearnedPose(vector);
-
-      if (learned && learned.score >= 0.28) {
-        signals.set(
-          learned.signal,
-          learned.score
-        );
-      }
+      if (learned && learned.score >= 0.28) signals.set(learned.signal, learned.score);
     }
 
-    if (
-      state.training &&
-      performance.now() > state.training.end
-    ) {
-      finishTeaching();
+    const primaryHand = hands.length === 1 ? hands[0] : null;
+    const primaryFrame = primaryHand ? makeHandFrame(primaryHand, frameNow) : null;
+
+    if (primaryFrame) {
+      state.lastHandSeenAt = frameNow;
+      state.handHistory.push(primaryFrame);
+      state.handHistory = state.handHistory.filter(
+        (frame) => frame.t >= frameNow - HAND_HISTORY_MS
+      );
+    } else if (frameNow - state.lastHandSeenAt > 350) {
+      state.handHistory = [];
+    }
+
+    if (state.training) {
+      if (frameNow < state.training.start) {
+        state.training.handProblem = "";
+      } else if (frameNow <= state.training.end) {
+        if (hands.length === 0) {
+          state.training.handProblem = "Waiting for one hand — keep it clearly inside the camera frame.";
+        } else if (hands.length > 1) {
+          state.training.handProblem = "Show only one hand while teaching this gesture.";
+        } else if (primaryFrame && frameNow - state.training.lastSampleAt >= 70) {
+          state.training.handProblem = "";
+          state.training.samples.push(primaryFrame);
+          state.training.lastSampleAt = frameNow;
+        }
+      } else {
+        finishTeaching();
+      }
+      updateTeachUI();
+    }
+
+    if (!state.training && primaryFrame) {
+      const motion = detectLearnedMotion(frameNow);
+      if (motion && motion.score >= 0.18) {
+        signals.set(motion.signal, motion.score);
+        state.externalSignals.set(motion.signal, {
+          confidence: motion.score,
+          until: frameNow + 450
+        });
+      }
     }
 
     collectHeadSignals(
@@ -1158,7 +1398,7 @@ async function processFrame(now) {
     state.signals = signals;
 
     renderSignals();
-    evaluateMappings(performance.now());
+    if (!state.training) evaluateMappings(performance.now());
   } catch (error) {
     console.warn(
       "Aprisha Human Interface frame:",
@@ -1208,13 +1448,11 @@ function renderSignals() {
   }
 
   if (state.training) {
-    host.appendChild(
-      node(
-        "span",
-        { class: "aphi-chip" },
-        `Learning ${state.training.name} · ${state.training.samples.length}`
-      )
-    );
+    const now = performance.now();
+    const label = now < state.training.start
+      ? `Get ready · ${Math.max(1, Math.ceil((state.training.start - now) / 1000))}`
+      : state.training.handProblem || `Learning ${state.training.name} · ${state.training.samples.length} samples`;
+    host.appendChild(node("span", { class: "aphi-chip" }, label));
   }
 
   const top =
@@ -1688,6 +1926,7 @@ window.APAprishaHumanInterface = {
 
 function boot() {
   mount();
+  updateTeachUI();
 
   console.log(
     "APRISHA HUMAN INTERFACE READY",

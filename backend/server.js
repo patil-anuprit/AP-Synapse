@@ -51,7 +51,7 @@ import {
     buildCreatorProfileAnswer
 } from "./core/creatorProfile.js";
 
-// AP_CREATOR_INTELLIGENCE_V13
+// AP_CREATOR_INTELLIGENCE_V14
 import { routeAprishaIntent } from "./services/aprishaIntentRouter.js";
 
 import {
@@ -843,7 +843,7 @@ app.post("/chat", async (req, res) => {
         let message =
             req.body?.message?.trim();
         /*
-         * AP_CREATOR_INTELLIGENCE_V13
+         * AP_CREATOR_INTELLIGENCE_V14
          *
          * Direct creator/founder/Anuprit questions bypass provider
          * variation and receive the verified creator profile.

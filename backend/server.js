@@ -1,4 +1,9 @@
 import {
+    persistVerifiedGoogleAudience
+} from "./services/weeklyIntelligenceNetwork.js";
+
+// AP_WEEKLY_INTELLIGENCE_NETWORK_V21
+import {
     installUniversalPresenceRoutes,
     attachUniversalPresenceWebSocket
 } from "./presence/universalPresence.js";
@@ -2232,6 +2237,37 @@ app.post("/auth/google", async (req, res) => {
             picture: payload.picture || "",
             emailVerified: payload.email_verified === true
         };
+        // AP_WEEKLY_INTELLIGENCE_NETWORK_V21
+        const weeklyAudienceSessionId =
+            String(
+                req.headers["x-session-id"] ||
+                (
+                    user.googleId
+                        ? `google:${user.googleId}`
+                        : `email:${user.email}`
+                )
+            )
+                .trim()
+                .slice(0, 240);
+
+        try {
+            await persistVerifiedGoogleAudience({
+                sessionId: weeklyAudienceSessionId,
+                googleId: user.googleId,
+                email: user.email,
+                name: user.name
+            });
+        }
+        catch (audienceError) {
+            /*
+             * Google sign-in must still succeed even if the
+             * communication audience database write fails.
+             */
+            console.error(
+                "AP Weekly Intelligence audience persistence failed:",
+                audienceError?.message || audienceError
+            );
+        }
 
         // ==========================================
         // AP SYNAPSE ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â SIGN-IN SECURITY EMAIL

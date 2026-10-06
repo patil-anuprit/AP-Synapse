@@ -1,3 +1,8 @@
+import {
+    sendWeeklyIntelligenceBriefs
+} from "./weeklyIntelligenceNetwork.js";
+
+// AP_WEEKLY_INTELLIGENCE_NETWORK_V21
 import { pool } from "../database/db.js";
 
 import {
@@ -372,6 +377,9 @@ export async function runCommunicationScheduler() {
 
     await sendWeeklyDigests();
 
+
+    // AP_WEEKLY_INTELLIGENCE_NETWORK_V21
+    await sendWeeklyIntelligenceBriefs();
 }
 
 

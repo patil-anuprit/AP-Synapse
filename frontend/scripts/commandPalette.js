@@ -225,7 +225,16 @@ async function handleGoogleSignIn(response) {
                 method: "POST",
 
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+
+                    // AP_WEEKLY_INTELLIGENCE_NETWORK_V21
+                    "x-session-id":
+                        localStorage.getItem(
+                            "ap_synapse_session"
+                        ) ||
+                        window.AP_PERSONALIZATION
+                            ?.getGuestId?.() ||
+                        ""
                 },
 
                 body: JSON.stringify({

@@ -336,9 +336,150 @@ export async function sendWeeklyIntelligenceBriefs() {
     };
 }
 
+
+/*
+ * AP_WEEKLY_INTELLIGENCE_STATUS_V1
+ *
+ * Aggregate diagnostics only.
+ * No recipient names, emails, session IDs or delivery rows leave
+ * the backend.
+ */
+export async function getWeeklyIntelligenceStatus() {
+
+    await ensureTables();
+
+    const weekKey =
+        getIsoWeekKey();
+
+    const result =
+        await pool.query(
+            `
+            WITH
+            all_profiles AS (
+                SELECT
+                    COUNT(*)::int AS total_profiles,
+                    COUNT(*) FILTER (
+                        WHERE
+                            email IS NOT NULL
+                            AND BTRIM(email) <> ''
+                    )::int AS profiles_with_email
+                FROM profiles
+            ),
+
+            canonical_with_email AS (
+                SELECT DISTINCT
+                    LOWER(BTRIM(email)) AS email
+                FROM profiles
+                WHERE
+                    email IS NOT NULL
+                    AND BTRIM(email) <> ''
+            ),
+
+            canonical_weekly_enabled AS (
+                SELECT DISTINCT
+                    LOWER(BTRIM(p.email)) AS email
+                FROM profiles p
+                INNER JOIN communication_preferences cp
+                    ON cp.session_id = p.session_id
+                WHERE
+                    p.email IS NOT NULL
+                    AND BTRIM(p.email) <> ''
+                    AND cp.weekly_digest = TRUE
+            ),
+
+            sent_this_week AS (
+                SELECT DISTINCT
+                    recipient_email AS email
+                FROM ap_weekly_intelligence_deliveries
+                WHERE
+                    week_key = $1
+            )
+
+            SELECT
+                ap.total_profiles,
+                ap.profiles_with_email,
+
+                (
+                    SELECT COUNT(*)::int
+                    FROM canonical_with_email
+                ) AS unique_email_recipients,
+
+                (
+                    SELECT COUNT(*)::int
+                    FROM canonical_weekly_enabled
+                ) AS weekly_enabled_recipients,
+
+                (
+                    SELECT COUNT(*)::int
+                    FROM sent_this_week
+                ) AS already_sent_this_week,
+
+                (
+                    SELECT COUNT(*)::int
+                    FROM canonical_weekly_enabled cwe
+                    WHERE NOT EXISTS (
+                        SELECT 1
+                        FROM sent_this_week stw
+                        WHERE stw.email = cwe.email
+                    )
+                ) AS eligible_now
+
+            FROM all_profiles ap
+            `,
+            [
+                weekKey
+            ]
+        );
+
+    const row =
+        result.rows?.[0] ||
+        {};
+
+    return {
+        weekKey,
+
+        totalProfiles:
+            Number(
+                row.total_profiles ||
+                0
+            ),
+
+        profilesWithEmail:
+            Number(
+                row.profiles_with_email ||
+                0
+            ),
+
+        uniqueEmailRecipients:
+            Number(
+                row.unique_email_recipients ||
+                0
+            ),
+
+        weeklyEnabledRecipients:
+            Number(
+                row.weekly_enabled_recipients ||
+                0
+            ),
+
+        alreadySentThisWeek:
+            Number(
+                row.already_sent_this_week ||
+                0
+            ),
+
+        eligibleNow:
+            Number(
+                row.eligible_now ||
+                0
+            )
+    };
+
+}
 export const AP_WEEKLY_INTELLIGENCE_NETWORK_V21 = {
     version: "2.1.0",
     getIsoWeekKey,
     persistVerifiedGoogleAudience,
-    sendWeeklyIntelligenceBriefs
+    sendWeeklyIntelligenceBriefs,
+    getWeeklyIntelligenceStatus
 };

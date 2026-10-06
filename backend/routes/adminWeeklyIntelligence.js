@@ -2,7 +2,8 @@ import crypto from "crypto";
 import express from "express";
 
 import {
-    sendWeeklyIntelligenceBriefs
+    sendWeeklyIntelligenceBriefs,
+    getWeeklyIntelligenceStatus
 } from "../services/weeklyIntelligenceNetwork.js";
 
 /*
@@ -277,5 +278,69 @@ router.post(
     }
 );
 
+
+
+/*
+ * AP_WEEKLY_INTELLIGENCE_STATUS_V1
+ *
+ * GET /admin/weekly-intelligence/status
+ *
+ * Protected by the same AP_ADMIN_KEY as the production send trigger.
+ * Returns aggregate counts only.
+ */
+router.get(
+    "/status",
+    requireAdmin,
+    async (
+        req,
+        res
+    ) => {
+
+        try {
+
+            const status =
+                await getWeeklyIntelligenceStatus();
+
+            return res
+                .status(200)
+                .set(
+                    "Cache-Control",
+                    "no-store"
+                )
+                .json({
+                    ok:
+                        true,
+                    mode:
+                        "weekly_intelligence_status",
+
+                    ...status
+                });
+
+        }
+        catch (error) {
+
+            console.error(
+                "AP Weekly Intelligence Status failed:",
+                error?.message ||
+                error
+            );
+
+            return res
+                .status(500)
+                .set(
+                    "Cache-Control",
+                    "no-store"
+                )
+                .json({
+                    ok:
+                        false,
+                    error:
+                        "weekly_intelligence_status_failed"
+                });
+
+        }
+
+    }
+);
 
 export default router;

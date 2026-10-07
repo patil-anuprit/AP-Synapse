@@ -481,6 +481,154 @@
     font-size: 11.5px !important;
   }
 }
+
+/* AP_HUMAN_INTERFACE_LABEL_V1 */
+#apAprishaOrderComboV1 {
+  width: auto !important;
+  min-width: 214px !important;
+  height: 42px !important;
+
+  padding: 2px 3px 2px 13px !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+
+  gap: 0 !important;
+
+  border: 1px solid rgba(228, 194, 101, .30) !important;
+  border-radius: 14px !important;
+
+  background:
+    radial-gradient(circle at 18% 12%, rgba(244,219,145,.075), transparent 38%),
+    linear-gradient(150deg, rgba(28,30,35,.995), rgba(9,10,13,.998)) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 8px 24px rgba(0,0,0,.30) !important;
+
+  overflow: hidden !important;
+}
+
+#apAprishaOrderComboV1 .apord-human-label {
+  display: inline-flex !important;
+  align-items: center !important;
+
+  height: 100% !important;
+
+  margin-right: 10px !important;
+  padding-right: 11px !important;
+
+  border-right: 1px solid rgba(255,255,255,.075) !important;
+
+  color: #e9d38a !important;
+
+  font:
+    720 11.5px/1
+    Inter,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif !important;
+
+  letter-spacing: .018em !important;
+
+  white-space: nowrap !important;
+
+  opacity: .96 !important;
+
+  user-select: none !important;
+  pointer-events: none !important;
+}
+
+#apAprishaOrderComboV1 .apord-combo-btn {
+  width: 38px !important;
+  min-width: 38px !important;
+
+  height: 36px !important;
+  min-height: 36px !important;
+
+  border-radius: 10px !important;
+}
+
+#apAprishaOrderComboV1 .apord-combo-btn + .apord-combo-btn::before {
+  top: 8px !important;
+  height: 20px !important;
+}
+
+#apAprishaOrderComboV1 .apord-icon {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+/* Clear professional hover: quiet, not flashy */
+#apAprishaOrderComboV1:hover {
+  border-color: rgba(239,208,119,.46) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 9px 26px rgba(0,0,0,.33) !important;
+}
+
+/* Mobile — keep label readable while preserving the full ordered row */
+@media (max-width: 767px) {
+  #apAprishaOrderComboV1 {
+    min-width: 178px !important;
+    height: 40px !important;
+
+    padding-left: 10px !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-human-label {
+    margin-right: 7px !important;
+    padding-right: 8px !important;
+
+    font-size: 10px !important;
+    letter-spacing: .01em !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-combo-btn {
+    width: 34px !important;
+    min-width: 34px !important;
+
+    height: 34px !important;
+    min-height: 34px !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-icon {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  #apAprishaOrderComboV1 {
+    min-width: 165px !important;
+    height: 38px !important;
+
+    padding-left: 9px !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-human-label {
+    margin-right: 6px !important;
+    padding-right: 7px !important;
+
+    font-size: 9.5px !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-combo-btn {
+    width: 32px !important;
+    min-width: 32px !important;
+
+    height: 32px !important;
+    min-height: 32px !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-icon {
+    width: 19px !important;
+    height: 19px !important;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .apord-btn,
   .apord-combo-btn {
@@ -563,7 +711,12 @@
       window.setTimeout(syncActiveState, 400);
     });
 
-    combo.append(human, omega);
+    const label = document.createElement("span");
+    label.className = "apord-human-label";
+    label.textContent = "Human Interface";
+    label.setAttribute("aria-hidden", "true");
+
+    combo.append(label, human, omega);
     return combo;
   }
 

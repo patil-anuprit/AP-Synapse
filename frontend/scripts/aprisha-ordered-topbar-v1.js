@@ -881,6 +881,335 @@
 }
 
 /* AP_HUMAN_INTERFACE_MICROHEADER_V2_END */
+
+/* AP_UNIFIED_APRISHA_HUMAN_CAPSULE_V1_START */
+
+/*
+  Final direction:
+  - first segment is only "Aprisha"
+  - second segment is the compact HUMAN INTERFACE capsule
+  - both segments visually read like one single premium control
+  - restrained, sober, official, graphite + muted-gold
+*/
+
+#apAprishaOrderAprishaBtnV1,
+#apAprishaOrderComboV1 {
+  background:
+    radial-gradient(circle at 28% 16%, rgba(244,219,145,.075), transparent 42%),
+    linear-gradient(150deg, rgba(28,30,35,.995), rgba(9,10,13,.998)) !important;
+  border-color: rgba(228,194,101,.24) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 8px 22px rgba(0,0,0,.28) !important;
+}
+
+/* Left segment: APRISHA only */
+#apAprishaOrderAprishaBtnV1 {
+  position: relative !important;
+
+  width: auto !important;
+  min-width: 118px !important;
+  max-width: none !important;
+
+  height: 44px !important;
+  min-height: 44px !important;
+
+  padding: 0 19px 0 18px !important;
+  margin-right: -8px !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 14px 0 0 14px !important;
+  border-right-width: 0 !important;
+
+  z-index: 2 !important;
+}
+
+#apAprishaOrderAprishaBtnV1::after {
+  content: "" !important;
+
+  position: absolute !important;
+  right: 0 !important;
+  top: 11px !important;
+
+  width: 1px !important;
+  height: 22px !important;
+
+  background: rgba(255,255,255,.085) !important;
+}
+
+#apAprishaOrderAprishaBtnV1 .apord-icon,
+#apAprishaOrderAprishaBtnV1 svg {
+  display: none !important;
+}
+
+#apAprishaOrderAprishaBtnV1 .apord-label {
+  display: inline-block !important;
+
+  color: #efd887 !important;
+
+  font:
+    760 14px/1
+    Inter,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif !important;
+
+  letter-spacing: .01em !important;
+  white-space: nowrap !important;
+}
+
+#apAprishaOrderAprishaBtnV1:hover {
+  border-color: rgba(239,208,119,.36) !important;
+  transform: none !important;
+}
+
+/* Right segment: HUMAN INTERFACE capsule — connected to Aprisha */
+#apAprishaOrderComboV1 {
+  position: relative !important;
+
+  width: 132px !important;
+  min-width: 132px !important;
+  max-width: 132px !important;
+
+  height: 44px !important;
+  min-height: 44px !important;
+
+  padding: 10px 4px 3px !important;
+  margin-left: 0 !important;
+
+  display: inline-flex !important;
+  align-items: flex-end !important;
+  justify-content: center !important;
+  gap: 2px !important;
+
+  border-radius: 0 14px 14px 0 !important;
+  border-left-width: 0 !important;
+
+  overflow: hidden !important;
+}
+
+#apAprishaOrderComboV1::before {
+  content: "" !important;
+
+  position: absolute !important;
+  left: 0 !important;
+  top: 11px !important;
+
+  width: 1px !important;
+  height: 22px !important;
+
+  background: rgba(255,255,255,.085) !important;
+}
+
+#apAprishaOrderComboV1::after {
+  content: "" !important;
+
+  position: absolute !important;
+  left: 50% !important;
+  top: 18px !important;
+
+  width: 1px !important;
+  height: 18px !important;
+
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255,255,255,.075) 24%,
+    rgba(255,255,255,.075) 76%,
+    transparent
+  ) !important;
+
+  transform: translateX(-.5px) !important;
+  pointer-events: none !important;
+}
+
+#apAprishaOrderComboV1 .apord-human-label {
+  position: absolute !important;
+  top: 4px !important;
+  left: 8px !important;
+  right: 8px !important;
+
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+
+  color: rgba(239,216,141,.62) !important;
+
+  font:
+    760 6.7px/1
+    Inter,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif !important;
+
+  letter-spacing: .145em !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+
+  border: 0 !important;
+  user-select: none !important;
+  pointer-events: none !important;
+}
+
+#apAprishaOrderComboV1 .apord-combo-btn {
+  position: relative !important;
+
+  width: 56px !important;
+  min-width: 56px !important;
+
+  height: 29px !important;
+  min-height: 29px !important;
+
+  border: 0 !important;
+  border-radius: 9px !important;
+
+  background: transparent !important;
+  box-shadow: none !important;
+
+  opacity: .92 !important;
+}
+
+#apAprishaOrderComboV1 .apord-combo-btn + .apord-combo-btn::before {
+  display: none !important;
+}
+
+#apAprishaOrderComboV1 .apord-combo-btn:hover {
+  background: rgba(235,202,111,.065) !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+#apAprishaOrderComboV1 .apord-combo-btn:active {
+  transform: scale(.95) !important;
+}
+
+#apAprishaOrderComboV1 .apord-combo-btn[data-active="true"] {
+  background:
+    radial-gradient(circle at 50% 35%, rgba(240,213,131,.10), transparent 70%),
+    rgba(235,202,111,.04) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(239,210,125,.12) !important;
+  opacity: 1 !important;
+}
+
+#apAprishaOrderComboV1 .apord-icon {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+#apAprishaOrderComboV1:hover {
+  border-color: rgba(239,208,119,.36) !important;
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+  #apAprishaOrderAprishaBtnV1 {
+    min-width: 105px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    padding: 0 16px !important;
+    margin-right: -6px !important;
+  }
+
+  #apAprishaOrderAprishaBtnV1 .apord-label {
+    font-size: 13px !important;
+  }
+
+  #apAprishaOrderAprishaBtnV1::after {
+    top: 10px !important;
+    height: 20px !important;
+  }
+
+  #apAprishaOrderComboV1 {
+    width: 118px !important;
+    min-width: 118px !important;
+    max-width: 118px !important;
+
+    height: 40px !important;
+    min-height: 40px !important;
+
+    padding: 9px 3px 3px !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-human-label {
+    top: 3px !important;
+    font-size: 6.0px !important;
+    letter-spacing: .125em !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-combo-btn {
+    width: 50px !important;
+    min-width: 50px !important;
+
+    height: 27px !important;
+    min-height: 27px !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-icon {
+    width: 19px !important;
+    height: 19px !important;
+  }
+
+  #apAprishaOrderComboV1::before {
+    top: 10px !important;
+    height: 20px !important;
+  }
+
+  #apAprishaOrderComboV1::after {
+    top: 16px !important;
+    height: 17px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  #apAprishaOrderAprishaBtnV1 {
+    min-width: 96px !important;
+    padding: 0 14px !important;
+  }
+
+  #apAprishaOrderAprishaBtnV1 .apord-label {
+    font-size: 12px !important;
+  }
+
+  #apAprishaOrderComboV1 {
+    width: 110px !important;
+    min-width: 110px !important;
+    max-width: 110px !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-human-label {
+    font-size: 5.7px !important;
+    letter-spacing: .11em !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-combo-btn {
+    width: 46px !important;
+    min-width: 46px !important;
+
+    height: 25px !important;
+    min-height: 25px !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-icon {
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
+/* keep this whole unified capsule completely calm */
+#apAprishaOrderAprishaBtnV1,
+#apAprishaOrderComboV1,
+#apAprishaOrderAprishaBtnV1 *,
+#apAprishaOrderComboV1 * {
+  animation: none !important;
+}
+
+/* AP_UNIFIED_APRISHA_HUMAN_CAPSULE_V1_END */
 @media (prefers-reduced-motion: reduce) {
   .apord-btn,
   .apord-combo-btn {
@@ -900,8 +1229,7 @@
     button.type = "button";
     button.title = "Aprisha";
     button.setAttribute("aria-label", "Aprisha");
-    button.innerHTML = `
-      ${svgAprisha()}
+        button.innerHTML = `
       <span class="apord-label">Aprisha</span>
     `;
 

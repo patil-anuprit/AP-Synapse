@@ -908,13 +908,13 @@
   position: relative !important;
 
   width: auto !important;
-  min-width: 118px !important;
+  min-width: 104px !important;
   max-width: none !important;
 
   height: 44px !important;
   min-height: 44px !important;
 
-  padding: 0 19px 0 18px !important;
+  padding: 0 12px !important;
   margin-right: -8px !important;
 
   display: inline-flex !important;
@@ -951,7 +951,7 @@
   color: #efd887 !important;
 
   font:
-    760 14px/1
+    760 13px/1
     Inter,
     system-ui,
     -apple-system,
@@ -971,14 +971,14 @@
 #apAprishaOrderComboV1 {
   position: relative !important;
 
-  width: 132px !important;
-  min-width: 132px !important;
-  max-width: 132px !important;
+  width: 104px !important;
+  min-width: 104px !important;
+  max-width: 104px !important;
 
   height: 44px !important;
   min-height: 44px !important;
 
-  padding: 10px 4px 3px !important;
+  padding: 9px 3px 3px !important;
   margin-left: 0 !important;
 
   display: inline-flex !important;
@@ -1013,7 +1013,7 @@
   top: 18px !important;
 
   width: 1px !important;
-  height: 18px !important;
+  height: 16px !important;
 
   background: linear-gradient(
     to bottom,
@@ -1040,7 +1040,7 @@
   color: rgba(239,216,141,.62) !important;
 
   font:
-    760 6.7px/1
+    760 6.2px/1
     Inter,
     system-ui,
     -apple-system,
@@ -1059,11 +1059,11 @@
 #apAprishaOrderComboV1 .apord-combo-btn {
   position: relative !important;
 
-  width: 56px !important;
-  min-width: 56px !important;
+  width: 43px !important;
+  min-width: 43px !important;
 
-  height: 29px !important;
-  min-height: 29px !important;
+  height: 24px !important;
+  min-height: 24px !important;
 
   border: 0 !important;
   border-radius: 9px !important;
@@ -1098,8 +1098,8 @@
 }
 
 #apAprishaOrderComboV1 .apord-icon {
-  width: 20px !important;
-  height: 20px !important;
+  width: 16px !important;
+  height: 16px !important;
 }
 
 #apAprishaOrderComboV1:hover {
@@ -1109,26 +1109,26 @@
 /* Mobile */
 @media (max-width: 767px) {
   #apAprishaOrderAprishaBtnV1 {
-    min-width: 105px !important;
+    min-width: 98px !important;
     height: 40px !important;
     min-height: 40px !important;
-    padding: 0 16px !important;
+    padding: 0 13px !important;
     margin-right: -6px !important;
   }
 
   #apAprishaOrderAprishaBtnV1 .apord-label {
-    font-size: 13px !important;
+    font-size: 11.5px !important;
   }
 
   #apAprishaOrderAprishaBtnV1::after {
     top: 10px !important;
-    height: 20px !important;
+    height: 16px !important;
   }
 
   #apAprishaOrderComboV1 {
-    width: 118px !important;
-    min-width: 118px !important;
-    max-width: 118px !important;
+    width: 104px !important;
+    min-width: 104px !important;
+    max-width: 104px !important;
 
     height: 40px !important;
     min-height: 40px !important;
@@ -1138,26 +1138,26 @@
 
   #apAprishaOrderComboV1 .apord-human-label {
     top: 3px !important;
-    font-size: 6.0px !important;
+    font-size: 5.4px !important;
     letter-spacing: .125em !important;
   }
 
   #apAprishaOrderComboV1 .apord-combo-btn {
-    width: 50px !important;
-    min-width: 50px !important;
+    width: 43px !important;
+    min-width: 43px !important;
 
-    height: 27px !important;
-    min-height: 27px !important;
+    height: 24px !important;
+    min-height: 24px !important;
   }
 
   #apAprishaOrderComboV1 .apord-icon {
-    width: 19px !important;
-    height: 19px !important;
+    width: 17px !important;
+    height: 17px !important;
   }
 
   #apAprishaOrderComboV1::before {
     top: 10px !important;
-    height: 20px !important;
+    height: 16px !important;
   }
 
   #apAprishaOrderComboV1::after {
@@ -1168,36 +1168,36 @@
 
 @media (max-width: 430px) {
   #apAprishaOrderAprishaBtnV1 {
-    min-width: 96px !important;
-    padding: 0 14px !important;
+    min-width: 92px !important;
+    padding: 0 12px !important;
   }
 
   #apAprishaOrderAprishaBtnV1 .apord-label {
-    font-size: 12px !important;
+    font-size: 11.5px !important;
   }
 
   #apAprishaOrderComboV1 {
-    width: 110px !important;
-    min-width: 110px !important;
-    max-width: 110px !important;
+    width: 104px !important;
+    min-width: 104px !important;
+    max-width: 104px !important;
   }
 
   #apAprishaOrderComboV1 .apord-human-label {
-    font-size: 5.7px !important;
+    font-size: 5.4px !important;
     letter-spacing: .11em !important;
   }
 
   #apAprishaOrderComboV1 .apord-combo-btn {
-    width: 46px !important;
-    min-width: 46px !important;
+    width: 43px !important;
+    min-width: 43px !important;
 
-    height: 25px !important;
-    min-height: 25px !important;
+    height: 24px !important;
+    min-height: 24px !important;
   }
 
   #apAprishaOrderComboV1 .apord-icon {
-    width: 18px !important;
-    height: 18px !important;
+    width: 16px !important;
+    height: 16px !important;
   }
 }
 

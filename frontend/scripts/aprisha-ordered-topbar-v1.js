@@ -411,6 +411,76 @@
   }
 }
 
+
+/* AP_APRISHA_FULL_LABEL_V1 */
+#apAprishaOrderAprishaBtnV1 {
+  width: auto !important;
+  min-width: 108px !important;
+  padding: 0 15px !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+
+  font: 750 13px/1 Inter, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+  letter-spacing: .005em !important;
+
+  flex: 0 0 auto !important;
+}
+
+#apAprishaOrderAprishaBtnV1 .apord-label {
+  display: inline-block !important;
+
+  color: #efd887 !important;
+
+  font: 750 13px/1 Inter, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+
+  white-space: nowrap !important;
+}
+
+#apAprishaOrderAprishaBtnV1 .apord-icon {
+  width: 20px !important;
+  height: 20px !important;
+  flex: 0 0 20px !important;
+}
+
+/* keep Aprisha visually separate from Human + Omega */
+#apAprishaOrderAprishaBtnV1 {
+  margin-right: 1px !important;
+}
+
+@media (max-width: 767px) {
+  #apAprishaOrderAprishaBtnV1 {
+    min-width: 96px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    padding: 0 12px !important;
+    gap: 7px !important;
+  }
+
+  #apAprishaOrderAprishaBtnV1 .apord-label {
+    font-size: 12px !important;
+  }
+
+  #apAprishaOrderAprishaBtnV1 .apord-icon {
+    width: 18px !important;
+    height: 18px !important;
+    flex-basis: 18px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  #apAprishaOrderAprishaBtnV1 {
+    min-width: 90px !important;
+    padding: 0 10px !important;
+    gap: 6px !important;
+  }
+
+  #apAprishaOrderAprishaBtnV1 .apord-label {
+    font-size: 11.5px !important;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .apord-btn,
   .apord-combo-btn {
@@ -430,7 +500,10 @@
     button.type = "button";
     button.title = "Aprisha";
     button.setAttribute("aria-label", "Aprisha");
-    button.innerHTML = svgAprisha();
+    button.innerHTML = `
+      ${svgAprisha()}
+      <span class="apord-label">Aprisha</span>
+    `;
 
     button.addEventListener("click", (event) => {
       event.preventDefault();

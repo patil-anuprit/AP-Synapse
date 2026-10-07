@@ -1401,6 +1401,210 @@
 }
 
 /* AP_MOBILE_SAFEFIT_V1_END */
+
+/* AP_MOBILE_FIT_V2_START */
+
+/*
+  Narrow-phone final fit.
+  This intentionally affects only <= 410px.
+  It keeps the unified premium design but creates enough
+  left-side breathing room so "Aprisha" cannot sit beneath
+  the hamburger/sidebar button.
+*/
+
+@media (max-width: 410px) {
+
+  .topbar {
+    position: relative !important;
+    box-sizing: border-box !important;
+  }
+
+  .topbar-right {
+    box-sizing: border-box !important;
+
+    width: calc(100% - 48px) !important;
+    max-width: calc(100% - 48px) !important;
+
+    margin-left: 48px !important;
+    margin-right: 0 !important;
+
+    padding-left: 10px !important;
+    padding-right: 2px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+
+    gap: 2px !important;
+
+    overflow: visible !important;
+  }
+
+  /* unified left segment — full Aprisha word */
+  #apAprishaOrderAprishaBtnV1 {
+    width: 74px !important;
+    min-width: 74px !important;
+    max-width: 74px !important;
+
+    height: 36px !important;
+    min-height: 36px !important;
+
+    flex: 0 0 74px !important;
+
+    margin-right: -4px !important;
+    padding: 0 7px !important;
+
+    overflow: visible !important;
+  }
+
+  #apAprishaOrderAprishaBtnV1 .apord-label {
+    display: block !important;
+
+    width: auto !important;
+    max-width: none !important;
+
+    font-size: 10.5px !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  /* unified right segment — Human Interface + two icons */
+  #apAprishaOrderComboV1 {
+    width: 82px !important;
+    min-width: 82px !important;
+    max-width: 82px !important;
+
+    height: 36px !important;
+    min-height: 36px !important;
+
+    flex: 0 0 82px !important;
+
+    padding: 8px 1px 2px !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-human-label {
+    top: 3px !important;
+    left: 3px !important;
+    right: 3px !important;
+
+    font-size: 4.65px !important;
+    letter-spacing: .07em !important;
+
+    white-space: nowrap !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-combo-btn {
+    width: 35px !important;
+    min-width: 35px !important;
+
+    height: 23px !important;
+    min-height: 23px !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-icon {
+    width: 15px !important;
+    height: 15px !important;
+  }
+
+  #apAprishaOrderComboV1::before {
+    top: 9px !important;
+    height: 18px !important;
+  }
+
+  #apAprishaOrderComboV1::after {
+    top: 15px !important;
+    height: 15px !important;
+  }
+
+  /*
+    Keep the remaining controls compact enough that
+    the left side never has to slide under the hamburger.
+  */
+  .ap-notification-icon-only,
+  #settingsBtn,
+  #profileBtn,
+  #shareConversationBtn,
+  #apMobileThemeToggle {
+    width: 28px !important;
+    min-width: 28px !important;
+    max-width: 28px !important;
+
+    height: 32px !important;
+    min-height: 32px !important;
+    max-height: 32px !important;
+
+    flex: 0 0 28px !important;
+
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  #profileBtn {
+    padding: 2px !important;
+  }
+
+  #profileBtn img {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  /* Search does not belong in a 393px command row. */
+  .topbar-search,
+  .search-box {
+    display: none !important;
+  }
+}
+
+/* Extra guard for very narrow phones. */
+@media (max-width: 370px) {
+
+  .topbar-right {
+    padding-left: 7px !important;
+    gap: 1px !important;
+  }
+
+  #apAprishaOrderAprishaBtnV1 {
+    width: 70px !important;
+    min-width: 70px !important;
+    max-width: 70px !important;
+
+    flex-basis: 70px !important;
+  }
+
+  #apAprishaOrderAprishaBtnV1 .apord-label {
+    font-size: 10px !important;
+  }
+
+  #apAprishaOrderComboV1 {
+    width: 78px !important;
+    min-width: 78px !important;
+    max-width: 78px !important;
+
+    flex-basis: 78px !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-human-label {
+    font-size: 4.4px !important;
+  }
+
+  .ap-notification-icon-only,
+  #settingsBtn,
+  #profileBtn,
+  #shareConversationBtn,
+  #apMobileThemeToggle {
+    width: 26px !important;
+    min-width: 26px !important;
+    max-width: 26px !important;
+
+    flex-basis: 26px !important;
+  }
+}
+
+/* AP_MOBILE_FIT_V2_END */
 @media (prefers-reduced-motion: reduce) {
   .apord-btn,
   .apord-combo-btn {

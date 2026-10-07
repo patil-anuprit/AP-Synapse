@@ -629,6 +629,258 @@
     height: 19px !important;
   }
 }
+
+/* AP_HUMAN_INTERFACE_MICROHEADER_V2_START */
+
+/*
+  Final direction:
+  - one compact capsule
+  - tiny HUMAN INTERFACE microheader
+  - Hand and Omega are the only dominant controls
+  - no flashy effects / pulse / blink
+  - same AP Synapse graphite + restrained gold language
+*/
+
+#apAprishaOrderComboV1 {
+  position: relative !important;
+
+  width: 124px !important;
+  min-width: 124px !important;
+  max-width: 124px !important;
+
+  height: 44px !important;
+  min-height: 44px !important;
+
+  padding: 10px 4px 3px !important;
+
+  display: inline-flex !important;
+  align-items: flex-end !important;
+  justify-content: center !important;
+
+  gap: 2px !important;
+
+  border: 1px solid rgba(226, 194, 108, .24) !important;
+  border-radius: 14px !important;
+
+  background:
+    radial-gradient(circle at 50% -10%, rgba(239, 210, 125, .075), transparent 48%),
+    linear-gradient(155deg, rgba(27, 29, 34, .995), rgba(9, 10, 13, .998)) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.038),
+    0 8px 22px rgba(0,0,0,.28) !important;
+
+  overflow: hidden !important;
+}
+
+#apAprishaOrderComboV1::after {
+  content: "" !important;
+
+  position: absolute !important;
+  left: 50% !important;
+  top: 17px !important;
+
+  width: 1px !important;
+  height: 19px !important;
+
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255,255,255,.075) 25%,
+    rgba(255,255,255,.075) 75%,
+    transparent
+  ) !important;
+
+  transform: translateX(-.5px) !important;
+
+  pointer-events: none !important;
+}
+
+#apAprishaOrderComboV1 .apord-human-label {
+  position: absolute !important;
+
+  top: 4px !important;
+  left: 8px !important;
+  right: 8px !important;
+
+  height: auto !important;
+
+  display: block !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  border: 0 !important;
+
+  color: rgba(239, 216, 141, .63) !important;
+
+  font:
+    760 6.8px/1
+    Inter,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif !important;
+
+  letter-spacing: .155em !important;
+  text-align: center !important;
+
+  white-space: nowrap !important;
+
+  opacity: 1 !important;
+
+  user-select: none !important;
+  pointer-events: none !important;
+}
+
+#apAprishaOrderComboV1 .apord-combo-btn {
+  position: relative !important;
+
+  width: 52px !important;
+  min-width: 52px !important;
+
+  height: 29px !important;
+  min-height: 29px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  display: grid !important;
+  place-items: center !important;
+
+  border: 0 !important;
+  border-radius: 9px !important;
+
+  background: transparent !important;
+  box-shadow: none !important;
+
+  opacity: .90 !important;
+
+  transition:
+    background .14s ease,
+    opacity .14s ease,
+    transform .14s ease !important;
+}
+
+#apAprishaOrderComboV1 .apord-combo-btn + .apord-combo-btn::before {
+  display: none !important;
+}
+
+#apAprishaOrderComboV1 .apord-combo-btn:hover {
+  background: rgba(235, 202, 111, .065) !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+#apAprishaOrderComboV1 .apord-combo-btn:active {
+  transform: scale(.95) !important;
+}
+
+#apAprishaOrderComboV1 .apord-combo-btn[data-active="true"] {
+  background:
+    radial-gradient(circle at 50% 35%, rgba(240, 213, 131, .10), transparent 70%),
+    rgba(235, 202, 111, .045) !important;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(239, 210, 125, .14) !important;
+
+  opacity: 1 !important;
+}
+
+#apAprishaOrderComboV1 .apord-icon {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+#apAprishaOrderComboV1 .apord-stroke {
+  stroke-width: 1.45 !important;
+}
+
+#apAprishaOrderComboV1:hover {
+  border-color: rgba(239, 208, 119, .38) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 9px 24px rgba(0,0,0,.31) !important;
+}
+
+/* Mobile keeps the same visual hierarchy, just slightly tighter. */
+@media (max-width: 767px) {
+  #apAprishaOrderComboV1 {
+    width: 112px !important;
+    min-width: 112px !important;
+    max-width: 112px !important;
+
+    height: 40px !important;
+    min-height: 40px !important;
+
+    padding: 9px 3px 3px !important;
+
+    border-radius: 13px !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-human-label {
+    top: 3px !important;
+
+    font-size: 6.2px !important;
+    letter-spacing: .13em !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-combo-btn {
+    width: 47px !important;
+    min-width: 47px !important;
+
+    height: 27px !important;
+    min-height: 27px !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-icon {
+    width: 19px !important;
+    height: 19px !important;
+  }
+
+  #apAprishaOrderComboV1::after {
+    top: 15px !important;
+    height: 17px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  #apAprishaOrderComboV1 {
+    width: 106px !important;
+    min-width: 106px !important;
+    max-width: 106px !important;
+
+    height: 38px !important;
+    min-height: 38px !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-human-label {
+    font-size: 5.9px !important;
+    letter-spacing: .115em !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-combo-btn {
+    width: 44px !important;
+    min-width: 44px !important;
+
+    height: 25px !important;
+    min-height: 25px !important;
+  }
+
+  #apAprishaOrderComboV1 .apord-icon {
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
+/* absolutely no pulsing / blinking in this grouped control */
+#apAprishaOrderComboV1,
+#apAprishaOrderComboV1 * {
+  animation: none !important;
+}
+
+/* AP_HUMAN_INTERFACE_MICROHEADER_V2_END */
 @media (prefers-reduced-motion: reduce) {
   .apord-btn,
   .apord-combo-btn {
@@ -713,7 +965,7 @@
 
     const label = document.createElement("span");
     label.className = "apord-human-label";
-    label.textContent = "Human Interface";
+    label.textContent = "HUMAN INTERFACE";
     label.setAttribute("aria-hidden", "true");
 
     combo.append(label, human, omega);

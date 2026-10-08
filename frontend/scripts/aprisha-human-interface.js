@@ -1,17 +1,20 @@
 (() => {
 "use strict";
 
-const VERSION = "1.2.0";
+const VERSION = "1.3.0"; // AP_APRISHA_MOBILE_GESTURE_V3_2
 const MARKER = "AP_APRISHA_HUMAN_INTERFACE_FINAL_V3_1_ROBUST_LEARNING";
 const STORAGE_KEY = "ap_aprisha_human_interface_v2";
 const ROOT_ID = "apAprishaHumanInterfaceV2";
 const STYLE_ID = "apAprishaHumanInterfaceV2Style";
-const FRAME_INTERVAL = 80;
+// Prefer mobile-friendly work per frame without changing desktop timing.
+const IS_MOBILE = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ||
+  (navigator.maxTouchPoints > 1 && window.innerWidth <= 900);
+const FRAME_INTERVAL = IS_MOBILE ? 115 : 80;
 const TRAINING_COUNTDOWN_MS = 1200;
-const TRAINING_TARGET_SAMPLES = 28;
-const TRAINING_MIN_SAMPLES = 16;
-const TRAINING_MAX_WAIT_MS = 10000;
-const TRAINING_SAMPLE_INTERVAL_MS = 80;
+const TRAINING_TARGET_SAMPLES = IS_MOBILE ? 18 : 28;
+const TRAINING_MIN_SAMPLES = IS_MOBILE ? 11 : 16;
+const TRAINING_MAX_WAIT_MS = IS_MOBILE ? 30000 : 10000;
+const TRAINING_SAMPLE_INTERVAL_MS = IS_MOBILE ? 110 : 80;
 const TRAINING_SEQUENCE_POINTS = 18;
 const HAND_HISTORY_MS = 4200;
 
@@ -680,21 +683,27 @@ async function ensureModels() {
         "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/wasm"
       );
 
-    state.gestureRecognizer =
-      await visionTasks.GestureRecognizer.createFromOptions(
-        vision,
-        {
-          baseOptions: {
-            modelAssetPath:
-              "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task"
-          },
-          runningMode: "VIDEO",
-          numHands: 2,
-          minHandDetectionConfidence: 0.28,
-          minHandPresenceConfidence: 0.28,
-          minTrackingConfidence: 0.28
-        }
-      );
+    try {
+      state.gestureRecognizer =
+        await visionTasks.GestureRecognizer.createFromOptions(
+          vision,
+          {
+            baseOptions: {
+              modelAssetPath:
+                "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task"
+            },
+            runningMode: "VIDEO",
+            numHands: 2,
+            minHandDetectionConfidence: 0.28,
+            minHandPresenceConfidence: 0.28,
+            minTrackingConfidence: 0.28
+          }
+        );
+    } catch (error) {
+      if (!IS_MOBILE) throw error;
+      console.warn("Aprisha mobile: built-in gesture model unavailable; hand teaching will use HandLandmarker.", error);
+      state.gestureRecognizer = null;
+    }
 
     state.handLandmarker =
       await visionTasks.HandLandmarker.createFromOptions(
@@ -712,21 +721,27 @@ async function ensureModels() {
         }
       );
 
-    state.faceLandmarker =
-      await visionTasks.FaceLandmarker.createFromOptions(
-        vision,
-        {
-          baseOptions: {
-            modelAssetPath:
-              "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task"
-          },
-          runningMode: "VIDEO",
-          numFaces: 1,
-          minFaceDetectionConfidence: 0.55,
-          minFacePresenceConfidence: 0.55,
-          minTrackingConfidence: 0.55
-        }
-      );
+    try {
+      state.faceLandmarker =
+        await visionTasks.FaceLandmarker.createFromOptions(
+          vision,
+          {
+            baseOptions: {
+              modelAssetPath:
+                "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task"
+            },
+            runningMode: "VIDEO",
+            numFaces: 1,
+            minFaceDetectionConfidence: 0.55,
+            minFacePresenceConfidence: 0.55,
+            minTrackingConfidence: 0.55
+          }
+        );
+    } catch (error) {
+      if (!IS_MOBILE) throw error;
+      console.warn("Aprisha mobile: face model unavailable; hand teaching still works.", error);
+      state.faceLandmarker = null;
+    }
 
     state.modelsReady = true;
   } finally {
@@ -744,25 +759,27 @@ async function enable() {
   }
 
   try {
-    await ensureModels();
-
-    state.stream =
-      await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: "user",
-          width: { ideal: 960 },
-          height: { ideal: 600 },
-          frameRate: { ideal: 24, max: 30 }
-        },
-        audio: false
-      });
+    // Request the camera while the mobile button tap is still active.
+    // Loading three large models first can delay Safari/Android capture.
+    state.stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: { ideal: "user" },
+        width: { ideal: IS_MOBILE ? 640 : 960 },
+        height: { ideal: IS_MOBILE ? 480 : 600 },
+        frameRate: { ideal: IS_MOBILE ? 20 : 24, max: 30 }
+      },
+      audio: false
+    });
 
     const video = root()?.querySelector('[data-role="video"]');
     if (!video) throw new Error("Video surface unavailable.");
-
+    video.muted = true;
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
     video.srcObject = state.stream;
     await video.play();
 
+    await ensureModels();
     state.enabled = true;
     calibrate();
     updateStatus();
@@ -774,8 +791,8 @@ async function enable() {
 
     toast(
       error?.name === "NotAllowedError"
-        ? "Camera permission was not granted."
-        : "Aprisha vision could not start."
+        ? "Camera permission denied. Allow camera access in browser settings."
+        : `Aprisha vision failed: ${String(error?.message || error?.name || "Unknown error").slice(0, 130)}`
     );
   }
 }
@@ -792,6 +809,7 @@ function disable() {
   state.signals.clear();
   state.externalSignals.clear();
   state.trackers.clear();
+  if (state.training?.watchdogId) clearTimeout(state.training.watchdogId);
   state.training = null;
   state.handHistory = [];
   state.lastHandSeenAt = 0;
@@ -1004,6 +1022,22 @@ function updateTeachUI() {
     `Hand locked · perform the gesture naturally · ${Math.round(progress * 100)}% captured.`;
 }
 
+// Mobile requestAnimationFrame can slow down or pause during UI/keyboard changes.
+// Keep teaching feedback and timeout independent of camera-frame callbacks.
+function startTrainingWatchdog(training) {
+  if (!IS_MOBILE || !training) return;
+  const tick = () => {
+    if (state.training !== training) return;
+    if (performance.now() >= training.deadline) {
+      finishTeaching();
+      return;
+    }
+    updateTeachUI();
+    training.watchdogId = setTimeout(tick, 300);
+  };
+  training.watchdogId = setTimeout(tick, 300);
+}
+
 function teachSignal() {
   if (!state.enabled) {
     toast("Enable the interface first.");
@@ -1044,9 +1078,11 @@ function teachSignal() {
     deadline: now + TRAINING_COUNTDOWN_MS + TRAINING_MAX_WAIT_MS,
     firstSampleAt: 0,
     lastSampleAt: 0,
-    handProblem: ""
+    handProblem: "",
+    watchdogId: null
   };
 
+  startTrainingWatchdog(state.training);
   updateTeachUI();
   toast("Get ready. Aprisha will wait for one clear hand, then learn automatically.");
 }
@@ -1054,6 +1090,7 @@ function teachSignal() {
 function finishTeaching() {
   const training = state.training;
   if (!training) return;
+  if (training.watchdogId) clearTimeout(training.watchdogId);
 
   state.training = null;
   updateTeachUI();
@@ -1318,23 +1355,35 @@ async function processFrame(now) {
   state.lastFrame = now;
 
   const video = root()?.querySelector('[data-role="video"]');
-  if (!video || video.readyState < 2) return;
+  if (!video || video.readyState < 2) {
+    if (state.training) {
+      state.training.handProblem = "Camera video is not delivering frames. Check camera permission or switch browsers.";
+      updateTeachUI();
+    }
+    return;
+  }
 
   try {
     const timestamp = Math.max(1, Math.round(performance.now()));
     const signals = new Map();
 
-    const gestureResult =
-      state.gestureRecognizer?.recognizeForVideo(
-        video,
-        timestamp
-      );
+    let gestureResult = null;
+    try {
+      gestureResult = state.gestureRecognizer?.recognizeForVideo(video, timestamp);
+    } catch (error) {
+      if (!IS_MOBILE) throw error;
+      if (!state.gestureDetectorWarningShown) {
+        console.warn("Aprisha mobile recognizer failed; using hand detector:", error);
+        state.gestureDetectorWarningShown = true;
+      }
+      state.gestureRecognizer = null;
+    }
 
-    const faceResult =
-      state.faceLandmarker?.detectForVideo(
-        video,
-        timestamp
-      );
+    // Face processing is unnecessary while teaching one hand and can
+    // consume most of the camera frame budget on mobile phones.
+    const faceResult = (IS_MOBILE && state.training)
+      ? null
+      : state.faceLandmarker?.detectForVideo(video, timestamp);
 
     let hands = gestureResult?.landmarks || [];
     let gestureSets = gestureResult?.gestures || [];
@@ -1437,10 +1486,11 @@ async function processFrame(now) {
     renderSignals();
     if (!state.training) evaluateMappings(performance.now());
   } catch (error) {
-    console.warn(
-      "Aprisha Human Interface frame:",
-      error
-    );
+    console.warn("Aprisha Human Interface frame:", error);
+    if (state.training) {
+      state.training.handProblem = `Camera recognition error: ${String(error?.message || error).slice(0, 100)}`;
+      updateTeachUI();
+    }
   }
 }
 
@@ -1927,7 +1977,15 @@ window.APAprishaHumanInterface = {
       modelsReady: state.modelsReady,
       signals: [...state.signals.keys()],
       mappings: state.config.mappings.length,
-      learnedSignals: state.config.learned.length
+      learnedSignals: state.config.learned.length,
+      mobileMode: IS_MOBILE,
+      cameraPlaying: !!(state.stream?.active && root()?.querySelector('[data-role="video"]')?.readyState >= 2),
+      handModelReady: !!state.handLandmarker,
+      gestureModelReady: !!state.gestureRecognizer,
+      faceModelReady: !!state.faceLandmarker,
+      teaching: !!state.training,
+      trainingSamples: state.training?.samples.length || 0,
+      trainingMessage: state.training?.handProblem || ""
     };
   },
 

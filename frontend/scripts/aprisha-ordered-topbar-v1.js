@@ -1831,6 +1831,14 @@
 }
 
 /* AP_MOBILE_LEFTSAFE_V3_END */
+/* AP_APRISHA_MOBILE_BALANCE_V4_START */
+@media (max-width: 767px) {
+  .topbar-right > .apord-utility-anchor {
+    margin-left: auto !important;
+  }
+}
+/* AP_APRISHA_MOBILE_BALANCE_V4_END */
+
 @media (prefers-reduced-motion: reduce) {
   .apord-btn,
   .apord-combo-btn {
@@ -1948,6 +1956,14 @@
     }
 
     const desired = [aprishaProxy, combo, notif, settings, profile, share, search].filter(Boolean);
+
+    /* AP_APRISHA_MOBILE_BALANCE_V4_ANCHOR */
+    const firstUtility = notif || settings || profile || share;
+    const utilityHost = firstUtility &&
+      (firstUtility.parentElement === bar
+        ? firstUtility
+        : Array.from(bar.children).find(child => child.contains(firstUtility)));
+    if (utilityHost) utilityHost.classList.add("apord-utility-anchor");
 
     desired.forEach((node) => {
       if (node.parentElement === bar) {

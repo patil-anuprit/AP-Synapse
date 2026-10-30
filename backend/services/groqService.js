@@ -84,13 +84,28 @@ export async function createStream(
             prepared.policy.safetyMarginTokens
     });
 
-    return groq.chat.completions.create({
-        model:
-            process.env.GROQ_MODEL ||
-            "openai/gpt-oss-120b",
-        messages: prepared.messages,
-        max_completion_tokens:
-            prepared.policy.maxCompletionTokens,
-        stream: true
-    });
-}
+    
+return groq.chat.completions.create({
+    model:
+        process.env.GROQ_MODEL ||
+        "openai/gpt-oss-120b",
+
+    messages: prepared.messages,
+
+    max_completion_tokens:
+        prepared.policy.maxCompletionTokens,
+
+    // Advanced reasoning
+    reasoning_effort: "low",
+
+    // Enable live web browsing
+    tools: [
+        { type: "browser_search" }
+    ],
+
+    // Let the model decide when to search
+    tool_choice: "auto",
+
+    // Preserve existing streaming mode
+    stream: true
+});

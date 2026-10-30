@@ -106,6 +106,9 @@ return groq.chat.completions.create({
     // Let the model decide when to search
     tool_choice: "auto",
 
+    
     // Preserve existing streaming mode
     stream: true
 });
+}
+

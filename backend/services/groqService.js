@@ -97,6 +97,9 @@ return groq.chat.completions.create({
         prepared.policy.maxCompletionTokens,
 
     reasoning_effort: "low",
+    
+    citation_options: "disabled",
+
 
     tools: [
         { type: "browser_search" }

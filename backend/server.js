@@ -908,7 +908,7 @@ const web =
 
 
         console.log(
-            `ÃƒÂ¢Ã…Â¡Ã‚Â¡ CHAT START | ${message.slice(0, 80)}`
+            `CHAT START | ${message.slice(0, 80)}`
         );
 
         // ============================================================
@@ -1056,13 +1056,13 @@ const web =
         if (selfImageRequest) {
 
             console.log(
-                "ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ¢â‚¬â„¢ Self-image generation blocked."
+                "Self-image generation blocked."
             );
 
             return res.json({
                 type: "text",
                 message:
-                    "I canÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢t generate an image representing my creator or their identity."
+                    "I cant generate an image representing my creator or their identity."
             });
 
         }
@@ -1084,13 +1084,13 @@ const web =
         ) {
 
             console.log(
-                "ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ¢â‚¬â„¢ Creator-image request blocked."
+                "Creator-image request blocked."
             );
 
             return res.status(403).json({
                 type: "blocked",
                 error:
-                    "I canÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢t create an image of my creator."
+                    "I cant create an image of my creator."
             });
 
         }
@@ -1103,7 +1103,7 @@ const web =
         if (explicitImageRequest) {
 
             console.log(
-                "ÃƒÂ°Ã…Â¸Ã¢â‚¬â€œÃ‚Â¼ÃƒÂ¯Ã‚Â¸Ã‚Â Explicit image-generation request detected."
+                "Explicit image-generation request detected."
             );
 
             const imageUrl =
@@ -1115,11 +1115,6 @@ const web =
             });
 
         }
-
-
-        // ============================================================
-        // NOW ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â AND ONLY NOW ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â START STREAMING
-        // ============================================================
 
 
         // ============================================================
@@ -1245,8 +1240,11 @@ const web =
             "finish",
             () => {
 
-                const answer =
-                    apPersonalizationAssistantText.trim();
+                
+               const answer = apPersonalizationAssistantText
+                   .split("__AP_SYNapse_SOURCES__")[0]
+                   .trim();
+
 
 
                 if (!answer) {
@@ -1305,7 +1303,7 @@ const web =
         }
 
 // ============================================================
-// AP SYNAPSE ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â PARALLEL WEB SOURCE SEARCH
+// AP SYNAPSE PARALLEL WEB SOURCE SEARCH
 // Starts while AI generation is happening.
 // ============================================================
 
@@ -1365,7 +1363,7 @@ const sourcesPromise =
     });
 
 // ==========================================
-// AP SYNAPSE ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â EXPLICIT IMAGE GENERATION
+// AP SYNAPSE EXPLICIT IMAGE GENERATION
 // ==========================================
 
 // ===============================
@@ -1375,7 +1373,7 @@ const sourcesPromise =
         // reuse sessionId from above
 
     // ============================================================
-// AP SYNAPSE ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â PARALLEL WEB SOURCE SEARCH
+// AP SYNAPSE PARALLEL WEB SOURCE SEARCH
 // Starts immediately so it does not delay AI generation.
 // ============================================================
 
@@ -1454,7 +1452,7 @@ const isUploadedImage =
 
 if (isUploadedImage) {
 
-    console.log("ÃƒÂ°Ã…Â¸Ã¢â‚¬â€œÃ‚Â¼ÃƒÂ¯Ã‚Â¸Ã‚Â Uploaded image detected.");
+    console.log("Uploaded image detected.");
 
     messages =
         buildMessages({
@@ -1501,7 +1499,7 @@ if (isUploadedImage) {
         ];
 
         console.log(
-            "ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ Image attached to AP Synapse vision request."
+            "Image attached to AP Synapse vision request."
         );
 
     }
@@ -1535,7 +1533,7 @@ ${message}`
 }
 
 // ==========================================
-// AP SYNAPSE ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â UPLOADED IMAGE VISION INPUT
+// AP SYNAPSE UPLOADED IMAGE VISION INPUT
 // ==========================================
 
 if (documentImage && !hasRequestDocument) {
@@ -1576,7 +1574,7 @@ if (documentImage && !hasRequestDocument) {
         ];
 
         console.log(
-            "ÃƒÂ°Ã…Â¸Ã¢â‚¬â€œÃ‚Â¼ÃƒÂ¯Ã‚Â¸Ã‚Â Uploaded image attached to AI request."
+            "Uploaded image attached to AI request."
         );
 
     }
@@ -1656,7 +1654,7 @@ Reply:
 "No.
 I am AP Synapse."
 
-If someone asks what powers you or which technology you use, explain that AP Synapse is built by Anuprit Harshal Patil and uses multiple AI technologies through its own intelligence engine. If the user specifically asks which underlying AI provider generated the current response, answer truthfully.
+If someone asks what powers you or which technology you use, explain that AP Synapse is built by Anuprit Harshal Patil and uses multiple AI technologies through its own intelligence engine Build independently without any dependency on other models or tools The AP-FM model from scratch that powers AP Synapse. If the user specifically asks which underlying AI provider generated the current response, answer truthfully.
 
 Never say you use APIs.
 
@@ -1679,13 +1677,13 @@ Remain professional.
 `
 });
 
-        console.log("STEP 1 ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦");
+        console.log("STEP 1");
 
         console.log(
-           `ÃƒÂ°Ã…Â¸Ã‚Â§Ã‚Â  MESSAGE BUILD COMPLETE | ${messages.length} messages`
+           `MESSAGE BUILD COMPLETE | ${messages.length} messages`
         );
 
-        console.log("STEP 2 ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦");
+        console.log("STEP 2");
 
         // ===============================
 // AP Synapse AI Router
@@ -1766,7 +1764,7 @@ If evidence is insufficient, explain uncertainty.`
 const streamReady = performance.now();
 
 console.log(
-    `ÃƒÂ¢Ã…Â¡Ã‚Â¡ AI STREAM READY: ${(streamReady - aiStart).toFixed(0)} ms`
+    `AI STREAM READY: ${(streamReady - aiStart).toFixed(0)} ms`
 );
 
 let firstTokenTime = null;
@@ -1784,7 +1782,7 @@ for await (const chunk of stream) {
         firstTokenTime = performance.now();
 
         console.log(
-            `ÃƒÂ¢Ã…Â¡Ã‚Â¡ FIRST TOKEN: ${
+            ` FIRST TOKEN: ${
                 (firstTokenTime - requestStart).toFixed(0)
             } ms total`
         );
@@ -1799,11 +1797,11 @@ const totalTime =
     performance.now() - requestStart;
 
 console.log(
-    `ÃƒÂ°Ã…Â¸Ã‚ÂÃ‚Â AP SYNAPSE TOTAL: ${totalTime.toFixed(0)} ms`
+    `AP SYNAPSE TOTAL: ${totalTime.toFixed(0)} ms`
 );
 
 // ============================================================
-// AP SYNAPSE ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â FINALIZE RESPONSE + SOURCES
+// AP SYNAPSE FINALIZE RESPONSE + SOURCES
 // ============================================================
 
 try {
@@ -1819,7 +1817,7 @@ try {
      */
 
     // ============================================================
-// AP SYNAPSE ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â RELIABLE SOURCE FINALIZATION
+// AP SYNAPSE RELIABLE SOURCE FINALIZATION
 // ============================================================
 
 let sources = [];
@@ -1833,7 +1831,7 @@ try {
     ]);
 } catch (sourceError) {
     console.error(
-        "ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â Source finalization failed:",
+        "Source finalization failed:",
         sourceError.message
     );
 
@@ -1918,7 +1916,7 @@ const validSources =
         [];
 
             // ============================================================
-// AP SYNAPSE ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â SOURCE PAYLOAD FOR FRONTEND
+// AP SYNAPSE SOURCE PAYLOAD FOR FRONTEND
 // Always send structured Tavily sources separately from AI text.
 // ============================================================
 
@@ -1941,81 +1939,12 @@ if (validSources.length > 0) {
 
 }
 
+    
     // ========================================================
-    // AP SYNAPSE ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â SOURCES & FURTHER READING
+    // AP SYNAPSE MEMORY
     // ========================================================
-
-    if (validSources.length > 0) {
-
-        res.write(
-            "\n\n\n" +
-            "ÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚Â\n" +
-            "USEFUL LINKS & SOURCES\n" +
-            "ÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚ÂÃƒÂ¢Ã¢â‚¬ÂÃ‚Â\n\n"
-        );
-
-        validSources.forEach((source, index) => {
-
-            const title =
-                String(
-                    source.title ||
-                    "Source"
-                ).trim();
-
-            const url =
-                String(
-                    source.url
-                ).trim();
-
-            const snippet =
-                String(
-                    source.snippet ||
-                    ""
-                ).trim();
-
-            /*
-             * Markdown link format.
-             *
-             * If your frontend has Markdown rendering,
-             * this becomes a real clickable link.
-             */
-
-            res.write(
-                `${index + 1}. [${title}](${url})\n`
-            );
-
-            if (snippet) {
-
-                res.write(
-                    `${snippet}\n`
-                );
-
-            }
-
-            res.write("\n");
-        });
-
-    }
-
-    // ========================================================
-    // AP SYNAPSE ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â MEMORY
-    // ========================================================
-
-    const finalResponse =
-        fullReply +
-        (
-            validSources.length > 0
-                ? "\n\nSources & Further Reading:\n" +
-                  validSources
-                    .map(
-                        (source, index) =>
-                            `${index + 1}. ${
-                                source.title || "Source"
-                            } ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â ${source.url}`
-                    )
-                    .join("\n")
-                : ""
-        );
+    
+    const finalResponse = fullReply;
 
     await remember(
         sessionId,
@@ -2024,11 +1953,11 @@ if (validSources.length > 0) {
     );
 
     console.log(
-        `ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ¢â‚¬â€ SOURCES ATTACHED: ${validSources.length}`
+        `SOURCES ATTACHED: ${validSources.length}`
     );
 
     console.log(
-        `ÃƒÂ°Ã…Â¸Ã‚ÂÃ‚Â RESPONSE COMPLETE: ${
+        `RESPONSE COMPLETE: ${
             (performance.now() - requestStart).toFixed(0)
         } ms`
     );
@@ -2040,7 +1969,7 @@ if (validSources.length > 0) {
 catch (finalizationError) {
 
     console.error(
-        "ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â Response finalization error:",
+        "Response finalization error:",
         finalizationError
     );
 
@@ -2052,7 +1981,7 @@ catch (finalizationError) {
 
     } catch (chatError) {
 
-        console.error("ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â Chat handler error:", chatError);
+        console.error("Chat handler error:", chatError);
 
         try {
             if (!res.writableEnded) {
@@ -2270,7 +2199,7 @@ app.use(
 );
 app.post("/auth/google", async (req, res) => {
     try {
-        console.log("ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â Google authentication request received.");
+        console.log("Google authentication request received.");
 
         // ------------------------------------------
         // 1. Receive Google credential
@@ -2279,14 +2208,14 @@ app.post("/auth/google", async (req, res) => {
         const credential = req.body?.credential;
 
         if (!credential) {
-            console.warn("ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â Google credential missing.");
+            console.warn("Google credential missing.");
             return res.status(400).json({
                 success: false,
                 error: "Google credential is required."
             });
         }
 
-        console.log("ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ Google credential received.");
+        console.log("Google credential received.");
 
         // ------------------------------------------
         // 2. Verify credential with Google
@@ -2304,7 +2233,7 @@ app.post("/auth/google", async (req, res) => {
         const payload = ticket.getPayload();
 
         if (!payload) {
-            console.warn("ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â Google returned no payload.");
+            console.warn("Google returned no payload.");
             return res.status(401).json({
                 success: false,
                 error: "Invalid Google credential."
@@ -2355,7 +2284,7 @@ app.post("/auth/google", async (req, res) => {
         }
 
         // ==========================================
-        // AP SYNAPSE ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â SIGN-IN SECURITY EMAIL
+        // AP SYNAPSE SIGN-IN SECURITY EMAIL
         // ==========================================
 
         try {
@@ -2374,7 +2303,7 @@ app.post("/auth/google", async (req, res) => {
                        user.name || "AP Synapse User",
 
                     sessionId:
-                       sessionId,
+                       weeklyAudienceSessionId,
 
                     payload: {
 
@@ -2392,7 +2321,7 @@ app.post("/auth/google", async (req, res) => {
                 });
 
                 console.log(
-                    "ÃƒÂ¢Ã…â€œÃ¢â‚¬Â°ÃƒÂ¯Ã‚Â¸Ã‚Â AP Synapse security communication dispatched:",
+                    "AP Synapse security communication dispatched:",
                     user.email
                 );
 
@@ -2403,7 +2332,7 @@ app.post("/auth/google", async (req, res) => {
             // Email failure must NEVER break Google Sign-In.
 
             console.error(
-                "ÃƒÂ¢Ã…Â¡Ã‚Â ÃƒÂ¯Ã‚Â¸Ã‚Â Sign-in security communication failed:",
+                "Sign-in security communication failed:",
                 emailError.message
             );
 
@@ -2413,9 +2342,9 @@ app.post("/auth/google", async (req, res) => {
         // 5. Successful authentication
         // ------------------------------------------
 
-        console.log("ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ Google Sign-In verified successfully.");
-        console.log("ÃƒÂ°Ã…Â¸Ã¢â‚¬ËœÃ‚Â¤ User:", user.name);
-        console.log("ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â§ Email:", user.email);
+        console.log("Google Sign-In verified successfully.");
+        console.log("User:", user.name);
+        console.log("Email:", user.email);
 
         return res.status(200).json({
             success: true,
@@ -2423,7 +2352,7 @@ app.post("/auth/google", async (req, res) => {
             user
         });
     } catch (error) {
-        console.error("ÃƒÂ¢Ã‚ÂÃ…â€™ Google Sign-In verification failed.");
+        console.error("Google Sign-In verification failed.");
         console.error(error);
         return res.status(401).json({
             success: false,
@@ -2433,7 +2362,7 @@ app.post("/auth/google", async (req, res) => {
 });
 
 // ============================================================
-// AP SYNAPSE ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â EMAIL SERVICE TEST
+// AP SYNAPSE EMAIL SERVICE TEST
 // TEMPORARY PRODUCTION-SAFE DIAGNOSTIC ENDPOINT
 // ============================================================
 
@@ -2487,7 +2416,7 @@ app.post("/email/test-welcome", async (req, res) => {
 });
 
 // ============================================================
-// AP SYNAPSE ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â PERSISTENT COMMUNICATION PREFERENCES
+// AP SYNAPSE PERSISTENT COMMUNICATION PREFERENCES
 // ============================================================
 
 app.get("/communication/preferences", async (req, res) => {
@@ -2613,7 +2542,7 @@ app.post("/communication/preferences", async (req, res) => {
 });
 
 // ============================================================
-// AP SYNAPSE ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â COMMUNICATION EVENT DISPATCH
+// AP SYNAPSE COMMUNICATION EVENT DISPATCH
 // ============================================================
 
 app.post("/communication/send", async (req, res) => {

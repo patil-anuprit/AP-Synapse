@@ -85,6 +85,7 @@ export async function createStream(
     });
 
     
+
 return groq.chat.completions.create({
     model:
         process.env.GROQ_MODEL ||
@@ -95,19 +96,14 @@ return groq.chat.completions.create({
     max_completion_tokens:
         prepared.policy.maxCompletionTokens,
 
-    // Advanced reasoning
     reasoning_effort: "low",
 
-    // Enable live web browsing
     tools: [
         { type: "browser_search" }
     ],
 
-    // Let the model decide when to search
-    tool_choice: "auto",
+    tool_choice: "required",
 
-    
-    // Preserve existing streaming mode
     stream: true
 });
 }

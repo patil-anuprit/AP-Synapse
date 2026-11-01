@@ -1807,29 +1807,50 @@ Remain professional.
             ])
             : [];
 
-    const apEvidence = (
-        Array.isArray(apLiveSources)
-            ? apLiveSources
-            : []
-    )
-        .filter(source =>
-            typeof source.url === "string" &&
-            /^https?:\/\//i.test(source.url)
-        )
-        .slice(0, 4)
+  
+    // AP SYNAPSE — BALANCED SEARCH EVIDENCE V1
+    // Preserve the first four mixed search results,
+    // then add two relevant remaining sources.
+
+    const apSourceCandidates = (
+        Array.isArray(apLiveSources) ? apLiveSources : []
+    ).filter(source =>
+        source &&
+        typeof source.url === "string" &&
+        /^https?:\/\//i.test(source.url) &&
+        String(source.snippet || source.content || "").trim()
+    );
+
+    const apEvidenceSources = [
+        ...apSourceCandidates.slice(0, 4),
+
+        ...apSourceCandidates.slice(4)
+            .sort((left, right) =>
+                (Number.isFinite(right.score) ? right.score : -1) -
+                (Number.isFinite(left.score) ? left.score : -1)
+            )
+            .slice(0, 2)
+    ];
+
+    const apEvidence = apEvidenceSources
         .map((source, index) => {
-            const title = String(source.title || "")
-                .slice(0, 100);
+            const title = String(
+                source.title || "Web source"
+            ).slice(0, 100);
+
             const url = source.url.slice(0, 250);
-            
+
             const snippet = String(
                 source.snippet || source.content || ""
-            ).slice(0, 650);
+            ).slice(0, 450);
 
+            const publishedDate = String(
+                source.publishedDate || ""
+            ).slice(0, 35);
 
             return `${index + 1}. ${title}
 URL: ${url}
-Excerpt: ${snippet}`;
+${publishedDate ? `Published: ${publishedDate}\n` : ""}Excerpt: ${snippet}`;
         })
         .join("\n\n");
 

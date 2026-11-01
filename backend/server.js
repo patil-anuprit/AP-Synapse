@@ -842,6 +842,51 @@ ${sample}`;
     }
 );
 
+
+function createCitationCleaner() {
+    let held = "";
+
+    const refPattern =
+        /^【(?:\d+†[^】]{1,110}|previous assistant summary)】$/i;
+
+    return {
+        push(chunk) {
+            let output = "";
+
+            for (const char of String(chunk ?? "")) {
+                if (held) {
+                    held += char;
+
+                    if (char === "】" || held.length > 120) {
+                        if (!refPattern.test(held)) {
+                            output += held;
+                        }
+
+                        held = "";
+                    }
+                } else if (char === "【") {
+                    held = char;
+                } else {
+                    output += char;
+                }
+            }
+
+            return output;
+        },
+
+        end() {
+            const output =
+                /^【(?:\d+†|previous assistant summary)/i.test(held)
+                    ? ""
+                    : held;
+
+            held = "";
+            return output;
+        }
+    };
+}
+
+
 app.post("/chat", async (req, res) => {
 
     const requestStart = performance.now();
@@ -1769,13 +1814,22 @@ console.log(
 
 let firstTokenTime = null;
 let fullReply = "";
+        
+const citationCleaner = createCitationCleaner();
+
 
 for await (const chunk of stream) {
 
-    const text =
-        chunk.choices?.[0]?.delta?.content || "";
+    
+const rawText =
+    chunk.choices?.[0]?.delta?.content || "";
 
-    if (!text) continue;
+if (!rawText) continue;
+
+const text = citationCleaner.push(rawText);
+
+if (!text) continue;
+
 
     if (firstTokenTime === null) {
 
@@ -1792,6 +1846,15 @@ for await (const chunk of stream) {
 
     res.write(text);
 }
+
+        
+const remainingText = citationCleaner.end();
+
+if (remainingText) {
+    fullReply += remainingText;
+    res.write(remainingText);
+}
+
 
 const totalTime =
     performance.now() - requestStart;

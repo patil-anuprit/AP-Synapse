@@ -931,17 +931,6 @@ const web =
         /\b(latest|recent|today|current|news|price|pricing|launch|launched|released|delivery|available|availability|specifications|specs|range|vehicle|suv|car|phev|hev|ev|7[\s-]?seater|20[2-9][0-9])\b/i.test(message)
     );
 
-        
-const apFactMemoryIsolation =
-    web &&
-    process.env.AP_TEST_FACT_MEMORY_ISOLATION === "true" &&
-    Boolean(
-        String(process.env.AP_EVIDENCE_DEBUG_QUERY || "").trim()
-    ) &&
-    String(originalMessage || "").trim().toLowerCase() ===
-    String(process.env.AP_EVIDENCE_DEBUG_QUERY || "")
-        .trim().toLowerCase();
-
 
         const documentImage = req.body?.documentImage || "";
 
@@ -1209,12 +1198,11 @@ const apFactMemoryIsolation =
 
         
 
+
 const apAnswerPersonalizationContext =
-    apFactMemoryIsolation
-        ? ""
-        : web && apPersonalizationContext.length > 3500
-            ? apPersonalizationContext.slice(0, 3500)
-            : apPersonalizationContext;
+    web && apPersonalizationContext.length > 3500
+        ? apPersonalizationContext.slice(0, 3500)
+        : apPersonalizationContext;
 
 
 message =
@@ -1569,10 +1557,11 @@ const uploadedDocument =
         );
 
 
+
 const conversationMemory =
-    apFactMemoryIsolation
-        ? memory.filter(item => item.role === "user").slice(-1)
-        : memory.filter(item => item.role !== "document");
+    memory.filter(
+        item => item.role !== "document"
+    );
 
 
 let messages;
@@ -1950,35 +1939,6 @@ URL: ${url}
 ${publishedDate ? `Published: ${publishedDate}\n` : ""}Excerpt: ${snippet}${rawHighlights ? `\nPage facts: ${rawHighlights}` : ""}`;
         })
         .join("\n\n");
-
-        
-    // AP SYNAPSE — TARGETED EVIDENCE DIAGNOSTIC
-    // Runs only for the exact configured test question.
-
-    const apEvidenceDebugQuery = String(
-        process.env.AP_EVIDENCE_DEBUG_QUERY || ""
-    ).trim().toLowerCase();
-
-    if (
-        apEvidenceDebugQuery &&
-        String(originalMessage).trim().toLowerCase() === apEvidenceDebugQuery
-    ) {
-        console.log("AP_EVIDENCE_DEBUG", JSON.stringify(
-            apEvidenceSources.map((source, index) => ({
-                index: index + 1,
-                url: source.url,
-                
-               excerpt: String(source.snippet || source.content || "")
-                   .slice(0, 160),
-               
-              rawLength: String(source.rawContent || "").length,
-              rawHighlights: apRawHighlights(source)
-
-
-            }))
-        ));
-    }
-
 
     if (apEvidence) {
         messages.unshift({

@@ -77,6 +77,7 @@
 
     let quietMicReady = false;
     let fallbackReason = "";
+    let quietAutoStartFailed = false;
 
     const START_COOLDOWN_MS = 1400;
     const MANUAL_BYPASS_MS = 3500;
@@ -307,6 +308,8 @@
 
                     quietMicReady =
                         true;
+
+                    quietAutoStartFailed = false;
 
                     fallbackReason =
                         "";
@@ -715,49 +718,44 @@
                     );
                 }
 
-                /*
-                 * Automatic Aprisha wake/restart calls are not
-                 * allowed to continuously reopen Chrome speech.
-                 * Hold the recognizer until VAD hears real speech.
-                 */
-                pendingRecognizer =
-                    this;
+                
+if (quietAutoStartFailed) {
+    return undefined;
+}
 
-                ensureQuietMic()
-                    .then(
-                        ready => {
-                            if (!ready) {
-                                /*
-                                 * Never sacrifice Aprisha if this
-                                 * browser cannot provide the quiet
-                                 * WebAudio path.
-                                 */
-                                if (
-                                    pendingRecognizer ===
-                                        this &&
-                                    !activeRecognizer
-                                ) {
-                                    pendingRecognizer =
-                                        null;
+pendingRecognizer =
+    this;
 
-                                    activeRecognizer =
-                                        this;
+ensureQuietMic()
+    .then(ready => {
+        if (ready) return;
 
-                                    try {
-                                        originalStart.call(
-                                            this
-                                        );
-                                    }
-                                    catch (_) {
-                                        activeRecognizer =
-                                            null;
-                                    }
-                                }
-                            }
-                        }
-                    );
+        quietAutoStartFailed = true;
 
-                return undefined;
+        if (pendingRecognizer === this) {
+            pendingRecognizer = null;
+        }
+
+        console.warn(
+            "Aprisha quiet mic unavailable; automatic " +
+            "speech recognition retries paused."
+        );
+    })
+    .catch(error => {
+        quietAutoStartFailed = true;
+
+        if (pendingRecognizer === this) {
+            pendingRecognizer = null;
+        }
+
+        console.warn(
+            "Aprisha quiet mic initialization failed:",
+            error?.name || error?.message || "unknown"
+        );
+    });
+
+return undefined;
+
             };
     }
 

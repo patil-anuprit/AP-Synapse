@@ -1760,13 +1760,13 @@ Remain professional.
             typeof source.url === "string" &&
             /^https?:\/\//i.test(source.url)
         )
-        .slice(0, 2)
+        .slice(0, 4)
         .map((source, index) => {
             const title = String(source.title || "")
                 .slice(0, 100);
             const url = source.url.slice(0, 250);
             const snippet = String(source.snippet || "")
-                .slice(0, 220);
+                .slice(0, 650);
 
             return `${index + 1}. ${title}
 URL: ${url}

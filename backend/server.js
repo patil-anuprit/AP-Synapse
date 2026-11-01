@@ -1842,7 +1842,7 @@ Remain professional.
 
             const snippet = String(
                 source.snippet || source.content || ""
-            ).slice(0, 450);
+            ).slice(0, 250);
 
             const publishedDate = String(
                 source.publishedDate || ""

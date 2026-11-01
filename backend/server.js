@@ -1867,12 +1867,15 @@ or "details could not be verified".`
     }
 
 
-    console.log("AP_LIVE_SEARCH", {
-        requested: web,
-        sources: Array.isArray(apLiveSources)
-            ? apLiveSources.length
-            : 0
-    });
+    
+console.log("AP_LIVE_SEARCH", {
+    requested: web,
+    sources: Array.isArray(apLiveSources)
+        ? apLiveSources.length
+        : 0,
+    evidenceIncluded: Boolean(apEvidence)
+});
+
 
     
 

@@ -561,6 +561,21 @@ async function* apFailoverStream(
                 providerIndex
             ];
 
+        
+if (
+    provider.name === "Groq Direct Recovery" &&
+    apProviderState("Groq").openUntil > Date.now()
+) {
+    apLog("warn", "provider.skipped", {
+        request: requestId,
+        provider: provider.name,
+        reason: "groq_cooldown_active"
+    });
+
+    continue;
+}
+
+
         const stream =
             await tryProvider(
                 provider.name,
@@ -798,7 +813,12 @@ async function* apFailoverStream(
 }
 
 
-export async function createAIStream(messages) {
+
+export async function createAIStream(
+    messages,
+    { searchMode = "auto" } = {}
+) {
+
 
     if (!Array.isArray(messages)) {
 
@@ -945,35 +965,57 @@ export async function createAIStream(messages) {
     // AP_STREAM_FAILOVER_V2
     // ==========================================
 
-    apLog("info", "route.started", {
-        request: requestId,
-        mode: "text",
-        messages: messages.length,
-        providers:
-            "Groq>Gemini>DeepSeek>OpenRouter"
-    });
+    
+apLog("info", "route.started", {
+    request: requestId,
+    mode: "text",
+    messages: messages.length,
+    search_mode: searchMode,
+    providers:
+        searchMode === "required"
+            ? "Groq Search>Gemini>DeepSeek>OpenRouter>Groq Direct Recovery"
+            : "Groq>Gemini>DeepSeek>OpenRouter"
+});
 
-    return apFailoverStream(
-        [
-            {
-                name: "Groq",
-                fn: groq
-            },
-            {
-                name: "Gemini",
-                fn: gemini
-            },
-            {
-                name: "DeepSeek",
-                fn: deepseek
-            },
-            {
-                name: "OpenRouter",
-                fn: openrouter
-            }
-        ],
-        messages,
-        requestId
-    );
+return apFailoverStream(
+    [
+        {
+            name: "Groq",
+            fn: (inputMessages, context) =>
+                groq(inputMessages, {
+                    ...context,
+                    searchMode:
+                        searchMode === "required"
+                            ? "required"
+                            : "auto"
+                })
+        },
+        {
+            name: "Gemini",
+            fn: gemini
+        },
+        {
+            name: "DeepSeek",
+            fn: deepseek
+        },
+        {
+            name: "OpenRouter",
+            fn: openrouter
+        },
+        ...(searchMode === "required"
+            ? [{
+                name: "Groq Direct Recovery",
+                fn: (inputMessages, context) =>
+                    groq(inputMessages, {
+                        ...context,
+                        searchMode: "none"
+                    })
+            }]
+            : [])
+    ],
+    messages,
+    requestId
+);
+
 
 }

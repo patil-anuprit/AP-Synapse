@@ -1626,24 +1626,24 @@ if (documentImage && !hasRequestDocument) {
 
 }
 
+
 if (web) {
-
     messages.unshift({
-
         role: "system",
-
-        content: `
-You have internet search mode enabled.
-
-If you are unsure,
-say that current information may require verification.
-
-Answer as completely as possible.
-`
-
+        content: [
+            "Answer the user's question directly, accurately and naturally.",
+            "Use trustworthy current search evidence whenever available.",
+            "If live search fails or returns no useful evidence, still provide the best helpful answer from established knowledge.",
+            "Never claim to have verified a live fact without evidence.",
+            "Do not invent exact current prices, specifications, dates, warranties or sources.",
+            "Briefly qualify uncertain time-sensitive details without making a search failure the main response.",
+            "Use professional Markdown formatting.",
+            "Never include raw HTML, fabricated citations or internal reference markers.",
+            "Keep answers clear, relevant and appropriately detailed."
+        ].join(" ")
     });
-
 }
+
 
             // =============================
 // AP Synapse Identity Shield
@@ -1803,7 +1803,11 @@ If evidence is insufficient, explain uncertainty.`
             : 0
     });
 
-    const stream = await createAIStream(messages);
+    
+const stream = await createAIStream(messages, {
+    searchMode: web ? "required" : "auto"
+});
+
 
 
 const streamReady = performance.now();
@@ -2042,19 +2046,30 @@ catch (finalizationError) {
 
 }
 
-    } catch (chatError) {
+    
+} catch (chatError) {
+    console.error("Chat handler error:", chatError);
 
-        console.error("Chat handler error:", chatError);
-
+    if (!res.writableEnded) {
         try {
-            if (!res.writableEnded) {
-                res.status(500).json({ error: "Unable to process chat request." });
+            if (res.headersSent) {
+                res.end(
+                    "\n\nThe response was interrupted. Please retry."
+                );
+            } else {
+                res.status(503).json({
+                    error: "This request could not be completed right now."
+                });
             }
-        } catch (e) {
-            // ignore
+        } catch (responseError) {
+            console.error(
+                "Chat error response failed:",
+                responseError
+            );
         }
-
     }
+}
+
 
 });
 

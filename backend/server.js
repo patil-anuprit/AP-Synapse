@@ -1352,9 +1352,29 @@ const web =
 // Starts while AI generation is happening.
 // ============================================================
 
+
+const apToday = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Kolkata",
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+}).format(new Date());
+
+const apRecentRequest =
+    /\b(latest|recent|newest|new|current|today|now|news|updates?|this\s+(?:week|month|year))\b/i
+        .test(originalMessage);
+
+const apExplicitYear =
+    /\b(?:19|20)\d{2}\b/.test(originalMessage);
+
+const apSearchQuery =
+    apRecentRequest && !apExplicitYear
+        ? `${originalMessage} ${apToday}`
+        : originalMessage;
+
 const sourceQueries = [
-    originalMessage,
-    `${originalMessage} official primary source`
+    apSearchQuery,
+    `${apSearchQuery} official primary source`
 ];
 
 const sourcesPromise =
@@ -1658,6 +1678,10 @@ if (web) {
         role: "system",
         content: [
             "Answer the user's question directly, accurately and naturally.",
+            
+           `Today's date in India is ${apToday}. Interpret recent, latest, and new relative to today unless the user specifies another period.`,
+           "Prioritize relevant recent evidence over outdated information.",
+
             "Use trustworthy current search evidence whenever available.",
             "If live search fails or returns no useful evidence, still provide the best helpful answer from established knowledge.",
             "Never claim to have verified a live fact without evidence.",
@@ -1851,9 +1875,11 @@ or "details could not be verified".`
     });
 
     
+
 const stream = await createAIStream(messages, {
-    searchMode: web ? "required" : "auto"
+    searchMode: "auto"
 });
+
 
 
 

@@ -32,6 +32,15 @@ function isUsefulQuery(query) {
     return !casualPatterns.some(pattern => pattern.test(q));
 }
 
+
+function isNewsQuery(query) {
+    return (
+        !/\bofficial primary source\b/i.test(query) &&
+        /\b(news|headlines|breaking|updates?|developments|announcements)\b/i.test(query)
+    );
+}
+
+
 export async function searchWebSources(query) {
 
     const TAVILY_API_KEY =
@@ -56,26 +65,34 @@ export async function searchWebSources(query) {
 
     try {
 
-        const response = await fetch(
-            "https://api.tavily.com/search",
-            {
-                method: "POST",
+        
+const response = await fetch(
+    "https://api.tavily.com/search",
+    {
+        method: "POST",
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+        signal: AbortSignal.timeout(4500),
 
-                body: JSON.stringify({
-                    api_key: TAVILY_API_KEY,
-                    query,
-                    search_depth: "basic",
-                    max_results: 5,
-                    include_answer: false,
-                    include_images: false,
-                    include_raw_content: false
-                })
-            }
-        );
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            api_key: TAVILY_API_KEY,
+            query,
+            topic: isNewsQuery(query) ? "news" : "general",
+            search_depth: "basic",
+            
+            max_results: 5,
+            include_published_date: true,
+            include_answer: false,
+
+            include_images: false,
+            include_raw_content: false
+        })
+    }
+);
+
 
         const data = await response.json();
 
@@ -99,25 +116,44 @@ export async function searchWebSources(query) {
             results.length
         );
 
-        return results
-            .slice(0, 5)
-            .map(item => ({
-                title:
-                    item.title ||
-                    "Web source",
+        
+return results
+    .filter(item => {
+        try {
+            const parsed = new URL(item?.url || "");
 
-                url:
-                    item.url ||
-                    "",
+            return (
+                parsed.protocol === "https:" ||
+                parsed.protocol === "http:"
+            );
+        } catch {
+            return false;
+        }
+    })
+    .slice(0, 5)
+    .map(item => ({
+        title: String(
+            item.title || "Web source"
+        ).slice(0, 180),
 
-                snippet:
-                    item.content ||
-                    "",
+        url: item.url,
 
-                domain:
-                    extractDomain(item.url)
-            }))
-            .filter(source => source.url);
+        snippet: String(
+            item.content || ""
+        ).slice(0, 1800),
+
+        domain: extractDomain(item.url),
+
+        score: Number.isFinite(item.score)
+            ? item.score
+            : null,
+
+        publishedDate:
+            item.published_date ||
+            item.publishedDate ||
+            ""
+    }));
+
 
     } catch (error) {
 

@@ -1861,6 +1861,29 @@ ${publishedDate ? `Published: ${publishedDate}\n` : ""}Excerpt: ${snippet}`;
         })
         .join("\n\n");
 
+        
+    // AP SYNAPSE — TARGETED EVIDENCE DIAGNOSTIC
+    // Runs only for the exact configured test question.
+
+    const apEvidenceDebugQuery = String(
+        process.env.AP_EVIDENCE_DEBUG_QUERY || ""
+    ).trim().toLowerCase();
+
+    if (
+        apEvidenceDebugQuery &&
+        String(originalMessage).trim().toLowerCase() === apEvidenceDebugQuery
+    ) {
+        console.log("AP_EVIDENCE_DEBUG", JSON.stringify(
+            apEvidenceSources.map((source, index) => ({
+                index: index + 1,
+                url: source.url,
+                excerpt: String(source.snippet || source.content || "")
+                    .slice(0, 450)
+            }))
+        ));
+    }
+
+
     if (apEvidence) {
         messages.unshift({
             role: "system",

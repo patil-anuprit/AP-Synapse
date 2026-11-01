@@ -1839,17 +1839,73 @@ Remain professional.
             .slice(0, 2)
     ];
 
+    
+    // AP SYNAPSE — RELEVANT RAW-PAGE EVIDENCE V1
+    // Keep each source's total excerpt short for Groq.
+
+    const apQuestionTerms = (
+        String(originalMessage).toLowerCase().match(/[a-z0-9]+/g) || []
+    ).filter(term =>
+        term.length >= 4 &&
+        !/^(what|when|where|which|with|from|about|this|that|there|their|latest|please)$/.test(term)
+    );
+
+    const apRawHighlights = source => {
+        const raw = String(source.rawContent || "").slice(0, 50000);
+        if (!raw.trim()) return "";
+
+        const metricPattern = /\b\d+(?:\.\d+)?\s*(?:kwh|kw|bhp|hp|ps|nm|km|litres?|liters?|lakh|gb|tb|mhz|ghz|%)\b/i;
+        const factPattern = /\b(battery|capacity|power|output|engine|range|price|cost|specifications?|launch|release|announced|dated|seating|performance|warranty|features?)\b/i;
+
+        const candidates = raw.split(/\n+/)
+            .map(line =>
+                line.replace(/[#*`>|]/g, " ")
+                    .replace(/\s+/g, " ")
+                    .trim()
+            )
+            .filter(line => line.length >= 16)
+            .map(line => {
+                const matches = apQuestionTerms.filter(term =>
+                    line.toLowerCase().includes(term)
+                ).length;
+
+                const score =
+                    (metricPattern.test(line) ? 7 : 0) +
+                    (factPattern.test(line) ? 3 : 0) +
+                    Math.min(matches, 3) * 2;
+
+                return { line, score };
+            })
+            .filter(item => item.score >= 5)
+            .sort((a, b) => b.score - a.score);
+
+        const chosen = [];
+
+        for (const item of candidates) {
+            const excerpt = item.line.slice(0, 140);
+
+            if (chosen.includes(excerpt)) continue;
+
+            chosen.push(excerpt);
+
+            if (chosen.length === 2) break;
+        }
+
+        return chosen.join(" | ").slice(0, 285);
+    };
+
     const apEvidence = apEvidenceSources
         .map((source, index) => {
-            const title = String(
-                source.title || "Web source"
-            ).slice(0, 100);
+            const title = String(source.title || "Web source")
+                .slice(0, 100);
 
             const url = source.url.slice(0, 250);
 
+            const rawHighlights = apRawHighlights(source);
+
             const snippet = String(
                 source.snippet || source.content || ""
-            ).slice(0, 450);
+            ).slice(0, rawHighlights ? 160 : 450);
 
             const publishedDate = String(
                 source.publishedDate || ""
@@ -1857,7 +1913,7 @@ Remain professional.
 
             return `${index + 1}. ${title}
 URL: ${url}
-${publishedDate ? `Published: ${publishedDate}\n` : ""}Excerpt: ${snippet}`;
+${publishedDate ? `Published: ${publishedDate}\n` : ""}Excerpt: ${snippet}${rawHighlights ? `\nPage facts: ${rawHighlights}` : ""}`;
         })
         .join("\n\n");
 
@@ -1877,8 +1933,11 @@ ${publishedDate ? `Published: ${publishedDate}\n` : ""}Excerpt: ${snippet}`;
             apEvidenceSources.map((source, index) => ({
                 index: index + 1,
                 url: source.url,
-                excerpt: String(source.snippet || source.content || "")
-                    .slice(0, 450)
+                
+               excerpt: String(source.snippet || source.content || "")
+                   .slice(0, 160),
+               rawHighlights: apRawHighlights(source)
+
             }))
         ));
     }

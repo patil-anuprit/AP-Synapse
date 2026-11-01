@@ -88,7 +88,12 @@ const response = await fetch(
             include_answer: false,
 
             include_images: false,
-            include_raw_content: false
+            
+            include_raw_content:
+                /\bofficial primary source\b/i.test(query)
+                    ? "markdown"
+                    : false
+
         })
     }
 );
@@ -143,6 +148,12 @@ return results
         ).slice(0, 1800),
 
         domain: extractDomain(item.url),
+
+        
+        rawContent: String(
+            item.raw_content || ""
+        ).slice(0, 50000),
+
 
         score: Number.isFinite(item.score)
             ? item.score

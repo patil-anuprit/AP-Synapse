@@ -22,10 +22,12 @@ const groq = new Groq({
     apiKey: process.env.GROQ_API_KEY
 });
 
+
 export async function createStream(
     messages,
-    { requestId } = {}
+    { requestId, searchMode = "auto" } = {}
 ) {
+
     if (!Array.isArray(messages)) {
         throw new Error("Messages must be an array.");
     }
@@ -96,18 +98,26 @@ return groq.chat.completions.create({
     max_completion_tokens:
         prepared.policy.maxCompletionTokens,
 
-    reasoning_effort: "low",
+   
     
-    citation_options: "disabled",
+reasoning_effort: "low",
+citation_options: "disabled",
 
+...(searchMode === "none"
+    ? {
+        tool_choice: "none"
+    }
+    : {
+        tools: [
+            { type: "browser_search" }
+        ],
+        tool_choice:
+            searchMode === "required"
+                ? "required"
+                : "auto"
+    }
+),
 
-    tools: [
-        { type: "browser_search" }
-    ],
-
-    tool_choice: "required",
-
-    stream: true
+stream: true
 });
 }
-

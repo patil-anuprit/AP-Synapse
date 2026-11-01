@@ -1438,9 +1438,25 @@ const sourcesPromise =
                 .replace(/#.*$/, "")
                 .toLowerCase();
 
-            if (seenUrls.has(key)) {
-                continue;
-            }
+            
+if (seenUrls.has(key)) {
+    const original = merged.find(item =>
+        String(item.url || "")
+            .replace(/#.*$/, "")
+            .toLowerCase() === key
+    );
+
+    if (
+        original &&
+        String(source.rawContent || "").length >
+        String(original.rawContent || "").length
+    ) {
+        original.rawContent = source.rawContent;
+    }
+
+    continue;
+}
+
 
             seenUrls.add(key);
             merged.push(source);
@@ -1936,7 +1952,10 @@ ${publishedDate ? `Published: ${publishedDate}\n` : ""}Excerpt: ${snippet}${rawH
                 
                excerpt: String(source.snippet || source.content || "")
                    .slice(0, 160),
-               rawHighlights: apRawHighlights(source)
+               
+              rawLength: String(source.rawContent || "").length,
+              rawHighlights: apRawHighlights(source)
+
 
             }))
         ));

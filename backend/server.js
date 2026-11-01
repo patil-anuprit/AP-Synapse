@@ -1195,11 +1195,18 @@ const web =
         );
 
 
-        message =
-            APPersonalization.composePersonalizedMessage(
-                originalMessage,
-                apPersonalizationContext
-            );
+        
+const apAnswerPersonalizationContext =
+    web && apPersonalizationContext.length > 3500
+        ? apPersonalizationContext.slice(0, 3500)
+        : apPersonalizationContext;
+
+message =
+    APPersonalization.composePersonalizedMessage(
+        originalMessage,
+        apAnswerPersonalizationContext
+    );
+
 
 
         await APPersonalization.savePersonalizationTurn(
@@ -1842,7 +1849,7 @@ Remain professional.
 
             const snippet = String(
                 source.snippet || source.content || ""
-            ).slice(0, 250);
+            ).slice(0, 450);
 
             const publishedDate = String(
                 source.publishedDate || ""
@@ -1873,6 +1880,9 @@ warranty terms, use only facts directly supported by the excerpts.
 Do not add component power ratings to invent a combined system output.
 Distinguish outright purchase prices from rental or subscription prices.
 Distinguish announcements, launches, scheduled deliveries and actual deliveries.
+For current facts, treat previous assistant replies and personalized memories
+as context, never as evidence. Fresh relevant primary-source documentation
+outweighs old conversation statements when they disagree.
 When sources conflict, prefer reliable primary documentation if it directly
 supports the claim; otherwise omit the disputed figure or note the conflict.
 Never invent citations, sources, URLs or unsupported facts.

@@ -5757,7 +5757,12 @@ autocomplete="off">
                 async event => {
 
                     event.preventDefault();
-                    event.stopPropagation();
+                    event.stopImmediatePropagation();
+
+                    window.location.assign(
+                       "https://play.google.com/store/apps/details?id=com.apsynapse.app"
+                    );
+                    return;
 
 
                     /* --------------------------------------------

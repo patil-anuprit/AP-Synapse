@@ -1,0 +1,55 @@
+name: AP Synapse - Prepare Universal Engine PR
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  prepare:
+    name: Check integration and open a review PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Patch existing chat and backend cautiously
+        run: python3 scripts/ap-creation-install.py
+      - name: Update backend dependencies and lockfile
+        run: npm --prefix backend install --package-lock-only --ignore-scripts --no-audit --no-fund
+      - name: Install backend dependencies for smoke tests
+        run: npm --prefix backend ci --ignore-scripts --no-audit --no-fund
+      - name: Syntax and unit tests
+        run: |
+          node --check backend/server.js
+          node --check frontend/scripts/chat.js
+          node --check frontend/scripts/renderCreationResult.js
+          node --test backend/services/ap-creation/tests/engine.test.mjs
+      - name: Check actual PDF, DOCX and PPTX renderers
+        run: node backend/services/ap-creation/tests/render-smoke.mjs
+      - name: Validate whitespace changes
+        run: git diff --check
+      - name: Open pull request (do not merge or deploy)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          branch="ap-universal-creation-${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add -- backend/server.js frontend/scripts/chat.js backend/package.json backend/package-lock.json
+          if git diff --cached --quiet; then
+            echo "No changes to propose"
+            exit 0
+          fi
+          git commit -m "Integrate AP Synapse creation engine behind disabled flags"
+          git push -u origin "$branch"
+          gh pr create --base "${GITHUB_REF_NAME}" --head "$branch" \
+            --title "AP Synapse: integrate context-aware creation engine (disabled by default)" \
+            --body "Adds chat-aware PDF, DOCX, PPTX and optional image generation. Keeps Canvas untouched. Flags AP_CREATION_ENABLED and AP_CREATION_CHAT_ENABLED default to OFF. Review memory boundaries, costs, API keys, chat response handling, and real Render/Railway smoke tests before activation."

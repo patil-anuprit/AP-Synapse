@@ -1,3 +1,4 @@
+import { renderCreationResult } from './renderCreationResult.js';
 import { getSessionId } from "./session.js";
 import {
     saveProject
@@ -1678,6 +1679,10 @@ if (contentType.includes("application/json")) {
 
     const data =
         await response.json();
+
+// AP_UNIVERSAL_CREATION_CHAT_V1: render downloadable files inside the existing chat.
+if (renderCreationResult(data, chatWindow)) return;
+
 
     // ============================================================
     // AP_IMAGE_EDIT_RESULT_CONTEXT_V22

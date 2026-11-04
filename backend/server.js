@@ -1,3 +1,4 @@
+import { createUniversalEngine } from './services/ap-creation/engine.mjs';
 import adminWeeklyIntelligenceRouter from "./routes/adminWeeklyIntelligence.js";
 
 // AP_WEEKLY_ADMIN_TRIGGER_V1
@@ -886,6 +887,42 @@ function createCitationCleaner() {
     };
 }
 
+
+
+// AP_UNIVERSAL_CREATION_CHAT_V1 (feature flag: OFF unless enabled in backend environment)
+const apUniversalCreator = createUniversalEngine({
+    getContext: async (req, { sessionId }) => {
+        // Use AP Synapse's EXISTING conversation memory rather than client-submitted history.
+        const { buildConversation } = await import('./memory/memoryManager.js');
+        const turns = typeof buildConversation === 'function'
+            ? await buildConversation(String(sessionId || ''))
+            : [];
+        return {
+            history: Array.isArray(turns) ? turns : [],
+            documentText: typeof req.body?.document === 'string' ? req.body.document : ''
+        };
+    },
+    onCreated: async (req, artifact) => {
+        // Keep generated-artifact metadata in the same conversation context.
+        // Add user-scoped durable binary storage separately before promising persistence.
+        const sessionId = String(req.get('x-session-id') || '');
+        if (!sessionId) return;
+        const { remember } = await import('./memory/memoryManager.js');
+        if (typeof remember === 'function') {
+            await remember(sessionId, 'user', String(req.body?.message || '').slice(0,2000));
+            await remember(sessionId, 'assistant', 'Created ' +
+                artifact.kind + ': ' + artifact.fileName);
+        }
+    },
+    chatEnabled: process.env.AP_CREATION_ENABLED === 'true' &&
+        process.env.AP_CREATION_CHAT_ENABLED === 'true',
+    allowImageIntercept: process.env.AP_CREATION_IMAGE_CHAT === 'true'
+});
+app.post('/ap/create', (req, res, next) => {
+    if (process.env.AP_CREATION_ENABLED !== 'true') return res.sendStatus(404);
+    return next();
+}, apUniversalCreator.handler);
+app.post('/chat', apUniversalCreator.chatMiddleware);
 
 app.post("/chat", async (req, res) => {
 

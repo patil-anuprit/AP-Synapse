@@ -1,0 +1,46 @@
+name: AP Synapse - Secure Creation Engine PR
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  protect:
+    name: Secure engine and create review branch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Apply fail-closed security-only patch
+        run: python3 scripts/ap-creation-secure-upgrade.py
+      - name: Syntax + regression tests
+        run: |
+          node --check backend/server.js
+          node --check backend/services/ap-creation/engine.mjs
+          node --check backend/services/ap-creation/authQuota.mjs
+          npm --prefix backend ci --ignore-scripts --no-audit --no-fund
+          node --test backend/services/ap-creation/tests/engine.test.mjs
+          node --test backend/services/ap-creation/tests/authQuota.test.mjs
+          git diff --check
+      - name: Prepare pull request branch (not main)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          branch="ap-creation-secure-${GITHUB_RUN_ID}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c "$branch"
+          git add -- backend/server.js backend/services/ap-creation/engine.mjs
+          git commit -m 'Authenticate artifact generation and enforce shared hourly quota'
+          git push -u origin "$branch"
+          if ! gh pr create --base "${GITHUB_REF_NAME}" --head "$branch" \
+            --title 'Secure AP Synapse creation engine before activation' \
+            --body 'Adds verified AP Synapse account requirement and PostgreSQL atomic shared hourly limit. Flags stay OFF; Canvas untouched. Review before merging.'; then
+            echo "GitHub has blocked automatic PR creation. Manually create from branch $branch"
+          fi

@@ -2655,7 +2655,10 @@ app.post("/auth/google", async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "Google Sign-In successful.",
-            user
+            
+            user,
+            personalizationToken: issuePersonalizationToken(user.googleId)
+
         });
     } catch (error) {
         console.error("Google Sign-In verification failed.");

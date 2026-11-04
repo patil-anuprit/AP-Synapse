@@ -36,10 +36,12 @@ function promptForPlan(kind,ctx){
 function imagePrompt(ctx){return `Create a high-quality, aesthetically refined image for the user. Follow the LATEST user instructions, using the ongoing conversation context below; if a prior image is attached, edit that image rather than starting over. Preserve any specified design identity and exact text, avoid garbled typography, and respect the requested aspect ratio. Do not include unrelated elements.\n${ctx}`;}
 function artifactDescription(kind,plan,message){return `${kind.toUpperCase()}: ${cleanText(plan?.title||message,180)}`;}
 function safeName(s){return cleanText(s,60).toLowerCase().replace(/[^a-z0-9 -]/g,'').replace(/\s+/g,'-').replace(/^-|-$/g,'')||'ap-synapse-creation';}
-export function createUniversalEngine({getContext=async()=>({}),identify,planProvider=geminiPlan,imageProvider=geminiImage,onCreated=async()=>{},renderers={pdf:renderPDF,docx:renderDOCX,slides:renderSlides},allowImageIntercept=false,chatEnabled=false}={}){
+export function createUniversalEngine({getContext=async()=>({}),identify,planProvider=geminiPlan,imageProvider=geminiImage,onCreated=async()=>{},renderers={pdf:renderPDF,docx:renderDOCX,slides:renderSlides},allowImageIntercept=false,chatEnabled=false,beforeCreate=async()=>{}}={}){
   async function execute(req){
     const message=cleanText(req.body?.message,8000);
     if(!message)throw Object.assign(new Error('MESSAGE_REQUIRED'),{status:400});
+    // AP_CREATION_VERIFIED_QUOTA_INTEGRATION_V1: verify signed account and reserve shared quota before accessing session artifacts or provider.
+    await beforeCreate(req);
     const userKey=keyFor(req,identify);
     const now=Date.now(), slot=rate.get(userKey);
     if(slot&&now-slot.start<300_000&&slot.count>=5)throw Object.assign(new Error('CREATION_RATE_LIMIT'),{status:429});

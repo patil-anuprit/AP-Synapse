@@ -891,6 +891,11 @@ function createCitationCleaner() {
 
 // AP_UNIVERSAL_CREATION_CHAT_V1 (feature flag: OFF unless enabled in backend environment)
 const apUniversalCreator = createUniversalEngine({
+    // AP_CREATION_VERIFIED_QUOTA_INTEGRATION_V1
+    beforeCreate: async(req) => {
+        const {reserveVerifiedCreation} = await import('./services/ap-creation/authQuota.mjs');
+        return reserveVerifiedCreation(req);
+    },
     getContext: async (req, { sessionId }) => {
         // Use AP Synapse's EXISTING conversation memory rather than client-submitted history.
         const { buildConversation } = await import('./memory/memoryManager.js');

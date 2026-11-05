@@ -1,3 +1,4 @@
+import {createMediaEngine} from './services/ap-media/engine.mjs';
 import { createUniversalEngine } from './services/ap-creation/engine.mjs';
 import adminWeeklyIntelligenceRouter from "./routes/adminWeeklyIntelligence.js";
 
@@ -927,6 +928,22 @@ app.post('/ap/create', (req, res, next) => {
     if (process.env.AP_CREATION_ENABLED !== 'true') return res.sendStatus(404);
     return next();
 }, apUniversalCreator.handler);
+// AP_MEDIA_CHAT_ENGINE_V1: media creation uses original chat, no Canvas hooks.
+const apMediaEngine = createMediaEngine({
+  getContext: async (req, {sessionId}) => {
+    // Account-scoped user chat is persisted by the new engine automatically.
+    // Reuse existing assistant replies ONLY after verifying session owner access.
+    if(process.env.AP_MEDIA_TRUST_EXISTING_CHAT_HISTORY!=='true')return {history:[]};
+    const {buildConversation} = await import('./memory/memoryManager.js');
+    const turns = typeof buildConversation === 'function'
+      ? await buildConversation(String(sessionId || '')) : [];
+    return {history: Array.isArray(turns) ? turns : []};
+  }
+});
+app.use('/ap/media', apMediaEngine.router);
+app.post('/chat', apMediaEngine.captureChat);
+app.post('/chat', apMediaEngine.chatMiddleware);
+
 app.post('/chat', apUniversalCreator.chatMiddleware);
 
 app.post("/chat", async (req, res) => {

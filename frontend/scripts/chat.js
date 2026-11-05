@@ -1,3 +1,4 @@
+import {renderMediaJob} from './renderMediaJob.js';
 import { renderCreationResult } from './renderCreationResult.js';
 import { getSessionId } from "./session.js";
 import {
@@ -1682,6 +1683,8 @@ if (contentType.includes("application/json")) {
 
 // AP_UNIVERSAL_CREATION_CHAT_V1: render downloadable files inside the existing chat.
 if (renderCreationResult(data, chatWindow)) return;
+// AP_MEDIA_CHAT_ENGINE_V1: async media card inside the existing conversation.
+if (renderMediaJob(data,chatWindow)) return;
 
 
     // ============================================================

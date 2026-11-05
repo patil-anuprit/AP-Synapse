@@ -16,12 +16,93 @@ async function generate(model,body,timeoutMs=70000){
   finally{clearTimeout(timer);}
 }
 function textFrom(res){return(res?.candidates||[]).flatMap(c=>c.content?.parts||[]).map(p=>p.text||'').join('\n').trim();}
-export async function geminiPlan(prompt){
-  const model=process.env.AP_CREATION_TEXT_MODEL || 'gemini-3.1-flash-lite';
-  const r=await generate(model,{contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{responseMimeType:'application/json',temperature:0.4,maxOutputTokens:8192}},65000);
-  let t=textFrom(r);t=t.replace(/^```(?:json)?\s*|\s*```$/g,'');
-  try{return JSON.parse(t);}catch{throw new ProviderError('MODEL_INVALID_JSON');}
+
+export async function geminiPlan(prompt) {
+  const primary =
+    process.env.AP_CREATION_TEXT_MODEL ||
+    "gemini-3.1-flash-lite";
+
+  const fallback =
+    process.env.AP_CREATION_TEXT_FALLBACK_MODEL ||
+    "gemini-2.5-flash";
+
+  const models = [
+    { name: primary, attempts: 2 },
+    ...(fallback !== primary
+      ? [{ name: fallback, attempts: 1 }]
+      : [])
+  ];
+
+  const body = {
+    contents: [{
+      role: "user",
+      parts: [{ text: prompt }]
+    }],
+    generationConfig: {
+      responseMimeType: "application/json",
+      temperature: 0.4,
+      maxOutputTokens: 8192
+    }
+  };
+
+  const deadline = Date.now() + 80000;
+  const retryable = new Set([500, 502, 503, 504]);
+  let lastError;
+
+  for (const model of models) {
+    for (let attempt = 0; attempt < model.attempts; attempt++) {
+      const remaining = deadline - Date.now();
+
+      if (remaining < 5000) {
+        throw lastError ||
+          new ProviderError("MODEL_TIMEOUT", 504);
+      }
+
+      try {
+        const result = await generate(
+          model.name,
+          body,
+          Math.min(45000, remaining - 2000)
+        );
+
+        const text = textFrom(result).replace(
+          /^```(?:json)?\s*|\s*```$/g,
+          ""
+        );
+
+        try {
+          return JSON.parse(text);
+        } catch {
+          throw new ProviderError("MODEL_INVALID_JSON", 502);
+        }
+
+      } catch (error) {
+        lastError = error;
+
+        if (!retryable.has(error.status)) {
+          throw error;
+        }
+
+        console.warn(
+          "[AP Creation] Temporary planning failure:",
+          error.message,
+          "model:",
+          model.name
+        );
+
+        if (attempt + 1 < model.attempts) {
+          await new Promise(resolve =>
+            setTimeout(resolve, 1000 * (attempt + 1))
+          );
+        }
+      }
+    }
+  }
+
+  throw lastError ||
+    new ProviderError("MODEL_UNAVAILABLE", 503);
 }
+
 export async function geminiImage({prompt,referenceImages=[],aspectRatio='1:1',quality='standard'}){
   // Model names are stable Google API identifiers as of Nov 2026. Availability and billing depend on account.
   const models=quality==='high'

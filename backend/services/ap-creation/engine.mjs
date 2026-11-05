@@ -113,42 +113,12 @@ export function createUniversalEngine({getContext=async()=>({}),identify,planPro
     try{const art=await execute(req);if(!art)return res.status(422).json({error:'NOT_A_CREATION_REQUEST'});res.set('Cache-Control','no-store');return res.status(200).json(present(art));}
     catch(e){console.error('[AP Creation]',e?.message||'unknown');return res.status(e.status>=400&&e.status<600?e.status:500).json({error:e.message==='CREATION_PROVIDER_NOT_CONFIGURED'?'CREATION_PROVIDER_NOT_CONFIGURED':'CREATION_FAILED'});}
   };
-  
-const chatMiddleware = async (req, res, next) => {
-  if (!chatEnabled) return next();
-
-  const message = cleanText(req.body?.message, 8000);
-  let kind = routeIntent(message);
-
-  if (
-    !kind &&
-    /\b(edit|revise|update|modify|improve|change|enhance|redo|format)\b|\b(make|turn)\s+it\b/i.test(message)
-  ) {
-    try {
-      const { verifiedCreationUser } =
-        await import('./authQuota.mjs');
-
-      const verifiedId = verifiedCreationUser(req);
-
-      req.user = {
-        ...(req.user && typeof req.user === 'object'
-          ? req.user
-          : {}),
-        id: verifiedId
-      };
-
-      const prior = cacheGet(keyFor(req, identify));
-      kind = routeIntent(message, prior?.kind);
-
-    } catch {
-      // Ordinary chat remains available.
-    }
-  }
-
-  if (!kind || (kind === 'image' && !allowImageIntercept)) {
-    return next();
-  }
-
-  return handler(req, res);
-};
-
+  const chatMiddleware=async(req,res,next)=>{
+    if(!chatEnabled)return next();
+    const prior=(()=>{try{return cacheGet(keyFor(req,identify));}catch{return null;}})();
+    const kind=routeIntent(req.body?.message,prior?.kind);
+    if(!kind||kind==='image'&&!allowImageIntercept)return next();
+    return handler(req,res);
+  };
+  return {execute,handler,chatMiddleware,routeIntent};
+}

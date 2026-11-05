@@ -48,7 +48,12 @@ export function createUniversalEngine({getContext=async()=>({}),identify,planPro
     if(!slot||now-slot.start>=300_000)rate.set(userKey,{start:now,count:1}); else slot.count++;
     if(rate.size>500)rate.delete(rate.keys().next().value);
     const prev=cacheGet(userKey);
-    const kind=routeIntent(message,prev?.kind);
+    
+    const requestedKind = String(req.body?.kind || "").toLowerCase();
+    const kind = ["image", "pdf", "docx", "slides"].includes(requestedKind)
+      ? requestedKind
+      : routeIntent(message, prev?.kind);
+
     if(!kind)return null;
     const trusted=(await getContext(req,{userKey,sessionId:req.headers?.['x-session-id']}))||{};
     // Server-owned history is authoritative; client's claimed history is deliberately ignored.

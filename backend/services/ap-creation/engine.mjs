@@ -67,7 +67,16 @@ export function createUniversalEngine({getContext=async()=>({}),identify,planPro
         quality:req.body?.quality==='high'?'high':'standard'});
       buf=generated.buffer;mimeType=generated.mimeType;model=generated.model||'image provider';
     }else{
-      plan=await planProvider(promptForPlan(kind,context),{kind,context,req});
+      
+     const revisionContext = prev?.kind === kind && prev?.plan
+       ? `${context}\n\nPREVIOUS GENERATED DOCUMENT (reuse its substance):\n${JSON.stringify(prev.plan).slice(0, 14000)}\n\nFor follow-up revisions, preserve the previous document's content unless the user's latest instruction explicitly requests changes.`
+       : context;
+
+    plan=await planProvider(
+      promptForPlan(kind,revisionContext),
+      {kind,context:revisionContext,req}
+    );
+
       if(!plan||typeof plan!=='object'||typeof plan.title!=='string')throw Object.assign(new Error('INVALID_CREATION_PLAN'),{status:502});
       buf=await renderers[kind](plan);mimeType=MIME[kind];
     }
@@ -78,7 +87,15 @@ export function createUniversalEngine({getContext=async()=>({}),identify,planPro
     const description=artifactDescription(kind,plan,message);
     const artifact={kind,description,fileName,mimeType,base64:buf.toString('base64'),bytes:buf.length,provider:model};
     // Retain image pixels for follow-up editing inside this process. Production should use user-scoped storage.
-    cacheSet(userKey,{kind,description,buffer:kind==='image'?buf:null,mimeType});
+    
+   cacheSet(userKey,{
+    kind,
+    description,
+    buffer:kind==='image'?buf:null,
+    mimeType,
+    plan:kind==='image'?null:plan
+  });
+
     try{await onCreated(req,{kind,description,fileName,mimeType,buffer:buf,plan});}catch(e){
       console.error('[AP Creation] artifact persistence failed:',e?.message||'unknown');
       // Don't claim durable storage was successful when this callback fails.

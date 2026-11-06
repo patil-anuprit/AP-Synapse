@@ -186,3 +186,43 @@
     text-shadow: 0 0 4px rgba(220, 168, 76, .17) !important;
   }
 }
+
+
+/* AP_LUXURY_DESKTOP_GLOW_V1 */
+/* Laptop and desktop placeholder only. No layout changes. */
+
+@media (min-width: 768px) {
+
+  .command-section .command-bar #userInput::placeholder {
+    color: #EAC580 !important;
+    -webkit-text-fill-color: #EAC580 !important;
+    opacity: 1 !important;
+    font-weight: 400 !important;
+    animation: apLuxuryDesktopGold
+      6.5s ease-in-out infinite !important;
+  }
+
+  @keyframes apLuxuryDesktopGold {
+    0%, 100% {
+      text-shadow:
+        0 0 1px rgba(255, 231, 174, .35),
+        0 0 4px rgba(220, 168, 76, .17),
+        0 0 8px rgba(205, 145, 50, .06);
+    }
+
+    50% {
+      text-shadow:
+        0 0 1.5px rgba(255, 239, 190, .70),
+        0 0 5px rgba(237, 183, 83, .28),
+        0 0 10px rgba(218, 155, 51, .10);
+    }
+  }
+}
+
+@media (min-width: 768px) and (prefers-reduced-motion: reduce) {
+  .command-section .command-bar #userInput::placeholder {
+    animation: none !important;
+    text-shadow:
+      0 0 4px rgba(220, 168, 76, .17) !important;
+  }
+}

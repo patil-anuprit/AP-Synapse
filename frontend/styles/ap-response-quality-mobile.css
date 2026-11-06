@@ -87,3 +87,41 @@
   }
 
 }
+
+/* AP_MOBILE_RESPONSE_FLEX_FIX_V2
+   Only mobile AI message layout.
+   Answer content and rendering are untouched.
+*/
+
+@media (max-width: 767px) {
+
+  #chatWindow .message.ai {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: flex-start !important;
+    column-gap: 8px !important;
+    row-gap: 6px !important;
+  }
+
+  #chatWindow .message.ai > .message-body {
+    flex: 1 1 calc(100% - 48px) !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+  }
+
+  #chatWindow .message.ai > .ap-response-actions {
+    position: static !important;
+    order: 3 !important;
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    margin: 0 !important;
+    padding: 0 4px !important;
+    box-sizing: border-box !important;
+  }
+
+}

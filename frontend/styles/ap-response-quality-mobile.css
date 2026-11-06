@@ -60,3 +60,30 @@
     hyphens: none !important;
     white-space: normal;
 }
+
+/* AP_MOBILE_RESPONSE_WIDTH_V1
+   Mobile AI answer container only.
+   No changes to response typography or rendering.
+*/
+
+@media (max-width: 767px) {
+
+  #chatWindow .message.ai {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    gap: 10px !important;
+    box-sizing: border-box !important;
+  }
+
+  #chatWindow .message.ai .message-body {
+    flex: 1 1 0% !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+}

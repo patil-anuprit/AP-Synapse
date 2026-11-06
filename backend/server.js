@@ -28,6 +28,8 @@ import { generateFlux2ProImage } from "./services/flux2ProImageService.js";
 import { generateCloudflareImage } from "./services/cloudflareImageService.js";
 import { OAuth2Client } from "google-auth-library";
 import { searchWebSources } from "./services/webSources.js";
+// AP_RESPONSE_INTELLIGENCE_V1
+import { planAPSearch, apEvidencePolicy } from "./services/apResponseQuality.js";
 import {
     sendWelcomeEmail,
     sendSignInNotification
@@ -981,14 +983,15 @@ app.post("/chat", async (req, res) => {
         const originalMessage =
             message;
         
-const web =
-    req.body?.web === true ||
-    (
-        typeof message === "string" &&
-        !req.body?.document &&
-        !req.body?.documentImage &&
-        /\b(latest|recent|today|current|news|price|pricing|launch|launched|released|delivery|available|availability|specifications|specs|range|vehicle|suv|car|phev|hev|ev|7[\s-]?seater|20[2-9][0-9])\b/i.test(message)
-    );
+// AP SYNAPSE — automatic freshness detection; honors existing Web Research toggle.
+const apSearchPlan = planAPSearch({
+    message: originalMessage,
+    requested: req.body?.web === true,
+    disableWeb: req.body?.disableWeb === true,
+    hasDocument: Boolean(req.body?.document || req.body?.documentImage || req.body?.image)
+});
+const web = apSearchPlan.useWeb;
+
 
 
         const documentImage = req.body?.documentImage || "";
@@ -1430,23 +1433,7 @@ const apToday = new Intl.DateTimeFormat("en-GB", {
     year: "numeric"
 }).format(new Date());
 
-const apRecentRequest =
-    /\b(latest|recent|newest|new|current|today|now|news|updates?|this\s+(?:week|month|year))\b/i
-        .test(originalMessage);
-
-const apExplicitYear =
-    /\b(?:19|20)\d{2}\b/.test(originalMessage);
-
-const apSearchQuery =
-    apRecentRequest && !apExplicitYear
-        ? `${originalMessage} ${apToday}`
-        : originalMessage;
-
-const sourceQueries = [
-    apSearchQuery,
-    `${apSearchQuery} official primary source`
-];
-
+const sourceQueries = apSearchPlan.queries;
 const sourcesPromise =
     Promise.allSettled(
         sourceQueries.map(
@@ -1891,7 +1878,7 @@ Remain professional.
             ? await Promise.race([
                 sourcesPromise,
                 new Promise(resolve =>
-                    setTimeout(() => resolve([]), 5000)
+                    setTimeout(() => resolve([]), apSearchPlan.priority === "recent" ? 7500 : 5000)
                 )
             ])
             : [];
@@ -2047,6 +2034,14 @@ console.log("AP_LIVE_SEARCH", {
 
 
     
+
+// AP_RESPONSE_INTELLIGENCE_V1: higher-priority policy, independent of provider fallback.
+if (web) {
+    messages.unshift({
+        role: "system",
+        content: apEvidencePolicy(apSearchPlan, apLiveSources.length)
+    });
+}
 
 const stream = await createAIStream(messages, {
     searchMode: "auto"

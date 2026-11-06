@@ -1,0 +1,35 @@
+/* Minimal assistant-only responsive fixes; keeps AP Synapse visual design. */
+#assistantPage .message.ai,
+#assistantPage .message.ai .message-body {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+#assistantPage .message.ai .message-body {
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+#assistantPage .message.ai .message-body pre,
+#assistantPage .message.ai .message-body .ap-safe-fallback {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: pre;
+    overflow-wrap: normal;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+}
+#assistantPage .message.ai .message-body pre code {
+    white-space: pre;
+    overflow-wrap: normal;
+}
+#assistantPage .message.ai .message-body .ap-mobile-table-shell,
+#assistantPage .message.ai .message-body .table-wrapper {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+#assistantPage .message.ai .message-body img {
+    max-width: 100%;
+    height: auto;
+}

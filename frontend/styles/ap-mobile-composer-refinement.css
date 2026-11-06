@@ -46,3 +46,44 @@
     }
   }
 }
+
+/* AP_VISIBLE_PLACEHOLDER_BREATH_V2
+   Animate a registered property rather than the pseudo-element.
+   Mobile placeholder text only.
+*/
+
+@property --ap-placeholder-light {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0.65;
+}
+
+@keyframes apQuietPlaceholderBreath {
+  0%, 100% {
+    --ap-placeholder-light: 0.32;
+  }
+  50% {
+    --ap-placeholder-light: 1;
+  }
+}
+
+@media (max-width: 767px) {
+  .command-section .command-bar
+  #userInput:placeholder-shown {
+    animation: apQuietPlaceholderBreath
+      4.2s ease-in-out infinite !important;
+  }
+
+  .command-section .command-bar
+  #userInput::placeholder {
+    opacity: var(--ap-placeholder-light) !important;
+    animation: none !important;
+  }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .command-section .command-bar
+  #userInput:placeholder-shown {
+    animation: none !important;
+  }
+}

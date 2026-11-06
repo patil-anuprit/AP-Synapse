@@ -84,12 +84,11 @@
   }
 }
 
-/* AP_NATIVE_LETTER_GLOW_V3 */
-/* Real placeholder letters emit steady golden light. */
+
+/* AP CRISP GOLDEN LETTER RADIANCE — FINAL */
 
 @media (max-width: 767px) {
 
-  /* Disable the previous decorative text overlay. */
   .command-section .ap-gold-placeholder {
     display: none !important;
   }
@@ -97,30 +96,25 @@
   .command-section .command-bar #userInput::placeholder,
   .command-section .command-bar.ap-spark-ready
   #userInput::placeholder {
-    color: #e7c47e !important;
-    -webkit-text-fill-color: #e7c47e !important;
+    color: #E9C681 !important;
+    -webkit-text-fill-color: #E9C681 !important;
     opacity: 1 !important;
-
-    text-shadow:
-      0 0 4px rgba(255, 230, 164, 0.9),
-      0 0 11px rgba(248, 188, 80, 0.65),
-      0 0 22px rgba(214, 149, 39, 0.38) !important;
-
-    animation: apNativeGoldEmit 5s ease-in-out infinite !important;
+    font-weight: 400 !important;
+    animation: apCrispGoldGlow 5.8s ease-in-out infinite !important;
   }
 
-  @keyframes apNativeGoldEmit {
+  @keyframes apCrispGoldGlow {
     0%, 100% {
       text-shadow:
-        0 0 3px rgba(255, 220, 145, .55),
-        0 0 9px rgba(235, 177, 69, .35);
+        0 0 1px rgba(255, 224, 145, .35),
+        0 0 5px rgba(228, 173, 72, .14);
     }
 
     50% {
       text-shadow:
-        0 0 5px rgba(255, 238, 180, 1),
-        0 0 13px rgba(255, 199, 84, .85),
-        0 0 25px rgba(224, 159, 46, .48);
+        0 0 2px rgba(255, 230, 160, .58),
+        0 0 7px rgba(235, 175, 70, .25),
+        0 0 12px rgba(218, 155, 48, .09);
     }
   }
 }
@@ -128,5 +122,6 @@
 @media (max-width: 767px) and (prefers-reduced-motion: reduce) {
   .command-section .command-bar #userInput::placeholder {
     animation: none !important;
+    text-shadow: 0 0 3px rgba(235, 175, 70, .2) !important;
   }
 }

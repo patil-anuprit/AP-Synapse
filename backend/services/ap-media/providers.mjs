@@ -1,4 +1,5 @@
 import {safeText} from './intent.mjs';
+import {geminiKeys, temporaryProviderFailure} from './geminiKeys.mjs';
 const GEMINI='https://generativelanguage.googleapis.com/v1beta';
 const MESHY='https://api.meshy.ai/openapi/v2/text-to-3d';
 export class MediaProviderError extends Error {
@@ -18,11 +19,11 @@ async function httpJSON(url, init, timeout=180000) {
   } finally {clearTimeout(timer);}
 }
 export async function createImage({prompt,previousImage,aspectRatio='1:1',quality='standard',referenceImages=[]}) {
-  const key=process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY;
-  if(!key)throw new MediaProviderError('GEMINI_API_KEY_REQUIRED',503);
+  const keys=geminiKeys();
+  if(!keys.length)throw new MediaProviderError('GEMINI_API_KEY_REQUIRED',503);
   const primary=quality==='high'?(process.env.AP_MEDIA_IMAGE_PRO_MODEL||'gemini-3-pro-image'):
-    (process.env.AP_MEDIA_IMAGE_MODEL||'gemini-nano-banana-2.1');
-  const fallbacks=quality==='high'?[process.env.AP_MEDIA_IMAGE_MODEL||'gemini-nano-banana-2.1']:
+    (process.env.AP_MEDIA_IMAGE_MODEL||'gemini-3.1-flash-image');
+  const fallbacks=quality==='high'?[process.env.AP_MEDIA_IMAGE_MODEL||'gemini-3.1-flash-image']:
     [process.env.AP_MEDIA_IMAGE_FALLBACK||'gemini-3.1-flash-lite-image'];
   const refs=referenceImages.length?referenceImages:(previousImage?[previousImage]:[]);
   const parts=[{text:safeText(prompt,13500)}];
@@ -32,22 +33,35 @@ export async function createImage({prompt,previousImage,aspectRatio='1:1',qualit
     parts.push({inlineData:{mimeType:item.mimeType,data:item.base64}});
   }
   let last;
-  for(const model of [primary,...fallbacks]){
-    try {
-      const body={contents:[{role:'user',parts}],generationConfig:{responseModalities:['TEXT','IMAGE'],
-        imageConfig:{aspectRatio,imageSize:quality==='high'?'2K':'1K'}}};
-      const r=await httpJSON(`${GEMINI}/models/${encodeURIComponent(model)}:generateContent`,{
-        method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify(body)},120000);
-      for(const c of (r?.candidates||[]))for(const p of (c.content?.parts||[])){
-        if(['image/png','image/jpeg','image/webp'].includes(p.inlineData?.mimeType)&&typeof p.inlineData.data==='string'){
-          return {buffer:Buffer.from(p.inlineData.data,'base64'),mimeType:p.inlineData.mimeType,provider:model};
+  // At most 3 authorized key attempts per generation, and only on transient provider failures.
+  // A project-quota (429) or billing/access (401/403) error stops immediately.
+  for (const key of keys.slice(0,3)) {
+    let shouldTryNextKey=false;
+    for(const model of [primary,...fallbacks]) {
+      try {
+        const body={contents:[{role:'user',parts}],generationConfig:{responseModalities:['TEXT','IMAGE'],
+          imageConfig:{aspectRatio,imageSize:quality==='high'?'2K':'1K'}}};
+        const r=await httpJSON(`${GEMINI}/models/${encodeURIComponent(model)}:generateContent`,{
+          method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify(body)},120000);
+        for(const c of (r?.candidates||[]))for(const p of (c.content?.parts||[])){
+          if(['image/png','image/jpeg','image/webp'].includes(p.inlineData?.mimeType)&&typeof p.inlineData.data==='string'){
+            return {buffer:Buffer.from(p.inlineData.data,'base64'),mimeType:p.inlineData.mimeType,provider:model};
+          }
         }
+        throw new MediaProviderError('IMAGE_PROVIDER_NO_OUTPUT',502);
+      }catch(e){
+        last=e;
+        if(e.status===401||e.status===403||e.status===429)throw e;
+        if(temporaryProviderFailure(e)) {shouldTryNextKey=true;break;}
+        // For model-not-found and non-quota invalid-model errors, try model fallback
+        // under the SAME authorized key (not another account).
       }
-      throw new MediaProviderError('IMAGE_PROVIDER_NO_OUTPUT',502);
-    }catch(e){last=e;if(e.status===401||e.status===403||e.status===429)break;}
+    }
+    if(!shouldTryNextKey)break;
   }
   throw last||new MediaProviderError('IMAGE_PROVIDER_FAILED',502);
 }
+
 function videoBytes(res) {
   const step=(res?.steps||[]).filter(s=>s.type==='model_output');
   for (const s of step) for (const c of (s.content||[])) {
@@ -58,7 +72,7 @@ function videoBytes(res) {
   return null;
 }
 export async function createVideo({prompt,previousInteractionId,referenceImage,aspectRatio='16:9',onReference=async()=>{}}) {
-  const key=process.env.GEMINI_API_KEY||process.env.GOOGLE_API_KEY;
+  const key=geminiKeys()[0];
   if(!key)throw new MediaProviderError('GEMINI_API_KEY_REQUIRED',503);
   const body={model:process.env.AP_MEDIA_VIDEO_MODEL||'gemini-omni-1.1-flash',
     input:referenceImage?[{type:'image',data:referenceImage.base64,mime_type:referenceImage.mimeType},{type:'text',text:prompt}]:prompt,

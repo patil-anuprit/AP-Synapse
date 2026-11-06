@@ -85,7 +85,7 @@
 }
 
 
-/* AP CRISP GOLDEN LETTER RADIANCE — FINAL */
+/* AP CRISP GOLDEN LETTER RADIANCE — ATTENTION POLISH */
 
 @media (max-width: 767px) {
 
@@ -96,25 +96,39 @@
   .command-section .command-bar #userInput::placeholder,
   .command-section .command-bar.ap-spark-ready
   #userInput::placeholder {
-    color: #E9C681 !important;
-    -webkit-text-fill-color: #E9C681 !important;
+    color: #F0CB82 !important;
+    -webkit-text-fill-color: #F0CB82 !important;
     opacity: 1 !important;
     font-weight: 400 !important;
-    animation: apCrispGoldGlow 5.8s ease-in-out infinite !important;
+    animation: apAttentionGoldGlow 4.8s ease-in-out infinite !important;
   }
 
-  @keyframes apCrispGoldGlow {
+  @keyframes apAttentionGoldGlow {
     0%, 100% {
       text-shadow:
-        0 0 1px rgba(255, 224, 145, .35),
-        0 0 5px rgba(228, 173, 72, .14);
+        0 0 1px rgba(255, 226, 150, .34),
+        0 0 5px rgba(231, 176, 72, .18);
     }
 
-    50% {
+    45% {
       text-shadow:
-        0 0 2px rgba(255, 230, 160, .58),
-        0 0 7px rgba(235, 175, 70, .25),
-        0 0 12px rgba(218, 155, 48, .09);
+        0 0 2px rgba(255, 235, 175, .62),
+        0 0 7px rgba(239, 181, 71, .30),
+        0 0 12px rgba(222, 157, 45, .12);
+    }
+
+    58% {
+      text-shadow:
+        0 0 2px rgba(255, 240, 190, .78),
+        0 0 9px rgba(255, 196, 88, .42),
+        0 0 15px rgba(230, 164, 51, .20);
+    }
+
+    72% {
+      text-shadow:
+        0 0 2px rgba(255, 233, 168, .56),
+        0 0 7px rgba(238, 180, 73, .26),
+        0 0 11px rgba(220, 156, 46, .10);
     }
   }
 }
@@ -122,6 +136,8 @@
 @media (max-width: 767px) and (prefers-reduced-motion: reduce) {
   .command-section .command-bar #userInput::placeholder {
     animation: none !important;
-    text-shadow: 0 0 3px rgba(235, 175, 70, .2) !important;
+    text-shadow:
+      0 0 2px rgba(239, 181, 71, .22),
+      0 0 6px rgba(222, 157, 45, .12) !important;
   }
 }

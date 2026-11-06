@@ -1,5 +1,4 @@
-
-**// Deterministic, conservative chat router. Ordinary questions remain ordinary chat.
+// Deterministic, conservative chat router. Ordinary questions remain ordinary chat.
 export function mediaIntent(raw, previous = null) {
   const text = String(raw || '').trim().slice(0, 8000);
   if (!text) return null;

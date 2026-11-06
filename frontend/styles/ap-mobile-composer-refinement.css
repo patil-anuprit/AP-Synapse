@@ -22,3 +22,27 @@
       0 0 26px rgba(207, 169, 91, 0.055) !important;
   }
 }
+
+/* AP_IDLE_PLACEHOLDER_PULSE_V1 */
+/* Only the idle mobile chat placeholder animates. */
+
+@media (max-width: 767px) {
+
+  @keyframes apPlaceholderBreathing {
+    0%, 100% { opacity: 0.50; }
+    50% { opacity: 0.85; }
+  }
+
+  .command-section .command-bar
+  #userInput:not(:focus):placeholder-shown::placeholder {
+    animation: apPlaceholderBreathing
+      4.8s ease-in-out infinite !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .command-section .command-bar
+    #userInput::placeholder {
+      animation: none !important;
+    }
+  }
+}

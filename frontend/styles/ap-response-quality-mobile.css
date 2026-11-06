@@ -33,3 +33,30 @@
     max-width: 100%;
     height: auto;
 }
+
+/* AP_TABLE_READABILITY_V2 */
+#assistantPage .message.ai .message-body .ap-quality-table-scroll {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+}
+#assistantPage .message.ai .message-body .ap-quality-table-scroll table {
+    width: 100% !important;
+    min-width: 580px !important;
+    max-width: none !important;
+    table-layout: auto !important;
+}
+#assistantPage .message.ai .message-body .ap-quality-table-scroll table:has(tr > :nth-child(4)) {
+    min-width: 780px !important;
+}
+#assistantPage .message.ai .message-body .ap-quality-table-scroll :is(th, td) {
+    min-width: 110px;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    hyphens: none !important;
+    white-space: normal;
+}

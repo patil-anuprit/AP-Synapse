@@ -15,11 +15,14 @@
             return `<pre class="ap-safe-fallback">${escapeHTML(text)}</pre>`;
         }
         const html = window.marked.parse(text, { gfm: true, breaks: true });
-        return window.DOMPurify.sanitize(html, {
+        const safeHTML = window.DOMPurify.sanitize(html, {
             USE_PROFILES: { html: true },
             FORBID_TAGS: ["script", "style", "iframe", "object", "embed", "form", "input", "textarea", "svg", "math"],
             FORBID_ATTR: ["style"],
             ALLOW_DATA_ATTR: false
         });
+        return safeHTML.replace(/<table\b[\s\S]*?<\/table>/gi, table =>
+            '<div class="ap-quality-table-scroll" role="region" aria-label="Scrollable table" tabindex="0">' + table + '</div>'
+        );
     };
 })();

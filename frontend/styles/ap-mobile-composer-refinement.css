@@ -1,0 +1,113 @@
+
+/* AP SYNAPSE — MOBILE CHAT COMPOSER REFINEMENT
+   Scope: composer controls only. Never styles AI responses. */
+
+@media (max-width: 767px) {
+
+  .command-section .command-bar {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 7px 6px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 11px 12px !important;
+    border-radius: 23px !important;
+    border: 1px solid rgba(198, 164, 92, .25) !important;
+    background: linear-gradient(
+      145deg,
+      rgba(28, 28, 27, .98),
+      rgba(13, 14, 14, .985)
+    ) !important;
+    box-shadow: 0 15px 38px rgba(0, 0, 0, .35) !important;
+    backdrop-filter: blur(18px) !important;
+    -webkit-backdrop-filter: blur(18px) !important;
+  }
+
+  .command-section .command-bar #userInput {
+    order: -20 !important;
+    flex: 1 1 calc(100% - 60px) !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: calc(100% - 60px) !important;
+    height: 46px !important;
+    min-height: 46px !important;
+    margin: 0 !important;
+    padding: 0 9px !important;
+    font-size: 16px !important;
+    line-height: 1.4 !important;
+    color: #f4f1e9 !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
+  .command-section .command-bar #userInput::placeholder {
+    color: rgba(228, 225, 216, .48) !important;
+  }
+
+  .command-section .command-bar #sendBtn {
+    order: -19 !important;
+    flex: 0 0 46px !important;
+    width: 46px !important;
+    min-width: 46px !important;
+    height: 46px !important;
+    min-height: 46px !important;
+    margin: 0 0 0 auto !important;
+    padding: 0 !important;
+    border-radius: 15px !important;
+    border: 1px solid rgba(235, 201, 129, .35) !important;
+    background: #c9a45a !important;
+    color: #15130f !important;
+    box-shadow: none !important;
+  }
+
+  .command-section .command-bar #sendBtn:disabled {
+    opacity: .55 !important;
+  }
+
+  .command-section .command-bar :is(
+    #attachBtn,
+    #imageGenBtn,
+    #voiceBtn,
+    #speakBtn,
+    #webBtn,
+    #deepThinkBtn,
+    #stopBtn
+  ) {
+    flex: 0 0 38px !important;
+    width: 38px !important;
+    min-width: 38px !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 11px !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    color: #c8c5be !important;
+    box-shadow: none !important;
+  }
+
+  .command-section .command-bar #liveTalkBtn {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: 70px !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    margin-left: auto !important;
+    padding: 0 8px !important;
+    border-radius: 11px !important;
+    white-space: nowrap !important;
+    font-size: 12px !important;
+  }
+
+  .command-section .command-bar button:focus-visible {
+    outline: 2px solid #c9a45a !important;
+    outline-offset: 2px !important;
+  }
+}

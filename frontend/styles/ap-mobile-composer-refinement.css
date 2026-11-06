@@ -1,0 +1,257 @@
+
+/* AP SYNAPSE — SUBTLE GOLDEN COMPOSER GLOW */
+/* Mobile only. Original layout and controls preserved. */
+
+@media (max-width: 767px) {
+
+  .command-section .command-bar {
+    border-color: rgba(207, 169, 91, 0.38) !important;
+
+    box-shadow:
+      0 0 0 1px rgba(207, 169, 91, 0.06),
+      0 0 10px rgba(207, 169, 91, 0.10),
+      0 0 22px rgba(207, 169, 91, 0.045) !important;
+  }
+
+  .command-section .command-bar:focus-within {
+    border-color: rgba(207, 169, 91, 0.58) !important;
+
+    box-shadow:
+      0 0 0 1px rgba(207, 169, 91, 0.10),
+      0 0 13px rgba(207, 169, 91, 0.15),
+      0 0 26px rgba(207, 169, 91, 0.055) !important;
+  }
+}
+
+
+/* AP SYNAPSE — GOLDEN RADIANCE FROM EVERY LETTER */
+/* Stable gold lettering, gently breathing light. */
+
+@media (max-width: 767px) {
+
+  .command-section #userInput::placeholder {
+    color: #d9b56e !important;
+    opacity: 1 !important;
+    animation: none !important;
+  }
+
+  .command-section .command-bar.ap-spark-ready
+  #userInput::placeholder {
+    color: transparent !important;
+    opacity: 0 !important;
+  }
+
+  .command-section .ap-gold-placeholder {
+    position: absolute !important;
+    z-index: 3;
+    pointer-events: none;
+    white-space: nowrap;
+    overflow: visible;
+    color: #dfb970 !important;
+    opacity: 1 !important;
+
+    background: none !important;
+    -webkit-text-fill-color: #dfb970 !important;
+
+    text-shadow:
+      0 0 3px rgba(255, 211, 120, .38),
+      0 0 8px rgba(218, 165, 65, .19),
+      0 0 14px rgba(218, 165, 65, .07);
+
+    animation: apLetterRadiance 4.8s ease-in-out infinite !important;
+  }
+
+  @keyframes apLetterRadiance {
+    0%, 100% {
+      text-shadow:
+        0 0 3px rgba(255, 211, 120, .38),
+        0 0 8px rgba(218, 165, 65, .19),
+        0 0 14px rgba(218, 165, 65, .07);
+    }
+
+    50% {
+      text-shadow:
+        0 0 4px rgba(255, 226, 150, .75),
+        0 0 10px rgba(235, 180, 77, .43),
+        0 0 19px rgba(218, 165, 65, .20);
+    }
+  }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .command-section .ap-gold-placeholder {
+    animation: none !important;
+  }
+}
+
+
+/* AP CRISP GOLDEN LETTER RADIANCE — ATTENTION POLISH */
+
+@media (max-width: 767px) {
+
+  .command-section .ap-gold-placeholder {
+    display: none !important;
+  }
+
+  .command-section .command-bar #userInput::placeholder,
+  .command-section .command-bar.ap-spark-ready
+  #userInput::placeholder {
+    color: #F0CB82 !important;
+    -webkit-text-fill-color: #F0CB82 !important;
+    opacity: 1 !important;
+    font-weight: 400 !important;
+    animation: apAttentionGoldGlow 4.8s ease-in-out infinite !important;
+  }
+
+  @keyframes apAttentionGoldGlow {
+    0%, 100% {
+      text-shadow:
+        0 0 1px rgba(255, 226, 150, .34),
+        0 0 5px rgba(231, 176, 72, .18);
+    }
+
+    45% {
+      text-shadow:
+        0 0 2px rgba(255, 235, 175, .62),
+        0 0 7px rgba(239, 181, 71, .30),
+        0 0 12px rgba(222, 157, 45, .12);
+    }
+
+    58% {
+      text-shadow:
+        0 0 2px rgba(255, 240, 190, .78),
+        0 0 9px rgba(255, 196, 88, .42),
+        0 0 15px rgba(230, 164, 51, .20);
+    }
+
+    72% {
+      text-shadow:
+        0 0 2px rgba(255, 233, 168, .56),
+        0 0 7px rgba(238, 180, 73, .26),
+        0 0 11px rgba(220, 156, 46, .10);
+    }
+  }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .command-section .command-bar #userInput::placeholder {
+    animation: none !important;
+    text-shadow:
+      0 0 2px rgba(239, 181, 71, .22),
+      0 0 6px rgba(222, 157, 45, .12) !important;
+  }
+}
+
+
+/* AP_LUXURY_CHAMPAGNE_GLOW_V1 */
+/* Mobile placeholder only — crisp, luxurious, restrained. */
+
+@media (max-width: 767px) {
+
+  .command-section .ap-gold-placeholder {
+    display: none !important;
+  }
+
+  .command-section .command-bar #userInput::placeholder,
+  .command-section .command-bar.ap-spark-ready
+  #userInput::placeholder {
+    color: #EAC580 !important;
+    -webkit-text-fill-color: #EAC580 !important;
+    opacity: 1 !important;
+    font-weight: 400 !important;
+
+    animation: apLuxuryGold 6.5s ease-in-out infinite !important;
+  }
+
+  @keyframes apLuxuryGold {
+    0%, 100% {
+      text-shadow:
+        0 0 1px rgba(255, 231, 174, .35),
+        0 0 4px rgba(220, 168, 76, .17),
+        0 0 8px rgba(205, 145, 50, .06);
+    }
+
+    50% {
+      text-shadow:
+        0 0 1.5px rgba(255, 239, 190, .70),
+        0 0 5px rgba(237, 183, 83, .28),
+        0 0 10px rgba(218, 155, 51, .10);
+    }
+  }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .command-section .command-bar #userInput::placeholder {
+    animation: none !important;
+    text-shadow: 0 0 4px rgba(220, 168, 76, .17) !important;
+  }
+}
+
+
+/* AP_LUXURY_DESKTOP_GLOW_V1 */
+/* Laptop and desktop placeholder only. No layout changes. */
+
+@media (min-width: 768px) {
+
+  .command-section .command-bar #userInput::placeholder {
+    color: #EAC580 !important;
+    -webkit-text-fill-color: #EAC580 !important;
+    opacity: 1 !important;
+    font-weight: 400 !important;
+    animation: apLuxuryDesktopGold
+      6.5s ease-in-out infinite !important;
+  }
+
+  @keyframes apLuxuryDesktopGold {
+    0%, 100% {
+      text-shadow:
+        0 0 1px rgba(255, 231, 174, .35),
+        0 0 4px rgba(220, 168, 76, .17),
+        0 0 8px rgba(205, 145, 50, .06);
+    }
+
+    50% {
+      text-shadow:
+        0 0 1.5px rgba(255, 239, 190, .70),
+        0 0 5px rgba(237, 183, 83, .28),
+        0 0 10px rgba(218, 155, 51, .10);
+    }
+  }
+}
+
+@media (min-width: 768px) and (prefers-reduced-motion: reduce) {
+  .command-section .command-bar #userInput::placeholder {
+    animation: none !important;
+    text-shadow:
+      0 0 4px rgba(220, 168, 76, .17) !important;
+  }
+}
+
+
+/* AP_LUXURY_DESKTOP_COMPOSER_BORDER_V1 */
+/* Desktop typing-box border only; original layout preserved. */
+
+@media (min-width: 768px) {
+
+  .command-section .command-bar {
+    border-color: rgba(207, 169, 91, 0.38) !important;
+
+    box-shadow:
+      0 0 0 1px rgba(207, 169, 91, 0.06),
+      0 0 10px rgba(207, 169, 91, 0.10),
+      0 0 22px rgba(207, 169, 91, 0.045) !important;
+
+    transition:
+      border-color 250ms ease,
+      box-shadow 350ms ease !important;
+  }
+
+  .command-section .command-bar:focus-within {
+    border-color: rgba(207, 169, 91, 0.58) !important;
+
+    box-shadow:
+      0 0 0 1px rgba(207, 169, 91, 0.10),
+      0 0 13px rgba(207, 169, 91, 0.15),
+      0 0 26px rgba(207, 169, 91, 0.055) !important;
+  }
+}

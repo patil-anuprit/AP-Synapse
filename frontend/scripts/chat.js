@@ -180,7 +180,7 @@ function addMessage(type, text) {
     body.className = "message-body";
 
     body.innerHTML =
-        marked.parse(String(text ?? ""));
+        window.apSafeMarkdown(String(text ?? ""));
 
     wrapper.innerHTML = `
         <div class="avatar">
@@ -1912,7 +1912,7 @@ const renderAIMessage = () => {
         renderLinks(rawText);
 
     aiMessage.innerHTML =
-        marked.parse(rendered) +
+        window.apSafeMarkdown(rendered) +
         '<span class="typingCursor">?</span>';
 
     // Make every rendered source URL visibly clickable.
@@ -2314,32 +2314,11 @@ if (finalChunk) {
 // AP SYNAPSE ï¿½ FINAL RESPONSE RENDER
 // =====================================
 
+// AP_SAFE_MARKDOWN_V1: let Marked handle Markdown and GFM autolinks.
+// Never inject HTML into the Markdown source; it corrupts code and links.
 function renderLinks(text) {
-
-    return String(text || "").replace(
-        /https?:\/\/[^\s<>"')]+/g,
-        (url) => {
-
-            const cleanUrl =
-                url.replace(/[.,;!?]+$/, "");
-
-            return `
-                <a
-                    href="${cleanUrl}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="ap-source-link"
-                >
-                    <span class="ap-source-link-icon">?</span>
-                    <span class="ap-source-link-text">
-                        ${cleanUrl}
-                    </span>
-                </a>
-            `;
-        }
-    );
+    return String(text ?? "");
 }
-
 // ============================================================
 // AP SYNAPSE ï¿½ PREMIUM WEB SOURCE CARDS
 // ============================================================
@@ -2380,7 +2359,7 @@ function renderAPSynapseSources(sources) {
                         source.snippet || ""
                     );
 
-                if (!url) return "";
+                if (!/^https?:\/\//i.test(url)) return "";
 
                 return `
                     <a
@@ -2489,7 +2468,7 @@ const renderedResponse =
     renderLinks(rawText);
 
 aiMessage.innerHTML =
-    marked.parse(renderedResponse) +
+    window.apSafeMarkdown(renderedResponse) +
     renderAPSynapseSources(
         apSynapseSources
     );

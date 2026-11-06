@@ -23,13 +23,14 @@
   }
 }
 
-/* AP SYNAPSE — STEADY GOLD WITH SOFT TRAVELLING SPARK */
-/* Mobile placeholder only. No layout changes. */
+
+/* AP SYNAPSE — GOLDEN RADIANCE FROM EVERY LETTER */
+/* Stable gold lettering, gently breathing light. */
 
 @media (max-width: 767px) {
 
   .command-section #userInput::placeholder {
-    color: #d5b16e !important;
+    color: #d9b56e !important;
     opacity: 1 !important;
     animation: none !important;
   }
@@ -40,43 +41,45 @@
     opacity: 0 !important;
   }
 
-  .command-section .command-bar.ap-spark-ready
-  #userInput:placeholder-shown {
-    animation: none !important;
-  }
-
   .command-section .ap-gold-placeholder {
     position: absolute !important;
     z-index: 3;
     pointer-events: none;
     white-space: nowrap;
-    overflow: hidden;
-    color: #d5b16e;
-    background: linear-gradient(
-      110deg,
-      #d5b16e 0%,
-      #d5b16e 43%,
-      #fff0bf 50%,
-      #d5b16e 57%,
-      #d5b16e 100%
-    );
-    background-size: 250% 100%;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: apGoldenTextSpark 7s ease-in-out infinite;
+    overflow: visible;
+    color: #dfb970 !important;
+    opacity: 1 !important;
+
+    background: none !important;
+    -webkit-text-fill-color: #dfb970 !important;
+
+    text-shadow:
+      0 0 3px rgba(255, 211, 120, .38),
+      0 0 8px rgba(218, 165, 65, .19),
+      0 0 14px rgba(218, 165, 65, .07);
+
+    animation: apLetterRadiance 4.8s ease-in-out infinite !important;
   }
 
-  @keyframes apGoldenTextSpark {
-    0%, 20% { background-position: 100% 50%; }
-    52%, 100% { background-position: 0% 50%; }
+  @keyframes apLetterRadiance {
+    0%, 100% {
+      text-shadow:
+        0 0 3px rgba(255, 211, 120, .38),
+        0 0 8px rgba(218, 165, 65, .19),
+        0 0 14px rgba(218, 165, 65, .07);
+    }
+
+    50% {
+      text-shadow:
+        0 0 4px rgba(255, 226, 150, .75),
+        0 0 10px rgba(235, 180, 77, .43),
+        0 0 19px rgba(218, 165, 65, .20);
+    }
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
   .command-section .ap-gold-placeholder {
     animation: none !important;
-    background: none !important;
-    -webkit-text-fill-color: #d5b16e !important;
   }
 }

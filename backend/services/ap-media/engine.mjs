@@ -1,4 +1,7 @@
 // AP Synapse chat-first media engine: no Canvas dependency, UI change or new studio.
+
+import {hasGeminiKeys} from './geminiKeys.mjs';
+
 import {randomUUID,createHash} from 'node:crypto';
 import {Router} from 'express';
 import {pool} from '../../database/db.js';
@@ -181,7 +184,7 @@ export function createMediaEngine({db=pool,getContext=async()=>({history:[]}),
     if(!intent)return next();
     if(intent.kind==='video'&&process.env.AP_MEDIA_VIDEO_ENABLED!=='true')return res.status(503).json({error:'VIDEO_NOT_ENABLED'});
     if(intent.kind==='model3d'&&process.env.AP_MEDIA_3D_ENABLED!=='true')return res.status(503).json({error:'3D_NOT_ENABLED'});
-    if(intent.kind==='video'&&!process.env.GEMINI_API_KEY&&!process.env.GOOGLE_API_KEY)return res.status(503).json({error:'GEMINI_API_KEY_REQUIRED'});
+    if(intent.kind==='video'&&!hasGeminiKeys())return res.status(503).json({error:'GEMINI_API_KEY_REQUIRED'});
     if(intent.kind==='model3d'&&!process.env.MESHY_API_KEY)return res.status(503).json({error:'MESHY_API_KEY_REQUIRED'});
     try {
       const memory=await db.query(`SELECT message FROM ap_media_chat_turns WHERE owner_id=$1 AND session_key=$2

@@ -226,3 +226,32 @@
       0 0 4px rgba(220, 168, 76, .17) !important;
   }
 }
+
+
+/* AP_LUXURY_DESKTOP_COMPOSER_BORDER_V1 */
+/* Desktop typing-box border only; original layout preserved. */
+
+@media (min-width: 768px) {
+
+  .command-section .command-bar {
+    border-color: rgba(207, 169, 91, 0.38) !important;
+
+    box-shadow:
+      0 0 0 1px rgba(207, 169, 91, 0.06),
+      0 0 10px rgba(207, 169, 91, 0.10),
+      0 0 22px rgba(207, 169, 91, 0.045) !important;
+
+    transition:
+      border-color 250ms ease,
+      box-shadow 350ms ease !important;
+  }
+
+  .command-section .command-bar:focus-within {
+    border-color: rgba(207, 169, 91, 0.58) !important;
+
+    box-shadow:
+      0 0 0 1px rgba(207, 169, 91, 0.10),
+      0 0 13px rgba(207, 169, 91, 0.15),
+      0 0 26px rgba(207, 169, 91, 0.055) !important;
+  }
+}

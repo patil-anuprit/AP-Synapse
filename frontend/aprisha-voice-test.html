@@ -86,6 +86,22 @@ The browser's speech service may process spoken audio.</p>
 <pre id="log"></pre>
 <button id="copy">Copy results</button>
 </div>
+
+<!-- AP_APRISHA_STT_STAGING_V1 -->
+<div class="panel">
+<strong>Test 3 · Groq mobile transcription (staging only)</strong>
+<p>Record 3–12 seconds, then send audio to your test backend.</p>
+<input id="stt-host" type="url" placeholder="https://YOUR-STAGING-BACKEND.onrender.com"
+ style="width:100%;padding:12px;background:#171717;color:white;border:1px solid #655332;border-radius:9px">
+<input id="stt-token" type="password" placeholder="Staging test token"
+ style="width:100%;padding:12px;background:#171717;color:white;border:1px solid #655332;border-radius:9px;margin-top:8px">
+<select id="stt-language"><option value="en">English (India)</option>
+<option value="hi">Hindi</option><option value="auto">Auto detect</option></select>
+<button id="stt-start">Start recording</button>
+<button id="stt-stop" disabled>Stop and transcribe</button>
+<p id="stt-status">Not started</p>
+<strong>Whisper transcript:</strong><p id="stt-result">—</p>
+</div>
 </main>
 
 <script>
@@ -268,5 +284,70 @@ The browser's speech service may process spoken audio.</p>
     log("Diagnostic ready");
 })();
 </script>
+
+<script>
+// AP_APRISHA_STT_STAGING_V1
+(() => {
+  const el = id => document.getElementById(id);
+  let media, recorder, chunks = [], clock;
+  function release() {
+    if (media) media.getTracks().forEach(t => t.stop());
+    media = null;
+    clearTimeout(clock);
+  }
+  function status(s) { el('stt-status').textContent = s; }
+  el('stt-start').onclick = async () => {
+    if (recorder && recorder.state !== 'inactive') return;
+    if (!el('stt-host').value || !el('stt-token').value) {
+      status('Enter staging backend URL and test token first.'); return;
+    }
+    if (!window.MediaRecorder) { status('MediaRecorder unsupported'); return; }
+    try {
+      media = await navigator.mediaDevices.getUserMedia({audio:true});
+      const types = ['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg'];
+      const type = types.find(t => MediaRecorder.isTypeSupported(t));
+      recorder = new MediaRecorder(media, type ? {mimeType:type} : undefined);
+      chunks = [];
+      recorder.ondataavailable = event => { if (event.data.size) chunks.push(event.data); };
+      recorder.onstop = async () => {
+        release();
+        el('stt-start').disabled = false;
+        el('stt-stop').disabled = true;
+        const mime = recorder.mimeType || 'audio/webm';
+        const ext = mime.includes('mp4') ? 'm4a' : mime.includes('ogg') ? 'ogg' : 'webm';
+        const blob = new Blob(chunks, {type:mime});
+        if (blob.size < 500) { status('Recording too short'); return; }
+        const form = new FormData();
+        form.append('audio', blob, 'speech.' + ext);
+        form.append('language', el('stt-language').value);
+        status('Transcribing...');
+        try {
+          const base = el('stt-host').value.replace(/\/+$/, '');
+          if (!/^https:\/\//i.test(base)) throw Error('Use an HTTPS staging URL');
+          const r = await fetch(base + '/aprisha/transcribe', {
+            method:'POST', headers:{'x-ap-stt-test-token':el('stt-token').value}, body:form
+          });
+          const result = await r.json();
+          if (!r.ok || !result.ok) throw Error(result.error || 'HTTP ' + r.status);
+          el('stt-result').textContent = result.text || '(No speech detected)';
+          status('Transcription completed');
+        } catch (err) { status('Error: ' + err.message); }
+      };
+      recorder.start();
+      el('stt-start').disabled = true;
+      el('stt-stop').disabled = false;
+      status('Recording — speak now');
+      clock = setTimeout(() => {
+        if (recorder?.state === 'recording') recorder.stop();
+      }, 12000);
+    } catch (err) { release(); status('Microphone error: ' + err.message); }
+  };
+  el('stt-stop').onclick = () => {
+    if (recorder?.state === 'recording') recorder.stop();
+  };
+  window.addEventListener('pagehide', release);
+})();
+</script>
+
 </body>
 </html>

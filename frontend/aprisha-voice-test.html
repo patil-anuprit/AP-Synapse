@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>APRISHA · Mobile Voice Diagnostic</title>
+<style>
+* { box-sizing:border-box }
+body {
+    margin:0; padding:22px 16px;
+    background:#090a0b; color:#f5f1e9;
+    font:15px/1.5 system-ui,sans-serif;
+}
+main { max-width:520px; margin:auto }
+h1 { font-size:23px; color:#eccb8c }
+p { color:#b6b6b6 }
+button,select {
+    width:100%; padding:15px; margin:7px 0;
+    border-radius:12px; font:inherit;
+}
+button {
+    border:1px solid #ad874d;
+    background:#211b13; color:#f6dfaf;
+}
+select {
+    background:#181818; color:white;
+    border:1px solid #555;
+}
+.panel {
+    border:1px solid #51442e;
+    background:#141414; border-radius:14px;
+    padding:16px; margin:15px 0;
+}
+#meter {
+    height:12px; width:0%;
+    background:#e8bf76; border-radius:9px;
+}
+.track {
+    background:#343434; border-radius:9px;
+    overflow:hidden;
+}
+pre {
+    white-space:pre-wrap; overflow-wrap:anywhere;
+    font:12px/1.7 monospace;
+    max-height:370px; overflow:auto;
+}
+strong { color:#f3d69e }
+</style>
+</head>
+<body>
+<main>
+<h1>APRISHA · Voice Diagnostic</h1>
+<p>This test runs without APRISHA's normal voice engines.
+It does not upload or save recordings to AP Synapse.
+The browser's speech service may process spoken audio.</p>
+
+<div class="panel">
+<strong>Device status</strong>
+<p id="support">Checking browser...</p>
+</div>
+
+<div class="panel">
+<strong>Test 1 · Microphone signal</strong>
+<p>Speak continuously for four seconds.</p>
+<button id="mic">Test microphone signal</button>
+<div class="track"><div id="meter"></div></div>
+<p id="level">Not tested</p>
+</div>
+
+<div class="panel">
+<strong>Test 2 · Speech recognition</strong>
+<p>Select language, then speak one sentence.</p>
+<select id="lang">
+<option value="en-IN">English (India)</option>
+<option value="en-US">English (US)</option>
+<option value="hi-IN">Hindi (India)</option>
+</select>
+<button id="speech">Start recognition</button>
+<button id="stop">Stop listening</button>
+<p><strong>Transcript:</strong></p>
+<p id="transcript">No words recognized yet.</p>
+</div>
+
+<div class="panel">
+<strong>Diagnostic events</strong>
+<pre id="log"></pre>
+<button id="copy">Copy results</button>
+</div>
+</main>
+
+<script>
+(() => {
+    const $ = id => document.getElementById(id);
+    const SR = window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    let stream = null;
+    let context = null;
+    let interval = null;
+    let timeout = null;
+    let recognition = null;
+    let peak = 0;
+
+    function log(message) {
+        $("log").textContent +=
+            new Date().toLocaleTimeString() +
+            "  " + message + "\n";
+        $("log").scrollTop = $("log").scrollHeight;
+    }
+
+    function stopMic() {
+        clearInterval(interval);
+        clearTimeout(timeout);
+        interval = null;
+        timeout = null;
+
+        if (stream) {
+            stream.getTracks().forEach(t => t.stop());
+            stream = null;
+        }
+
+        if (context) {
+            context.close().catch(() => {});
+            context = null;
+        }
+
+        $("meter").style.width = "0%";
+    }
+
+    $("support").textContent =
+        "HTTPS: " + window.isSecureContext +
+        " | Microphone: " +
+        Boolean(navigator.mediaDevices?.getUserMedia) +
+        " | SpeechRecognition: " + Boolean(SR);
+
+    $("mic").onclick = async () => {
+        stopMic();
+        peak = 0;
+        $("level").textContent = "Requesting microphone...";
+
+        try {
+            stream = await navigator.mediaDevices
+                .getUserMedia({audio:true,video:false});
+
+            const AC = window.AudioContext ||
+                window.webkitAudioContext;
+
+            if (!AC) throw Error("AudioContext unavailable");
+
+            context = new AC();
+            const source =
+                context.createMediaStreamSource(stream);
+            const analyser = context.createAnalyser();
+            analyser.fftSize = 1024;
+            source.connect(analyser);
+
+            const samples =
+                new Float32Array(analyser.fftSize);
+
+            log("Microphone stream opened");
+
+            interval = setInterval(() => {
+                analyser.getFloatTimeDomainData(samples);
+                let sum = 0;
+
+                for (const value of samples)
+                    sum += value * value;
+
+                const rms = Math.sqrt(sum / samples.length);
+                peak = Math.max(peak,rms);
+
+                $("meter").style.width =
+                    Math.min(100,rms * 1200) + "%";
+
+                $("level").textContent =
+                    "Signal level: " + rms.toFixed(4);
+            },100);
+
+            timeout = setTimeout(() => {
+                log("Microphone peak: " + peak.toFixed(4));
+                $("level").textContent =
+                    "Peak signal: " + peak.toFixed(4);
+                stopMic();
+            },4000);
+        } catch(error) {
+            log("Microphone ERROR: " +
+                (error.name || error.message));
+            $("level").textContent = "Microphone failed";
+            stopMic();
+        }
+    };
+
+    $("speech").onclick = () => {
+        stopMic();
+
+        if (!SR) {
+            log("SpeechRecognition unavailable");
+            return;
+        }
+
+        if (recognition) {
+            try { recognition.abort(); } catch {}
+        }
+
+        recognition = new SR();
+        const r = recognition;
+
+        r.lang = $("lang").value;
+        r.continuous = false;
+        r.interimResults = true;
+        r.maxAlternatives = 1;
+
+        $("transcript").textContent = "Waiting for speech...";
+        log("Starting recognition: " + r.lang);
+
+        r.onstart = () => log("Recognition started");
+        r.onaudiostart = () => log("Audio capture started");
+        r.onsoundstart = () => log("Sound detected");
+        r.onspeechstart = () => log("Speech detected");
+        r.onnomatch = () => log("Speech not matched");
+
+        r.onresult = event => {
+            const text = Array.from(event.results)
+                .map(result => result[0]?.transcript || "")
+                .join(" ");
+
+            $("transcript").textContent = text;
+            log("Transcript: " + text);
+        };
+
+        r.onerror = event =>
+            log("Recognition ERROR: " + event.error);
+
+        r.onend = () => log("Recognition ended");
+
+        try {
+            r.start();
+        } catch(error) {
+            log("Start ERROR: " +
+                (error.name || error.message));
+        }
+    };
+
+    $("stop").onclick = () => {
+        stopMic();
+        if (recognition) {
+            try { recognition.stop(); } catch {}
+        }
+        log("Stopped by user");
+    };
+
+    $("copy").onclick = async () => {
+        const result =
+            $("support").textContent + "\n" +
+            $("level").textContent + "\n" +
+            $("transcript").textContent + "\n" +
+            $("log").textContent;
+
+        try {
+            await navigator.clipboard.writeText(result);
+            alert("Results copied");
+        } catch {
+            log("Copy unavailable: take a screenshot");
+        }
+    };
+
+    window.addEventListener("pagehide",stopMic);
+    log("Diagnostic ready");
+})();
+</script>
+</body>
+</html>

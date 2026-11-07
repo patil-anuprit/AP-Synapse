@@ -1,25 +1,93 @@
-/* AP_TABLE_NOSCROLL_V8 — mobile assistant tables only */
-.ap-premium-response-table .ap-table-toolbar,.ap-premium-response-table .ap-table-card-list{display:none}
-@media(max-width:760px){
-  .ap-premium-response-table{box-sizing:border-box;width:100%;min-width:0;max-width:100%;margin:14px 0 20px;overflow:visible;border:0;border-radius:0;box-shadow:none;background:transparent;color:inherit}
-  .ap-premium-response-table .ap-table-toolbar{display:flex;justify-content:flex-end;padding:2px 0 6px;border:0;background:transparent}
-  .ap-premium-response-table .ap-table-caption,.ap-premium-response-table .ap-table-swipe-hint,.ap-premium-response-table .ap-table-card-list{display:none!important}
-  .ap-premium-response-table .ap-table-copy{appearance:none;border:0;background:transparent;padding:4px 3px;color:inherit;opacity:.7;font:400 13px system-ui}
-  .ap-premium-response-table .ap-table-copy:focus-visible{outline:2px solid currentColor}
-  .ap-premium-response-table.ap-table-condensed>.ap-table-scroll{display:none!important}
-  .ap-premium-response-table.ap-table-condensed>.ap-table-summary{display:table!important;position:static!important;table-layout:fixed!important;box-sizing:border-box!important;width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;border:0!important;border-collapse:collapse!important;background:transparent!important;box-shadow:none!important}
-  .ap-premium-response-table.ap-table-condensed>.ap-table-summary :is(thead,tbody,tr,th,td){position:static!important;inset:auto!important;transform:none!important;z-index:auto!important;box-shadow:none!important;background:transparent!important}
-  .ap-premium-response-table.ap-table-condensed>.ap-table-summary :is(th,td){display:table-cell!important;box-sizing:border-box!important;min-width:0!important;max-width:none!important;padding:12px 12px 12px 0!important;border:0!important;border-bottom:1px solid rgba(255,255,255,.13)!important;text-align:left!important;vertical-align:top!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important;color:inherit!important;font:400 16px/1.55 system-ui!important}
-  .ap-premium-response-table.ap-table-condensed>.ap-table-summary th{font-weight:650!important}
-  .ap-premium-response-table.ap-table-condensed>.ap-table-summary :is(th,td):first-child{width:39%!important;padding-right:14px!important}
-  .ap-premium-response-table.ap-table-condensed>.ap-table-summary :is(th,td):last-child{width:61%!important;padding-right:0!important}
-  .ap-premium-response-table.ap-table-condensed>.ap-table-summary tbody tr:last-child td{border-bottom:0!important}
-  .ap-premium-response-table.ap-table-condensed>.ap-table-notes{display:block!important;position:static!important;transform:none!important;box-sizing:border-box!important;width:100%!important;min-width:0!important;max-width:100%!important;overflow:visible!important;margin:18px 0 0!important;padding:0!important;background:transparent!important;border:0!important;color:inherit!important;font:400 16px/1.65 system-ui!important;overflow-wrap:anywhere!important}
-  .ap-premium-response-table.ap-table-condensed>.ap-table-notes .ap-table-notes-title{font:650 16px/1.5 system-ui!important;margin:0 0 12px!important}
-  .ap-premium-response-table.ap-table-condensed>.ap-table-notes h4{font:650 16px/1.5 system-ui!important;margin:12px 0 4px!important}
-  .ap-premium-response-table.ap-table-condensed>.ap-table-notes p{font:400 16px/1.65 system-ui!important;margin:0 0 8px!important;opacity:1!important}
-  .ap-premium-response-table:not(.ap-table-condensed)>.ap-table-scroll{display:block;max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
-  .ap-premium-response-table:not(.ap-table-condensed) .ap-table-scroll :is(thead,tbody,tr,th,td){position:static!important;top:auto!important;left:auto!important;inset:auto!important;transform:none!important;z-index:auto!important;box-shadow:none!important}
-  .ap-premium-response-table:not(.ap-table-condensed) .ap-table-scroll :is(th,td){padding:11px 14px!important;font:400 15px/1.55 system-ui!important;white-space:normal!important;vertical-align:top!important;overflow-wrap:anywhere!important}
+/* AP_TABLE_GRID_NO_STICKY_V9 — mobile assistant tables only */
+.ap-premium-response-table .ap-table-summary-grid,
+.ap-premium-response-table .ap-table-notes,
+.ap-premium-response-table .ap-table-card-list {display:none;}
+@media(max-width:760px) {
+  .ap-premium-response-table {
+    box-sizing:border-box!important;display:block!important;
+    width:100%!important;max-width:100%!important;min-width:0!important;
+    margin:12px 0 16px!important;padding:0!important;
+    border:0!important;border-radius:0!important;background:transparent!important;
+    box-shadow:none!important;overflow-x:clip!important;overflow-y:visible!important;
+  }
+  .ap-premium-response-table .ap-table-toolbar {
+    display:flex!important;justify-content:flex-end!important;
+    padding:0 0 5px!important;border:0!important;background:transparent!important;
+  }
+  .ap-premium-response-table .ap-table-caption,
+  .ap-premium-response-table .ap-table-swipe-hint,
+  .ap-premium-response-table .ap-table-card-list {display:none!important;}
+  .ap-premium-response-table .ap-table-copy {
+    font:400 13px/1.4 system-ui!important;background:transparent!important;
+    border:0!important;padding:4px 2px!important;color:inherit!important;opacity:.75;
+  }
+  /* Only complex/uncondensed ORIGINAL tables may horizontally scroll. */
+  .ap-premium-response-table:not(.ap-table-condensed)>.ap-table-scroll {
+    display:block!important;max-width:100%!important;width:100%!important;
+    overflow-x:auto!important;overflow-y:hidden!important;
+    -webkit-overflow-scrolling:touch;
+  }
+  .ap-premium-response-table:not(.ap-table-condensed) .ap-table-scroll :is(thead,tbody,tr,th,td) {
+    position:static!important;left:auto!important;top:auto!important;
+    right:auto!important;transform:none!important;z-index:auto!important;
+    box-shadow:none!important;
+  }
+  .ap-premium-response-table:not(.ap-table-condensed) .ap-table-scroll :is(th,td) {
+    min-width:120px!important;padding:12px!important;font:400 15px/1.55 system-ui!important;
+    border:0!important;border-bottom:1px solid rgba(160,160,160,.23)!important;
+    background:transparent!important;color:inherit!important;white-space:normal!important;
+  }
+  .ap-premium-response-table:not(.ap-table-condensed) .ap-table-scroll th {font-weight:650!important;}
+  /* For compact comparison data: no scrolling HTML table or sticky cells exist. */
+  .ap-premium-response-table.ap-table-condensed>.ap-table-scroll,
+  .ap-premium-response-table.ap-table-condensed>.ap-table-summary {display:none!important;}
+  .ap-premium-response-table.ap-table-condensed>.ap-table-summary-grid {
+    display:block!important;position:static!important;box-sizing:border-box!important;
+    width:100%!important;max-width:100%!important;min-width:0!important;
+    margin:0!important;padding:0!important;overflow:visible!important;
+    background:transparent!important;border:0!important;box-shadow:none!important;
+  }
+  .ap-premium-response-table .ap-table-summary-grid>.ap-table-grid-row {
+    display:grid!important;position:static!important;
+    grid-template-columns:minmax(0,39%) minmax(0,61%)!important;
+    width:100%!important;min-width:0!important;max-width:100%!important;
+    border-bottom:1px solid rgba(160,160,160,.22)!important;
+    overflow:visible!important;transform:none!important;
+    background:transparent!important;
+  }
+  .ap-premium-response-table .ap-table-summary-grid>.ap-table-grid-row:last-child {border-bottom:0!important;}
+  .ap-premium-response-table .ap-table-summary-grid .ap-table-grid-cell {
+    display:block!important;position:static!important;min-width:0!important;max-width:100%!important;
+    padding:12px 12px 12px 0!important;box-sizing:border-box!important;
+    font:400 15.5px/1.55 system-ui,sans-serif!important;
+    color:inherit!important;background:transparent!important;
+    overflow-wrap:anywhere!important;word-break:normal!important;white-space:normal!important;
+    text-align:left!important;transform:none!important;box-shadow:none!important;
+  }
+  .ap-premium-response-table .ap-table-summary-grid .ap-table-grid-row:first-child .ap-table-grid-cell {
+    font-weight:650!important;
+  }
+  .ap-premium-response-table .ap-table-summary-grid .ap-table-grid-row>.ap-table-grid-cell:first-child {
+    font-weight:600!important;padding-right:14px!important;
+  }
+  .ap-premium-response-table.ap-table-condensed>.ap-table-notes {
+    display:block!important;position:static!important;
+    width:100%!important;max-width:100%!important;min-width:0!important;
+    box-sizing:border-box!important;margin:16px 0 0!important;
+    padding:0!important;overflow-wrap:anywhere!important;
+    background:transparent!important;border:0!important;transform:none!important;
+    font:400 16px/1.65 system-ui,sans-serif!important;
+  }
+  .ap-premium-response-table .ap-table-notes-title {font:650 16px/1.5 system-ui!important;margin:0 0 12px!important;}
+  .ap-premium-response-table .ap-table-notes section {margin:0 0 15px!important;}
+  .ap-premium-response-table .ap-table-notes h4 {font:650 16px/1.5 system-ui!important;margin:0 0 5px!important;}
+  .ap-premium-response-table .ap-table-notes p {font:400 16px/1.65 system-ui!important;margin:0 0 8px!important;}
+  .ap-premium-response-table .ap-table-notes strong {font-weight:650!important;}
 }
-@media print{.ap-premium-response-table .ap-table-summary,.ap-premium-response-table .ap-table-notes,.ap-premium-response-table .ap-table-toolbar{display:none!important}.ap-premium-response-table .ap-table-scroll{display:block!important;overflow:visible!important}.ap-premium-response-table .ap-table-scroll>table{display:table!important}}
+@media print {
+  .ap-premium-response-table .ap-table-toolbar,
+  .ap-premium-response-table .ap-table-summary-grid,
+  .ap-premium-response-table .ap-table-notes {display:none!important;}
+  .ap-premium-response-table>.ap-table-scroll {display:block!important;overflow:visible!important;}
+  .ap-premium-response-table .ap-table-scroll>table {display:table!important;}
+}

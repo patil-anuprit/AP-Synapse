@@ -51,83 +51,95 @@
 
   // AP_TABLE_MINIMAL_NATIVE_V5
   // AP_TABLE_SHORT_WITH_NOTES_V6
+  // AP_TABLE_GRID_NO_STICKY_V9
+  // A mobile-only non-scrolling two-column GRID, not another table.
+  // This avoids sticky th/td rules inherited from the app's old table CSS.
   function makeCards(table, list, wrapper) {
-    const scroll = wrapper.querySelector('.ap-table-scroll');
-    wrapper.classList.remove('ap-table-condensed');
-    wrapper.querySelectorAll('.ap-table-summary').forEach(el=>el.remove());
-    wrapper.querySelector(':scope > .ap-table-notes')?.remove();
-    list.replaceChildren();
+    wrapper.classList.remove('ap-table-condensed', 'ap-has-table-cards');
+    wrapper.querySelectorAll('.ap-table-summary, .ap-table-summary-grid, .ap-table-notes')
+      .forEach(el => el.remove());
+    if (list.childElementCount) list.replaceChildren();
+    const scroll = wrapper.querySelector(':scope > .ap-table-scroll');
     if (!MOBILE.matches || !scroll) return;
-    const head = table.tHead?.rows?.[0];
-    const headers = Array.from(head?.cells || []);
-    const rows = Array.from(table.tBodies).flatMap(body => Array.from(body.rows));
-    if (headers.length < 2 || headers.length > 10 ||
-        !rows.length || rows.length > 28 ||
-        table.querySelector('[rowspan],[colspan],table,button,input,textarea,select,iframe,script,[contenteditable]') ||
-        rows.some(r => r.cells.length !== headers.length)) return;
-    const label = el => text(el);
+    const headers = Array.from(table.tHead?.rows?.[0]?.cells || []);
+    const rows = Array.from(table.tBodies || []).flatMap(body => Array.from(body.rows));
+    const value = cell => text(cell);
+    if (headers.length < 2 || headers.length > 10 || rows.length < 1 || rows.length > 28 ||
+        table.querySelector('[rowspan], [colspan], table, button, input, textarea, select, iframe, script, [contenteditable]') ||
+        rows.some(row => row.cells.length !== headers.length)) return;
     const transpose = headers.length > 2 &&
-      /^(feature|features|criterion|criteria|aspect|attribute|metric|parameter|property)$/i.test(label(headers[0]));
-    const long = rows.some(r => Array.from(r.cells).some(c => label(c).length > 78));
+      /^(feature|features|criterion|criteria|aspect|attribute|metric|parameter|property)$/i
+        .test(value(headers[0]));
     const comparison = /model|tool|option|platform|service|product|provider|plan|approach|method|feature|best|use|strength|limitation|advantage|disadvantage|reason|description/i
-      .test(headers.map(label).join(' '));
-    if (!transpose && headers.length === 2 && !long) return;
-    if (!transpose && !comparison && !long) return;
-    const summary = document.createElement('table');
-    summary.className = 'ap-table-summary';
-    const thead = summary.createTHead();
-    const headRow = thead.insertRow();
-    const columns = transpose
-      ? [ 'Option', label(rows[0].cells[0]) || 'Overview' ]
-      : [ label(headers[0]) || 'Item', label(headers[1]) || 'Summary' ];
-    columns.forEach(name => {
-      const th = document.createElement('th');
-      th.scope = 'col'; th.textContent = name; headRow.append(th);
-    });
-    const tbody = summary.createTBody();
+      .test(headers.map(value).join(' '));
+    const long = rows.some(row => Array.from(row.cells).some(cell => value(cell).length > 78));
+    if (headers.length > 2 && !transpose && !comparison && !long) return;
+
+    const titleA = transpose ? 'Option' : value(headers[0]) || 'Item';
+    const titleB = transpose ? value(rows[0].cells[0]) || 'Overview' : value(headers[1]) || 'Summary';
+    const grid = document.createElement('div');
+    grid.className = 'ap-table-summary-grid';
+    grid.setAttribute('role', 'table');
+    grid.setAttribute('aria-label', `${titleA} and ${titleB}`);
     const notes = document.createElement('div');
     notes.className = 'ap-table-notes';
-    const noteTitle = document.createElement('p');
-    noteTitle.className = 'ap-table-notes-title';
-    noteTitle.textContent = 'Additional information';
-    notes.append(noteTitle);
+    const noteHeading = document.createElement('p');
+    noteHeading.className = 'ap-table-notes-title';
+    noteHeading.textContent = 'Additional information';
+    notes.append(noteHeading);
+
+    function makeRow(one, two, header) {
+      const row = document.createElement('div');
+      row.className = 'ap-table-grid-row';
+      row.setAttribute('role', 'row');
+      [one, two].forEach((part, i) => {
+        const cell = document.createElement('div');
+        cell.className = 'ap-table-grid-cell';
+        cell.setAttribute('role', header ? 'columnheader' : 'cell');
+        cell.textContent = part;
+        row.append(cell);
+      });
+      grid.append(row);
+    }
+    makeRow(titleA, titleB, true);
+
     function short(value) {
-      if (value.length <= 48) return value;
-      let clipped = value.slice(0, 46).replace(/\s+\S*$/, '').trim();
-      if (clipped.length < 24) clipped = value.slice(0, 46).trim();
-      return clipped + '…';
+      if (value.length <= 54) return value;
+      let cut = value.slice(0, 52).replace(/\s+\S*$/, '').trim();
+      if (cut.length < 22) cut = value.slice(0, 52).trim();
+      return cut + '…';
     }
     function add(name, headline, extras) {
-      const tr = tbody.insertRow();
-      [name, short(headline)].forEach(value => {
-        const td = tr.insertCell(); td.textContent = value;
-      });
+      makeRow(name, short(headline), false);
       const details = [];
-      if (short(headline) !== headline) details.push([columns[1],headline]);
-      details.push(...extras.filter(([key,value]) => key && value));
+      if (short(headline) !== headline) details.push([titleB, headline]);
+      details.push(...extras.filter(([key, val]) => key && val));
       if (!details.length) return;
       const section = document.createElement('section');
       const heading = document.createElement('h4');
-      heading.textContent = name; section.append(heading);
-      details.forEach(([key,value]) => {
+      heading.textContent = name;
+      section.append(heading);
+      details.forEach(([key, val]) => {
         const p = document.createElement('p');
-        const bold = document.createElement('strong');
-        bold.textContent = key + ': ';
-        p.append(bold, document.createTextNode(value)); section.append(p);
+        const strong = document.createElement('strong');
+        strong.textContent = key + ': ';
+        p.append(strong, document.createTextNode(val));
+        section.append(p);
       });
       notes.append(section);
     }
     if (transpose) {
       for (let col = 1; col < headers.length; col++) {
-        add(label(headers[col]), label(rows[0].cells[col]),
-          rows.slice(1).map(r => [label(r.cells[0]),label(r.cells[col])]));
+        add(value(headers[col]), value(rows[0].cells[col]),
+          rows.slice(1).map(row => [value(row.cells[0]), value(row.cells[col])]));
       }
     } else {
-      rows.forEach(r => add(label(r.cells[0]),label(r.cells[1]),
-        headers.slice(2).map((h,i) => [label(h),label(r.cells[i+2])] )));
+      rows.forEach(row => add(value(row.cells[0]), value(row.cells[1]),
+        headers.slice(2).map((head, i) => [value(head), value(row.cells[i + 2])])));
     }
-    scroll.insertAdjacentElement('afterend',summary); // AP_TABLE_NOSCROLL_V8
-    if (notes.children.length > 1) summary.after(notes);
+    // Both summary and notes are SIBLINGS of the horizontal scroller.
+    scroll.insertAdjacentElement('afterend', grid);
+    if (notes.children.length > 1) grid.insertAdjacentElement('afterend', notes);
     wrapper.classList.add('ap-table-condensed');
   }
   function tsv(table) {

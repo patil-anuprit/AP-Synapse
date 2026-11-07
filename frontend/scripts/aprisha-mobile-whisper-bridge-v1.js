@@ -2,8 +2,8 @@
 // Private, opt-in preview bridge: ?apMobileTalk=1 (not for production).
 (() => {
   "use strict";
-  const mobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  const allowed = true; // Experimental Preview branch only; never merge directly.
+  const mobile = true; // Preview test only
+  const allowed = new URLSearchParams(location.search).get("apMobileTalk") === "1"; // Experimental Preview branch only; never merge directly.
   if (!mobile || !allowed || document.getElementById("ap-mobile-whisper-launcher")) return;
 
   const HOST = "https://ap-synapse-aprisha-staging.onrender.com";

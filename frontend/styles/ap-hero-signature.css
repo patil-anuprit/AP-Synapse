@@ -1,0 +1,194 @@
+
+/* ==================================================
+   AP SYNAPSE — PREMIUM ANGULAR BRAND SIGNATURE
+   Homepage hero badge only.
+   ================================================== */
+
+#heroScreen .hero-badge.ap-hero-signature {
+    position: relative !important;
+    isolation: isolate;
+
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    width: max-content !important;
+    max-width: calc(100vw - 36px) !important;
+    min-height: 40px !important;
+    box-sizing: border-box !important;
+
+    gap: 12px !important;
+    padding: 7px 24px !important;
+    margin-bottom: 16px !important;
+
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+
+    white-space: nowrap !important;
+    text-transform: none !important;
+}
+
+/* Metallic angular outline */
+
+#heroScreen .ap-hero-signature::before {
+    content: "" !important;
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+
+    background: linear-gradient(
+        110deg,
+        #785422 0%,
+        #F2D18B 22%,
+        #A97B39 43%,
+        #FFF0BF 52%,
+        #B8863C 76%,
+        #E4B96F 100%
+    );
+
+    clip-path: polygon(
+        14px 0,
+        calc(100% - 14px) 0,
+        100% 50%,
+        calc(100% - 14px) 100%,
+        14px 100%,
+        0 50%
+    );
+
+    animation: apSignatureGlow 7s ease-in-out infinite;
+}
+
+/* Obsidian glass interior */
+
+#heroScreen .ap-hero-signature::after {
+    content: "" !important;
+    position: absolute;
+    inset: 1.3px;
+    z-index: -1;
+    pointer-events: none;
+
+    background: linear-gradient(
+        180deg,
+        #22201B 0%,
+        #111110 44%,
+        #080909 100%
+    );
+
+    clip-path: polygon(
+        13px 0,
+        calc(100% - 13px) 0,
+        100% 50%,
+        calc(100% - 13px) 100%,
+        13px 100%,
+        0 50%
+    );
+}
+
+/* Original AP logo */
+
+#heroScreen .ap-hero-signature-logo {
+    display: block !important;
+    position: relative;
+    z-index: 1;
+
+    width: 25px !important;
+    height: 25px !important;
+    min-width: 25px !important;
+
+    object-fit: contain !important;
+    border-radius: 4px !important;
+
+    filter: drop-shadow(
+        0 0 4px rgba(234, 179, 80, .28)
+    );
+}
+
+/* Slim engraved divider */
+
+#heroScreen .ap-hero-signature-divider {
+    display: block !important;
+    width: 1px !important;
+    height: 23px !important;
+    flex-shrink: 0 !important;
+
+    background: linear-gradient(
+        transparent,
+        #EBC680,
+        transparent
+    );
+}
+
+/* Unified champagne-gold wordmark */
+
+#heroScreen .ap-hero-signature-wordmark {
+    position: relative;
+    z-index: 1;
+
+    display: inline-block !important;
+    color: #F6DDA5 !important;
+
+    font-family: Georgia, "Times New Roman", serif !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+    letter-spacing: .085em !important;
+
+    white-space: nowrap !important;
+    -webkit-text-fill-color: #F6DDA5 !important;
+
+    text-shadow:
+        0 0 3px rgba(255, 225, 160, .40),
+        0 0 9px rgba(223, 168, 68, .21) !important;
+}
+
+/* Soft illumination, no flashing */
+
+@keyframes apSignatureGlow {
+    0%, 100% {
+        filter: drop-shadow(
+            0 0 3px rgba(218, 170, 83, .22)
+        );
+    }
+
+    50% {
+        filter: drop-shadow(
+            0 0 7px rgba(238, 190, 98, .42)
+        );
+    }
+}
+
+/* Mobile: same identity, compact proportions */
+
+@media (max-width: 767px) {
+    #heroScreen .hero-badge.ap-hero-signature {
+        min-height: 33px !important;
+        padding: 6px 15px !important;
+        gap: 8px !important;
+        margin-bottom: 12px !important;
+    }
+
+    #heroScreen .ap-hero-signature-logo {
+        width: 20px !important;
+        height: 20px !important;
+        min-width: 20px !important;
+    }
+
+    #heroScreen .ap-hero-signature-divider {
+        height: 18px !important;
+    }
+
+    #heroScreen .ap-hero-signature-wordmark {
+        font-size: 13px !important;
+        letter-spacing: .07em !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #heroScreen .ap-hero-signature::before {
+        animation: none !important;
+    }
+}

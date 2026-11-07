@@ -100,3 +100,58 @@
   .ap-premium-response-table .ap-table-card-list{display:none!important;}
   .ap-premium-response-table .ap-table-scroll {display:block!important;overflow:visible!important;}
 }
+
+/* AP TABLE CARDS V2 — premium uncluttered mobile layout */
+@media (max-width:760px) {
+  .ap-premium-response-table .ap-table-swipe-hint {
+    display:none!important;
+  }
+
+  .ap-premium-response-table.ap-has-table-cards
+  .ap-table-card-list {
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    gap:13px;
+    padding:13px;
+  }
+
+  .ap-premium-response-table .ap-table-card {
+    padding:15px;
+    background:linear-gradient(150deg,#20201e,#151718);
+    border:1px solid rgba(208,170,104,.22);
+    border-radius:13px;
+  }
+
+  .ap-premium-response-table .ap-table-card-title {
+    font:650 15px/1.45 system-ui;
+    padding-bottom:13px;
+    margin-bottom:2px;
+  }
+
+  .ap-premium-response-table .ap-table-card-detail {
+    display:block;
+    grid-template-columns:none;
+    padding:11px 0;
+    font:400 13.5px/1.55 system-ui;
+  }
+
+  .ap-premium-response-table
+  .ap-table-card-detail + .ap-table-card-detail {
+    border-top:1px solid rgba(255,255,255,.075);
+  }
+
+  .ap-premium-response-table .ap-table-card-key {
+    display:block;
+    margin-bottom:5px;
+    color:#c3a777;
+    font:650 11px/1.4 system-ui;
+  }
+
+  .ap-premium-response-table .ap-table-card-value {
+    display:block;
+    min-width:0;
+    color:#ebe8e2;
+    overflow-wrap:anywhere;
+    font:450 13.5px/1.55 system-ui;
+  }
+}

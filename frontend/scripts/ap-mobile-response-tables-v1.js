@@ -28,8 +28,8 @@
   function eligibleForCards(table) {
     const headers = Array.from(table.tHead?.rows?.[0]?.cells || []);
     const rows = Array.from(table.tBodies || []).flatMap(body => Array.from(body.rows));
-    if (!MOBILE.matches || headers.length < 2 || headers.length > 4 ||
-        rows.length < 1 || rows.length > 12 ||
+    if (!MOBILE.matches || headers.length < 2 || headers.length > 16 ||
+        rows.length < 1 || rows.length > 60 ||
         table.querySelector('[rowspan], [colspan], button, input, textarea, select, iframe, script, [contenteditable]')) return null;
     if (rows.some(r => r.cells.length !== headers.length) ||
         headers.some(h => !text(h))) return null;
@@ -45,32 +45,81 @@
     });
     return destination;
   }
+
+  // AP_TABLE_CARDS_V2
   function makeCards(table, list, wrapper) {
     const spec = eligibleForCards(table);
+
     if (!spec) {
       wrapper.classList.remove('ap-has-table-cards');
       list.replaceChildren();
       return;
     }
-    const fragment=document.createDocumentFragment();
-    spec.rows.forEach((row, index) => {
-      const card=document.createElement('article');
-      card.className='ap-table-card'; card.setAttribute('role','listitem');
-      const title=document.createElement('div');
-      title.className='ap-table-card-title';
-      const indexEl=document.createElement('span');
-      indexEl.className='ap-table-card-index';
-      indexEl.textContent=String(index+1).padStart(2,'0');
-      title.append(indexEl, cleanClone(row.cells[0]));
-      card.appendChild(title);
-      for(let c=1;c<row.cells.length;c++) {
-        const item=document.createElement('div');item.className='ap-table-card-detail';
-        const key=document.createElement('span');key.className='ap-table-card-key';
-        key.textContent=text(spec.headers[c]);
-        item.append(key, cleanClone(row.cells[c]));card.appendChild(item);
+
+    const fragment = document.createDocumentFragment();
+
+    function addCard(index, heading, pairs) {
+      const card = document.createElement('article');
+      card.className = 'ap-table-card';
+      card.setAttribute('role', 'listitem');
+
+      const title = document.createElement('div');
+      title.className = 'ap-table-card-title';
+
+      const number = document.createElement('span');
+      number.className = 'ap-table-card-index';
+      number.textContent =
+        String(index + 1).padStart(2, '0');
+
+      title.append(number, cleanClone(heading));
+      card.append(title);
+
+      for (const [keyCell, valueCell] of pairs) {
+        const item = document.createElement('div');
+        item.className = 'ap-table-card-detail';
+
+        const key = document.createElement('span');
+        key.className = 'ap-table-card-key';
+        key.textContent = text(keyCell);
+
+        item.append(key, cleanClone(valueCell));
+        card.append(item);
       }
-      fragment.appendChild(card);
-    });
+
+      fragment.append(card);
+    }
+
+    const transposed = spec.headers.length > 2 &&
+      /^(feature|features|criteria|criterion|attribute|aspect|metric|specification|parameter|property|category)$/i
+        .test(text(spec.headers[0])) &&
+      spec.rows.every(row => text(row.cells[0]));
+
+    if (transposed) {
+      for (let col = 1; col < spec.headers.length; col++) {
+        addCard(
+          col - 1,
+          spec.headers[col],
+          spec.rows.map(row => [
+            row.cells[0],
+            row.cells[col]
+          ])
+        );
+      }
+    } else {
+      spec.rows.forEach((row, index) => {
+        addCard(
+          index,
+          row.cells[0],
+          Array.from(row.cells)
+            .slice(1)
+            .map((cell, col) => [
+              spec.headers[col + 1],
+              cell
+            ])
+        );
+      });
+    }
+
     list.replaceChildren(fragment);
     wrapper.classList.add('ap-has-table-cards');
   }
@@ -98,7 +147,7 @@
       catch {copy.textContent='Copy unavailable';}
       window.setTimeout(()=>{copy.textContent='Copy';},1800);
     });
-    actions.append(hint,copy);bar.append(caption,actions);
+    actions.append(copy);bar.append(caption,actions);
     const scroll=document.createElement('div');scroll.className='ap-table-scroll';
     scroll.setAttribute('role','region');scroll.setAttribute('aria-label','Scrollable response table');
     scroll.tabIndex=0;

@@ -3714,14 +3714,15 @@
             );
 
 
-            armWake();
+            if (localStorage.getItem("apAprishaEnabled") === "true") {
+                armWake();
+            }
 
         }
         else {
 
-            showPermission(
-                true
-            );
+            /* AP_APRISHA_ON_DEMAND_WEB_V1 */
+            showPermission(false);
         }
     }
 

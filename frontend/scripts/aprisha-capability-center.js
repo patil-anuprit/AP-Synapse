@@ -1295,15 +1295,11 @@
         refreshStatus();
 
 
-        if (
-            shouldAutoOpen()
-        ) {
-
-            setTimeout(
-                open,
-                650
-            );
-        }
+        /* AP_APRISHA_NO_FORCED_ONBOARDING_V1
+         * Never force capability onboarding on page load.
+         * Permissions remain available through explicit
+         * APRISHA capability actions.
+         */
 
 
         console.log(

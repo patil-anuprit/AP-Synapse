@@ -450,6 +450,10 @@
     }
 
     function mountCard() {
+        // AP_APRISHA_NO_HOMEPAGE_BANNER_V1
+        // Do not insert Aprisha Everywhere into the homepage.
+        return;
+
         if (inlineDismissed) return;
         if (document.getElementById(CARD_ID)) return;
 

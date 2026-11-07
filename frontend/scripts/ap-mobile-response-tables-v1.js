@@ -48,10 +48,13 @@
 
   // AP_TABLE_CARDS_V2
   // AP_TABLE_NATIVE_HORIZONTAL_V4
+
+  // AP_TABLE_MINIMAL_NATIVE_V5
   function makeCards(table, list, wrapper) {
     wrapper.classList.remove("ap-has-table-cards");
     if (list.childElementCount) list.replaceChildren();
   }
+
   function tsv(table) {
     return Array.from(table.rows).map(row =>
       Array.from(row.cells).map(cell => text(cell).replace(/\t/g,' ').replace(/\n/g,' ')).join('\t')

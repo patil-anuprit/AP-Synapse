@@ -1,3 +1,4 @@
+/* AP_APRISHA_EXPLICIT_OPT_IN_V1 */
 ﻿(() => {
     "use strict";
 
@@ -460,7 +461,7 @@
         const enabled =
             localStorage.getItem(
                 "apAprishaEnabled"
-            ) !== "false";
+            ) === "true";
 
 
         if (
@@ -561,11 +562,6 @@
                             "true"
                         );
 
-
-                        localStorage.setItem(
-                            "apAprishaEnabled",
-                            "true"
-                        );
 
 
                         autoRestore();

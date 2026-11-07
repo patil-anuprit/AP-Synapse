@@ -275,8 +275,7 @@
 
             if (
                 text.includes("enable hey aprisha") ||
-                text.includes("enable aprisha") ||
-                text.includes("hey aprisha")
+                text.includes("enable aprisha")
             ) {
                 setTimeout(enable, 120);
             }
@@ -287,9 +286,7 @@
     // AP_WAKE_AUTO_ARM_ON_FIRST_GESTURE
     function armOnFirstGesture() {
         const shouldArm =
-            localStorage.getItem(KEY) === "1" ||
-            location.search.includes("wake=1") ||
-            location.search.includes("fresh=wake");
+            localStorage.getItem(KEY) === "1";
 
         if (!shouldArm) return;
 

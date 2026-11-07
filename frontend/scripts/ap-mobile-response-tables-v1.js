@@ -47,81 +47,10 @@
   }
 
   // AP_TABLE_CARDS_V2
+  // AP_TABLE_NATIVE_HORIZONTAL_V4
   function makeCards(table, list, wrapper) {
-    const spec = eligibleForCards(table);
-
-    if (!spec) {
-      wrapper.classList.remove('ap-has-table-cards');
-      list.replaceChildren();
-      return;
-    }
-
-    const fragment = document.createDocumentFragment();
-
-    function addCard(index, heading, pairs) {
-      const card = document.createElement('article');
-      card.className = 'ap-table-card';
-      card.setAttribute('role', 'listitem');
-
-      const title = document.createElement('div');
-      title.className = 'ap-table-card-title';
-
-      const number = document.createElement('span');
-      number.className = 'ap-table-card-index';
-      number.textContent =
-        String(index + 1).padStart(2, '0');
-
-      title.append(number, cleanClone(heading));
-      card.append(title);
-
-      for (const [keyCell, valueCell] of pairs) {
-        const item = document.createElement('div');
-        item.className = 'ap-table-card-detail';
-
-        const key = document.createElement('span');
-        key.className = 'ap-table-card-key';
-        key.textContent = text(keyCell);
-
-        item.append(key, cleanClone(valueCell));
-        card.append(item);
-      }
-
-      fragment.append(card);
-    }
-
-    const transposed = spec.headers.length > 2 &&
-      /^(feature|features|criteria|criterion|attribute|aspect|metric|specification|parameter|property|category)$/i
-        .test(text(spec.headers[0])) &&
-      spec.rows.every(row => text(row.cells[0]));
-
-    if (transposed) {
-      for (let col = 1; col < spec.headers.length; col++) {
-        addCard(
-          col - 1,
-          spec.headers[col],
-          spec.rows.map(row => [
-            row.cells[0],
-            row.cells[col]
-          ])
-        );
-      }
-    } else {
-      spec.rows.forEach((row, index) => {
-        addCard(
-          index,
-          row.cells[0],
-          Array.from(row.cells)
-            .slice(1)
-            .map((cell, col) => [
-              spec.headers[col + 1],
-              cell
-            ])
-        );
-      });
-    }
-
-    list.replaceChildren(fragment);
-    wrapper.classList.add('ap-has-table-cards');
+    wrapper.classList.remove("ap-has-table-cards");
+    if (list.childElementCount) list.replaceChildren();
   }
   function tsv(table) {
     return Array.from(table.rows).map(row =>

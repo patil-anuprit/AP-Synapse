@@ -1,3 +1,4 @@
+import aprishaSttRouter from "./routes/aprishaTranscribe.js";
 import {createMediaEngine} from './services/ap-media/engine.mjs';
 import { createUniversalEngine } from './services/ap-creation/engine.mjs';
 import adminWeeklyIntelligenceRouter from "./routes/adminWeeklyIntelligence.js";
@@ -148,6 +149,7 @@ const AP_SCHEDULER_ENABLED =
 app.use(cors());
 // AP_DIRECT_ATTACHMENT_BODY_LIMIT_V4
 app.use(express.json({ limit: "12mb" }));
+app.use("/aprisha/transcribe", aprishaSttRouter);
 app.use("/aprisha", aprishaAgentRouter);
 app.use("/aprisha-desktop", aprishaDesktopRouter);
 app.use("/share-v2", shareV2Router);

@@ -54,7 +54,7 @@
   function makeCards(table, list, wrapper) {
     const scroll = wrapper.querySelector('.ap-table-scroll');
     wrapper.classList.remove('ap-table-condensed');
-    wrapper.querySelector(':scope > .ap-table-summary')?.remove();
+    wrapper.querySelectorAll('.ap-table-summary').forEach(el=>el.remove());
     wrapper.querySelector(':scope > .ap-table-notes')?.remove();
     list.replaceChildren();
     if (!MOBILE.matches || !scroll) return;
@@ -126,8 +126,8 @@
       rows.forEach(r => add(label(r.cells[0]),label(r.cells[1]),
         headers.slice(2).map((h,i) => [label(h),label(r.cells[i+2])] )));
     }
-    scroll.after(summary);
-    if (notes.children.length > 1) wrapper.append(notes);
+    scroll.insertAdjacentElement('afterend',summary); // AP_TABLE_NOSCROLL_V8
+    if (notes.children.length > 1) summary.after(notes);
     wrapper.classList.add('ap-table-condensed');
   }
   function tsv(table) {

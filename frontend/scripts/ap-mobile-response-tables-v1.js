@@ -50,11 +50,86 @@
   // AP_TABLE_NATIVE_HORIZONTAL_V4
 
   // AP_TABLE_MINIMAL_NATIVE_V5
+  // AP_TABLE_SHORT_WITH_NOTES_V6
   function makeCards(table, list, wrapper) {
-    wrapper.classList.remove("ap-has-table-cards");
-    if (list.childElementCount) list.replaceChildren();
+    const scroll = wrapper.querySelector('.ap-table-scroll');
+    wrapper.classList.remove('ap-table-condensed');
+    scroll?.querySelector('.ap-table-summary')?.remove();
+    wrapper.querySelector(':scope > .ap-table-notes')?.remove();
+    list.replaceChildren();
+    if (!MOBILE.matches || !scroll) return;
+    const head = table.tHead?.rows?.[0];
+    const headers = Array.from(head?.cells || []);
+    const rows = Array.from(table.tBodies).flatMap(body => Array.from(body.rows));
+    if (headers.length < 2 || headers.length > 10 ||
+        !rows.length || rows.length > 28 ||
+        table.querySelector('[rowspan],[colspan],table,button,input,textarea,select,iframe,script,[contenteditable]') ||
+        rows.some(r => r.cells.length !== headers.length)) return;
+    const label = el => text(el);
+    const transpose = headers.length > 2 &&
+      /^(feature|features|criterion|criteria|aspect|attribute|metric|parameter|property)$/i.test(label(headers[0]));
+    const long = rows.some(r => Array.from(r.cells).some(c => label(c).length > 78));
+    const comparison = /model|tool|option|platform|service|product|provider|plan|approach|method|feature|best|use|strength|limitation|advantage|disadvantage|reason|description/i
+      .test(headers.map(label).join(' '));
+    if (!transpose && headers.length === 2 && !long) return;
+    if (!transpose && !comparison && !long) return;
+    const summary = document.createElement('table');
+    summary.className = 'ap-table-summary';
+    const thead = summary.createTHead();
+    const headRow = thead.insertRow();
+    const columns = transpose
+      ? [ 'Option', label(rows[0].cells[0]) || 'Overview' ]
+      : [ label(headers[0]) || 'Item', label(headers[1]) || 'Summary' ];
+    columns.forEach(name => {
+      const th = document.createElement('th');
+      th.scope = 'col'; th.textContent = name; headRow.append(th);
+    });
+    const tbody = summary.createTBody();
+    const notes = document.createElement('div');
+    notes.className = 'ap-table-notes';
+    const noteTitle = document.createElement('p');
+    noteTitle.className = 'ap-table-notes-title';
+    noteTitle.textContent = 'Additional information';
+    notes.append(noteTitle);
+    function short(value) {
+      if (value.length <= 70) return value;
+      let clipped = value.slice(0, 68).replace(/\s+\S*$/, '').trim();
+      if (clipped.length < 24) clipped = value.slice(0, 68).trim();
+      return clipped + '…';
+    }
+    function add(name, headline, extras) {
+      const tr = tbody.insertRow();
+      [name, short(headline)].forEach(value => {
+        const td = tr.insertCell(); td.textContent = value;
+      });
+      const details = [];
+      if (short(headline) !== headline) details.push([columns[1],headline]);
+      details.push(...extras.filter(([key,value]) => key && value));
+      if (!details.length) return;
+      const section = document.createElement('section');
+      const heading = document.createElement('h4');
+      heading.textContent = name; section.append(heading);
+      details.forEach(([key,value]) => {
+        const p = document.createElement('p');
+        const bold = document.createElement('strong');
+        bold.textContent = key + ': ';
+        p.append(bold, document.createTextNode(value)); section.append(p);
+      });
+      notes.append(section);
+    }
+    if (transpose) {
+      for (let col = 1; col < headers.length; col++) {
+        add(label(headers[col]), label(rows[0].cells[col]),
+          rows.slice(1).map(r => [label(r.cells[0]),label(r.cells[col])]));
+      }
+    } else {
+      rows.forEach(r => add(label(r.cells[0]),label(r.cells[1]),
+        headers.slice(2).map((h,i) => [label(h),label(r.cells[i+2])] )));
+    }
+    scroll.append(summary);
+    if (notes.children.length > 1) wrapper.append(notes);
+    wrapper.classList.add('ap-table-condensed');
   }
-
   function tsv(table) {
     return Array.from(table.rows).map(row =>
       Array.from(row.cells).map(cell => text(cell).replace(/\t/g,' ').replace(/\n/g,' ')).join('\t')

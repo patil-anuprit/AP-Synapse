@@ -54,7 +54,7 @@
   function makeCards(table, list, wrapper) {
     const scroll = wrapper.querySelector('.ap-table-scroll');
     wrapper.classList.remove('ap-table-condensed');
-    scroll?.querySelector('.ap-table-summary')?.remove();
+    wrapper.querySelector(':scope > .ap-table-summary')?.remove();
     wrapper.querySelector(':scope > .ap-table-notes')?.remove();
     list.replaceChildren();
     if (!MOBILE.matches || !scroll) return;
@@ -92,9 +92,9 @@
     noteTitle.textContent = 'Additional information';
     notes.append(noteTitle);
     function short(value) {
-      if (value.length <= 70) return value;
-      let clipped = value.slice(0, 68).replace(/\s+\S*$/, '').trim();
-      if (clipped.length < 24) clipped = value.slice(0, 68).trim();
+      if (value.length <= 48) return value;
+      let clipped = value.slice(0, 46).replace(/\s+\S*$/, '').trim();
+      if (clipped.length < 24) clipped = value.slice(0, 46).trim();
       return clipped + '…';
     }
     function add(name, headline, extras) {
@@ -126,7 +126,7 @@
       rows.forEach(r => add(label(r.cells[0]),label(r.cells[1]),
         headers.slice(2).map((h,i) => [label(h),label(r.cells[i+2])] )));
     }
-    scroll.append(summary);
+    scroll.after(summary);
     if (notes.children.length > 1) wrapper.append(notes);
     wrapper.classList.add('ap-table-condensed');
   }

@@ -3,7 +3,7 @@
 (() => {
   "use strict";
   const mobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  const allowed = new URLSearchParams(location.search).get("apMobileTalk") === "1";
+  const allowed = true; // Experimental Preview branch only; never merge directly.
   if (!mobile || !allowed || document.getElementById("ap-mobile-whisper-launcher")) return;
 
   const HOST = "https://ap-synapse-aprisha-staging.onrender.com";
@@ -12,7 +12,7 @@
 
   const css = document.createElement("style");
   css.textContent = `
-    #ap-mobile-whisper-launcher {position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));right:14px;z-index:2147483000;
+    #ap-mobile-whisper-launcher {position:fixed;bottom:calc(195px + env(safe-area-inset-bottom));right:14px;z-index:2147483000;
       padding:11px 14px;background:#1c1811;color:#f6dcac;border:1px solid #bb9659;
       border-radius:14px;font:600 13px system-ui;box-shadow:0 8px 24px #0009;}
     #ap-mobile-whisper-panel {display:none;position:fixed;inset:auto 9px calc(146px + env(safe-area-inset-bottom)) 9px;

@@ -155,3 +155,83 @@
     font:450 13.5px/1.55 system-ui;
   }
 }
+
+
+/* AP_TABLE_HYBRID_GRID_V3
+   Restore horizontal label/value table rhythm on mobile.
+   Desktop and original table data remain untouched.
+*/
+@media (max-width:760px) {
+
+  .ap-premium-response-table.ap-has-table-cards
+  .ap-table-card-list {
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    gap:12px;
+    padding:12px;
+  }
+
+  .ap-premium-response-table .ap-table-card {
+    padding:0 14px;
+    border-radius:13px;
+    overflow:hidden;
+    background:linear-gradient(145deg,#1c1d1d,#131516);
+    border:1px solid rgba(199,161,99,.23);
+  }
+
+  .ap-premium-response-table .ap-table-card-title {
+    padding:15px 0 13px;
+    margin:0;
+    border-bottom:1px solid rgba(207,171,106,.26);
+    color:#efd49e;
+  }
+
+  .ap-premium-response-table.ap-has-table-cards
+  .ap-table-card .ap-table-card-detail {
+    display:grid!important;
+    grid-template-columns:minmax(88px,35%) minmax(0,1fr)!important;
+    align-items:start;
+    column-gap:12px;
+    padding:12px 0;
+    margin:0;
+    border-top:0;
+  }
+
+  .ap-premium-response-table.ap-has-table-cards
+  .ap-table-card .ap-table-card-detail
+  + .ap-table-card-detail {
+    border-top:1px solid rgba(255,255,255,.09);
+  }
+
+  .ap-premium-response-table
+  .ap-table-card .ap-table-card-key {
+    display:block;
+    min-width:0;
+    margin:0;
+    padding:2px 10px 2px 0;
+    border-right:1px solid rgba(207,171,106,.16);
+    color:#caaa71;
+    font:650 10.5px/1.5 system-ui;
+    overflow-wrap:anywhere;
+    letter-spacing:.015em;
+  }
+
+  .ap-premium-response-table
+  .ap-table-card .ap-table-card-detail > :not(.ap-table-card-key) {
+    display:block;
+    min-width:0;
+    margin:0;
+    color:#eeeae3;
+    font:400 13px/1.55 system-ui;
+    overflow-wrap:anywhere;
+  }
+
+  .ap-premium-response-table
+  .ap-table-card .ap-table-card-detail p {
+    margin:0;
+  }
+
+  .ap-premium-response-table .ap-table-swipe-hint {
+    display:none!important;
+  }
+}

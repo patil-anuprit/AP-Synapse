@@ -3,7 +3,7 @@
 (() => {
   "use strict";
   const mobile = true; // Preview test only
-  const allowed = new URLSearchParams(location.search).get("apMobileTalk") === "1"; // Experimental Preview branch only; never merge directly.
+  const allowed = true; // Experimental Preview branch only; never merge directly.
   if (!mobile || !allowed || document.getElementById("ap-mobile-whisper-launcher")) return;
 
   const HOST = "https://ap-synapse-aprisha-staging.onrender.com";
@@ -33,7 +33,7 @@
     #ap-mobile-whisper-panel #apmw-status {color:#e9cb91;min-height:24px;}
   `;
   document.head.appendChild(css);
-  const launcher = document.createElement("button");
+  const launcher = document.getElementById("ap-aprisha-static-voice-test-v1") || document.createElement("button");
   launcher.type = "button";
   launcher.id = "ap-mobile-whisper-launcher";
   launcher.textContent = "🎤 APRISHA Talk";
@@ -62,11 +62,11 @@
     <div class="apmw-actions"><button id="apmw-send" type="button">Insert into AP Synapse chat</button><button id="apmw-copy" type="button">Copy transcript</button></div>
     <p style="font-size:11px">This Preview experiment requires your private token; do not merge it into production.</p>`;
 
-  document.body.appendChild(launcher);
+  if (!launcher.isConnected) document.body.appendChild(launcher);
   document.body.appendChild(panel);
   const $ = id => panel.querySelector("#" + id);
   const status = text => { $("apmw-status").textContent = text; };
-  launcher.addEventListener("click", () => { panel.style.display = "block"; });
+  launcher.addEventListener("click", event => { event.preventDefault(); panel.style.display = "block"; });
   $("apmw-close").addEventListener("click", () => { panel.style.display = "none"; });
   $("apmw-connect-btn").addEventListener("click", () => {
     const entered = $("apmw-token").value.trim();

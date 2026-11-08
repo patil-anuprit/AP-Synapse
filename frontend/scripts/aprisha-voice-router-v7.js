@@ -2532,6 +2532,13 @@
             if (
                 text === "speak"
             ) {
+                // AP_APRISHA_ANDROID_DIRECT_WHISPER_V2
+                // The dedicated Android panel owns manual voice capture.
+                // Leave other voice entry points and desktop unchanged.
+                if (
+                    /Android/i.test(navigator.userAgent) &&
+                    button.closest("#apDedicatedAprishaOverlay")
+                ) return;
 
                 beginSession();
             }

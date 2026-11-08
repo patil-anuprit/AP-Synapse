@@ -369,15 +369,17 @@
 
 
     // AP_APRISHA_ANDROID_DIRECT_WHISPER_V2
-    // Staging Preview ONLY: a native MediaRecorder captures an explicit Speak tap.
+    // Native mobile recorder routes transcription to the existing AP Synapse backend.
     // No added UI and no SpeechRecognition.prototype patching. Desktop is unchanged.
+    // AP_APRISHA_PRIMARY_BACKEND_V7: mobile browser, PWA and installed Android TWA.
     const androidWhisperPreview =
         (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
          (/Macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1)) &&
-        /(^|\.)vercel\.app$/i.test(location.hostname);
-    const androidWhisperHost = "https://ap-synapse-aprisha-staging.onrender.com";
+        (/(^|\.)ap-synapse\.com$/i.test(location.hostname) ||
+         /(^|\.)vercel\.app$/i.test(location.hostname));
+    const androidWhisperHost = "https://api.ap-synapse.com";
     let androidWhisperSession = null;
-    // AP_APRISHA_GUEST_V6: no login requirement, no developer-token popup.
+    // AP_APRISHA_PRIMARY_BACKEND_V7: no account or developer-token popup.
     // Guest proof is short-lived and stored in memory only.
     let androidVoiceGuestProof = { token: "", expiresAt: 0 };
 
@@ -466,7 +468,7 @@
         s.controller = new AbortController();
         s.requestTimeout = setTimeout(() => s.controller.abort(), 35000);
         try {
-            // AP_APRISHA_GUEST_V6: existing signed-in users may use their session,
+            // AP_APRISHA_PRIMARY_BACKEND_V7: signed-in accounts or invisible guest proof,
             // but a guest can speak immediately using a backend-minted voice proof.
             // Neither the Groq API key nor the server signing secret enters the browser.
             let signedToken = "";
@@ -518,20 +520,20 @@
             releaseAndroidAudio(s);
             releaseAndroidOwnership();
             console.warn("APRISHA mobile transcription failed:", error.name || "error");
-            // AP_APRISHA_GUEST_V6: actionable errors without login prompts.
+            // AP_APRISHA_PRIMARY_BACKEND_V7: actionable errors without login prompts.
             const reason = String(error?.message || "");
             if (reason.includes("APRISHA_GUEST_UNAVAILABLE") ||
                 reason.includes("Not authorized") || reason.includes("401") || reason.includes("403")) {
-                setState("APRISHA voice access unavailable", "Check guest voice settings on Render and try again.");
+                setState("APRISHA voice access unavailable", "APRISHA is temporarily unavailable. Please try again.");
             } else if (reason.includes("429") || reason.includes("503") ||
                        reason.includes("Voice service temporarily busy")) {
                 setState("APRISHA temporarily busy", "Please try again shortly.");
             } else if (error?.name === "AbortError") {
                 setState("Voice timed out", "Check your connection and try again.");
             } else if (error instanceof TypeError || /failed to fetch|networkerror/i.test(reason)) {
-                setState("Voice network blocked", "Use the branch Preview address; check Render's allowed origin.");
+                setState("Voice network blocked", "Check your connection and try again.");
             } else {
-                setState("Transcription error", (reason || "Try again.").slice(0, 110));
+                setState("APRISHA could not understand", "Please try speaking again.");
             }
         }
     }
@@ -940,7 +942,7 @@
         open(true);
         stop();
 
-        // AP_APRISHA_GUEST_V6 — original Speak works for signed-in users and guests.
+        // AP_APRISHA_PRIMARY_BACKEND_V7: original controls, no token or login prompt.
         if (androidWhisperPreview) {
             startAndroidWhisper();
             return;

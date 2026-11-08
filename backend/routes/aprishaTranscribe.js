@@ -1,4 +1,4 @@
-// AP_APRISHA_STT_STAGING_V1 - never deploy openly to production.
+// AP_APRISHA_PRIMARY_BACKEND_V7 - protected production route; explicit enable flag.
 import express from 'express';
 import multer from 'multer';
 import Groq, { toFile } from 'groq-sdk';
@@ -17,7 +17,7 @@ const upload = multer({
 // AP_APRISHA_SIGNED_AUTH_V5 — verified signed-in users, no daily/minute quotas.
 // Keep limited *simultaneous* requests to avoid memory/provider overload.
 // Production scale-out needs distributed concurrency controls and cost monitoring.
-// AP_APRISHA_GUEST_V6 — anonymous voice-only access (Preview opt-in).
+// AP_APRISHA_PRIMARY_BACKEND_V7 — anonymous voice-only access (enable explicitly).
 // Origin validation helps block drive-by websites, but is not authentication:
 // clients outside browsers can spoof Origin, so also enforce bounded issuance,
 // request bursts, uploads and total service concurrency / provider capacity.
@@ -28,6 +28,24 @@ const guestAllowedOrigins = new Set(
     .split(',').map(origin => origin.trim().replace(/\/+$/, '')).filter(Boolean)
 );
 const guestEnabled = process.env.AP_APRISHA_STT_GUEST_ENABLED === '1';
+// Explicit production rollout switch. Defaults safely to OFF.
+router.use((req, res, next) => {
+  res.set('Cache-Control', 'no-store');
+  const origin = String(req.get('origin') || '').replace(/\/+$/, '');
+  if (origin && guestAllowedOrigins.has(origin)) {
+    res.set('Access-Control-Allow-Origin', origin);
+    res.set('Vary', 'Origin');
+    res.set('Access-Control-Allow-Headers', 'Authorization, Content-Type');
+    res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  }
+  if (req.method === 'OPTIONS')
+    return res.sendStatus(guestAllowedOrigins.has(origin) ? 204 : 403);
+  if (process.env.AP_APRISHA_STT_ENABLED !== '1')
+    return res.status(503).json({ok:false,error:'Mobile voice is not enabled'});
+  next();
+});
+router.get('/health', (_req, res) => res.json({ok:true,service:'aprisha-stt'}));
+
 const mintCounters = new Map();
 const usageCounters = new Map();
 
@@ -97,8 +115,8 @@ function verifiedUser(req) {
   } catch { return null; }
 }
 
-// Note: guest proof issuance is NOT sufficient for high-risk public deployment.
-// At scale use a shared store, abuse prevention and an enforced provider spend budget.
+// For large deployments, replace instance counters with a shared store and track
+// provider budgets / request telemetry. No client-facing daily quota is imposed.
 router.post('/session', (req, res) => {
   res.set('Cache-Control', 'no-store');
   if (!validGuestConfig())

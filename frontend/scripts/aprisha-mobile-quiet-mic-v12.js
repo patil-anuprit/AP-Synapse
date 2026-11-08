@@ -681,6 +681,22 @@
                     this
                 );
 
+                // AP_MOBILE_ASR_DIRECT_TEST_V1
+                // Only activated by ?apMobileAsr=direct.
+                // Normal voice behavior remains unchanged.
+                if (
+                    new URLSearchParams(
+                        window.location.search
+                    ).get("apMobileAsr") === "direct"
+                ) {
+                    console.info(
+                        "[APRISHA ASR TEST] Direct recognition start"
+                    );
+
+                    return originalStart.call(this);
+                }
+
+
                 if (!enabled) {
                     return originalStart.call(
                         this

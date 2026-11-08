@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
     "use strict";
 
     const BUTTON_ID = "apDedicatedAprishaButton";
@@ -252,7 +252,7 @@
             .addEventListener("click", speak);
 
         overlay.querySelector(".ap-dedicated-aprisha-stop")
-            .addEventListener("click", stop);
+            .addEventListener("click", () => stop({ submit: true }));
 
         // AP_APRISHA_WAKE_BUTTON_BIND_V64
         const wakeButton =
@@ -367,6 +367,252 @@
         document.getElementById(OVERLAY_ID)?.classList.remove("open");
     }
 
+
+    // AP_APRISHA_ANDROID_DIRECT_WHISPER_V2
+    // Native mobile recorder routes transcription to the existing AP Synapse backend.
+    // No added UI and no SpeechRecognition.prototype patching. Desktop is unchanged.
+    // AP_APRISHA_PRIMARY_BACKEND_V7: mobile browser, PWA and installed Android TWA.
+    const androidWhisperPreview =
+        (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+         (/Macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1)) &&
+        (/(^|\.)ap-synapse\.com$/i.test(location.hostname) ||
+         /(^|\.)vercel\.app$/i.test(location.hostname));
+    const androidWhisperHost = "https://api.ap-synapse.com";
+    let androidWhisperSession = null;
+    // AP_APRISHA_PRIMARY_BACKEND_V7: no account or developer-token popup.
+    // Guest proof is short-lived and stored in memory only.
+    let androidVoiceGuestProof = { token: "", expiresAt: 0 };
+
+    async function getAndroidVoiceGuestProof(signal) {
+        if (androidVoiceGuestProof.token &&
+            Date.now() + 20000 < androidVoiceGuestProof.expiresAt) {
+            return androidVoiceGuestProof.token;
+        }
+        const response = await fetch(androidWhisperHost + "/aprisha/transcribe/session", {
+            method: "POST", signal, cache: "no-store"
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || result.ok !== true || typeof result.token !== "string") {
+            throw new Error("APRISHA_GUEST_UNAVAILABLE: " + (result.error || response.status));
+        }
+        const expiry = Number(result.expiresAt);
+        androidVoiceGuestProof = {
+            token: result.token,
+            expiresAt: Number.isFinite(expiry) ? expiry : Date.now() + 60000
+        };
+        return result.token;
+    }
+
+    function releaseAndroidAudio(s) {
+        clearTimeout(s.timer);
+        clearTimeout(s.requestTimeout);
+        s.timer = null;
+        s.requestTimeout = null;
+        if (s.stream) {
+            s.stream.getTracks().forEach(track => {
+                try { track.stop(); } catch (_) {}
+            });
+            s.stream = null;
+        }
+        if (s.quietWasEnabled) {
+            // Only restore background listening when the user opted into wake voice.
+            const optedIn =
+                localStorage.getItem("ap_aprisha_wake_master_enabled") === "1" ||
+                localStorage.getItem("apAprishaEnabled") === "true";
+            if (optedIn) {
+                try { window.APAprishaQuietMicV12?.enable?.(); } catch (_) {}
+            }
+            s.quietWasEnabled = false;
+        }
+    }
+
+    function releaseAndroidOwnership() {
+        window.__AP_APRISHA_SESSION_ACTIVE = false;
+        window.__AP_APRISHA_MANUAL_STOP = true;
+        window.__AP_APRISHA_DEDICATED_MIC__ = false;
+        setListening(false);
+        document.dispatchEvent(new CustomEvent("ap:aprisha-listening-end"));
+    }
+
+    function cancelAndroidWhisper() {
+        const s = androidWhisperSession;
+        if (!s) return false;
+        s.cancelled = true;
+        androidWhisperSession = null;
+        s.controller?.abort();
+        if (s.recorder?.state === "recording") {
+            s.recorder.onstop = null;
+            try { s.recorder.stop(); } catch (_) {}
+        }
+        releaseAndroidAudio(s);
+        releaseAndroidOwnership();
+        return true;
+    }
+
+    async function sendAndroidWhisper(s) {
+        if (androidWhisperSession !== s || s.cancelled) return;
+        releaseAndroidAudio(s);
+        s.stage = "transcribing";
+        setState("Understanding your speech…", "Processing your recorded voice.");
+        const type = s.recorder?.mimeType || "audio/webm";
+        const ext = type.includes("mp4") ? "m4a" : type.includes("ogg") ? "ogg" : "webm";
+        const blob = new Blob(s.chunks, { type });
+        if (blob.size < 500 || blob.size > 5 * 1024 * 1024) {
+            cancelAndroidWhisper();
+            setState("Please try again", "Speak for at least a second, then tap Stop.");
+            return;
+        }
+        const form = new FormData();
+        form.append("audio", blob, "speech." + ext);
+        form.append("language", navigator.language?.toLowerCase().startsWith("hi") ? "hi" : "en");
+        s.controller = new AbortController();
+        s.requestTimeout = setTimeout(() => s.controller.abort(), 35000);
+        try {
+            // AP_APRISHA_PRIMARY_BACKEND_V7: signed-in accounts or invisible guest proof,
+            // but a guest can speak immediately using a backend-minted voice proof.
+            // Neither the Groq API key nor the server signing secret enters the browser.
+            let signedToken = "";
+            try {
+                const available = await Promise.resolve(
+                    window.AP_PERSONALIZATION?.getToken?.()
+                );
+                if (typeof available === "string") signedToken = available.trim();
+            } catch (_) { /* Guest mode remains available. */ }
+
+            const sendAudio = token => fetch(androidWhisperHost + "/aprisha/transcribe", {
+                method: "POST",
+                headers: { Authorization: `Bearer ${token}` },
+                body: form,
+                signal: s.controller.signal,
+                cache: "no-store"
+            });
+
+            let response = signedToken ? await sendAudio(signedToken) : null;
+            if (!response || response.status === 401) {
+                const guestProof = await getAndroidVoiceGuestProof(s.controller.signal);
+                response = await sendAudio(guestProof);
+                if (response.status === 401) {
+                    // Stale proof (e.g., backend redeploy/key rotation); renew once.
+                    androidVoiceGuestProof = { token: "", expiresAt: 0 };
+                    const renewed = await getAndroidVoiceGuestProof(s.controller.signal);
+                    response = await sendAudio(renewed);
+                }
+            }
+            const result = await response.json();
+            if (!response.ok || result.ok !== true)
+                throw new Error(result.error || "HTTP " + response.status);
+            const transcript = String(result.text || "").trim()
+                .replace(/\b(?:apresha|apreisha|apreesha)\b/ig, "APRISHA");
+            if (androidWhisperSession !== s || s.cancelled) return;
+            androidWhisperSession = null;
+            releaseAndroidAudio(s);
+            releaseAndroidOwnership();
+            if (!transcript) {
+                setState("I couldn't hear your words", "Tap Speak and try again.");
+                return;
+            }
+            setState("I heard you", transcript);
+            // The SAME command handler as desktop: chat, actions and spoken replies.
+            handleAprishaCommand(transcript);
+        } catch (error) {
+            if (androidWhisperSession !== s || s.cancelled) return;
+            androidWhisperSession = null;
+            releaseAndroidAudio(s);
+            releaseAndroidOwnership();
+            console.warn("APRISHA mobile transcription failed:", error.name || "error");
+            // AP_APRISHA_PRIMARY_BACKEND_V7: actionable errors without login prompts.
+            const reason = String(error?.message || "");
+            if (reason.includes("APRISHA_GUEST_UNAVAILABLE") ||
+                reason.includes("Not authorized") || reason.includes("401") || reason.includes("403")) {
+                setState("APRISHA voice access unavailable", "APRISHA is temporarily unavailable. Please try again.");
+            } else if (reason.includes("429") || reason.includes("503") ||
+                       reason.includes("Voice service temporarily busy")) {
+                setState("APRISHA temporarily busy", "Please try again shortly.");
+            } else if (error?.name === "AbortError") {
+                setState("Voice timed out", "Check your connection and try again.");
+            } else if (error instanceof TypeError || /failed to fetch|networkerror/i.test(reason)) {
+                setState("Voice network blocked", "Check your connection and try again.");
+            } else {
+                setState("APRISHA could not understand", "Please try speaking again.");
+            }
+        }
+    }
+
+    function finishAndroidWhisper(s) {
+        if (androidWhisperSession !== s || s.cancelled || s.stage === "transcribing") return;
+        if (!s.recorder || s.recorder.state !== "recording") {
+            cancelAndroidWhisper();
+            setState("Microphone still preparing", "Tap Speak and try again.");
+            return;
+        }
+        s.stage = "finishing";
+        setListening(false);
+        setState("Understanding your speech…", "Transcribing your voice.");
+        try { s.recorder.stop(); }
+        catch (_) {
+            cancelAndroidWhisper();
+            setState("Recording failed", "Tap Speak to try again.");
+        }
+    }
+
+    function startAndroidWhisper() {
+        if (!window.MediaRecorder || !navigator.mediaDevices?.getUserMedia) {
+            setState("Voice unavailable", "This Android browser does not support microphone recording.");
+            return;
+        }
+        const s = {
+            stage: "starting", stream: null, recorder: null, chunks: [],
+            cancelled: false, timer: null, requestTimeout: null, controller: null,
+            quietWasEnabled: window.APAprishaQuietMicV12?.active === true
+        };
+        androidWhisperSession = s;
+        window.__AP_APRISHA_DEDICATED_MIC__ = true;
+        window.__AP_APRISHA_SESSION_ACTIVE = true;
+        window.__AP_APRISHA_MANUAL_STOP = false;
+        try { window.APAprishaQuietMicV12?.disable?.(); } catch (_) {}
+        setState("Preparing microphone…", "Allow microphone access to speak.");
+
+        // Called synchronously from the original Speak click to retain user activation.
+        navigator.mediaDevices.getUserMedia({
+            audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+            video: false
+        }).then(stream => {
+            if (androidWhisperSession !== s || s.cancelled) {
+                stream.getTracks().forEach(track => track.stop());
+                return;
+            }
+            s.stream = stream;
+            const types = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/ogg"];
+            const type = types.find(t => MediaRecorder.isTypeSupported(t));
+            s.recorder = new MediaRecorder(stream, type ? { mimeType: type } : undefined);
+            s.recorder.ondataavailable = event => {
+                if (event.data?.size && !s.cancelled) s.chunks.push(event.data);
+            };
+            s.recorder.onerror = () => {
+                cancelAndroidWhisper();
+                setState("Microphone recording failed", "Tap Speak to try again.");
+            };
+            s.recorder.onstop = () => { void sendAndroidWhisper(s); };
+            s.recorder.start();
+            s.stage = "recording";
+            setListening(true);
+            setState("Listening…", "Speak naturally, then tap Stop.");
+            // Safety: finish automatically if Stop isn't pressed.
+            s.timer = setTimeout(() => finishAndroidWhisper(s), 12000);
+        }).catch(error => {
+            if (androidWhisperSession !== s) return;
+            cancelAndroidWhisper();
+            setState(
+                error?.name === "NotAllowedError" ? "Microphone permission needed" : "Microphone unavailable",
+                "Allow microphone access and tap Speak again."
+            );
+        });
+    }
+
+    window.addEventListener("pagehide", () => {
+        cancelAndroidWhisper();
+        androidVoiceGuestProof = { token: "", expiresAt: 0 };
+    });
 
     // AP_DEDICATED_ACTIONS_V4
     let replyObserver = null;
@@ -695,6 +941,12 @@
 
         open(true);
         stop();
+
+        // AP_APRISHA_PRIMARY_BACKEND_V7: original controls, no token or login prompt.
+        if (androidWhisperPreview) {
+            startAndroidWhisper();
+            return;
+        }
 
         // AP_APRISHA_DEDICATED_MIC_CLAIM_V91
         //
@@ -1115,7 +1367,17 @@
         }
     }
 
-    function stop() {
+    function stop(options = {}) {
+        // AP_APRISHA_ANDROID_DIRECT_WHISPER_V2
+        if (androidWhisperSession) {
+            const current = androidWhisperSession;
+            if (options?.submit === true && current.stage !== "transcribing") {
+                finishAndroidWhisper(current);
+            } else {
+                cancelAndroidWhisper();
+            }
+            return;
+        }
 
         // AP_APRISHA_DEDICATED_MIC_RELEASE_V91
         window.__AP_APRISHA_DEDICATED_MIC__ = false;

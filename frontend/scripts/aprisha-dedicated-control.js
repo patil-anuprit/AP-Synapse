@@ -372,11 +372,34 @@
     // Staging Preview ONLY: a native MediaRecorder captures an explicit Speak tap.
     // No added UI and no SpeechRecognition.prototype patching. Desktop is unchanged.
     const androidWhisperPreview =
-        /Android/i.test(navigator.userAgent) &&
+        (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+         (/Macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1)) &&
         /(^|\.)vercel\.app$/i.test(location.hostname);
     const androidWhisperHost = "https://ap-synapse-aprisha-staging.onrender.com";
     let androidWhisperSession = null;
-    // AP_APRISHA_SIGNED_AUTH_V5: uses existing signed AP Synapse login token; no token popup.
+    // AP_APRISHA_GUEST_V6: no login requirement, no developer-token popup.
+    // Guest proof is short-lived and stored in memory only.
+    let androidVoiceGuestProof = { token: "", expiresAt: 0 };
+
+    async function getAndroidVoiceGuestProof(signal) {
+        if (androidVoiceGuestProof.token &&
+            Date.now() + 20000 < androidVoiceGuestProof.expiresAt) {
+            return androidVoiceGuestProof.token;
+        }
+        const response = await fetch(androidWhisperHost + "/aprisha/transcribe/session", {
+            method: "POST", signal, cache: "no-store"
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || result.ok !== true || typeof result.token !== "string") {
+            throw new Error("APRISHA_GUEST_UNAVAILABLE: " + (result.error || response.status));
+        }
+        const expiry = Number(result.expiresAt);
+        androidVoiceGuestProof = {
+            token: result.token,
+            expiresAt: Number.isFinite(expiry) ? expiry : Date.now() + 60000
+        };
+        return result.token;
+    }
 
     function releaseAndroidAudio(s) {
         clearTimeout(s.timer);
@@ -443,21 +466,36 @@
         s.controller = new AbortController();
         s.requestTimeout = setTimeout(() => s.controller.abort(), 35000);
         try {
-            // AP_APRISHA_SIGNED_AUTH_V5 — signed AP Synapse account session only.
-            // Never send the Groq key or private developer staging token to browsers.
-            const signedToken = await Promise.resolve(
-                window.AP_PERSONALIZATION?.getToken?.()
-            );
-            if (typeof signedToken !== "string" || !signedToken.trim()) {
-                throw new Error("APRISHA_SIGN_IN_REQUIRED");
-            }
-            const response = await fetch(androidWhisperHost + "/aprisha/transcribe", {
+            // AP_APRISHA_GUEST_V6: existing signed-in users may use their session,
+            // but a guest can speak immediately using a backend-minted voice proof.
+            // Neither the Groq API key nor the server signing secret enters the browser.
+            let signedToken = "";
+            try {
+                const available = await Promise.resolve(
+                    window.AP_PERSONALIZATION?.getToken?.()
+                );
+                if (typeof available === "string") signedToken = available.trim();
+            } catch (_) { /* Guest mode remains available. */ }
+
+            const sendAudio = token => fetch(androidWhisperHost + "/aprisha/transcribe", {
                 method: "POST",
-                headers: { Authorization: `Bearer ${signedToken.trim()}` },
+                headers: { Authorization: `Bearer ${token}` },
                 body: form,
                 signal: s.controller.signal,
                 cache: "no-store"
             });
+
+            let response = signedToken ? await sendAudio(signedToken) : null;
+            if (!response || response.status === 401) {
+                const guestProof = await getAndroidVoiceGuestProof(s.controller.signal);
+                response = await sendAudio(guestProof);
+                if (response.status === 401) {
+                    // Stale proof (e.g., backend redeploy/key rotation); renew once.
+                    androidVoiceGuestProof = { token: "", expiresAt: 0 };
+                    const renewed = await getAndroidVoiceGuestProof(s.controller.signal);
+                    response = await sendAudio(renewed);
+                }
+            }
             const result = await response.json();
             if (!response.ok || result.ok !== true)
                 throw new Error(result.error || "HTTP " + response.status);
@@ -480,11 +518,11 @@
             releaseAndroidAudio(s);
             releaseAndroidOwnership();
             console.warn("APRISHA mobile transcription failed:", error.name || "error");
-            // AP_APRISHA_SIGNED_AUTH_V5: no developer token or dialogs.
+            // AP_APRISHA_GUEST_V6: actionable errors without login prompts.
             const reason = String(error?.message || "");
-            if (reason.includes("APRISHA_SIGN_IN_REQUIRED") ||
-                reason.includes("Not authorized") || reason.includes("401")) {
-                setState("Sign in to use APRISHA", "Sign in to AP Synapse and tap Speak again.");
+            if (reason.includes("APRISHA_GUEST_UNAVAILABLE") ||
+                reason.includes("Not authorized") || reason.includes("401") || reason.includes("403")) {
+                setState("APRISHA voice access unavailable", "Check guest voice settings on Render and try again.");
             } else if (reason.includes("429") || reason.includes("503") ||
                        reason.includes("Voice service temporarily busy")) {
                 setState("APRISHA temporarily busy", "Please try again shortly.");
@@ -571,6 +609,7 @@
 
     window.addEventListener("pagehide", () => {
         cancelAndroidWhisper();
+        androidVoiceGuestProof = { token: "", expiresAt: 0 };
     });
 
     // AP_DEDICATED_ACTIONS_V4
@@ -901,13 +940,8 @@
         open(true);
         stop();
 
-        // AP_APRISHA_SIGNED_AUTH_V5 — original Speak control; no extra popup.
+        // AP_APRISHA_GUEST_V6 — original Speak works for signed-in users and guests.
         if (androidWhisperPreview) {
-            // The final request also validates the session server-side.
-            if (typeof window.AP_PERSONALIZATION?.getToken !== "function") {
-                setState("Sign in to use APRISHA", "Sign in to AP Synapse and tap Speak again.");
-                return;
-            }
             startAndroidWhisper();
             return;
         }

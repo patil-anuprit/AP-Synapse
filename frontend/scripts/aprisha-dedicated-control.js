@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
     "use strict";
 
     const BUTTON_ID = "apDedicatedAprishaButton";
@@ -437,17 +437,6 @@
             setState("Please try again", "Speak for at least a second, then tap Stop.");
             return;
         }
-        if (!androidWhisperTestToken) {
-            const entered = window.prompt(
-                "APRISHA staging test token (not your Groq key). For Preview testing only:"
-            );
-            if (!entered || entered.trim().length < 24) {
-                cancelAndroidWhisper();
-                setState("Staging test token required", "Tap Speak again after obtaining your private test token.");
-                return;
-            }
-            androidWhisperTestToken = entered.trim();
-        }
         const form = new FormData();
         form.append("audio", blob, "speech." + ext);
         form.append("language", navigator.language?.toLowerCase().startsWith("hi") ? "hi" : "en");
@@ -486,7 +475,18 @@
                 androidWhisperTestToken = "";
             }
             console.warn("APRISHA mobile transcription failed:", error.name || "error");
-            setState("Voice connection failed", "Unable to transcribe. Tap Speak to try again.");
+            // AP_APRISHA_ANDROID_DIRECT_WHISPER_V3: preview-only actionable error.
+            const reason = String(error?.message || "");
+            if (reason.includes("Not authorized") || reason.includes("401")) {
+                androidWhisperTestToken = "";
+                setState("Token rejected", "Tap Speak to enter the correct staging token.");
+            } else if (error?.name === "AbortError") {
+                setState("Voice timed out", "Check your connection and try again.");
+            } else if (error instanceof TypeError || /failed to fetch|networkerror/i.test(reason)) {
+                setState("Voice network blocked", "Use the branch Preview address; check Render's allowed origin.");
+            } else {
+                setState("Transcription error", (reason || "Try again.").slice(0, 110));
+            }
         }
     }
 
@@ -894,8 +894,19 @@
         open(true);
         stop();
 
-        // AP_APRISHA_ANDROID_DIRECT_WHISPER_V2
+        // AP_APRISHA_ANDROID_DIRECT_WHISPER_V3
+        // Ask on the REAL Speak tap, before asynchronous recorder events.
         if (androidWhisperPreview) {
+            if (!androidWhisperTestToken) {
+                const entered = window.prompt(
+                    "APRISHA Preview transcription token (not your Groq API key):"
+                );
+                if (!entered || entered.trim().length < 24) {
+                    setState("Test token needed", "Tap Speak, then enter the private staging token.");
+                    return;
+                }
+                androidWhisperTestToken = entered.trim();
+            }
             startAndroidWhisper();
             return;
         }

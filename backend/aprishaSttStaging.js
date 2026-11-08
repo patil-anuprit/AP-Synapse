@@ -4,7 +4,6 @@ import aprishaSttRouter from "./routes/aprishaTranscribe.js";
 
 const required = [
   "GROQ_API_KEY",
-  "AP_APRISHA_STT_TEST_TOKEN",
   "AP_APRISHA_STT_ALLOWED_ORIGIN"
 ];
 
@@ -14,9 +13,6 @@ for (const name of required) {
   }
 }
 
-if (process.env.AP_APRISHA_STT_TEST_TOKEN.length < 24) {
-  throw new Error("Staging test token must be at least 24 characters");
-}
 
 const allowedOrigins = new Set(
   process.env.AP_APRISHA_STT_ALLOWED_ORIGIN
@@ -34,7 +30,7 @@ app.use(cors({
     callback(null, Boolean(origin && allowedOrigins.has(origin)));
   },
   methods: ["GET", "POST"],
-  allowedHeaders: ["x-ap-stt-test-token"]
+  allowedHeaders: ["Authorization"]
 }));
 
 app.get("/health", (req, res) => {

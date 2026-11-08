@@ -376,7 +376,7 @@
         /(^|\.)vercel\.app$/i.test(location.hostname);
     const androidWhisperHost = "https://ap-synapse-aprisha-staging.onrender.com";
     let androidWhisperSession = null;
-    let androidWhisperTestToken = ""; // RAM only; never store secrets in the page.
+    // AP_APRISHA_SIGNED_AUTH_V5: uses existing signed AP Synapse login token; no token popup.
 
     function releaseAndroidAudio(s) {
         clearTimeout(s.timer);
@@ -443,9 +443,17 @@
         s.controller = new AbortController();
         s.requestTimeout = setTimeout(() => s.controller.abort(), 35000);
         try {
+            // AP_APRISHA_SIGNED_AUTH_V5 — signed AP Synapse account session only.
+            // Never send the Groq key or private developer staging token to browsers.
+            const signedToken = await Promise.resolve(
+                window.AP_PERSONALIZATION?.getToken?.()
+            );
+            if (typeof signedToken !== "string" || !signedToken.trim()) {
+                throw new Error("APRISHA_SIGN_IN_REQUIRED");
+            }
             const response = await fetch(androidWhisperHost + "/aprisha/transcribe", {
                 method: "POST",
-                headers: { "x-ap-stt-test-token": androidWhisperTestToken },
+                headers: { Authorization: `Bearer ${signedToken.trim()}` },
                 body: form,
                 signal: s.controller.signal,
                 cache: "no-store"
@@ -471,15 +479,15 @@
             androidWhisperSession = null;
             releaseAndroidAudio(s);
             releaseAndroidOwnership();
-            if (String(error.message || "").includes("Not authorized")) {
-                androidWhisperTestToken = "";
-            }
             console.warn("APRISHA mobile transcription failed:", error.name || "error");
-            // AP_APRISHA_ANDROID_DIRECT_WHISPER_V3: preview-only actionable error.
+            // AP_APRISHA_SIGNED_AUTH_V5: no developer token or dialogs.
             const reason = String(error?.message || "");
-            if (reason.includes("Not authorized") || reason.includes("401")) {
-                androidWhisperTestToken = "";
-                setState("Token rejected", "Tap Speak to enter the correct staging token.");
+            if (reason.includes("APRISHA_SIGN_IN_REQUIRED") ||
+                reason.includes("Not authorized") || reason.includes("401")) {
+                setState("Sign in to use APRISHA", "Sign in to AP Synapse and tap Speak again.");
+            } else if (reason.includes("429") || reason.includes("503") ||
+                       reason.includes("Voice service temporarily busy")) {
+                setState("APRISHA temporarily busy", "Please try again shortly.");
             } else if (error?.name === "AbortError") {
                 setState("Voice timed out", "Check your connection and try again.");
             } else if (error instanceof TypeError || /failed to fetch|networkerror/i.test(reason)) {
@@ -563,7 +571,6 @@
 
     window.addEventListener("pagehide", () => {
         cancelAndroidWhisper();
-        androidWhisperTestToken = "";
     });
 
     // AP_DEDICATED_ACTIONS_V4
@@ -894,18 +901,12 @@
         open(true);
         stop();
 
-        // AP_APRISHA_ANDROID_DIRECT_WHISPER_V3
-        // Ask on the REAL Speak tap, before asynchronous recorder events.
+        // AP_APRISHA_SIGNED_AUTH_V5 — original Speak control; no extra popup.
         if (androidWhisperPreview) {
-            if (!androidWhisperTestToken) {
-                const entered = window.prompt(
-                    "APRISHA Preview transcription token (not your Groq API key):"
-                );
-                if (!entered || entered.trim().length < 24) {
-                    setState("Test token needed", "Tap Speak, then enter the private staging token.");
-                    return;
-                }
-                androidWhisperTestToken = entered.trim();
+            // The final request also validates the session server-side.
+            if (typeof window.AP_PERSONALIZATION?.getToken !== "function") {
+                setState("Sign in to use APRISHA", "Sign in to AP Synapse and tap Speak again.");
+                return;
             }
             startAndroidWhisper();
             return;

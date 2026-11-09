@@ -1,0 +1,44 @@
+
+/* AP SYNAPSE MOBILE HOME SCROLLBAR V1
+   Hide tracks, preserve scrolling.
+   Mobile homepage only, both themes. */
+
+@media screen and (max-width: 767px) {
+
+  html:has(
+    #assistantPage[aria-hidden="false"]:not([style*="display: none"])
+    #heroScreen:not([hidden]):not([style*="display: none"])
+  ),
+  html:has(
+    #assistantPage[aria-hidden="false"]:not([style*="display: none"])
+    #heroScreen:not([hidden]):not([style*="display: none"])
+  ) :is(
+    body,
+    .workspace,
+    .workspace-content,
+    #assistantPage,
+    #heroScreen
+  ) {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  html:has(
+    #assistantPage[aria-hidden="false"]:not([style*="display: none"])
+    #heroScreen:not([hidden]):not([style*="display: none"])
+  )::-webkit-scrollbar,
+  html:has(
+    #assistantPage[aria-hidden="false"]:not([style*="display: none"])
+    #heroScreen:not([hidden]):not([style*="display: none"])
+  ) :is(
+    body,
+    .workspace,
+    .workspace-content,
+    #assistantPage,
+    #heroScreen
+  )::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+    display: none !important;
+  }
+}

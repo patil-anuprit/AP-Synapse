@@ -537,8 +537,140 @@
         } catch {}
 
         if (!seen && isAndroid) {
-            setTimeout(openModal, 1100);
+    // Invite only after the user intentionally taps APRISHA.
+    // Do not interrupt startup or change APRISHA voice logic.
+    let invitationShown = false;
+
+    document.addEventListener("click", function(event) {
+        const target = event.target;
+
+        if (invitationShown ||
+            !(target instanceof Element) ||
+            !target.closest("#apAprishaOrderAprishaBtnV1")) {
+            return;
         }
+
+        try {
+            if (localStorage.getItem(SEEN_KEY) === "1") {
+                return;
+            }
+        } catch (_) {}
+
+        invitationShown = true;
+
+        const id = "ap-everywhere-tap-invitation-v1";
+        const style = document.createElement("style");
+
+        style.textContent = `
+          @media (max-width:767px) {
+            #${id} {
+              position:fixed;
+              top:calc(68px + env(safe-area-inset-top, 0px));
+              left:12px;
+              right:12px;
+              max-width:370px;
+              margin-inline:auto;
+              box-sizing:border-box;
+              z-index:2147483647;
+              padding:15px;
+              border:1px solid rgba(217,183,119,.4);
+              border-radius:14px;
+              background:#1b1b1d;
+              color:#f5f0e6;
+              box-shadow:0 16px 38px rgba(0,0,0,.48);
+              font-family:inherit;
+            }
+
+            #${id} .ap-invite-title {
+              font-size:14px;
+              font-weight:650;
+            }
+
+            #${id} .ap-invite-copy {
+              color:#c9c3b8;
+              font-size:12px;
+              line-height:1.5;
+              margin:6px 0 12px;
+            }
+
+            #${id} .ap-invite-actions {
+              display:flex;
+              gap:8px;
+            }
+
+            #${id} button {
+              padding:9px 12px;
+              border-radius:8px;
+              font:inherit;
+              font-size:12px;
+              cursor:pointer;
+            }
+
+            #${id} .ap-invite-enable {
+              background:#d9b777;
+              border:1px solid #d9b777;
+              color:#241c10;
+              font-weight:650;
+            }
+
+            #${id} .ap-invite-later {
+              background:transparent;
+              border:1px solid rgba(255,255,255,.18);
+              color:#ddd4c5;
+            }
+          }
+        `;
+
+        const panel = document.createElement("aside");
+        panel.id = id;
+        panel.setAttribute("role", "region");
+        panel.setAttribute(
+            "aria-label", "APRISHA Everywhere invitation"
+        );
+
+        panel.innerHTML = `
+          <div class="ap-invite-title">
+            APRISHA Everywhere
+          </div>
+          <p class="ap-invite-copy">
+            Want APRISHA beyond AP Synapse?
+            Enable it whenever you're ready.
+          </p>
+          <div class="ap-invite-actions">
+            <button type="button" class="ap-invite-enable">
+              Enable
+            </button>
+            <button type="button" class="ap-invite-later">
+              Not now
+            </button>
+          </div>
+        `;
+
+        function closeInvitation() {
+            panel.remove();
+            style.remove();
+
+            try {
+                localStorage.setItem(SEEN_KEY, "1");
+            } catch (_) {}
+        }
+
+        panel.querySelector(".ap-invite-later")
+            .addEventListener("click", closeInvitation);
+
+        panel.querySelector(".ap-invite-enable")
+            .addEventListener("click", () => {
+                closeInvitation();
+
+                // Reuse existing Android activation flow.
+                openModal();
+            });
+
+        document.head.appendChild(style);
+        document.body.appendChild(panel);
+
+    }, true);
+}
 
         new MutationObserver(mountCard).observe(
             document.documentElement,

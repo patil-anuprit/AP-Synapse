@@ -1,0 +1,76 @@
+
+/* AP Synapse Mobile Message Alignment V4 */
+/* Only mobile chat and Share-dialog controls. */
+
+@media screen and (max-width: 767px) {
+
+  #chatWindow .message.ai
+  .message-body > .ap-response-actions {
+    position: static !important;
+    inset: auto !important;
+    transform: none !important;
+    float: none !important;
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    align-self: flex-start !important;
+    vertical-align: top !important;
+    box-sizing: border-box !important;
+    width: max-content !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 6px 0 0 !important;
+    padding: 3px !important;
+    gap: 5px !important;
+    border-radius: 11px !important;
+    box-shadow: none !important;
+  }
+
+  #chatWindow .message.ai
+  .message-body > .ap-response-actions > button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex: 0 0 30px !important;
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
+    padding: 4px !important;
+    margin: 0 !important;
+    border-radius: 9px !important;
+  }
+
+  #chatWindow .message.ai
+  .message-body > .ap-response-actions
+  .ap-action-label {
+    display: none !important;
+  }
+
+  /* Actual Share conversation close button */
+  #apShareV2Backdrop .ap-share-panel > header >
+  button.ap-share-close[data-action="close"] {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex: 0 0 36px !important;
+    width: 36px !important;
+    height: 36px !important;
+    padding: 0 !important;
+    font: 400 25px/1 Arial, sans-serif !important;
+    color: #e8d3a2 !important;
+    -webkit-text-fill-color: #e8d3a2 !important;
+    text-shadow: none !important;
+  }
+
+  #apShareV2Backdrop .ap-share-panel > header >
+  button.ap-share-close[data-action="close"]::before,
+  #apShareV2Backdrop .ap-share-panel > header >
+  button.ap-share-close[data-action="close"]::after {
+    content: none !important;
+    display: none !important;
+  }
+}

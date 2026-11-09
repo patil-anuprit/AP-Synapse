@@ -64,6 +64,18 @@
     event.preventDefault();
     event.stopImmediatePropagation();
     applyMode(mode === "light" ? "dark" : "light");
+
+    // Close Settings after changing appearance.
+    // Other panels remain unaffected.
+    const panel = document.getElementById("popupPanel");
+    const title = document.getElementById("popupTitle");
+
+    if (
+      panel &&
+      title?.textContent?.trim() === "Settings"
+    ) {
+      panel.style.display = "none";
+    }
   }, true);
 
   // Respect any other existing theme command that toggles the legacy class.

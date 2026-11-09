@@ -603,3 +603,11 @@ html[data-ap-theme="light"] body #synapseIdentityPanel .synapse-identity-close {
   background: #f4f6f8 !important;
   color: #263243 !important;
 }
+
+/* AP_LIGHT_HERO_BROWN_V3 - Light mode only */
+html[data-ap-theme="light"] body .hero-title-main {
+  background-image: none !important;
+  color: #876222 !important;
+  -webkit-text-fill-color: #876222 !important;
+  text-shadow: none !important;
+}

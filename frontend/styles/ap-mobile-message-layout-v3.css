@@ -1,0 +1,157 @@
+
+/* AP SYNAPSE - MOBILE MESSAGE LAYOUT V3 */
+/* Only mobile chat and Share dialog. No JS changes. */
+
+@media screen and (max-width: 767px) {
+
+  /* User message: on the RIGHT */
+  #chatWindow .message.user,
+  #chatWindow .user-message {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    align-self: flex-end !important;
+    justify-content: flex-start !important;
+    width: max-content !important;
+    max-width: calc(100% - 20px) !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: 10px !important;
+    gap: 4px !important;
+    float: none !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+  }
+
+  #chatWindow .message.user > .avatar,
+  #chatWindow .user-message > .avatar {
+    display: none !important;
+  }
+
+  #chatWindow .message.user > .message-body,
+  #chatWindow .user-message > .message-body {
+    width: max-content !important;
+    max-width: 100% !important;
+    align-self: flex-end !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* User actions: directly BELOW the message */
+  #chatWindow .message.user .ap-user-message-actions,
+  #chatWindow .user-message .ap-user-message-actions,
+  #chatWindow .message.user [data-ap-msg-actions="true"] {
+    position: static !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    align-self: flex-end !important;
+    justify-content: flex-end !important;
+    flex: 0 0 auto !important;
+    width: max-content !important;
+    min-width: 0 !important;
+    max-width: max-content !important;
+    height: auto !important;
+    margin: 2px 0 0 !important;
+    padding: 3px !important;
+    gap: 5px !important;
+    transform: none !important;
+    inset: auto !important;
+    box-shadow: none !important;
+  }
+
+  /* Assistant responses: remain on the LEFT */
+  #chatWindow .message.ai {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    gap: 5px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  #chatWindow .message.ai > .message-body {
+    align-self: flex-start !important;
+    width: auto !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+
+  /* Assistant actions: immediately BELOW the response */
+  #chatWindow .message.ai .ap-response-actions,
+  #chatWindow .message.ai [data-ap-msg-actions="true"] {
+    position: static !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    align-self: flex-start !important;
+    justify-content: flex-start !important;
+    flex: 0 0 auto !important;
+    width: max-content !important;
+    min-width: 0 !important;
+    max-width: max-content !important;
+    height: auto !important;
+    margin: 3px 0 0 !important;
+    padding: 3px !important;
+    gap: 5px !important;
+    transform: none !important;
+    inset: auto !important;
+    box-shadow: none !important;
+  }
+
+  /* No oversized action containers */
+  #chatWindow [data-ap-msg-actions="true"] {
+    box-sizing: border-box !important;
+    min-height: 0 !important;
+    max-height: 44px !important;
+    border-radius: 11px !important;
+  }
+
+  #chatWindow .ap-user-message-actions button,
+  #chatWindow .ap-response-actions button {
+    flex: 0 0 30px !important;
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
+    padding: 5px !important;
+    border-radius: 9px !important;
+  }
+
+  /* Share conversation: proper top-right X */
+  #apShareV2Backdrop .ap-share-panel > header > button[data-action="close"],
+  #apShareV2Backdrop .ap-share-panel > header > .ap-share-close,
+  .ap-share-panel > header > .ap-share-close {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex: 0 0 36px !important;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    padding: 0 !important;
+    font-size: 0 !important;
+    color: transparent !important;
+    border-radius: 11px !important;
+    position: relative !important;
+  }
+
+  #apShareV2Backdrop .ap-share-panel > header > button[data-action="close"] > *,
+  .ap-share-panel > header > .ap-share-close > * {
+    display: none !important;
+  }
+
+  #apShareV2Backdrop .ap-share-panel > header > button[data-action="close"]::after,
+  .ap-share-panel > header > .ap-share-close::after {
+    content: "×" !important;
+    display: block !important;
+    color: #f1d9a0 !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 25px !important;
+    font-weight: 400 !important;
+    line-height: 1 !important;
+    -webkit-text-fill-color: #f1d9a0 !important;
+    pointer-events: none !important;
+  }
+}

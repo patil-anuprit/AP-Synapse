@@ -332,3 +332,274 @@ html[data-ap-theme="light"] body :is(button,a,input,select,textarea):focus-visib
 @media (prefers-reduced-motion:reduce) {
   html[data-ap-theme="light"] body * { scroll-behavior: auto; }
 }
+
+/* AP SYNAPSE — LIGHT V2 CONTRAST REFINEMENT
+   Scoped to opt-in Light Mode. Preserve layout, commands, media, and dark theme.
+   Fixes verified against the seven 2026-11-09 Preview screenshots. */
+
+/* 1. SIDEBAR — remove leftover dark blocks without changing sidebar dimensions. */
+html[data-ap-theme="light"] body .sidebar :is(.sidebar-header,.sidebar-group,.recent-group,.history-list,.history-item-content),
+html[data-ap-theme="light"] body .sidebar .brand {
+  background-color: transparent !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body .sidebar .brand-text :is(h2,span),
+html[data-ap-theme="light"] body .sidebar .new-chat-btn :is(span,strong),
+html[data-ap-theme="light"] body .sidebar .ap-install-btn :is(span,strong),
+html[data-ap-theme="light"] body .sidebar :is(.history-title,.history-preview,.history-time),
+html[data-ap-theme="light"] body .sidebar .recent-group h4 {
+  background: transparent !important;
+  -webkit-text-fill-color: #263243 !important;
+  color: #263243 !important;
+  text-shadow: none !important;
+}
+html[data-ap-theme="light"] body .sidebar .brand-text span,
+html[data-ap-theme="light"] body .sidebar :is(.history-preview,.history-time),
+html[data-ap-theme="light"] body .sidebar .recent-group h4 {
+  color: #526173 !important;
+  -webkit-text-fill-color: #526173 !important;
+}
+html[data-ap-theme="light"] body .sidebar :is(.history-item,.history-list,.recent-group),
+html[data-ap-theme="light"] body .sidebar :is(.history-item,.history-list,.recent-group) :is(div,p,small):not(.history-item-content):not(.history-title) {
+  border-color: rgba(28,42,60,.10) !important;
+}
+html[data-ap-theme="light"] body .sidebar .history-list {
+  background: #fff !important;
+  color: #526173 !important;
+}
+html[data-ap-theme="light"] body .sidebar .history-item:hover {
+  background: #f7f4ee !important;
+}
+html[data-ap-theme="light"] body .sidebar .new-chat-btn,
+html[data-ap-theme="light"] body .sidebar .ap-install-btn {
+  background: #fff !important;
+  border: 1px solid #d8dde4 !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body .sidebar .ap-install-icon {
+  color: #846123 !important;
+}
+
+/* 2. HERO — gradient text formerly used a white text-fill on the dark canvas. */
+html[data-ap-theme="light"] body .hero-title,
+html[data-ap-theme="light"] body .hero-title-main {
+  color: #1c2532 !important;
+  -webkit-text-fill-color: #1c2532 !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+html[data-ap-theme="light"] body .hero-title-accent {
+  color: #876222 !important;
+  -webkit-text-fill-color: #876222 !important;
+  text-shadow: none !important;
+}
+html[data-ap-theme="light"] body .recent-intelligence-grid :is(.recent-card,.recent-card-title,.recent-card-meta,.recent-card-action) {
+  color: #293647 !important;
+  -webkit-text-fill-color: #293647 !important;
+  text-shadow: none !important;
+}
+html[data-ap-theme="light"] body .recent-intelligence-grid .recent-card {
+  background: #fff !important;
+  border-color: #e0e4ea !important;
+}
+html[data-ap-theme="light"] body .recent-intelligence-grid .recent-card-meta {
+  color: #647083 !important;
+  -webkit-text-fill-color: #647083 !important;
+}
+html[data-ap-theme="light"] body .recent-intelligence-grid .recent-card-action {
+  color: #835d24 !important;
+  -webkit-text-fill-color: #835d24 !important;
+}
+
+/* 3. INTELLIGENCE FIELD — preserve the modal's geometry and live indicators. */
+html[data-ap-theme="light"] body #intelligenceFieldPanel .intelligence-field-panel-inner {
+  background: linear-gradient(155deg,#fff,#f7f8fa) !important;
+  border-color: #d8dee5 !important;
+  color: #263243 !important;
+  box-shadow: 0 25px 65px rgba(32,43,58,.16) !important;
+}
+html[data-ap-theme="light"] body #intelligenceFieldPanel :is(.intelligence-field-panel-header,.intelligence-field-live,.intelligence-field-metrics > div,.intelligence-field-footer) {
+  background: #fff !important;
+  border-color: #e0e4e9 !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body #intelligenceFieldPanel :is(h2,strong,.intelligence-field-live strong,.intelligence-field-metrics strong) {
+  color: #202c39 !important;
+  -webkit-text-fill-color: #202c39 !important;
+}
+html[data-ap-theme="light"] body #intelligenceFieldPanel :is(.popup-kicker,.intelligence-field-live span,.intelligence-field-metrics span,.intelligence-field-footer span) {
+  color: #526174 !important;
+  -webkit-text-fill-color: #526174 !important;
+}
+html[data-ap-theme="light"] body #intelligenceFieldPanel .popup-close {
+  background: #f3f5f7 !important;
+  color: #263243 !important;
+  border-color: #d9dfe7 !important;
+}
+
+/* 4. ORIGINAL APRISHA VOICE DIALOG — presentation only, keep Speak / Stop events. */
+html[data-ap-theme="light"] body #apDedicatedAprishaOverlay .ap-dedicated-aprisha-panel {
+  background: linear-gradient(160deg,#fff,#fafafa) !important;
+  border-color: #dce1e7 !important;
+  color: #202b38 !important;
+  box-shadow: 0 25px 75px rgba(28,36,49,.18) !important;
+}
+html[data-ap-theme="light"] body #apDedicatedAprishaOverlay .ap-dedicated-aprisha-head {
+  background: #fff !important;
+  border-color: #e4e7ec !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body #apDedicatedAprishaOverlay .ap-dedicated-aprisha-body {
+  background: transparent !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body #apDedicatedAprishaOverlay .ap-dedicated-aprisha-status {
+  color: #263243 !important;
+  -webkit-text-fill-color: #263243 !important;
+}
+html[data-ap-theme="light"] body #apDedicatedAprishaOverlay .ap-dedicated-aprisha-transcript {
+  color: #526174 !important;
+  -webkit-text-fill-color: #526174 !important;
+}
+html[data-ap-theme="light"] body #apDedicatedAprishaOverlay .ap-dedicated-aprisha-orb {
+  color: #866321 !important;
+  border-color: #d5bd87 !important;
+  background: #faf5e8 !important;
+}
+html[data-ap-theme="light"] body #apDedicatedAprishaOverlay .ap-dedicated-aprisha-close,
+html[data-ap-theme="light"] body #apDedicatedAprishaOverlay .ap-dedicated-aprisha-actions button.secondary {
+  background: #f1f3f6 !important;
+  border-color: #dde2e9 !important;
+  color: #263243 !important;
+}
+
+/* 5. APRISHA HUMAN INTERFACE — controls and labels must be readable on ivory. */
+html[data-ap-theme="light"] body #apAprishaHumanInterfaceV2 .aphi-panel {
+  background: linear-gradient(155deg,#fff,#f8f9fa) !important;
+  border-color: #d7dfe7 !important;
+  color: #25313e !important;
+}
+html[data-ap-theme="light"] body #apAprishaHumanInterfaceV2 :is(.aphi-header,.aphi-card,.aphi-stat,.aphi-rule,.aphi-teach,.aphi-settings) {
+  background: #fff !important;
+  border-color: #dfe4ea !important;
+  color: #25313e !important;
+}
+html[data-ap-theme="light"] body #apAprishaHumanInterfaceV2 :is(h2,h3,.aphi-stat strong) {
+  color: #25313e !important;
+  -webkit-text-fill-color: #25313e !important;
+}
+html[data-ap-theme="light"] body #apAprishaHumanInterfaceV2 :is(.aphi-kicker,.aphi-sub,.aphi-cardtop,.aphi-stat small,.aphi-teach-status,.aphi-note,label) {
+  color: #536175 !important;
+  -webkit-text-fill-color: #536175 !important;
+}
+html[data-ap-theme="light"] body #apAprishaHumanInterfaceV2 :is(.aphi-secondary,.aphi-x,.aphi-remove,.aphi-danger) {
+  background: #f4f6f8 !important;
+  color: #263243 !important;
+  border-color: #dce1e8 !important;
+}
+html[data-ap-theme="light"] body #apAprishaHumanInterfaceV2 :is(input:not([type="checkbox"]),select) {
+  background: #fcfcfd !important;
+  color: #25313e !important;
+  border-color: #dce1e8 !important;
+}
+html[data-ap-theme="light"] body #apAprishaHumanInterfaceV2 .aphi-primary {
+  background: #263243 !important;
+  color: #fff !important;
+}
+/* Deliberately preserve the dark camera preview and its high-contrast in-video chip. */
+html[data-ap-theme="light"] body #apAprishaHumanInterfaceV2 .aphi-cardtop {
+  background: #f8f9fa !important;
+  border-color: #e2e6ea !important;
+}
+html[data-ap-theme="light"] body #apAprishaHumanInterfaceV2 .aphi-confirmbox {
+  background: #fff !important;
+  border-color: #dfe4ea !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body #apAprishaHumanInterfaceV2 .aphi-confirmbox p {
+  color: #526174 !important;
+}
+
+/* 6. NOTIFICATIONS — formerly light header over a dark, low-contrast body. */
+html[data-ap-theme="light"] body .ap-notification-panel {
+  background: #fff !important;
+  border-color: #dce1e7 !important;
+  color: #263243 !important;
+  box-shadow: 0 24px 65px rgba(30,42,58,.16) !important;
+}
+html[data-ap-theme="light"] body .ap-notification-panel :is(.ap-notification-header,.ap-notification-list,.ap-notification-footer,.ap-notification-empty) {
+  background: #fff !important;
+  border-color: #e4e8ec !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body .ap-notification-panel :is(h2,strong,.ap-notification-empty strong,.ap-notification-item-content strong) {
+  color: #202b38 !important;
+  -webkit-text-fill-color: #202b38 !important;
+}
+html[data-ap-theme="light"] body .ap-notification-panel :is(p,small,time,.ap-notification-empty span,.ap-notification-footer button,.ap-notification-item-content p) {
+  color: #566375 !important;
+  -webkit-text-fill-color: #566375 !important;
+}
+html[data-ap-theme="light"] body .ap-notification-panel .ap-notification-item {
+  background: #fafbfc !important;
+  border-color: #e2e6eb !important;
+}
+
+/* 7. IDENTITY — correct white-on-cream text and pale disabled-looking chips. */
+html[data-ap-theme="light"] body #profileCard {
+  background: #fff !important;
+  border-color: #dce1e7 !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body #profileCard :is(.popup-header,.profile-hero,.profile-status,.profile-details,.profile-capabilities,.profile-account-section,.google-identity-section) {
+  background: #fff !important;
+  border-color: #e1e6ec !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body #profileCard :is(h2,h3,h4,.profile-identity strong,.profile-identity h3,.profile-details strong,.profile-section-label,.google-identity-copy h4) {
+  color: #202b38 !important;
+  -webkit-text-fill-color: #202b38 !important;
+}
+html[data-ap-theme="light"] body #profileCard :is(.profileEmail,.profile-identity p,.google-identity-copy p,.profile-details span,.profile-status span,.google-identity-eyebrow) {
+  color: #546275 !important;
+  -webkit-text-fill-color: #546275 !important;
+}
+html[data-ap-theme="light"] body #profileCard .profile-capabilities span {
+  color: #77571f !important;
+  -webkit-text-fill-color: #77571f !important;
+  background: #fbf7ee !important;
+  border-color: #eaddc6 !important;
+}
+html[data-ap-theme="light"] body #profileCard :is(.synapse-account-action,.popup-close) {
+  background: #f5f6f8 !important;
+  color: #263243 !important;
+  border-color: #e0e5ea !important;
+}
+html[data-ap-theme="light"] body #profileCard .profile-avatar {
+  color: #866322 !important;
+  -webkit-text-fill-color: #866322 !important;
+}
+
+/* 8. SYNAPSE IDENTITY — avoid mixed dark/light popup fragments. */
+html[data-ap-theme="light"] body #synapseIdentityPanel {
+  background: #fff !important;
+  border-color: #dce2e8 !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body #synapseIdentityPanel :is(.synapse-identity-panel-header,.synapse-identity-status,.synapse-identity-stat) {
+  background: #fff !important;
+  border-color: #e2e7ed !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body #synapseIdentityPanel :is(h3,strong,.synapse-identity-panel-brand) {
+  color: #263243 !important;
+  -webkit-text-fill-color: #263243 !important;
+}
+html[data-ap-theme="light"] body #synapseIdentityPanel :is(.synapse-identity-panel-kicker,.synapse-identity-stat span,.synapse-identity-status span) {
+  color: #596777 !important;
+  -webkit-text-fill-color: #596777 !important;
+}
+html[data-ap-theme="light"] body #synapseIdentityPanel .synapse-identity-close {
+  background: #f4f6f8 !important;
+  color: #263243 !important;
+}

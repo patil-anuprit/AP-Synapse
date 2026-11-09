@@ -611,3 +611,150 @@ html[data-ap-theme="light"] body .hero-title-main {
   -webkit-text-fill-color: #876222 !important;
   text-shadow: none !important;
 }
+
+/* AP SYNAPSE LIGHT V3: targeted contrast fixes; no dark-theme rules. */
+/* Sidebar identity and navigation: eliminate black strips. */
+html[data-ap-theme="light"] body aside.sidebar .brand,
+html[data-ap-theme="light"] body aside.sidebar .brand-text,
+html[data-ap-theme="light"] body aside.sidebar .sidebar-group,
+html[data-ap-theme="light"] body aside.sidebar .sidebar-group h4,
+html[data-ap-theme="light"] body aside.sidebar .recent-group,
+html[data-ap-theme="light"] body aside.sidebar .history-list,
+html[data-ap-theme="light"] body aside.sidebar .sidebar-header {
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+html[data-ap-theme="light"] body aside.sidebar .brand-text :is(h1,h2,h3,span,p),
+html[data-ap-theme="light"] body aside.sidebar .sidebar-group h4 {
+  color: #263241 !important;
+  -webkit-text-fill-color: #263241 !important;
+}
+html[data-ap-theme="light"] body aside.sidebar .sidebar-group h4 {
+  border-color: #e3e6ea !important;
+}
+html[data-ap-theme="light"] body aside.sidebar .recent-group .history-list,
+html[data-ap-theme="light"] body aside.sidebar .recent-group .history-item,
+html[data-ap-theme="light"] body aside.sidebar .recent-group .history-empty,
+html[data-ap-theme="light"] body aside.sidebar .recent-group .empty-state {
+  background-color: #f7f8fa !important;
+  color: #556273 !important;
+  -webkit-text-fill-color: #556273 !important;
+}
+html[data-ap-theme="light"] body aside.sidebar .recent-group .history-item:hover {
+  background-color: #f8f0e1 !important;
+}
+/* Notifications: maintain one white surface, including empty state and footer. */
+html[data-ap-theme="light"] body #apSynapseNotificationCenter .ap-notification-panel,
+html[data-ap-theme="light"] body #apSynapseNotificationCenter .ap-notification-header,
+html[data-ap-theme="light"] body #apSynapseNotificationCenter .ap-notification-list,
+html[data-ap-theme="light"] body #apSynapseNotificationCenter .ap-notification-empty,
+html[data-ap-theme="light"] body #apSynapseNotificationCenter .ap-notification-footer {
+  background: #fff !important;
+  background-image: none !important;
+  color: #283343 !important;
+  border-color: #e2e6ea !important;
+}
+html[data-ap-theme="light"] body #apSynapseNotificationCenter .ap-notification-empty strong,
+html[data-ap-theme="light"] body #apSynapseNotificationCenter .ap-notification-header h2 {
+  color: #202a36 !important;
+  -webkit-text-fill-color: #202a36 !important;
+}
+html[data-ap-theme="light"] body #apSynapseNotificationCenter .ap-notification-empty span,
+html[data-ap-theme="light"] body #apSynapseNotificationCenter .ap-notification-footer :is(span,button),
+html[data-ap-theme="light"] body #apSynapseNotificationCenter .ap-notification-header p {
+  color: #617084 !important;
+  -webkit-text-fill-color: #617084 !important;
+}
+/* Automation: previously inline black result box with almost invisible placeholder. */
+html[data-ap-theme="light"] body #automationPage #automationResult {
+  background: #f8fafc !important;
+  background-image: none !important;
+  border: 1px solid #dbe1e8 !important;
+  color: #283343 !important;
+  -webkit-text-fill-color: #283343 !important;
+}
+/* Intelligence Core: cards remain subtle; titles never white-on-light. */
+html[data-ap-theme="light"] body #ultimateSettings .ultimate-settings-section,
+html[data-ap-theme="light"] body #ultimateSettings .ultimate-setting {
+  color: #273342 !important;
+  border-color: #dbe1e7 !important;
+}
+html[data-ap-theme="light"] body #ultimateSettings .ultimate-setting {
+  background: #fff !important;
+  background-image: none !important;
+}
+html[data-ap-theme="light"] body #ultimateSettings .ultimate-setting-main strong,
+html[data-ap-theme="light"] body #ultimateSettings .ultimate-section-title h3 {
+  color: #263241 !important;
+  -webkit-text-fill-color: #263241 !important;
+  text-shadow: none !important;
+}
+html[data-ap-theme="light"] body #ultimateSettings .ultimate-setting-main small,
+html[data-ap-theme="light"] body #ultimateSettings .ultimate-section-title p {
+  color: #5b6878 !important;
+  -webkit-text-fill-color: #5b6878 !important;
+}
+/* Personalization: entire profile uses visible light surfaces and graphite labels. */
+html[data-ap-theme="light"] body .ap-personalization-workspace-shell,
+html[data-ap-theme="light"] body .ap-personalization-workspace-main {
+  background: #f7f8fa !important;
+  background-image: none !important;
+  color: #253142 !important;
+}
+html[data-ap-theme="light"] body .ap-personalization-workspace-header,
+html[data-ap-theme="light"] body .ap-personalization-shell,
+html[data-ap-theme="light"] body .ap-personalization-head,
+html[data-ap-theme="light"] body .ap-personalization-body {
+  background: #fff !important;
+  background-image: none !important;
+  color: #253142 !important;
+  border-color: #e2e6eb !important;
+}
+html[data-ap-theme="light"] body .ap-personalization-switch,
+html[data-ap-theme="light"] body .ap-personalization-controls {
+  background: #f8fafc !important;
+  color: #253142 !important;
+  border-color: #e0e5eb !important;
+}
+html[data-ap-theme="light"] body .ap-personalization-workspace-shell :is(h1,h2,h3,h4,.ap-personalization-title,.ap-personalization-switch-copy strong),
+html[data-ap-theme="light"] body .ap-personalization-shell .ap-personalization-field label {
+  color: #253142 !important;
+  -webkit-text-fill-color: #253142 !important;
+}
+html[data-ap-theme="light"] body .ap-personalization-workspace-shell :is(p,small,.ap-personalization-switch-copy span),
+html[data-ap-theme="light"] body .ap-personalization-head p {
+  color: #5a697b !important;
+  -webkit-text-fill-color: #5a697b !important;
+}
+html[data-ap-theme="light"] body .ap-personalization-shell :is(input:not([type="checkbox"]),textarea,select) {
+  background: #fff !important;
+  color: #253142 !important;
+  border-color: #d5dde5 !important;
+}
+html[data-ap-theme="light"] body .ap-personalization-shell :is(input,textarea)::placeholder {
+  color: #758192 !important;
+  opacity: 1 !important;
+}
+/* Code Studio: unify the explorer in light mode, without editing the dark code editor. */
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-workspace .ap-code-explorer {
+  background: #f7f8fa !important;
+  background-image: none !important;
+  color: #253142 !important;
+  border-color: #dbe2ea !important;
+}
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-explorer :is(.ap-code-panel-title,.ap-code-project-name) {
+  background: #f2f4f7 !important;
+  color: #253142 !important;
+  border-color: #dbe2ea !important;
+}
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-explorer .ap-code-file {
+  background: transparent !important;
+  color: #3d4b5d !important;
+  border-color: transparent !important;
+}
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-explorer .ap-code-file.active,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-explorer .ap-code-file:hover {
+  background: #eee6d6 !important;
+  color: #77571f !important;
+}

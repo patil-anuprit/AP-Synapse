@@ -758,3 +758,197 @@ html[data-ap-theme="light"] body #codeStudioPage .ap-code-explorer .ap-code-file
   background: #eee6d6 !important;
   color: #77571f !important;
 }
+
+/* AP LIGHT CODE STUDIO AND COLLAPSED RAIL V4 */
+
+html[data-ap-theme="light"] body #codeStudioPage,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-pro,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-body,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-workspace {
+
+  background: #fff !important;
+  background-image: none !important;
+  color: #273344 !important;
+  border-color: #e2e6eb !important;
+  color-scheme: light;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-backdrop {
+
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-explorer,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-ai,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-ai-panel {
+
+  background: #f8f9fb !important;
+  background-image: none !important;
+  color: #273344 !important;
+  border-color: #dfe5ed !important;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-editor-panel,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-editor,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-editor-host,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-editor-body,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-ai-content,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-output-pro,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-ai-card,
+html[data-ap-theme="light"] body #codeStudioPage .ap-ai-card,
+html[data-ap-theme="light"] body #codeStudioPage .ap-ai-result {
+
+  background: #fff !important;
+  background-image: none !important;
+  color: #273344 !important;
+  border-color: #e2e6eb !important;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-header,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-tabs,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-ai-head,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-section-head,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-panel-title,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-project,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-project-name,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-footer,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-status,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-editor-status {
+
+  background: #f7f8fa !important;
+  background-image: none !important;
+  color: #344154 !important;
+  border-color: #dce3eb !important;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-brand-title,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-brand-sub,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-file,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-tab,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-project-name,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-section-head,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-ai-head,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-ai-content,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-output-pro,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-panel-title,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-editor-status {
+
+  color: #344154 !important;
+  -webkit-text-fill-color: #344154 !important;
+  text-shadow: none !important;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-lines,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-line-numbers {
+
+  background: #fafbfc !important;
+  color: #7e8b9c !important;
+  -webkit-text-fill-color: #7e8b9c !important;
+  border-color: #e4e9ef !important;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage #codeStudioInput,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-input-pro,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-editor textarea,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-editor-body textarea {
+
+  background: #fff !important;
+  background-image: none !important;
+  color: #233143 !important;
+  -webkit-text-fill-color: #233143 !important;
+  caret-color: #946d29 !important;
+  border-color: #e1e6eb !important;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage #codeStudioInput::placeholder,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-input-pro::placeholder,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-editor textarea::placeholder {
+
+  color: #7a8798 !important;
+  -webkit-text-fill-color: #7a8798 !important;
+  opacity: 1 !important;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-file,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-tab,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-action {
+
+  background: transparent !important;
+  background-image: none !important;
+  color: #344154 !important;
+  -webkit-text-fill-color: #344154 !important;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-file.active,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-tab.active,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-file:hover,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-tab:hover {
+
+  background: #f2ebdc !important;
+  color: #795820 !important;
+  -webkit-text-fill-color: #795820 !important;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-primary,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-analyze,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-ai-button {
+
+  background: #d8b45e !important;
+  background-image: none !important;
+  color: #212a35 !important;
+  -webkit-text-fill-color: #212a35 !important;
+
+}
+
+html[data-ap-theme="light"] body #apCollapsedRail,
+html[data-ap-theme="light"] body .ap-collapsed-rail {
+
+  background: #f8f9fb !important;
+  background-image: none !important;
+  color: #273344 !important;
+  border-color: #dce3eb !important;
+  box-shadow: 2px 12px 30px rgba(34,43,57,.07) !important;
+  color-scheme: light;
+
+}
+
+html[data-ap-theme="light"] body #apCollapsedRail .ap-rail-btn,
+html[data-ap-theme="light"] body #apCollapsedRail .ap-rail-brand {
+
+  background: #fff !important;
+  background-image: none !important;
+  color: #273344 !important;
+  -webkit-text-fill-color: #273344 !important;
+  border-color: #dce3eb !important;
+  box-shadow: none !important;
+
+}
+
+html[data-ap-theme="light"] body #apCollapsedRail .ap-rail-btn:hover,
+html[data-ap-theme="light"] body #apCollapsedRail .ap-rail-brand:hover {
+
+  background: #f2ebdc !important;
+  color: #795820 !important;
+  -webkit-text-fill-color: #795820 !important;
+  border-color: #d9c18e !important;
+
+}
+
+html[data-ap-theme="light"] body body.ap-sidebar-collapsed .workspace {
+
+  background: #f7f8fa !important;
+
+}

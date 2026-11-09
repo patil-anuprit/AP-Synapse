@@ -74,3 +74,60 @@
     display: none !important;
   }
 }
+
+
+/* AP SYNAPSE COMPACT MESSAGE CONTROLS V5 */
+/* Mobile chat actions only. */
+
+@media screen and (max-width: 767px) {
+
+  #chatWindow .message.user .ap-user-message-actions,
+  #chatWindow .user-message .ap-user-message-actions,
+  #chatWindow .message.ai .message-body > .ap-response-actions {
+    gap: 4px !important;
+    padding: 2px !important;
+    margin-top: 4px !important;
+    background: transparent !important;
+    background-image: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    filter: none !important;
+  }
+
+  #chatWindow .message.user .ap-user-message-actions > button,
+  #chatWindow .user-message .ap-user-message-actions > button,
+  #chatWindow .message.ai .message-body > .ap-response-actions > button {
+    flex: 0 0 26px !important;
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 26px !important;
+    min-height: 26px !important;
+    max-width: 26px !important;
+    max-height: 26px !important;
+    padding: 5px !important;
+    margin: 0 !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(185,150,82,.22) !important;
+    background: rgba(255,255,255,.025) !important;
+    box-shadow: none !important;
+    filter: none !important;
+    opacity: .88 !important;
+  }
+
+  #chatWindow .ap-user-message-actions > button svg,
+  #chatWindow .ap-response-actions > button svg {
+    width: 14px !important;
+    height: 14px !important;
+    max-width: 14px !important;
+    max-height: 14px !important;
+  }
+
+  #chatWindow .ap-user-message-actions > button:hover,
+  #chatWindow .ap-response-actions > button:hover,
+  #chatWindow .ap-user-message-actions > button:focus-visible,
+  #chatWindow .ap-response-actions > button:focus-visible {
+    background: rgba(185,150,82,.10) !important;
+    border-color: rgba(185,150,82,.48) !important;
+    opacity: 1 !important;
+  }
+}

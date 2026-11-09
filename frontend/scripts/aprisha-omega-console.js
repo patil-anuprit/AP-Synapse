@@ -137,6 +137,71 @@
     return root;
   }
 
+  // AP_APRISHA_OMEGA_HUMAN_RESULT_V1
+  // View-only summary. APRISHA Omega retains its complete structured run history.
+  function describeOmegaRun(result, goal) {
+    const steps = Array.isArray(result?.results) ? result.results : [];
+    if (!result?.ok) return { ok: false, message: "APRISHA could not complete the request." };
+    if (!steps.length) return { ok: true, message: "APRISHA has finished processing your request." };
+
+    const niceName = (value) => {
+      const name = String(value || "").trim();
+      const standard = { youtube: "YouTube", github: "GitHub", whatsapp: "WhatsApp", gmail: "Gmail", spotify: "Spotify", google: "Google" };
+      return standard[name.toLowerCase()] || (name ? name[0].toUpperCase() + name.slice(1) : "the website");
+    };
+
+    const lines = steps.map((step) => {
+      const action = String(step?.goal || goal || "the requested action").trim().slice(0, 120);
+      if (step?.error || step?.verification?.ok === false) {
+        const message = String(step.error || step.verification?.message || "The action could not be verified.").trim();
+        return `Could not complete “${action}”. ${message.slice(0, 180)}`;
+      }
+
+      const output = step?.result;
+      const skill = String(step?.skill || "");
+      if (skill === "web.open_known" && output?.opened === true)
+        return `Opened ${niceName(output.service)} in a new tab.`;
+      if (skill === "web.open_url" && output?.opened === true)
+        return "Opened the website in a new tab.";
+      if (skill === "web.search" && output?.opened === true)
+        return "Opened your web search in a new tab.";
+      if (skill === "ui.click" && output?.clicked === true)
+        return "Clicked the requested control.";
+      if (skill === "ui.type" && output?.typed === true)
+        return "Entered the text into the selected field.";
+      if (skill === "clipboard.write" && output?.written === true)
+        return "Copied the text to your clipboard.";
+      if (skill === "clipboard.read" && typeof output?.text === "string")
+        return `Clipboard text: ${output.text.slice(0, 1200)}`;
+      if (skill === "browser.back" && output?.requested === true)
+        return "Going back to the previous page.";
+      if (skill === "browser.forward" && output?.requested === true)
+        return "Moving to the next page.";
+      if (skill === "browser.reload" && output?.requested === true)
+        return "Refreshing the page.";
+      if (skill === "time.wait" && typeof output?.waitedMs === "number")
+        return "Finished waiting.";
+      if (skill === "omega.status" && Number.isFinite(Number(output?.skills)))
+        return `APRISHA Ω is ready, with ${Number(output.skills)} skills available.`;
+      if (skill === "ap.event" && output?.dispatched === true)
+        return "The requested action was dispatched.";
+
+      // Use a concise, human-authored verification message when available;
+      // never surface entire internal step/result objects to end users.
+      const verifiedMessage = step?.verification?.message;
+      if (typeof verifiedMessage === "string" && verifiedMessage.trim() &&
+          !/^[\s]*[\[{]/.test(verifiedMessage)) {
+        const message = verifiedMessage.trim().slice(0, 180);
+        return message[0].toUpperCase() + message.slice(1);
+      }
+      // Legacy skills may delegate actions without independently verifying outcomes.
+      return `APRISHA finished processing: ${action}.`;
+    });
+
+    const ok = !steps.some((step) => !!step?.error || step?.verification?.ok === false);
+    return { ok, message: lines.join("\n") };
+  }
+
   async function boot() {
     const omega = await waitForOmega();
     if (!omega) {
@@ -186,8 +251,9 @@
       status.textContent = `Planning: ${goal}`;
       try {
         const result = await omega.run(goal, { source: "omega-topbar-console" });
-        status.classList.add("ao-good");
-        status.textContent = `Done\n${JSON.stringify(result.results, null, 2)}`;
+        const friendly = describeOmegaRun(result, goal);
+        status.classList.add(friendly.ok ? "ao-good" : "ao-bad");
+        status.textContent = friendly.message;
         input.value = "";
       } catch (error) {
         status.classList.add("ao-bad");

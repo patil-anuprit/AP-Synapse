@@ -64,18 +64,31 @@
     event.preventDefault();
     event.stopImmediatePropagation();
     applyMode(mode === "light" ? "dark" : "light");
+    // AP_THEME_CLOSE_SETTINGS_CLEAN_V6
+    const themeSettingsPopupV6 =
+      document.getElementById("popupPanel");
 
-    // Close Settings after changing appearance.
-    // Other panels remain unaffected.
-    const panel = document.getElementById("popupPanel");
-    const title = document.getElementById("popupTitle");
+    const themeSettingsTitleV6 =
+      document.getElementById("popupTitle");
 
-    if (
-      panel &&
-      title?.textContent?.trim() === "Settings"
-    ) {
-      panel.style.display = "none";
+    if (themeSettingsPopupV6 && (
+      target.id === "themeToggle" ||
+      themeSettingsTitleV6?.textContent
+        ?.trim().toLowerCase() === "settings"
+    )) {
+      const themeSettingsCloseV6 =
+        document.getElementById("closePopup");
+
+      if (themeSettingsCloseV6)
+        themeSettingsCloseV6.click();
+
+      themeSettingsPopupV6.style.display = "none";
+
+      themeSettingsPopupV6.classList.remove(
+        "open", "active", "show", "visible"
+      );
     }
+
   }, true);
 
   // Respect any other existing theme command that toggles the legacy class.

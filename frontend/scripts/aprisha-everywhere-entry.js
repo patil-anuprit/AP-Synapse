@@ -536,9 +536,8 @@
                 localStorage.getItem(SEEN_KEY) === "1";
         } catch {}
 
-        if (!seen && isAndroid) {
-            setTimeout(openModal, 1100);
-        }
+        // Mobile first-launch popup intentionally disabled.
+        // Manual Aprisha Everywhere activation remains available.
 
         new MutationObserver(mountCard).observe(
             document.documentElement,

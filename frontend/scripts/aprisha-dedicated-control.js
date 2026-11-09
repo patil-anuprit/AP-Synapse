@@ -215,7 +215,7 @@
                     <span>Aprisha</span>
                     <button class="ap-dedicated-aprisha-close"
                             type="button"
-                            aria-label="Close Aprisha">Ã—</button>
+                            aria-label="Close Aprisha">X</button>
                 </div>
 
                 <div class="ap-dedicated-aprisha-body">

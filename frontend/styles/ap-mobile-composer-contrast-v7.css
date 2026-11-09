@@ -1,0 +1,81 @@
+
+/* AP SYNAPSE MOBILE LIGHT - COMPOSER VISIBILITY V7 */
+/* Mobile Light Mode only. No changes to hidden states or actions. */
+
+@media screen and (max-width: 767px) {
+
+  html[data-ap-theme="light"] body
+  .command-bar .command-tools {
+    align-items: center !important;
+    min-height: 30px !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .command-bar .command-tools > button.command-tool,
+  html[data-ap-theme="light"] body
+  .command-bar .command-tools > button.command-action {
+    background: #f3f5f7 !important;
+    background-image: none !important;
+    color: #344154 !important;
+    -webkit-text-fill-color: #344154 !important;
+    border: 1px solid #e0e5eb !important;
+    opacity: 1 !important;
+    filter: none !important;
+    box-shadow: none !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .command-bar .command-tools > button.command-tool svg {
+    width: 17px !important;
+    height: 17px !important;
+    color: #344154 !important;
+    stroke: #344154 !important;
+    fill: none !important;
+    stroke-width: 1.7 !important;
+    opacity: 1 !important;
+    filter: none !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .command-bar .command-tool svg
+  :is(path,rect,circle,line,polyline) {
+    stroke: #344154 !important;
+    opacity: 1 !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .command-bar .command-tool .ap-semantic-icon,
+  html[data-ap-theme="light"] body
+  .command-bar .command-tool .ap-semantic-icon svg {
+    color: #344154 !important;
+    opacity: 1 !important;
+    filter: none !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .command-bar #liveTalkBtn .live-talk-label {
+    color: #344154 !important;
+    -webkit-text-fill-color: #344154 !important;
+    opacity: 1 !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .command-bar #liveTalkBtn .live-core {
+    background: #b68b38 !important;
+    opacity: 1 !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .command-bar .command-tool.active,
+  html[data-ap-theme="light"] body
+  .command-bar .command-tool[aria-pressed="true"] {
+    background: #f3e9d6 !important;
+    border-color: #d7b779 !important;
+    color: #795820 !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .command-bar .command-tool:disabled {
+    opacity: .45 !important;
+  }
+}

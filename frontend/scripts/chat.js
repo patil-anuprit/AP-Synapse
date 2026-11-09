@@ -2810,23 +2810,13 @@ showToast(btn.innerText+" feature coming in AP Synapse v1.1");
 
 });
 
-addMessage(
 
-"ai-message",
+const imagePrompt = document.getElementById("userInput");
+if (imagePrompt) {
+  imagePrompt.placeholder = "Describe the image you want to create...";
+  imagePrompt.focus();
+}
 
-`?? Image generation is ready.
-
-Type something like:
-
-ï¿½ Create a futuristic city
-
-ï¿½ Draw a solar system
-
-ï¿½ Generate a medical diagram
-
-ï¿½ Create an AI logo`
-
-);
 
 });
 

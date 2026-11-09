@@ -1,0 +1,148 @@
+
+/* AP SYNAPSE MOBILE LIGHT V6 - MOBILE ONLY */
+@media screen and (max-width: 767px) {
+
+  html[data-ap-theme="light"] body
+  .hero-actions .hero-action-btn {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #273344 !important;
+    -webkit-text-fill-color: #273344 !important;
+    border-color: #e5d8bf !important;
+    box-shadow: 0 5px 18px rgba(31,40,54,.05) !important;
+    text-shadow: none !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .hero-actions .hero-action-btn:hover,
+  html[data-ap-theme="light"] body
+  .hero-actions .hero-action-btn:focus-visible {
+    background: #fbf5e8 !important;
+    background-image: none !important;
+    color: #795822 !important;
+    -webkit-text-fill-color: #795822 !important;
+  }
+
+  html[data-ap-theme="light"] body .hero-description {
+    color: #64748b !important;
+    -webkit-text-fill-color: #64748b !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .recent-intelligence {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #273344 !important;
+    border-color: #e4e8ed !important;
+    box-shadow: 0 11px 32px rgba(27,39,55,.055) !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .recent-intelligence .recent-intelligence-grid {
+    background: transparent !important;
+    background-image: none !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .recent-intelligence .recent-card,
+  html[data-ap-theme="light"] body
+  .recent-intelligence .recent-intelligence-grid > * {
+    background: #fcfcfd !important;
+    background-image: none !important;
+    color: #273344 !important;
+    border-color: #e3e8ee !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .recent-intelligence :is(h2,h3,.recent-card-title) {
+    color: #273344 !important;
+    -webkit-text-fill-color: #273344 !important;
+    text-shadow: none !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .recent-intelligence :is(.recent-card-meta,#viewAllHistoryBtn) {
+    color: #667487 !important;
+    -webkit-text-fill-color: #667487 !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .recent-intelligence :is(.recent-kicker,.recent-card-action) {
+    color: #876321 !important;
+    -webkit-text-fill-color: #876321 !important;
+  }
+
+  /* Notification panel: white header, body and footer. */
+  html[data-ap-theme="light"] body
+  #apSynapseNotificationCenter .ap-notification-panel,
+  html[data-ap-theme="light"] body
+  #apSynapseNotificationCenter .ap-notification-panel > *,
+  html[data-ap-theme="light"] body
+  #apSynapseNotificationCenter .ap-notification-empty,
+  html[data-ap-theme="light"] body
+  .ap-notification-panel,
+  html[data-ap-theme="light"] body
+  .ap-notification-panel > *,
+  html[data-ap-theme="light"] body
+  .ap-notification-panel .ap-notification-empty {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #263344 !important;
+    border-color: #e3e8ef !important;
+    color-scheme: light;
+  }
+
+  html[data-ap-theme="light"] body
+  .ap-notification-panel :is(
+    .ap-notification-header h2,
+    .ap-notification-empty strong,
+    .ap-notification-item-content strong
+  ) {
+    color: #243144 !important;
+    -webkit-text-fill-color: #243144 !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .ap-notification-panel :is(
+    .ap-notification-header p,
+    .ap-notification-empty span,
+    .ap-notification-item-content p,
+    .ap-notification-footer
+  ) {
+    color: #5c6c7e !important;
+    -webkit-text-fill-color: #5c6c7e !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .ap-notification-panel .ap-notification-empty-icon {
+    background: #fbf5e9 !important;
+    color: #8a6525 !important;
+    border-color: #e3d4b6 !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .ap-notification-panel .ap-notification-footer button {
+    color: #795822 !important;
+    -webkit-text-fill-color: #795822 !important;
+  }
+
+  /* Improve existing mobile composer icon contrast. */
+  html[data-ap-theme="light"] body
+  .command-bar .command-tools :is(.command-tool,.command-action) {
+    color: #526175 !important;
+    -webkit-text-fill-color: #526175 !important;
+    opacity: 1 !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .command-bar .command-tools .command-tool svg {
+    stroke: currentColor !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .command-bar #userInput::placeholder {
+    color: #8b6828 !important;
+    -webkit-text-fill-color: #8b6828 !important;
+    opacity: 1 !important;
+  }
+}

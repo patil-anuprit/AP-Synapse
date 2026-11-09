@@ -1,0 +1,954 @@
+/* AP SYNAPSE — PREMIUM LIGHT APPEARANCE V1
+   Opt-in only. No selector takes effect unless the root carries data-ap-theme="light".
+   Preserve original dark theme, UI geometry, media, code editors and canvases. */
+html[data-ap-theme="light"] {
+  color-scheme: light;
+  --apl-bg: #f7f8fa;
+  --apl-paper: #ffffff;
+  --apl-soft: #fcfcfb;
+  --apl-ink: #19212b;
+  --apl-body: #303a49;
+  --apl-muted: #697586;
+  --apl-border: rgba(32, 43, 57, .105);
+  --apl-border-strong: rgba(34, 46, 60, .16);
+  --apl-gold: #946d29;
+  --apl-gold-deep: #71521d;
+  --apl-gold-wash: rgba(180, 133, 48, .09);
+  --apl-shadow: 0 10px 32px rgba(24, 33, 45, .045);
+}
+
+/* The shell. Background animation is retained with softer contrast. */
+html[data-ap-theme="light"] body,
+html[data-ap-theme="light"] body .app,
+html[data-ap-theme="light"] body .workspace,
+html[data-ap-theme="light"] body .workspace-content,
+html[data-ap-theme="light"] body .workspace-page,
+html[data-ap-theme="light"] body .conversation,
+html[data-ap-theme="light"] body .hero-screen,
+html[data-ap-theme="light"] body .hero-container,
+html[data-ap-theme="light"] body .projects-page {
+  color: var(--apl-ink) !important;
+  background-color: transparent !important;
+}
+html[data-ap-theme="light"] body {
+  background: var(--apl-bg) !important;
+}
+html[data-ap-theme="light"] body .background {
+  background: radial-gradient(ellipse at 68% 15%,rgba(196,160,83,.075),transparent 46%),
+              radial-gradient(ellipse at 12% 92%,rgba(110,125,142,.045),transparent 45%),
+              #f7f8fa !important;
+}
+html[data-ap-theme="light"] body #intelligence-field {
+  opacity: .19 !important;
+  mix-blend-mode: multiply !important;
+  filter: saturate(.62) contrast(.94) !important;
+  pointer-events: none !important;
+}
+
+/* Navigation surfaces: crisp, quiet, consistent with the dark identity. */
+html[data-ap-theme="light"] body .sidebar {
+  background: rgba(255,255,255,.975) !important;
+  border-right: 1px solid var(--apl-border) !important;
+  box-shadow: 10px 0 36px rgba(29,38,51,.018) !important;
+  color: var(--apl-ink) !important;
+}
+html[data-ap-theme="light"] body .sidebar-header,
+html[data-ap-theme="light"] body .sidebar-footer,
+html[data-ap-theme="light"] body .sidebar-group {
+  border-color: var(--apl-border) !important;
+}
+html[data-ap-theme="light"] body .brand h2,
+html[data-ap-theme="light"] body .sidebar .brand-text h2,
+html[data-ap-theme="light"] body .sidebar .sidebar-group h4 {
+  color: var(--apl-ink) !important;
+}
+html[data-ap-theme="light"] body .sidebar .brand-text span,
+html[data-ap-theme="light"] body .sidebar .version,
+html[data-ap-theme="light"] body .sidebar-group h4 {
+  color: var(--apl-muted) !important;
+}
+html[data-ap-theme="light"] body .sidebar nav a,
+html[data-ap-theme="light"] body .sidebar .history-list,
+html[data-ap-theme="light"] body .sidebar .history-item {
+  color: var(--apl-body) !important;
+}
+html[data-ap-theme="light"] body .sidebar nav a:hover,
+html[data-ap-theme="light"] body .sidebar nav a.active,
+html[data-ap-theme="light"] body .sidebar .history-item:hover {
+  background: var(--apl-gold-wash) !important;
+  color: var(--apl-gold-deep) !important;
+}
+html[data-ap-theme="light"] body .sidebar .new-chat-btn,
+html[data-ap-theme="light"] body .sidebar .ap-install-btn,
+html[data-ap-theme="light"] body .sidebar .sidebar-search,
+html[data-ap-theme="light"] body .sidebar .sidebar-search input {
+  background: var(--apl-paper) !important;
+  border-color: var(--apl-border-strong) !important;
+  color: var(--apl-ink) !important;
+}
+html[data-ap-theme="light"] body .sidebar .new-chat-btn:hover,
+html[data-ap-theme="light"] body .sidebar .ap-install-btn:hover {
+  background: #faf5e9 !important;
+  border-color: rgba(148,109,41,.33) !important;
+}
+
+html[data-ap-theme="light"] body .topbar {
+  background: rgba(255,255,255,.93) !important;
+  border-bottom: 1px solid var(--apl-border) !important;
+  box-shadow: 0 4px 22px rgba(29,38,51,.02) !important;
+  color: var(--apl-ink) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(1.05);
+  backdrop-filter: blur(22px) saturate(1.05);
+}
+html[data-ap-theme="light"] body .topbar .workspace-title p,
+html[data-ap-theme="light"] body .topbar .synapse-identity-subtitle,
+html[data-ap-theme="light"] body .topbar .shortcut {
+  color: var(--apl-muted) !important;
+}
+html[data-ap-theme="light"] body .topbar .synapse-identity-name,
+html[data-ap-theme="light"] body .topbar .intelligence-field-label,
+html[data-ap-theme="light"] body .topbar .intelligence-field-state {
+  color: var(--apl-ink) !important;
+}
+html[data-ap-theme="light"] body .topbar .synapse-identity-btn,
+html[data-ap-theme="light"] body .topbar .intelligence-field-control,
+html[data-ap-theme="light"] body .topbar .global-search,
+html[data-ap-theme="light"] body .topbar .top-icon,
+html[data-ap-theme="light"] body .topbar .ap-mobile-theme-toggle,
+html[data-ap-theme="light"] body .topbar .conversation-share-btn {
+  color: var(--apl-ink) !important;
+  background: rgba(249,250,251,.96) !important;
+  border-color: var(--apl-border) !important;
+}
+html[data-ap-theme="light"] body .topbar .global-search input {
+  background: transparent !important;
+  color: var(--apl-ink) !important;
+}
+html[data-ap-theme="light"] body .topbar .top-icon:hover,
+html[data-ap-theme="light"] body .topbar .ap-mobile-theme-toggle:hover {
+  background: var(--apl-gold-wash) !important;
+}
+
+/* Hero: warm ivory accents, unmistakable AP Synapse graphite and gold. */
+html[data-ap-theme="light"] body .hero-title,
+html[data-ap-theme="light"] body .hero-title-main,
+html[data-ap-theme="light"] body .hero-container h1,
+html[data-ap-theme="light"] body .personal-greeting {
+  color: var(--apl-ink) !important;
+  text-shadow: none !important;
+}
+html[data-ap-theme="light"] body .hero-title-accent,
+html[data-ap-theme="light"] body .recent-kicker,
+html[data-ap-theme="light"] body .workspace-badge {
+  color: var(--apl-gold-deep) !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+html[data-ap-theme="light"] body .hero-description,
+html[data-ap-theme="light"] body .hero-container > p {
+  color: var(--apl-muted) !important;
+}
+html[data-ap-theme="light"] body .hero-badge,
+html[data-ap-theme="light"] body .ap-hero-signature,
+html[data-ap-theme="light"] body .hero-actions button {
+  background: linear-gradient(165deg,#fff,#faf8f4) !important;
+  color: var(--apl-ink) !important;
+  border-color: rgba(151,118,53,.25) !important;
+  box-shadow: var(--apl-shadow) !important;
+}
+html[data-ap-theme="light"] body .hero-actions button:hover {
+  background: #fcf6e9 !important;
+  border-color: rgba(148,109,41,.45) !important;
+}
+
+/* Recent work and general workspace cards. Dynamic card contents remain intact. */
+html[data-ap-theme="light"] body .recent-intelligence,
+html[data-ap-theme="light"] body .recent-intelligence-grid > *,
+html[data-ap-theme="light"] body .project-card,
+html[data-ap-theme="light"] body .project-stat-card,
+html[data-ap-theme="light"] body .settings-card,
+html[data-ap-theme="light"] body .document-upload-card,
+html[data-ap-theme="light"] body .document-ask-card,
+html[data-ap-theme="light"] body .document-answer-card,
+html[data-ap-theme="light"] body .project-box {
+  background: var(--apl-paper) !important;
+  color: var(--apl-ink) !important;
+  border-color: var(--apl-border) !important;
+  box-shadow: var(--apl-shadow) !important;
+}
+html[data-ap-theme="light"] body .recent-intelligence h2,
+html[data-ap-theme="light"] body .recent-intelligence h3,
+html[data-ap-theme="light"] body .projects-header h1,
+html[data-ap-theme="light"] body .projects-page h1,
+html[data-ap-theme="light"] body .settings-card h2,
+html[data-ap-theme="light"] body .project-card h2 {
+  color: var(--apl-ink) !important;
+}
+html[data-ap-theme="light"] body .recent-intelligence p,
+html[data-ap-theme="light"] body .projects-header p,
+html[data-ap-theme="light"] body .settings-card p,
+html[data-ap-theme="light"] body .recent-intelligence-grid small {
+  color: var(--apl-muted) !important;
+}
+
+/* Composer. Preserve its layout, mechanics and restrained gold identity. */
+html[data-ap-theme="light"] body .command-section {
+  background: transparent !important;
+}
+html[data-ap-theme="light"] body .command-bar {
+  background: rgba(255,255,255,.975) !important;
+  border-color: rgba(152,118,54,.28) !important;
+  color: var(--apl-ink) !important;
+  box-shadow: 0 12px 35px rgba(36,43,55,.07),0 0 0 1px rgba(161,120,43,.055) !important;
+}
+html[data-ap-theme="light"] body .command-input-wrap,
+html[data-ap-theme="light"] body .command-input-wrap input,
+html[data-ap-theme="light"] body #userInput {
+  background: transparent !important;
+  color: var(--apl-ink) !important;
+}
+html[data-ap-theme="light"] body #userInput::placeholder,
+html[data-ap-theme="light"] body .global-search input::placeholder {
+  color: #697587 !important;
+  -webkit-text-fill-color: #697587 !important;
+  opacity: 1;
+}
+html[data-ap-theme="light"] body .command-tools .command-tool,
+html[data-ap-theme="light"] body .command-tools .command-action {
+  color: var(--apl-muted) !important;
+}
+html[data-ap-theme="light"] body .command-tools .command-tool:hover {
+  color: var(--apl-gold-deep) !important;
+  background: var(--apl-gold-wash) !important;
+}
+html[data-ap-theme="light"] body .command-send {
+  background: linear-gradient(145deg,#ddbf76,#b78e3c) !important;
+  color: #242117 !important;
+}
+
+/* Chat content: readable ink on paper. Do not recolor media, syntax highlighting, or code canvases. */
+html[data-ap-theme="light"] body .chat-window,
+html[data-ap-theme="light"] body .chat-window :is(.message-content,.message-text,.markdown-body,.message-body),
+html[data-ap-theme="light"] body .conversation-navigator {
+  color: var(--apl-body) !important;
+}
+html[data-ap-theme="light"] body .chat-window :is(.assistant-message,.message.assistant,.message.ai),
+html[data-ap-theme="light"] body .chat-window :is(.user-message,.message.user) {
+  border-color: var(--apl-border) !important;
+  color: var(--apl-body) !important;
+}
+html[data-ap-theme="light"] body .chat-window :is(.user-message,.message.user) {
+  background: #f0f2f5 !important;
+}
+html[data-ap-theme="light"] body .chat-window :is(.assistant-message,.message.assistant,.message.ai) {
+  background: transparent !important;
+}
+html[data-ap-theme="light"] body .chat-window :is(h1,h2,h3,h4,strong),
+html[data-ap-theme="light"] body .conversation-navigator-header {
+  color: var(--apl-ink) !important;
+}
+html[data-ap-theme="light"] body .chat-window a {
+  color: #805e23 !important;
+}
+html[data-ap-theme="light"] body .chat-window :is(blockquote,th) {
+  border-color: var(--apl-border-strong) !important;
+}
+html[data-ap-theme="light"] body .chat-window :is(table,th,td) {
+  border-color: var(--apl-border) !important;
+}
+html[data-ap-theme="light"] body .chat-window :is(th,td) {
+  background-color: rgba(248,249,250,.86) !important;
+  color: var(--apl-body) !important;
+}
+html[data-ap-theme="light"] body .chat-window :is(pre,pre *,code[class*="language-"],pre code) {
+  /* Editor and code-block styling is intentionally left to syntax-highlighting CSS. */
+}
+
+/* Forms and settings: only app controls, never third-party widgets. */
+html[data-ap-theme="light"] body :is(.projects-page,.settings-card,.project-modal,.command-section)
+  :is(input,textarea,select):not([type="checkbox"]):not([type="radio"]),
+html[data-ap-theme="light"] body .settings-control {
+  background: #fcfcfd !important;
+  color: var(--apl-ink) !important;
+  border-color: var(--apl-border-strong) !important;
+}
+html[data-ap-theme="light"] body :is(.projects-page,.settings-card,.project-modal)
+  :is(input,textarea,select)::placeholder {
+  color: var(--apl-muted) !important;
+}
+html[data-ap-theme="light"] body :is(.projects-page,.settings-card,.project-modal)
+  :is(input,textarea,select):focus-visible {
+  outline: 2px solid rgba(160,119,44,.36) !important;
+  outline-offset: 1px;
+}
+html[data-ap-theme="light"] body .settings-control:hover {
+  background: #f8f2e5 !important;
+}
+
+/* Code Studio: readable light chrome, keep the editor's syntax contrast unchanged. */
+html[data-ap-theme="light"] body :is(.ap-code-header,.ap-code-explorer,.ap-code-ai-panel,.ap-code-footer),
+html[data-ap-theme="light"] body .ap-code-workspace {
+  color: var(--apl-body) !important;
+  background: var(--apl-paper) !important;
+  border-color: var(--apl-border) !important;
+}
+html[data-ap-theme="light"] body .ap-code-editor-body,
+html[data-ap-theme="light"] body #apCanvas,
+html[data-ap-theme="light"] body .whiteboard-shell canvas {
+  /* Preserve the specialized editor and drawing color systems. */
+}
+
+/* APRISHA Omega popup: only its appearance in light mode changes. */
+html[data-ap-theme="light"] body #apAprishaOmegaConsoleV1 .ao-panel {
+  background: linear-gradient(160deg,#fff,#fbfbfa) !important;
+  border-color: var(--apl-border-strong) !important;
+  color: var(--apl-ink) !important;
+  box-shadow: 0 28px 70px rgba(32,40,54,.16) !important;
+}
+html[data-ap-theme="light"] body #apAprishaOmegaConsoleV1 :is(.ao-title,.ao-panel input) {
+  color: var(--apl-ink) !important;
+}
+html[data-ap-theme="light"] body #apAprishaOmegaConsoleV1 :is(.ao-head,.ao-status,.ao-panel input,.ao-close) {
+  border-color: var(--apl-border) !important;
+  background: #f9fafb !important;
+}
+html[data-ap-theme="light"] body #apAprishaOmegaConsoleV1 :is(.ao-sub,.ao-status) {
+  color: var(--apl-muted) !important;
+}
+html[data-ap-theme="light"] body #apAprishaOmegaConsoleV1 .ao-status.ao-good {
+  color: #2a6544 !important;
+}
+html[data-ap-theme="light"] body #apAprishaOmegaConsoleV1 .ao-status.ao-bad {
+  color: #a13b37 !important;
+}
+
+/* Light-mode controls remain accessible, with no sizing or positioning changes. */
+html[data-ap-theme="light"] body :is(#themeSettingsBtn,#apMobileThemeToggle,#themeToggle) {
+  border-color: rgba(155,117,46,.32) !important;
+  color: var(--apl-gold-deep) !important;
+}
+html[data-ap-theme="light"] body :is(button,a,input,select,textarea):focus-visible {
+  outline-color: rgba(149,110,39,.57);
+}
+@media (prefers-reduced-motion:reduce) {
+  html[data-ap-theme="light"] body * { scroll-behavior: auto; }
+}
+
+/* AP SYNAPSE — LIGHT V2 CONTRAST REFINEMENT
+   Scoped to opt-in Light Mode. Preserve layout, commands, media, and dark theme.
+   Fixes verified against the seven 2026-11-09 Preview screenshots. */
+
+/* 1. SIDEBAR — remove leftover dark blocks without changing sidebar dimensions. */
+html[data-ap-theme="light"] body .sidebar :is(.sidebar-header,.sidebar-group,.recent-group,.history-list,.history-item-content),
+html[data-ap-theme="light"] body .sidebar .brand {
+  background-color: transparent !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body .sidebar .brand-text :is(h2,span),
+html[data-ap-theme="light"] body .sidebar .new-chat-btn :is(span,strong),
+html[data-ap-theme="light"] body .sidebar .ap-install-btn :is(span,strong),
+html[data-ap-theme="light"] body .sidebar :is(.history-title,.history-preview,.history-time),
+html[data-ap-theme="light"] body .sidebar .recent-group h4 {
+  background: transparent !important;
+  -webkit-text-fill-color: #263243 !important;
+  color: #263243 !important;
+  text-shadow: none !important;
+}
+html[data-ap-theme="light"] body .sidebar .brand-text span,
+html[data-ap-theme="light"] body .sidebar :is(.history-preview,.history-time),
+html[data-ap-theme="light"] body .sidebar .recent-group h4 {
+  color: #526173 !important;
+  -webkit-text-fill-color: #526173 !important;
+}
+html[data-ap-theme="light"] body .sidebar :is(.history-item,.history-list,.recent-group),
+html[data-ap-theme="light"] body .sidebar :is(.history-item,.history-list,.recent-group) :is(div,p,small):not(.history-item-content):not(.history-title) {
+  border-color: rgba(28,42,60,.10) !important;
+}
+html[data-ap-theme="light"] body .sidebar .history-list {
+  background: #fff !important;
+  color: #526173 !important;
+}
+html[data-ap-theme="light"] body .sidebar .history-item:hover {
+  background: #f7f4ee !important;
+}
+html[data-ap-theme="light"] body .sidebar .new-chat-btn,
+html[data-ap-theme="light"] body .sidebar .ap-install-btn {
+  background: #fff !important;
+  border: 1px solid #d8dde4 !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body .sidebar .ap-install-icon {
+  color: #846123 !important;
+}
+
+/* 2. HERO — gradient text formerly used a white text-fill on the dark canvas. */
+html[data-ap-theme="light"] body .hero-title,
+html[data-ap-theme="light"] body .hero-title-main {
+  color: #1c2532 !important;
+  -webkit-text-fill-color: #1c2532 !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+html[data-ap-theme="light"] body .hero-title-accent {
+  color: #876222 !important;
+  -webkit-text-fill-color: #876222 !important;
+  text-shadow: none !important;
+}
+html[data-ap-theme="light"] body .recent-intelligence-grid :is(.recent-card,.recent-card-title,.recent-card-meta,.recent-card-action) {
+  color: #293647 !important;
+  -webkit-text-fill-color: #293647 !important;
+  text-shadow: none !important;
+}
+html[data-ap-theme="light"] body .recent-intelligence-grid .recent-card {
+  background: #fff !important;
+  border-color: #e0e4ea !important;
+}
+html[data-ap-theme="light"] body .recent-intelligence-grid .recent-card-meta {
+  color: #647083 !important;
+  -webkit-text-fill-color: #647083 !important;
+}
+html[data-ap-theme="light"] body .recent-intelligence-grid .recent-card-action {
+  color: #835d24 !important;
+  -webkit-text-fill-color: #835d24 !important;
+}
+
+/* 3. INTELLIGENCE FIELD — preserve the modal's geometry and live indicators. */
+html[data-ap-theme="light"] body #intelligenceFieldPanel .intelligence-field-panel-inner {
+  background: linear-gradient(155deg,#fff,#f7f8fa) !important;
+  border-color: #d8dee5 !important;
+  color: #263243 !important;
+  box-shadow: 0 25px 65px rgba(32,43,58,.16) !important;
+}
+html[data-ap-theme="light"] body #intelligenceFieldPanel :is(.intelligence-field-panel-header,.intelligence-field-live,.intelligence-field-metrics > div,.intelligence-field-footer) {
+  background: #fff !important;
+  border-color: #e0e4e9 !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body #intelligenceFieldPanel :is(h2,strong,.intelligence-field-live strong,.intelligence-field-metrics strong) {
+  color: #202c39 !important;
+  -webkit-text-fill-color: #202c39 !important;
+}
+html[data-ap-theme="light"] body #intelligenceFieldPanel :is(.popup-kicker,.intelligence-field-live span,.intelligence-field-metrics span,.intelligence-field-footer span) {
+  color: #526174 !important;
+  -webkit-text-fill-color: #526174 !important;
+}
+html[data-ap-theme="light"] body #intelligenceFieldPanel .popup-close {
+  background: #f3f5f7 !important;
+  color: #263243 !important;
+  border-color: #d9dfe7 !important;
+}
+
+/* 4. ORIGINAL APRISHA VOICE DIALOG — presentation only, keep Speak / Stop events. */
+html[data-ap-theme="light"] body #apDedicatedAprishaOverlay .ap-dedicated-aprisha-panel {
+  background: linear-gradient(160deg,#fff,#fafafa) !important;
+  border-color: #dce1e7 !important;
+  color: #202b38 !important;
+  box-shadow: 0 25px 75px rgba(28,36,49,.18) !important;
+}
+html[data-ap-theme="light"] body #apDedicatedAprishaOverlay .ap-dedicated-aprisha-head {
+  background: #fff !important;
+  border-color: #e4e7ec !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body #apDedicatedAprishaOverlay .ap-dedicated-aprisha-body {
+  background: transparent !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body #apDedicatedAprishaOverlay .ap-dedicated-aprisha-status {
+  color: #263243 !important;
+  -webkit-text-fill-color: #263243 !important;
+}
+html[data-ap-theme="light"] body #apDedicatedAprishaOverlay .ap-dedicated-aprisha-transcript {
+  color: #526174 !important;
+  -webkit-text-fill-color: #526174 !important;
+}
+html[data-ap-theme="light"] body #apDedicatedAprishaOverlay .ap-dedicated-aprisha-orb {
+  color: #866321 !important;
+  border-color: #d5bd87 !important;
+  background: #faf5e8 !important;
+}
+html[data-ap-theme="light"] body #apDedicatedAprishaOverlay .ap-dedicated-aprisha-close,
+html[data-ap-theme="light"] body #apDedicatedAprishaOverlay .ap-dedicated-aprisha-actions button.secondary {
+  background: #f1f3f6 !important;
+  border-color: #dde2e9 !important;
+  color: #263243 !important;
+}
+
+/* 5. APRISHA HUMAN INTERFACE — controls and labels must be readable on ivory. */
+html[data-ap-theme="light"] body #apAprishaHumanInterfaceV2 .aphi-panel {
+  background: linear-gradient(155deg,#fff,#f8f9fa) !important;
+  border-color: #d7dfe7 !important;
+  color: #25313e !important;
+}
+html[data-ap-theme="light"] body #apAprishaHumanInterfaceV2 :is(.aphi-header,.aphi-card,.aphi-stat,.aphi-rule,.aphi-teach,.aphi-settings) {
+  background: #fff !important;
+  border-color: #dfe4ea !important;
+  color: #25313e !important;
+}
+html[data-ap-theme="light"] body #apAprishaHumanInterfaceV2 :is(h2,h3,.aphi-stat strong) {
+  color: #25313e !important;
+  -webkit-text-fill-color: #25313e !important;
+}
+html[data-ap-theme="light"] body #apAprishaHumanInterfaceV2 :is(.aphi-kicker,.aphi-sub,.aphi-cardtop,.aphi-stat small,.aphi-teach-status,.aphi-note,label) {
+  color: #536175 !important;
+  -webkit-text-fill-color: #536175 !important;
+}
+html[data-ap-theme="light"] body #apAprishaHumanInterfaceV2 :is(.aphi-secondary,.aphi-x,.aphi-remove,.aphi-danger) {
+  background: #f4f6f8 !important;
+  color: #263243 !important;
+  border-color: #dce1e8 !important;
+}
+html[data-ap-theme="light"] body #apAprishaHumanInterfaceV2 :is(input:not([type="checkbox"]),select) {
+  background: #fcfcfd !important;
+  color: #25313e !important;
+  border-color: #dce1e8 !important;
+}
+html[data-ap-theme="light"] body #apAprishaHumanInterfaceV2 .aphi-primary {
+  background: #263243 !important;
+  color: #fff !important;
+}
+/* Deliberately preserve the dark camera preview and its high-contrast in-video chip. */
+html[data-ap-theme="light"] body #apAprishaHumanInterfaceV2 .aphi-cardtop {
+  background: #f8f9fa !important;
+  border-color: #e2e6ea !important;
+}
+html[data-ap-theme="light"] body #apAprishaHumanInterfaceV2 .aphi-confirmbox {
+  background: #fff !important;
+  border-color: #dfe4ea !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body #apAprishaHumanInterfaceV2 .aphi-confirmbox p {
+  color: #526174 !important;
+}
+
+/* 6. NOTIFICATIONS — formerly light header over a dark, low-contrast body. */
+html[data-ap-theme="light"] body .ap-notification-panel {
+  background: #fff !important;
+  border-color: #dce1e7 !important;
+  color: #263243 !important;
+  box-shadow: 0 24px 65px rgba(30,42,58,.16) !important;
+}
+html[data-ap-theme="light"] body .ap-notification-panel :is(.ap-notification-header,.ap-notification-list,.ap-notification-footer,.ap-notification-empty) {
+  background: #fff !important;
+  border-color: #e4e8ec !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body .ap-notification-panel :is(h2,strong,.ap-notification-empty strong,.ap-notification-item-content strong) {
+  color: #202b38 !important;
+  -webkit-text-fill-color: #202b38 !important;
+}
+html[data-ap-theme="light"] body .ap-notification-panel :is(p,small,time,.ap-notification-empty span,.ap-notification-footer button,.ap-notification-item-content p) {
+  color: #566375 !important;
+  -webkit-text-fill-color: #566375 !important;
+}
+html[data-ap-theme="light"] body .ap-notification-panel .ap-notification-item {
+  background: #fafbfc !important;
+  border-color: #e2e6eb !important;
+}
+
+/* 7. IDENTITY — correct white-on-cream text and pale disabled-looking chips. */
+html[data-ap-theme="light"] body #profileCard {
+  background: #fff !important;
+  border-color: #dce1e7 !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body #profileCard :is(.popup-header,.profile-hero,.profile-status,.profile-details,.profile-capabilities,.profile-account-section,.google-identity-section) {
+  background: #fff !important;
+  border-color: #e1e6ec !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body #profileCard :is(h2,h3,h4,.profile-identity strong,.profile-identity h3,.profile-details strong,.profile-section-label,.google-identity-copy h4) {
+  color: #202b38 !important;
+  -webkit-text-fill-color: #202b38 !important;
+}
+html[data-ap-theme="light"] body #profileCard :is(.profileEmail,.profile-identity p,.google-identity-copy p,.profile-details span,.profile-status span,.google-identity-eyebrow) {
+  color: #546275 !important;
+  -webkit-text-fill-color: #546275 !important;
+}
+html[data-ap-theme="light"] body #profileCard .profile-capabilities span {
+  color: #77571f !important;
+  -webkit-text-fill-color: #77571f !important;
+  background: #fbf7ee !important;
+  border-color: #eaddc6 !important;
+}
+html[data-ap-theme="light"] body #profileCard :is(.synapse-account-action,.popup-close) {
+  background: #f5f6f8 !important;
+  color: #263243 !important;
+  border-color: #e0e5ea !important;
+}
+html[data-ap-theme="light"] body #profileCard .profile-avatar {
+  color: #866322 !important;
+  -webkit-text-fill-color: #866322 !important;
+}
+
+/* 8. SYNAPSE IDENTITY — avoid mixed dark/light popup fragments. */
+html[data-ap-theme="light"] body #synapseIdentityPanel {
+  background: #fff !important;
+  border-color: #dce2e8 !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body #synapseIdentityPanel :is(.synapse-identity-panel-header,.synapse-identity-status,.synapse-identity-stat) {
+  background: #fff !important;
+  border-color: #e2e7ed !important;
+  color: #263243 !important;
+}
+html[data-ap-theme="light"] body #synapseIdentityPanel :is(h3,strong,.synapse-identity-panel-brand) {
+  color: #263243 !important;
+  -webkit-text-fill-color: #263243 !important;
+}
+html[data-ap-theme="light"] body #synapseIdentityPanel :is(.synapse-identity-panel-kicker,.synapse-identity-stat span,.synapse-identity-status span) {
+  color: #596777 !important;
+  -webkit-text-fill-color: #596777 !important;
+}
+html[data-ap-theme="light"] body #synapseIdentityPanel .synapse-identity-close {
+  background: #f4f6f8 !important;
+  color: #263243 !important;
+}
+
+/* AP_LIGHT_HERO_BROWN_V3 - Light mode only */
+html[data-ap-theme="light"] body .hero-title-main {
+  background-image: none !important;
+  color: #876222 !important;
+  -webkit-text-fill-color: #876222 !important;
+  text-shadow: none !important;
+}
+
+/* AP SYNAPSE LIGHT V3: targeted contrast fixes; no dark-theme rules. */
+/* Sidebar identity and navigation: eliminate black strips. */
+html[data-ap-theme="light"] body aside.sidebar .brand,
+html[data-ap-theme="light"] body aside.sidebar .brand-text,
+html[data-ap-theme="light"] body aside.sidebar .sidebar-group,
+html[data-ap-theme="light"] body aside.sidebar .sidebar-group h4,
+html[data-ap-theme="light"] body aside.sidebar .recent-group,
+html[data-ap-theme="light"] body aside.sidebar .history-list,
+html[data-ap-theme="light"] body aside.sidebar .sidebar-header {
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+html[data-ap-theme="light"] body aside.sidebar .brand-text :is(h1,h2,h3,span,p),
+html[data-ap-theme="light"] body aside.sidebar .sidebar-group h4 {
+  color: #263241 !important;
+  -webkit-text-fill-color: #263241 !important;
+}
+html[data-ap-theme="light"] body aside.sidebar .sidebar-group h4 {
+  border-color: #e3e6ea !important;
+}
+html[data-ap-theme="light"] body aside.sidebar .recent-group .history-list,
+html[data-ap-theme="light"] body aside.sidebar .recent-group .history-item,
+html[data-ap-theme="light"] body aside.sidebar .recent-group .history-empty,
+html[data-ap-theme="light"] body aside.sidebar .recent-group .empty-state {
+  background-color: #f7f8fa !important;
+  color: #556273 !important;
+  -webkit-text-fill-color: #556273 !important;
+}
+html[data-ap-theme="light"] body aside.sidebar .recent-group .history-item:hover {
+  background-color: #f8f0e1 !important;
+}
+/* Notifications: maintain one white surface, including empty state and footer. */
+html[data-ap-theme="light"] body #apSynapseNotificationCenter .ap-notification-panel,
+html[data-ap-theme="light"] body #apSynapseNotificationCenter .ap-notification-header,
+html[data-ap-theme="light"] body #apSynapseNotificationCenter .ap-notification-list,
+html[data-ap-theme="light"] body #apSynapseNotificationCenter .ap-notification-empty,
+html[data-ap-theme="light"] body #apSynapseNotificationCenter .ap-notification-footer {
+  background: #fff !important;
+  background-image: none !important;
+  color: #283343 !important;
+  border-color: #e2e6ea !important;
+}
+html[data-ap-theme="light"] body #apSynapseNotificationCenter .ap-notification-empty strong,
+html[data-ap-theme="light"] body #apSynapseNotificationCenter .ap-notification-header h2 {
+  color: #202a36 !important;
+  -webkit-text-fill-color: #202a36 !important;
+}
+html[data-ap-theme="light"] body #apSynapseNotificationCenter .ap-notification-empty span,
+html[data-ap-theme="light"] body #apSynapseNotificationCenter .ap-notification-footer :is(span,button),
+html[data-ap-theme="light"] body #apSynapseNotificationCenter .ap-notification-header p {
+  color: #617084 !important;
+  -webkit-text-fill-color: #617084 !important;
+}
+/* Automation: previously inline black result box with almost invisible placeholder. */
+html[data-ap-theme="light"] body #automationPage #automationResult {
+  background: #f8fafc !important;
+  background-image: none !important;
+  border: 1px solid #dbe1e8 !important;
+  color: #283343 !important;
+  -webkit-text-fill-color: #283343 !important;
+}
+/* Intelligence Core: cards remain subtle; titles never white-on-light. */
+html[data-ap-theme="light"] body #ultimateSettings .ultimate-settings-section,
+html[data-ap-theme="light"] body #ultimateSettings .ultimate-setting {
+  color: #273342 !important;
+  border-color: #dbe1e7 !important;
+}
+html[data-ap-theme="light"] body #ultimateSettings .ultimate-setting {
+  background: #fff !important;
+  background-image: none !important;
+}
+html[data-ap-theme="light"] body #ultimateSettings .ultimate-setting-main strong,
+html[data-ap-theme="light"] body #ultimateSettings .ultimate-section-title h3 {
+  color: #263241 !important;
+  -webkit-text-fill-color: #263241 !important;
+  text-shadow: none !important;
+}
+html[data-ap-theme="light"] body #ultimateSettings .ultimate-setting-main small,
+html[data-ap-theme="light"] body #ultimateSettings .ultimate-section-title p {
+  color: #5b6878 !important;
+  -webkit-text-fill-color: #5b6878 !important;
+}
+/* Personalization: entire profile uses visible light surfaces and graphite labels. */
+html[data-ap-theme="light"] body .ap-personalization-workspace-shell,
+html[data-ap-theme="light"] body .ap-personalization-workspace-main {
+  background: #f7f8fa !important;
+  background-image: none !important;
+  color: #253142 !important;
+}
+html[data-ap-theme="light"] body .ap-personalization-workspace-header,
+html[data-ap-theme="light"] body .ap-personalization-shell,
+html[data-ap-theme="light"] body .ap-personalization-head,
+html[data-ap-theme="light"] body .ap-personalization-body {
+  background: #fff !important;
+  background-image: none !important;
+  color: #253142 !important;
+  border-color: #e2e6eb !important;
+}
+html[data-ap-theme="light"] body .ap-personalization-switch,
+html[data-ap-theme="light"] body .ap-personalization-controls {
+  background: #f8fafc !important;
+  color: #253142 !important;
+  border-color: #e0e5eb !important;
+}
+html[data-ap-theme="light"] body .ap-personalization-workspace-shell :is(h1,h2,h3,h4,.ap-personalization-title,.ap-personalization-switch-copy strong),
+html[data-ap-theme="light"] body .ap-personalization-shell .ap-personalization-field label {
+  color: #253142 !important;
+  -webkit-text-fill-color: #253142 !important;
+}
+html[data-ap-theme="light"] body .ap-personalization-workspace-shell :is(p,small,.ap-personalization-switch-copy span),
+html[data-ap-theme="light"] body .ap-personalization-head p {
+  color: #5a697b !important;
+  -webkit-text-fill-color: #5a697b !important;
+}
+html[data-ap-theme="light"] body .ap-personalization-shell :is(input:not([type="checkbox"]),textarea,select) {
+  background: #fff !important;
+  color: #253142 !important;
+  border-color: #d5dde5 !important;
+}
+html[data-ap-theme="light"] body .ap-personalization-shell :is(input,textarea)::placeholder {
+  color: #758192 !important;
+  opacity: 1 !important;
+}
+/* Code Studio: unify the explorer in light mode, without editing the dark code editor. */
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-workspace .ap-code-explorer {
+  background: #f7f8fa !important;
+  background-image: none !important;
+  color: #253142 !important;
+  border-color: #dbe2ea !important;
+}
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-explorer :is(.ap-code-panel-title,.ap-code-project-name) {
+  background: #f2f4f7 !important;
+  color: #253142 !important;
+  border-color: #dbe2ea !important;
+}
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-explorer .ap-code-file {
+  background: transparent !important;
+  color: #3d4b5d !important;
+  border-color: transparent !important;
+}
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-explorer .ap-code-file.active,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-explorer .ap-code-file:hover {
+  background: #eee6d6 !important;
+  color: #77571f !important;
+}
+
+/* AP LIGHT CODE STUDIO AND COLLAPSED RAIL V4 */
+
+html[data-ap-theme="light"] body #codeStudioPage,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-pro,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-body,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-workspace {
+
+  background: #fff !important;
+  background-image: none !important;
+  color: #273344 !important;
+  border-color: #e2e6eb !important;
+  color-scheme: light;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-backdrop {
+
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-explorer,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-ai,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-ai-panel {
+
+  background: #f8f9fb !important;
+  background-image: none !important;
+  color: #273344 !important;
+  border-color: #dfe5ed !important;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-editor-panel,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-editor,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-editor-host,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-editor-body,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-ai-content,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-output-pro,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-ai-card,
+html[data-ap-theme="light"] body #codeStudioPage .ap-ai-card,
+html[data-ap-theme="light"] body #codeStudioPage .ap-ai-result {
+
+  background: #fff !important;
+  background-image: none !important;
+  color: #273344 !important;
+  border-color: #e2e6eb !important;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-header,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-tabs,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-ai-head,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-section-head,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-panel-title,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-project,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-project-name,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-footer,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-status,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-editor-status {
+
+  background: #f7f8fa !important;
+  background-image: none !important;
+  color: #344154 !important;
+  border-color: #dce3eb !important;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-brand-title,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-brand-sub,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-file,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-tab,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-project-name,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-section-head,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-ai-head,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-ai-content,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-output-pro,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-panel-title,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-editor-status {
+
+  color: #344154 !important;
+  -webkit-text-fill-color: #344154 !important;
+  text-shadow: none !important;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-lines,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-line-numbers {
+
+  background: #fafbfc !important;
+  color: #7e8b9c !important;
+  -webkit-text-fill-color: #7e8b9c !important;
+  border-color: #e4e9ef !important;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage #codeStudioInput,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-input-pro,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-editor textarea,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-editor-body textarea {
+
+  background: #fff !important;
+  background-image: none !important;
+  color: #233143 !important;
+  -webkit-text-fill-color: #233143 !important;
+  caret-color: #946d29 !important;
+  border-color: #e1e6eb !important;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage #codeStudioInput::placeholder,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-input-pro::placeholder,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-editor textarea::placeholder {
+
+  color: #7a8798 !important;
+  -webkit-text-fill-color: #7a8798 !important;
+  opacity: 1 !important;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-file,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-tab,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-action {
+
+  background: transparent !important;
+  background-image: none !important;
+  color: #344154 !important;
+  -webkit-text-fill-color: #344154 !important;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-file.active,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-tab.active,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-file:hover,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-tab:hover {
+
+  background: #f2ebdc !important;
+  color: #795820 !important;
+  -webkit-text-fill-color: #795820 !important;
+
+}
+
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-primary,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-analyze,
+html[data-ap-theme="light"] body #codeStudioPage .ap-code-ai-button {
+
+  background: #d8b45e !important;
+  background-image: none !important;
+  color: #212a35 !important;
+  -webkit-text-fill-color: #212a35 !important;
+
+}
+
+html[data-ap-theme="light"] body #apCollapsedRail,
+html[data-ap-theme="light"] body .ap-collapsed-rail {
+
+  background: #f8f9fb !important;
+  background-image: none !important;
+  color: #273344 !important;
+  border-color: #dce3eb !important;
+  box-shadow: 2px 12px 30px rgba(34,43,57,.07) !important;
+  color-scheme: light;
+
+}
+
+html[data-ap-theme="light"] body #apCollapsedRail .ap-rail-btn,
+html[data-ap-theme="light"] body #apCollapsedRail .ap-rail-brand {
+
+  background: #fff !important;
+  background-image: none !important;
+  color: #273344 !important;
+  -webkit-text-fill-color: #273344 !important;
+  border-color: #dce3eb !important;
+  box-shadow: none !important;
+
+}
+
+html[data-ap-theme="light"] body #apCollapsedRail .ap-rail-btn:hover,
+html[data-ap-theme="light"] body #apCollapsedRail .ap-rail-brand:hover {
+
+  background: #f2ebdc !important;
+  color: #795820 !important;
+  -webkit-text-fill-color: #795820 !important;
+  border-color: #d9c18e !important;
+
+}
+
+html[data-ap-theme="light"] body body.ap-sidebar-collapsed .workspace {
+
+  background: #f7f8fa !important;
+
+}

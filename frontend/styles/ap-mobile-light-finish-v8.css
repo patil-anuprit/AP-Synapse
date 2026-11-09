@@ -1,0 +1,136 @@
+
+/* AP SYNAPSE MOBILE LIGHT FINISH V8 */
+/* Phone Light Mode only. Desktop and Dark Mode unchanged. */
+
+@media screen and (max-width: 767px) {
+
+  /* Sidebar footer and navigation labels */
+  html[data-ap-theme="light"] body .sidebar .sidebar-footer,
+  html[data-ap-theme="light"] body .sidebar .sidebar-footer nav {
+    background: #fff !important;
+    background-image: none !important;
+    color: #263344 !important;
+  }
+
+  html[data-ap-theme="light"] body .sidebar .sidebar-footer nav a,
+  html[data-ap-theme="light"] body .sidebar #sidebarSettingsBtn,
+  html[data-ap-theme="light"] body .sidebar #personalizationSidebarBtn,
+  html[data-ap-theme="light"] body .sidebar #profileSidebarBtn {
+    background: #fff !important;
+    background-image: none !important;
+    color: #263344 !important;
+    -webkit-text-fill-color: #263344 !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .sidebar .sidebar-footer nav a :is(span,strong,small) {
+    background: transparent !important;
+    color: #263344 !important;
+    -webkit-text-fill-color: #263344 !important;
+  }
+
+  html[data-ap-theme="light"] body
+  .sidebar .sidebar-footer nav a:hover {
+    background: #f5efe4 !important;
+    color: #795a25 !important;
+  }
+
+  /* Notification center */
+  html[data-ap-theme="light"] body
+  #apSynapseNotificationCenter .ap-notification-panel,
+  html[data-ap-theme="light"] body
+  #apSynapseNotificationCenter .ap-notification-header,
+  html[data-ap-theme="light"] body
+  #apSynapseNotificationCenter .ap-notification-empty,
+  html[data-ap-theme="light"] body
+  #apSynapseNotificationCenter .ap-notification-footer,
+  html[data-ap-theme="light"] body
+  #apSynapseNotificationCenter .ap-notification-list {
+    background: #fff !important;
+    background-image: none !important;
+    color: #263344 !important;
+    border-color: #e0e5ed !important;
+    color-scheme: light;
+  }
+
+  html[data-ap-theme="light"] body
+  #apSynapseNotificationCenter :is(h2,strong,p,span) {
+    color: #263344 !important;
+    -webkit-text-fill-color: #263344 !important;
+    text-shadow: none !important;
+  }
+
+  html[data-ap-theme="light"] body
+  #apSynapseNotificationCenter .ap-notification-empty span,
+  html[data-ap-theme="light"] body
+  #apSynapseNotificationCenter .ap-notification-header p {
+    color: #617086 !important;
+    -webkit-text-fill-color: #617086 !important;
+  }
+
+  html[data-ap-theme="light"] body
+  #apSynapseNotificationCenter .ap-notification-empty-icon {
+    background: #fbf4e5 !important;
+    color: #946d29 !important;
+    border-color: #e7d4ab !important;
+  }
+
+  html[data-ap-theme="light"] body
+  #apSynapseNotificationCenter .ap-notification-footer :is(a,button) {
+    color: #805d24 !important;
+    -webkit-text-fill-color: #805d24 !important;
+  }
+
+  /* Image creation panel */
+  html[data-ap-theme="light"] body #apMobileImageSheet,
+  html[data-ap-theme="light"] body #apMobileImageSheet
+  :is(.ap-image-sheet-panel,.ap-image-sheet-content,
+      .ap-image-sheet-header,.ap-image-sheet-footer) {
+    background: #fff !important;
+    background-image: none !important;
+    color: #253244 !important;
+    border-color: #e1e5eb !important;
+    color-scheme: light;
+  }
+
+  html[data-ap-theme="light"] body
+  #apMobileImageSheet :is(h2,h3,h4,p,span,strong,small,label) {
+    color: #253244 !important;
+    -webkit-text-fill-color: #253244 !important;
+    text-shadow: none !important;
+  }
+
+  html[data-ap-theme="light"] body
+  #apMobileImageSheet .ap-image-prompt-option {
+    background: #f7f8fa !important;
+    background-image: none !important;
+    color: #263344 !important;
+    -webkit-text-fill-color: #263344 !important;
+    border: 1px solid #e2e6ed !important;
+    opacity: 1 !important;
+  }
+
+  html[data-ap-theme="light"] body
+  #apMobileImageSheet .ap-image-prompt-option
+  :is(span,strong,small) {
+    color: #263344 !important;
+    -webkit-text-fill-color: #263344 !important;
+    opacity: 1 !important;
+  }
+
+  html[data-ap-theme="light"] body
+  #apMobileImageSheet .ap-image-sheet-close {
+    background: #f1f3f6 !important;
+    color: #263344 !important;
+    border-color: #e0e5ec !important;
+    opacity: 1 !important;
+  }
+
+  html[data-ap-theme="light"] body
+  #apMobileImageSheet .ap-image-prompt-option:hover {
+    background: #f8f0df !important;
+    border-color: #d4b572 !important;
+  }
+}

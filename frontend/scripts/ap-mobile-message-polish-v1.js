@@ -1,300 +1,140 @@
-
-/* AP SYNAPSE - MOBILE MESSAGE POLISH V1 */
+/* AP Synapse mobile message actions V2: limited to visible chat messages. */
 (() => {
   "use strict";
+  if (window.__apMobileMessagePolishV2) return;
+  window.__apMobileMessagePolishV2 = true;
+  const mobile = matchMedia("(max-width: 900px)");
+  const CHAT = "#chatWindow";
+  const ROOT = ".message.user, .message.ai";
+  const BODY = ".message-body, [data-message-body], .message-content, .message-text";
+  const ACTION = "button, [role='button']";
 
-  const MOBILE_QUERY = window.matchMedia("(max-width: 900px)");
-
-  function isMobile() {
-    return MOBILE_QUERY.matches;
+  function label(el) {
+    return [el.getAttribute("aria-label"), el.getAttribute("title"),
+      el.getAttribute("data-action"), el.className?.baseVal ?? el.className,
+      el.textContent].filter(Boolean).join(" ").toLowerCase();
   }
-
-  function isVisible(el) {
-    if (!el) return false;
-    if (el.getAttribute("aria-hidden") === "true") return false;
-    const style = window.getComputedStyle(el);
-    return style.display !== "none" && style.visibility !== "hidden";
+  function message(btn) { return btn.closest(ROOT); }
+  function isEdit(btn) {
+    if (/\b(edit|pencil|rewrite)\b/.test(label(btn))) return true;
+    const root = message(btn), parent = btn.parentElement;
+    return !!(root?.matches(".message.user") && parent?.classList.contains("ap-user-message-actions") &&
+      parent.querySelectorAll(ACTION).length === 2 && btn === parent.querySelectorAll(ACTION)[1]);
   }
-
-  function getLabel(el) {
-    return [
-      el.getAttribute("aria-label") || "",
-      el.getAttribute("title") || "",
-      el.getAttribute("data-action") || "",
-      el.getAttribute("data-role") || "",
-      el.className || "",
-      el.textContent || ""
-    ].join(" ").toLowerCase();
+  function isShare(btn) {
+    if (/\b(share|share-message|share-response)\b/.test(label(btn))) return true;
+    const root = message(btn), parent = btn.parentElement;
+    return !!(root?.matches(".message.ai") && parent &&
+      /action/i.test(parent.className || "") &&
+      parent.querySelectorAll(ACTION).length === 2 && btn === parent.querySelectorAll(ACTION)[1]);
   }
-
-  function isShareButton(btn) {
-    const label = getLabel(btn);
-    return /share|collaborat|snapshot/.test(label);
-  }
-
-  function isExplicitEditButton(btn) {
-    const label = getLabel(btn);
-    return /edit|pencil|pen|rewrite/.test(label);
-  }
-
-  function isLikelyEditButton(btn) {
-    if (isExplicitEditButton(btn)) return true;
-    const parent = btn.parentElement;
-    if (!parent) return false;
-
-    const siblings = Array.from(parent.children).filter(
-      node => node.matches && node.matches("button,[role='button']")
-    );
-
-    if (siblings.length >= 2 && siblings.length <= 3) {
-      const hasShare = siblings.some(isShareButton);
-      if (hasShare && !isShareButton(btn)) return true;
-    }
-    return false;
-  }
-
-  function findComposer() {
-    const selectors = [
-      "textarea.ap-mobile-chat-input-final",
-      "textarea#userInput",
-      "input.ap-mobile-chat-input-final",
-      "input#userInput",
-      ".ap-mobile-chat-input-final",
-      ".command-bar textarea",
-      ".command-bar input[type='text']",
-      "textarea",
-      "input[type='text']"
-    ];
-    for (const selector of selectors) {
-      const el = document.querySelector(selector);
-      if (isVisible(el)) return el;
-    }
-    return null;
-  }
-
-  function setNativeValue(el, value) {
-    const proto = Object.getPrototypeOf(el);
-    const descriptor = Object.getOwnPropertyDescriptor(proto, "value");
-    if (descriptor && descriptor.set) {
-      descriptor.set.call(el, value);
-    } else {
-      el.value = value;
-    }
-  }
-
-  function cleanText(text) {
-    return (text || "")
-      .replace(/\u00A0/g, " ")
-      .replace(/[ \t]+\n/g, "\n")
-      .replace(/\n[ \t]+/g, "\n")
-      .replace(/[ \t]{2,}/g, " ")
-      .replace(/\n{3,}/g, "\n\n")
-      .trim();
-  }
-
-  function stripTrailingTimestamp(text) {
-    let t = cleanText(text);
-
-    const patterns = [
-      /\s+(?:\d{1,2}:\d{2})(?:\s?[APMapm]{2})?$/,
-      /\s+(?:today|yesterday)\s+\d{1,2}:\d{2}(?:\s?[APMapm]{2})?$/i,
-      /\s+(?:mon|tue|wed|thu|fri|sat|sun)\s+\d{1,2}:\d{2}(?:\s?[APMapm]{2})?$/i
-    ];
-
-    for (const pattern of patterns) {
-      t = t.replace(pattern, "").trim();
-    }
-    return t;
-  }
-
-  function extractMessageText(root) {
+  function messageText(root) {
     if (!root) return "";
-
-    const contentSelectors = [
-      "[data-message-body]",
-      ".message-text",
-      ".message-content",
-      ".chat-message-content",
-      ".bubble-content",
-      ".content",
-      ".text",
-      ".markdown",
-      ".prose"
-    ];
-
-    for (const selector of contentSelectors) {
-      const el = root.querySelector(selector);
-      if (el && isVisible(el)) {
-        const clone = el.cloneNode(true);
-        clone.querySelectorAll(
-          ".timestamp,.time,.message-time,.message-meta,.meta,time,.edited,[data-time],[data-timestamp],button,svg"
-        ).forEach(node => node.remove());
-
-        const txt = stripTrailingTimestamp(clone.textContent || "");
-        if (txt) return txt;
-      }
+    const body = root.querySelector(BODY);
+    const copy = (body || root).cloneNode(true);
+    copy.querySelectorAll(".avatar,.timestamp,.message-time,.message-meta,time,.ap-user-message-actions,[data-ap-msg-actions],button,[role='button'],svg").forEach(el=>el.remove());
+    return (copy.textContent || "").replace(/\u00a0/g, " ").replace(/\s+\d{1,2}:\d{2}(?:\s*[AP]M)?\s*$/i, "").trim();
+  }
+  function composer() {
+    return document.querySelector("#userInput, .ap-mobile-chat-input-final, .command-bar textarea, .command-bar input[type=text]");
+  }
+  function setInput(input, value) {
+    let proto = input;
+    let setter;
+    while ((proto = Object.getPrototypeOf(proto))) {
+      const d = Object.getOwnPropertyDescriptor(proto, "value");
+      if (d?.set) { setter = d.set; break; }
     }
-
-    const clone = root.cloneNode(true);
-    clone.querySelectorAll(
-      ".timestamp,.time,.message-time,.message-meta,.meta,time,.edited,[data-time],[data-timestamp],button,svg"
-    ).forEach(node => node.remove());
-
-    return stripTrailingTimestamp(clone.textContent || "");
+    if (setter) setter.call(input, value);
+    else input.value = value;
+    input.dispatchEvent(new Event("input", {bubbles:true}));
+    input.focus({preventScroll:true});
+  }
+  function edit(btn) {
+    const root = message(btn), clean = messageText(root);
+    if (!root?.matches(".message.user") || !clean) return;
+    setTimeout(() => {
+      const input = composer();
+      if (input && input.value !== clean) setInput(input, clean);
+    }, 0);
   }
 
-  function findMessageRoot(node) {
-    return node.closest(
-      "[data-message-id], .message, .chat-message, .user-message, .assistant-message, li"
-    );
+  function dismissShare() {
+    const overlay = document.getElementById("apMobileMessageShareV2");
+    if (!overlay) return;
+    overlay.remove();
   }
-
-  function applyComposerText(value) {
-    const input = findComposer();
-    if (!input) return;
-
-    const text = stripTrailingTimestamp(value);
+  function showShare(root) {
+    const text = messageText(root);
     if (!text) return;
-
-    setNativeValue(input, text);
-    input.dispatchEvent(new Event("input", { bubbles: true }));
-    input.dispatchEvent(new Event("change", { bubbles: true }));
-
-    if (typeof input.focus === "function") input.focus();
-
-    try {
-      const len = input.value.length;
-      if (typeof input.setSelectionRange === "function") {
-        input.setSelectionRange(len, len);
-      }
-    } catch (_) {}
-  }
-
-  function repairEditFill(clickedButton) {
-    const root = findMessageRoot(clickedButton);
-    const extracted = extractMessageText(root);
-
-    const run = () => {
-      const input = findComposer();
-      if (!input) return;
-
-      let finalText = extracted || stripTrailingTimestamp(input.value || "");
-      finalText = stripTrailingTimestamp(finalText);
-      if (!finalText) return;
-
-      if ((input.value || "") !== finalText) {
-        applyComposerText(finalText);
-      }
-    };
-
-    setTimeout(run, 0);
-    setTimeout(run, 50);
-    setTimeout(run, 180);
-  }
-
-  function styleMessageActionClusters() {
-    if (!isMobile()) return;
-
-    const buttons = Array.from(document.querySelectorAll("button,[role='button']"));
-
-    buttons.forEach(btn => {
-      if (!isVisible(btn)) return;
-      if (!(isLikelyEditButton(btn) || isShareButton(btn))) return;
-
-      const messageRoot = findMessageRoot(btn);
-      if (!messageRoot) return;
-
-      const cluster = btn.parentElement;
-      if (!cluster) return;
-
-      const clusterButtons = Array.from(cluster.children).filter(
-        node => node.matches && node.matches("button,[role='button']")
-      );
-
-      if (!clusterButtons.length || clusterButtons.length > 4) return;
-
-      cluster.setAttribute("data-ap-msg-actions", "true");
-      clusterButtons.forEach(b => b.setAttribute("data-ap-msg-action", "true"));
-    });
-  }
-
-  function fixShareSheetCloseButton() {
-    const panels = Array.from(document.querySelectorAll("div,section,aside"));
-
-    panels.forEach(panel => {
-      const text = cleanText(panel.textContent || "");
-      if (!/share conversation/i.test(text)) return;
-
-      panel.setAttribute("data-ap-share-sheet", "true");
-
-      const buttons = Array.from(panel.querySelectorAll("button,[role='button']")).filter(isVisible);
-      if (!buttons.length) return;
-
-      let closeBtn = buttons.find(btn => /close|dismiss|cancel|x/i.test(getLabel(btn)));
-
-      if (!closeBtn) {
-        const panelRect = panel.getBoundingClientRect();
-
-        closeBtn = buttons
-          .map(btn => {
-            const r = btn.getBoundingClientRect();
-            const score = Math.abs(r.top - panelRect.top) + Math.abs(r.right - panelRect.right);
-            return { btn, score };
-          })
-          .sort((a, b) => a.score - b.score)[0]?.btn || null;
-      }
-
-      if (!closeBtn) return;
-
-      closeBtn.setAttribute("data-ap-share-close", "true");
-      closeBtn.setAttribute("aria-label", "Close share panel");
-      closeBtn.setAttribute("title", "Close");
-
-      if (closeBtn.dataset.apShareCloseApplied !== "true") {
-        closeBtn.dataset.apShareCloseApplied = "true";
-        closeBtn.textContent = "×";
+    dismissShare();
+    const back = document.createElement("div");
+    back.id = "apMobileMessageShareV2";
+    back.className = "ap-mobile-message-share-v2";
+    back.innerHTML = '<section class="ap-mm-share-sheet" role="dialog" aria-modal="true" aria-label="Share message">' +
+      '<div class="ap-mm-share-head"><strong>Share message</strong><button type="button" class="ap-mm-share-close" aria-label="Close">×</button></div>' +
+      '<p class="ap-mm-share-preview"></p>' +
+      '<div class="ap-mm-share-controls"><button type="button" class="ap-mm-share-copy">Copy text</button><button type="button" class="ap-mm-share-native">Share</button></div>' +
+      '<p class="ap-mm-share-status" role="status"></p></section>';
+    back.querySelector(".ap-mm-share-preview").textContent = text.slice(0,240) + (text.length > 240 ? "…" : "");
+    const share = back.querySelector(".ap-mm-share-native");
+    if (!navigator.share) share.hidden = true;
+    const status = back.querySelector(".ap-mm-share-status");
+    back.querySelector(".ap-mm-share-close").addEventListener("click", dismissShare);
+    back.addEventListener("click", e => {if (e.target === back) dismissShare();});
+    back.querySelector(".ap-mm-share-copy").addEventListener("click", async () => {
+      try {
+        if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
+        await navigator.clipboard.writeText(text);
+        status.textContent = "Copied. You can now paste the message anywhere.";
+      } catch (_e) {
+        const fallback = document.createElement("textarea");
+        fallback.value = text;
+        fallback.style.cssText = "position:fixed;left:-9999px;top:0";
+        document.body.appendChild(fallback);
+        fallback.select();
+        let copied = false;
+        try { copied = document.execCommand("copy"); } catch (_e) {}
+        fallback.remove();
+        status.textContent = copied ? "Copied. You can now paste the message anywhere." : "Copy unavailable in this browser.";
       }
     });
+    share.addEventListener("click", async () => {
+      try { await navigator.share({title:"AP Synapse message", text}); }
+      catch (e) { if (e?.name !== "AbortError") status.textContent = "Sharing was unavailable. Use Copy text instead."; }
+    });
+    document.body.appendChild(back);
+    back.querySelector(".ap-mm-share-close").focus({preventScroll:true});
   }
-
-  function runPolish() {
-    styleMessageActionClusters();
-    fixShareSheetCloseButton();
-  }
-
-  document.addEventListener("click", event => {
-    const btn = event.target.closest("button,[role='button']");
-    if (!btn) return;
-
-    if (isLikelyEditButton(btn) && !isShareButton(btn)) {
-      repairEditFill(btn);
-    }
-
-    setTimeout(runPolish, 0);
-    setTimeout(runPolish, 120);
+  document.addEventListener("keydown", e=>{if(e.key==="Escape")dismissShare();});
+  document.addEventListener("click", e=>{
+    if (!mobile.matches) return;
+    const btn = e.target.closest(ACTION);
+    if (!btn || !btn.closest(CHAT) || !message(btn)) return;
+    if (isShare(btn)) { e.preventDefault(); e.stopImmediatePropagation(); showShare(message(btn)); }
+    else if (isEdit(btn)) edit(btn);
   }, true);
-
-  const observer = new MutationObserver(() => {
-    requestAnimationFrame(runPolish);
-  });
-
-  function boot() {
-    if (!document.body) return;
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ["class", "style", "aria-hidden"]
+  function styleClusters() {
+    if (!mobile.matches) return;
+    const chat = document.querySelector(CHAT);
+    if (!chat) return;
+    chat.querySelectorAll(ROOT).forEach(root => {
+      root.querySelectorAll("button, [role='button']").forEach(btn=>{
+        if (!(isEdit(btn) || isShare(btn) || /\bcopy\b/.test(label(btn)))) return;
+        const parent = btn.parentElement;
+        if (!parent || parent.querySelectorAll(":scope > button, :scope > [role='button']").length > 4) return;
+        parent.setAttribute("data-ap-msg-actions", "true");
+        parent.querySelectorAll(":scope > button, :scope > [role='button']").forEach(b=>b.setAttribute("data-ap-msg-action", "true"));
+      });
     });
-
-    runPolish();
-    setTimeout(runPolish, 250);
-    setTimeout(runPolish, 900);
   }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot, { once: true });
-  } else {
-    boot();
+  function boot(){
+    const chat=document.querySelector(CHAT);
+    if (!chat) return;
+    styleClusters();
+    const observer=new MutationObserver(() => requestAnimationFrame(styleClusters));
+    observer.observe(chat,{childList:true,subtree:true});
   }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",boot,{once:true});
+  else boot();
 })();

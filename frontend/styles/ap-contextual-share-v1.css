@@ -1,0 +1,7 @@
+
+/* AP SYNAPSE - CONTEXTUAL SHARE V1 */
+/* Hide until the current conversation has a real user message. */
+
+#shareConversationBtn:not([data-ap-share-ready="true"]) {
+  display: none !important;
+}

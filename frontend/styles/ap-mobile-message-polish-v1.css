@@ -1,0 +1,67 @@
+
+/* AP SYNAPSE - MOBILE MESSAGE POLISH V1 */
+@media (max-width: 900px) {
+
+  [data-ap-msg-actions="true"]{
+    display:inline-flex !important;
+    align-items:center !important;
+    gap:8px !important;
+    padding:6px 8px !important;
+    border-radius:999px !important;
+    border:1px solid rgba(212, 175, 55, 0.26) !important;
+    background:rgba(8,10,16,0.88) !important;
+    -webkit-backdrop-filter:blur(12px) !important;
+    backdrop-filter:blur(12px) !important;
+    box-shadow:0 10px 26px rgba(0,0,0,0.28) !important;
+  }
+
+  [data-ap-msg-action="true"]{
+    width:32px !important;
+    height:32px !important;
+    min-width:32px !important;
+    min-height:32px !important;
+    padding:0 !important;
+    border-radius:10px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    border:1px solid rgba(212, 175, 55, 0.24) !important;
+    background:transparent !important;
+    color:#e7c468 !important;
+    box-shadow:none !important;
+  }
+
+  [data-ap-msg-action="true"] svg,
+  [data-ap-msg-action="true"] i{
+    width:15px !important;
+    height:15px !important;
+    font-size:15px !important;
+  }
+
+  [data-ap-msg-action="true"]:hover,
+  [data-ap-msg-action="true"]:active{
+    background:rgba(212,175,55,0.10) !important;
+  }
+
+  [data-ap-share-sheet="true"]{
+    position:relative !important;
+  }
+
+  [data-ap-share-close="true"]{
+    width:38px !important;
+    height:38px !important;
+    min-width:38px !important;
+    min-height:38px !important;
+    border-radius:12px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    border:1px solid rgba(212,175,55,0.22) !important;
+    background:rgba(255,255,255,0.03) !important;
+    color:#f1d37a !important;
+    font-size:26px !important;
+    line-height:1 !important;
+    font-weight:400 !important;
+    padding:0 !important;
+  }
+}

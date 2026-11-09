@@ -1,0 +1,22 @@
+/*
+ * AP Synapse — Mobile First-Launch Banner Removal
+ *
+ * Hide only the legacy Hey Aprisha permission banner.
+ * Preserve APRISHA voice, wake-word and microphone logic.
+ * No desktop modifications.
+ */
+
+@media screen and (max-width: 767px) {
+
+  body :is(div, section, aside)
+  :has(> .ap-aprisha-permission-copy)
+  :not(:has(
+    #apAprishaText,
+    #apAprishaSiriText,
+    #apAprishaOrderAprishaBtnV1,
+    #apAprishaOrderComboV1
+  )) {
+    display: none !important;
+  }
+
+}

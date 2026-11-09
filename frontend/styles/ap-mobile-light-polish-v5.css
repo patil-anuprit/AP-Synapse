@@ -1,0 +1,99 @@
+/* AP SYNAPSE MOBILE LIGHT POLISH V5 — no desktop or dark rules */
+@media (max-width: 767px) {
+  html[data-ap-theme="light"] body aside.sidebar,
+  html[data-ap-theme="light"] body.ap-mobile-sidebar-open aside.sidebar {
+    background: #fff !important;
+    background-image: none !important;
+    color: #2b394b !important;
+    border-color: #e1e6ed !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: 12px 0 32px rgba(30,40,55,.12) !important;
+  }
+  html[data-ap-theme="light"] body aside.sidebar :is(.sidebar-header,.brand,.brand-text,.sidebar-group,.recent-group,.history-list,.sidebar-footer) {
+    background: #fff !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    border-color: #e6eaf0 !important;
+  }
+  html[data-ap-theme="light"] body aside.sidebar :is(a,button,h2,h3,h4,span,.history-title,.history-preview,.history-time) {
+    color: #2c394b !important;
+    -webkit-text-fill-color: #2c394b !important;
+    text-shadow: none !important;
+  }
+  html[data-ap-theme="light"] body aside.sidebar :is(.sidebar-group a,.sidebar-footer a) {
+    background: transparent !important;
+    background-image: none !important;
+    border-color: transparent !important;
+  }
+  html[data-ap-theme="light"] body aside.sidebar :is(.sidebar-group h4,.recent-group h4,[class*="history-scroll"],[class*="scroll-hint"]) {
+    background: #f5f7fa !important;
+    background-image: none !important;
+    color: #64748b !important;
+    -webkit-text-fill-color: #64748b !important;
+  }
+  html[data-ap-theme="light"] body aside.sidebar :is(.history-item,.history-empty,.empty-state) {
+    background: #f8fafc !important;
+    color: #344154 !important;
+  }
+  html[data-ap-theme="light"] body aside.sidebar :is(.sidebar-group a,.sidebar-footer a).active {
+    background: #f4ecdc !important;
+    color: #805e22 !important;
+    -webkit-text-fill-color: #805e22 !important;
+  }
+  html[data-ap-theme="light"] body aside.sidebar :is(.new-chat-btn,.ap-install-btn) {
+    background: #fff !important;
+    border-color: #dce3ea !important;
+    color: #283647 !important;
+  }
+  html[data-ap-theme="light"] body .ap-notification-panel,
+  html[data-ap-theme="light"] body .ap-notification-panel :is(.ap-notification-header,.ap-notification-list,.ap-notification-empty,.ap-notification-footer) {
+    background: #fff !important;
+    background-image: none !important;
+    border-color: #e2e8ee !important;
+    color: #263446 !important;
+    color-scheme: light;
+  }
+  html[data-ap-theme="light"] body .ap-notification-panel :is(h2,strong,.ap-notification-item-content strong) {
+    color: #263446 !important;
+    -webkit-text-fill-color: #263446 !important;
+  }
+  html[data-ap-theme="light"] body .ap-notification-panel :is(p,span,.ap-notification-footer button,.ap-notification-tool) {
+    color: #607085 !important;
+    -webkit-text-fill-color: #607085 !important;
+  }
+  html[data-ap-theme="light"] body .ap-notification-panel :is(.ap-notification-item,.ap-notification-item-icon) {
+    background: #f8fafc !important;
+    border-color: #e2e8ee !important;
+  }
+  html[data-ap-theme="light"] body .ap-notification-panel .ap-notification-empty-icon {
+    background: #faf2e3 !important;
+    color: #846226 !important;
+  }
+  html[data-ap-theme="light"] body #canvasPage :is(.ap-wb-pro-toolbar,#apInfiniteCanvasHud) {
+    background: #fff !important;
+    background-image: none !important;
+    color: #283647 !important;
+    border-color: #dde4ec !important;
+    box-shadow: 0 8px 24px rgba(29,39,52,.10) !important;
+  }
+  html[data-ap-theme="light"] body #canvasPage .ap-wb-pro-toolbar .ap-wb-group {
+    background: transparent !important;
+    border-color: #e3e9ef !important;
+  }
+  html[data-ap-theme="light"] body #canvasPage :is(.ap-wb-pro-toolbar .ap-wb-btn,.ap-wb-mobile-minimize-v191,.ap-wb-collapse-toggle,#apInfiniteCanvasHud button) {
+    background: #f8fafc !important;
+    background-image: none !important;
+    color: #29384b !important;
+    border-color: #dde4ec !important;
+  }
+  html[data-ap-theme="light"] body #canvasPage .ap-wb-pro-toolbar .ap-wb-btn.active {
+    background: #f2e9d5 !important;
+    color: #805e22 !important;
+    border-color: #dac598 !important;
+  }
+  html[data-ap-theme="light"] body #canvasPage .ap-wb-pro-toolbar .ap-wb-btn svg,
+  html[data-ap-theme="light"] body #canvasPage .ap-wb-pro-toolbar .ap-wb-btn svg * {
+    stroke: currentColor !important;
+  }
+}

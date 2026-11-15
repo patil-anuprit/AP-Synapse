@@ -5220,7 +5220,19 @@ renderRecentIntelligence();
                 token => element.classList.contains(token)
             );
 
+        /*
+         * A/B comparison:
+         * ?ap_sidebar_close_legacy=1 uses original
+         * sidebar closing behavior.
+         *
+         * Default uses the V2 redundant-close guard.
+         */
+        const useOriginalClose =
+            new URLSearchParams(window.location.search)
+                .get("ap_sidebar_close_legacy") === "1";
+
         if (
+            !useOriginalClose &&
             !hasOpenState(document.body) &&
             !hasOpenState(sidebar) &&
             !hasOpenState(overlay) &&

@@ -6399,17 +6399,32 @@ button:active,
         }, 90);
     }
 
-    document.addEventListener(
-        "pointerdown",
-        turboInteraction,
-        { passive: true }
-    );
+    /*
+     * AP Synapse Performance A/B Test
+     *
+     * Default: Avoid global body-class changes
+     * during user interactions.
+     *
+     * ?ap_turbo_legacy=1 restores original behavior
+     * for testing without changing other features.
+     */
+    const legacyTurboEnabled =
+        new URLSearchParams(window.location.search)
+            .get("ap_turbo_legacy") === "1";
 
-    document.addEventListener(
-        "keydown",
-        turboInteraction,
-        { passive: true }
-    );
+    if (legacyTurboEnabled) {
+        document.addEventListener(
+            "pointerdown",
+            turboInteraction,
+            { passive: true }
+        );
+
+        document.addEventListener(
+            "keydown",
+            turboInteraction,
+            { passive: true }
+        );
+    }
 
     /* Make sidebar scrolling independent */
     document.querySelectorAll(

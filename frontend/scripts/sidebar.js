@@ -5200,6 +5200,38 @@ renderRecentIntelligence();
         const sidebar = getSidebar();
         const overlay = getOverlay();
 
+        /*
+         * Performance V2:
+         * Skip redundant close operations only when
+         * every sidebar state is already closed.
+         *
+         * Actual open-to-closed behavior is unchanged.
+         */
+        const closeTokens = [
+            "ap-sidebar-open",
+            "ap-sidebar-visible",
+            "ap-open",
+            "mobile-open",
+            "ap-mobile-open"
+        ];
+
+        const hasOpenState = element =>
+            !!element && closeTokens.some(
+                token => element.classList.contains(token)
+            );
+
+        if (
+            !hasOpenState(document.body) &&
+            !hasOpenState(sidebar) &&
+            !hasOpenState(overlay) &&
+            document.body.style.overflow === ""
+        ) {
+            console.log(
+                "AP SYNAPSE — MOBILE SIDEBAR CLOSED"
+            );
+            return;
+        }
+
         document.body.classList.remove(
             "ap-sidebar-open",
             "ap-sidebar-visible",

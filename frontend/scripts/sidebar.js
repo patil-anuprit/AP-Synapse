@@ -5200,12 +5200,60 @@ renderRecentIntelligence();
         const sidebar = getSidebar();
         const overlay = getOverlay();
 
+        /*
+         * Performance V2:
+         * Skip redundant close operations only when
+         * every sidebar state is already closed.
+         *
+         * Actual open-to-closed behavior is unchanged.
+         */
+        const closeTokens = [
+            "ap-sidebar-open",
+            "ap-sidebar-visible",
+            "ap-open",
+            "mobile-open",
+            "ap-mobile-open",
+            "ap-mobile-sidebar-open",
+            "ap-sidebar-locked"
+        ];
+
+        const hasOpenState = element =>
+            !!element && closeTokens.some(
+                token => element.classList.contains(token)
+            );
+
+        /*
+         * A/B comparison:
+         * ?ap_sidebar_close_legacy=1 uses original
+         * sidebar closing behavior.
+         *
+         * Default uses the V2 redundant-close guard.
+         */
+        const useOriginalClose =
+            new URLSearchParams(window.location.search)
+                .get("ap_sidebar_close_legacy") === "1";
+
+        if (
+            !useOriginalClose &&
+            !hasOpenState(document.body) &&
+            !hasOpenState(sidebar) &&
+            !hasOpenState(overlay) &&
+            document.body.style.overflow === ""
+        ) {
+            console.log(
+                "AP SYNAPSE — MOBILE SIDEBAR CLOSED"
+            );
+            return;
+        }
+
         document.body.classList.remove(
             "ap-sidebar-open",
             "ap-sidebar-visible",
             "ap-open",
             "mobile-open",
-            "ap-mobile-open"
+            "ap-mobile-open",
+            "ap-mobile-sidebar-open",
+            "ap-sidebar-locked"
         );
 
         if (sidebar) {
@@ -9857,7 +9905,9 @@ setTimeout(() => {
 
             document.body.classList.remove(
                 "ap-mobile-sidebar-open",
-                "ap-mobile-nav-open"
+                "ap-mobile-nav-open",
+                "ap-sidebar-locked",
+                "ap-sidebar-open"
             );
 
             button.textContent = "☰";
@@ -9885,9 +9935,9 @@ setTimeout(() => {
         /* Clean starting state */
         closeSidebar();
 
-        /* ONE SINGLE TAP HANDLER */
+        /* ONE SINGLE CLICK HANDLER */
         button.addEventListener(
-            "pointerdown",
+            "click",
             event => {
 
                 if (window.innerWidth > 767) return;

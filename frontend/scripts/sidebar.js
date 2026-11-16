@@ -5212,7 +5212,9 @@ renderRecentIntelligence();
             "ap-sidebar-visible",
             "ap-open",
             "mobile-open",
-            "ap-mobile-open"
+            "ap-mobile-open",
+            "ap-mobile-sidebar-open",
+            "ap-sidebar-locked"
         ];
 
         const hasOpenState = element =>
@@ -5249,7 +5251,9 @@ renderRecentIntelligence();
             "ap-sidebar-visible",
             "ap-open",
             "mobile-open",
-            "ap-mobile-open"
+            "ap-mobile-open",
+            "ap-mobile-sidebar-open",
+            "ap-sidebar-locked"
         );
 
         if (sidebar) {

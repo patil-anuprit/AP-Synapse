@@ -9905,7 +9905,9 @@ setTimeout(() => {
 
             document.body.classList.remove(
                 "ap-mobile-sidebar-open",
-                "ap-mobile-nav-open"
+                "ap-mobile-nav-open",
+                "ap-sidebar-locked",
+                "ap-sidebar-open"
             );
 
             button.textContent = "☰";
@@ -9933,9 +9935,9 @@ setTimeout(() => {
         /* Clean starting state */
         closeSidebar();
 
-        /* ONE SINGLE TAP HANDLER */
+        /* ONE SINGLE CLICK HANDLER */
         button.addEventListener(
-            "pointerdown",
+            "click",
             event => {
 
                 if (window.innerWidth > 767) return;

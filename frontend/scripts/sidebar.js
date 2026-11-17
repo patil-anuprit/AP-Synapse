@@ -9857,7 +9857,9 @@ setTimeout(() => {
 
             document.body.classList.remove(
                 "ap-mobile-sidebar-open",
-                "ap-mobile-nav-open"
+                "ap-mobile-nav-open",
+                "ap-sidebar-locked",
+                "ap-sidebar-open"
             );
 
             button.textContent = "☰";
@@ -9885,21 +9887,55 @@ setTimeout(() => {
         /* Clean starting state */
         closeSidebar();
 
-        /* ONE SINGLE TAP HANDLER */
-        button.addEventListener(
+        /*
+         * AP Synapse single-owner mobile menu.
+         *
+         * Capture before older document handlers.
+         * One pointer interaction = one toggle.
+         * Keyboard click remains supported.
+         */
+        const toggleFinalSidebar = () => {
+            if (isOpen()) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        };
+
+        window.addEventListener(
             "pointerdown",
             event => {
-
                 if (window.innerWidth > 767) return;
+                if (!button.contains(event.target)) return;
 
                 event.preventDefault();
                 event.stopPropagation();
                 event.stopImmediatePropagation();
 
-                if (isOpen()) {
-                    closeSidebar();
-                } else {
-                    openSidebar();
+                toggleFinalSidebar();
+            },
+            {
+                capture: true,
+                passive: false
+            }
+        );
+
+        window.addEventListener(
+            "click",
+            event => {
+                if (window.innerWidth > 767) return;
+                if (!button.contains(event.target)) return;
+
+                event.preventDefault();
+                event.stopPropagation();
+                event.stopImmediatePropagation();
+
+                /*
+                 * Pointer clicks were handled above.
+                 * Detail 0 supports keyboard activation.
+                 */
+                if (event.detail === 0) {
+                    toggleFinalSidebar();
                 }
             },
             {

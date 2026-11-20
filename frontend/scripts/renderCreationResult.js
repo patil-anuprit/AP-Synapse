@@ -3,7 +3,7 @@
 export function renderCreationResult(data,chatWindow){
   if(data?.type!=='ap_creation'||!data.artifact||!chatWindow)return false;
   const a=data.artifact;
-  if(!/^(image\/(png|jpeg|webp)|application\/(pdf|vnd\.(openxmlformats-officedocument\.(wordprocessingml\.document|presentationml\.presentation))))$/.test(a.mimeType||''))return false;
+  if(!new Set(['image/png','image/jpeg','image/webp','application/pdf','application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/vnd.openxmlformats-officedocument.presentationml.presentation','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']).has(a.mimeType||''))return false;
   if(typeof a.base64!=='string'||a.base64.length>22_000_000)return false;
   const binary=atob(a.base64), bytes=new Uint8Array(binary.length);
   for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);

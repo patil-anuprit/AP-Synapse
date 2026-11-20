@@ -2,6 +2,7 @@
 const MAKE = /\b(create|generate|make|design|draw|render|build|produce|prepare|export|turn\s+(?:this|it)\s+into|convert)\b/i;
 const CHANGE = /\b(change|edit|revise|update|modify|improve|remove|replace|enhance|redo|make\s+it|turn\s+it)\b/i;
 const IMAGE = /\b(image|picture|photo|poster|logo|banner|thumbnail|illustration|wallpaper|artwork|visual|graphic|drawing)\b/i;
+const SHEET = /\b(xlsx|excel|spreadsheet|workbook|worksheet|spread\s*sheet)\b/i;
 const SLIDES = /\b(pptx?|powerpoint|slides?|slide\s*deck|presentation)\b/i;
 const PDF = /\b(pdf|pdf\s*file)\b/i;
 const DOC = /\b(docx|word\s+document|editable\s+document|document)\b/i;
@@ -14,6 +15,7 @@ export function routeIntent(message, priorKind = null) {
   if (/\bto\s+(?:an?\s+)?(?:docx|word\s+document|editable\s+document)\b/i.test(s)) return 'docx';
   if (/\bto\s+(?:an?\s+)?(?:pptx?|powerpoint|slides?|presentation)\b/i.test(s)) return 'slides';
   if (/\bto\s+(?:an?\s+)?pdf\b/i.test(s)) return 'pdf';
+  if (SHEET.test(s)) return 'xlsx';
   if (SLIDES.test(s)) return 'slides';
   if (PDF.test(s)) return 'pdf';
   if (DOC.test(s)) return 'docx';

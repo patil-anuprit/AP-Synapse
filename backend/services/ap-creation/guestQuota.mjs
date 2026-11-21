@@ -69,17 +69,21 @@ export async function reserveCreationAccess(req,{
     await client.query('BEGIN');
 
     const policies=[
-      [`hour:${hash}`,'hour',2],
-      [`day:${hash}`,'day',5],
+      [`lifetime:${hash}`,'lifetime',15],
+      [`hour:${hash}`,'hour',15],
+      [`day:${hash}`,'day',15],
       ['global:guest','day',60]
     ];
 
     for(const [scope,window,max] of policies){
+      const period=window==='lifetime'
+        ? "TIMESTAMPTZ '2000-01-01 00:00:00+00'"
+        : `date_trunc('${window}',now())`;
       const result=await client.query(`
         INSERT INTO ap_creation_guest_usage(
           scope,window_start,calls
         )
-        VALUES($1,date_trunc('${window}',now()),1)
+        VALUES($1,${period},1)
         ON CONFLICT(scope,window_start)
         DO UPDATE SET
           calls=ap_creation_guest_usage.calls+1
@@ -88,7 +92,12 @@ export async function reserveCreationAccess(req,{
       `,[scope,max]);
 
       if(!result.rows?.length)
-        throw fail('CREATION_GUEST_LIMIT',429);
+        throw fail(
+          window==='lifetime'
+            ? 'CREATION_GUEST_SIGNIN_REQUIRED'
+            : 'CREATION_GUEST_LIMIT',
+          429
+        );
     }
 
     await client.query('COMMIT');

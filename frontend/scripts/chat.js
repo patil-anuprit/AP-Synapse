@@ -1704,6 +1704,54 @@ const thinkingInterval =
         );
 
 
+        // AP_GUEST_15_SIGNIN_NOTICE_V1
+        if (response.status === 429) {
+            let guestError = null;
+            try {
+                guestError = (await response.clone().json())?.error;
+            } catch {}
+
+            if (
+                guestError === "CREATION_GUEST_SIGNIN_REQUIRED" ||
+                guestError === "CREATION_GUEST_LIMIT"
+            ) {
+                clearInterval(thinkingInterval);
+                document.getElementById("thinking")?.remove();
+
+                const card = document.createElement("div");
+                card.className = "ap-guest-creation-signin";
+                card.style.cssText =
+                    "margin:12px 0;padding:18px 20px;" +
+                    "border:1px solid rgba(191,157,92,.45);" +
+                    "border-radius:15px;background:rgba(22,22,22,.9);" +
+                    "color:#f4efe4;max-width:540px;";
+
+                const heading = document.createElement("div");
+                heading.style.cssText =
+                    "color:#d9bb79;font-size:16px;" +
+                    "font-weight:650;margin-bottom:8px;";
+
+                heading.textContent =
+                    guestError === "CREATION_GUEST_SIGNIN_REQUIRED"
+                    ? "Your 15 complimentary creations are complete"
+                    : "Guest creation capacity reached";
+
+                const description = document.createElement("div");
+                description.style.cssText =
+                    "font-size:14px;line-height:1.65;";
+
+                description.textContent =
+                    "Sign in with Google using the AP profile icon " +
+                    "to continue creating with your account allowance " +
+                    "and enjoy a more personalized AP Synapse experience.";
+
+                card.append(heading, description);
+                chatWindow.append(card);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+                return;
+            }
+        }
+
         if (!response.ok) {
             throw new Error("Server Error");
         }

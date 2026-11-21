@@ -61,8 +61,12 @@ test('guest gets private ephemeral identity and quotas',async()=>{
   assert.equal(req.user.id,id);
   assert.equal(
     queries.filter(q=>q.sql.includes('RETURNING calls')).length,
-    3
+    4
   );
+  assert.ok(queries.some(q=>
+    q.sql.includes("TIMESTAMPTZ '2000-01-01 00:00:00+00'") &&
+    q.args?.[1]===15
+  ));
   assert.ok(queries.some(q=>q.sql==='COMMIT'));
 });
 

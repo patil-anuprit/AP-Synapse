@@ -127,7 +127,7 @@ export function createUniversalEngine({getContext=async()=>({}),identify,planPro
     if(!slot||now-slot.start>=300_000)rate.set(userKey,{start:now,count:1}); else slot.count++;
     if(rate.size>500)rate.delete(rate.keys().next().value);
     const prev=cacheGet(userKey);
-    
+
     const requestedKind = String(req.body?.kind || "").toLowerCase();
     const kind = ["image", "pdf", "docx", "slides", "xlsx"].includes(requestedKind)
       ? requestedKind
@@ -178,7 +178,7 @@ export function createUniversalEngine({getContext=async()=>({}),identify,planPro
         quality:req.body?.quality==='high'?'high':'standard'});
       buf=generated.buffer;mimeType=generated.mimeType;model=generated.model||'image provider';
     }else{
-      
+
      const revisionContext = prev?.kind === kind && prev?.plan
        ? `${context}\n\nPREVIOUS GENERATED DOCUMENT (reuse its substance):\n${JSON.stringify(prev.plan).slice(0, 14000)}\n\nFor follow-up revisions, preserve the previous document's content unless the user's latest instruction explicitly requests changes.`
        : context;
@@ -204,7 +204,7 @@ export function createUniversalEngine({getContext=async()=>({}),identify,planPro
     const description=artifactDescription(kind,plan,message);
     const artifact={kind,description,fileName,mimeType,base64:buf.toString('base64'),bytes:buf.length,provider:model};
     // Retain image pixels for follow-up editing inside this process. Production should use user-scoped storage.
-    
+
    if(!req._apCreationGuest) cacheSet(userKey,{
     kind,
     description,
@@ -228,7 +228,11 @@ export function createUniversalEngine({getContext=async()=>({}),identify,planPro
   };}
   const handler=async(req,res)=>{
     try{const art=await execute(req);if(!art)return res.status(422).json({error:'NOT_A_CREATION_REQUEST'});res.set('Cache-Control','no-store');return res.status(200).json(present(art));}
-    catch(e){console.error('[AP Creation]',e?.message||'unknown');return res.status(e.status>=400&&e.status<600?e.status:500).json({error:e.message==='CREATION_PROVIDER_NOT_CONFIGURED'?'CREATION_PROVIDER_NOT_CONFIGURED':'CREATION_FAILED'});}
+    catch(e){console.error('[AP Creation]',e?.message||'unknown');return res.status(e.status>=400&&e.status<600?e.status:500).json({error:[
+  'CREATION_GUEST_SIGNIN_REQUIRED',
+  'CREATION_GUEST_LIMIT',
+  'CREATION_PROVIDER_NOT_CONFIGURED'
+].includes(e.message)?e.message:'CREATION_FAILED'});}
   };
   const chatMiddleware=async(req,res,next)=>{
     if(!chatEnabled)return next();

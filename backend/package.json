@@ -34,7 +34,11 @@
     "sharp": "^0.35.3",
     "tesseract.js": "^7.0.0",
     "tiktoken": "^1.0.22",
-    "ws": "^8.21.3",
-    "xlsx": "^0.18.5"
+    "ws": "^8.21.3"
+  },
+  "overrides": {
+    "pptxgenjs": {
+      "image-size": "2.1.0"
+    }
   }
 }

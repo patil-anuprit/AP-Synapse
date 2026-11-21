@@ -219,6 +219,40 @@ export async function renderPDF(plan) {
   });
 }
 
+// Convert clearly structured key/value bullets into real editable table cells.
+// Other bullet lists remain untouched; a structured section.table takes precedence.
+function tableForSection(section){
+  const explicit=section?.table;
+  if(Array.isArray(explicit?.headers) && explicit.headers.length &&
+     Array.isArray(explicit?.rows))
+    return {table:explicit,fromBullets:false};
+
+  const bullets=Array.isArray(section?.bullets)?section.bullets:[];
+  if(bullets.length<2 || bullets.length>20)return null;
+
+  const parsed=bullets.map(item=>{
+    if(typeof item!=='string')return null;
+    const parts=item.split(/\s+\|\s+/);
+    if(parts.length<2 || parts.length>6)return null;
+    const pairs=parts.map(part=>
+      /^\s*([^:|]{2,80}):\s*(.{1,350})\s*$/.exec(part)
+    );
+    if(pairs.some(pair=>!pair))return null;
+    return pairs.map(pair=>[pair[1].trim(),pair[2].trim()]);
+  });
+  if(parsed.some(row=>!row))return null;
+
+  const headers=parsed[0].map(pair=>pair[0]);
+  if(parsed.some(row=>row.length!==headers.length ||
+    row.some((pair,i)=>pair[0].toLowerCase()!==headers[i].toLowerCase())))
+    return null;
+
+  return {
+    fromBullets:true,
+    table:{headers,rows:parsed.map(row=>row.map(pair=>pair[1]))}
+  };
+}
+
 export async function renderDOCX(plan){
   const d=await import('docx');
   const {
@@ -279,9 +313,12 @@ export async function renderDOCX(plan){
       }));
     }
 
+    const normalizedTable=tableForSection(section);
+
     for(const item of (
-      Array.isArray(section.bullets)
-        ? section.bullets.slice(0,20) : []
+      normalizedTable?.fromBullets ? [] :
+      (Array.isArray(section.bullets)
+        ? section.bullets.slice(0,20) : [])
     )){
       children.push(new Paragraph({
         children:[new TextRun({
@@ -295,7 +332,7 @@ export async function renderDOCX(plan){
       }));
     }
 
-    const t=section.table;
+    const t=normalizedTable?.table;
 
     if(Array.isArray(t?.headers) &&
        Array.isArray(t?.rows) &&

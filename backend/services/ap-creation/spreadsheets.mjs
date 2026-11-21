@@ -26,6 +26,59 @@ function cellValue(value) {
   return value == null ? null : limit(value, 2000);
 }
 
+// Rebuild formulas for an explicitly recognizable monthly operating budget.
+// Do not attempt to guess formula semantics for arbitrary spreadsheets.
+function repairMonthlyBudget(sheet,cols,records,totals){
+  const months=['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+  if(cols.length!==14 ||
+     !months.every((month,i)=>cols[i+1].header.toLowerCase().startsWith(month)) ||
+     !/^(annual|yearly|year)\s*total$/i.test(cols[13].header.trim()))return false;
+
+  const labels=records.map(row=>String(row[cols[0].key]??'').trim());
+  const income=labels.findIndex(label=>/^(income|revenue)$/i.test(label));
+  const expenses=labels.findIndex(label=>/^expenses?$/i.test(label));
+  const profit=labels.findIndex(label=>/^net\s+(profit|income)$/i.test(label));
+  if(income<0 || expenses<=income+1 || profit<=expenses+1)return false;
+
+  const incomes=[];
+  const costs=[];
+  for(let i=income+1;i<expenses;i++){
+    if(!labels[i] || /\b(sub)?totals?\b/i.test(labels[i]))return false;
+    incomes.push(i+5);
+  }
+  for(let i=expenses+1;i<profit;i++){
+    if(!labels[i] || /\b(sub)?totals?\b/i.test(labels[i]))return false;
+    costs.push(i+5);
+  }
+  if(!incomes.length || !costs.length)return false;
+
+  // Protect against irregular subtotals, hidden calculations and gaps.
+  for(const row of [...incomes,...costs]){
+    for(let col=2;col<=13;col++){
+      const value=sheet.getRow(row).getCell(col).value;
+      if(value!==null && typeof value!=='number' &&
+         !(typeof value==='object'&&typeof value.formula==='string'))
+        return false;
+    }
+  }
+
+  const profitRow=profit+5;
+  for(const row of [...incomes,...costs])
+    sheet.getCell(`N${row}`).value={formula:`SUM(B${row}:M${row})`};
+
+  for(let col=2;col<=13;col++){
+    let num=col,letter='';
+    while(num){num--;letter=String.fromCharCode(65+num%26)+letter;num=Math.floor(num/26);}
+    const revenue=`SUM(${letter}${incomes[0]}:${letter}${incomes.at(-1)})`;
+    const expense=`SUM(${letter}${costs[0]}:${letter}${costs.at(-1)})`;
+    sheet.getCell(`${letter}${profitRow}`).value={formula:`${revenue}-${expense}`};
+  }
+  sheet.getCell(`N${profitRow}`).value={formula:`SUM(B${profitRow}:M${profitRow})`};
+  if(totals && /^grand\s+totals?$/i.test(String(totals.label||'')))
+    sheet.getCell(`N${records.length+5}`).value={formula:`N${profitRow}`};
+  return true;
+}
+
 export async function renderXLSX(plan) {
   const sheets = plan?.sheets;
   if (!Array.isArray(sheets) || !sheets.length || sheets.length > 6)
@@ -156,6 +209,10 @@ export async function renderXLSX(plan) {
         if (column.type === 'percent') cell.numFmt = '0.00%';
       });
     }
+
+    // Correct generated financial formulas only where the budget layout
+    // can be inferred unambiguously from row and column labels.
+    repairMonthlyBudget(sheet,cols,rows,source.totals);
 
     sheet.autoFilter = {
       from: { row: 4, column: 1 },

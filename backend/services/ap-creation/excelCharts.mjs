@@ -55,6 +55,103 @@ function cachedValue(cell){
   return null;
 }
 
+// A standard 12-month budget does not contain an AP Variance worksheet.
+// Embed a revenue/profit chart directly in that budget instead of skipping charts.
+async function chartMonthlyBudget(original,book){
+  const months=['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+  let selected=null;
+
+  for(const sheet of book.worksheets){
+    const header=sheet.getRow(4);
+    if(!months.every((m,i)=>
+      String(header.getCell(i+2).value||'').toLowerCase().startsWith(m)))
+      continue;
+
+    const marker=(regex,start=5)=>{
+      for(let row=start;row<=sheet.rowCount;row++)
+        if(regex.test(String(sheet.getCell(`A${row}`).value||'').trim()))
+          return row;
+      return -1;
+    };
+
+    const income=marker(/^(income|revenue)$/i);
+    const expenses=marker(/^expenses?$/i,income+1);
+    const profit=marker(/^net\s+(profit|income)$/i,expenses+1);
+    if(income<0||expenses<=income+1||profit<=expenses+1)continue;
+
+    const revenueRow=income+1;
+    if(revenueRow>=expenses)continue;
+
+    const actualRevenue=months.map((_,i)=>
+      cachedValue(sheet.getRow(revenueRow).getCell(i+2))
+    );
+    const actualProfit=months.map((_,i)=>{
+      const revenueValues=[];
+      const expenseValues=[];
+      for(let r=income+1;r<expenses;r++)
+        revenueValues.push(cachedValue(sheet.getRow(r).getCell(i+2)));
+      for(let r=expenses+1;r<profit;r++)
+        expenseValues.push(cachedValue(sheet.getRow(r).getCell(i+2)));
+      if([...revenueValues,...expenseValues].some(v=>v===null))return null;
+      return revenueValues.reduce((sum,v)=>sum+v,0)-
+        expenseValues.reduce((sum,v)=>sum+v,0);
+    });
+
+    selected={sheet,revenueRow,profit,actualRevenue,actualProfit};
+    break;
+  }
+
+  if(!selected)return original;
+  const {sheet,revenueRow,profit,actualRevenue,actualProfit}=selected;
+  const q="'"+sheet.name.replace(/'/g,"''")+"'";
+
+  const built=await addChart(original,{
+    type:'column',
+    title:'Monthly Revenue vs Net Profit',
+    sheet:sheet.name,
+    categories:`${q}!$B$4:$M$4`,
+    series:[
+      {nameRef:`${q}!$A$${revenueRow}`,
+        ref:`${q}!$B$${revenueRow}:$M$${revenueRow}`,
+        color:'#B39250'},
+      {nameRef:`${q}!$A$${profit}`,
+        ref:`${q}!$B$${profit}:$M$${profit}`,
+        color:'#34383D'}
+    ],
+    anchor:{col:1,row:15},
+    width:740,height:430,legend:'b',
+    dataLabels:false,numberFormat:'#,##0'
+  });
+
+  const zip=await JSZip.loadAsync(built);
+  const paths=Object.keys(zip.files).filter(name=>
+    /^xl\/charts\/chart\d+\.xml$/.test(name));
+  if(paths.length!==1)throw new Error('UNEXPECTED_BUDGET_CHART_COUNT');
+
+  let xml=await zip.file(paths[0]).async('string');
+  let index=0;
+  xml=xml.replace(/<c:ser>[\s\S]*?<\/c:ser>/g,block=>{
+    const i=index++;
+    if(i>1)throw new Error('UNEXPECTED_BUDGET_SERIES');
+    let next=inject(block,'tx','strRef','str',
+      [i===0?'Revenue':'Net Profit']);
+    next=inject(next,'cat','strRef','str',months.map((_,j)=>
+      String(sheet.getRow(4).getCell(j+2).value)));
+    const values=i===0?actualRevenue:actualProfit;
+    // Cache only verifiably numeric inputs; formulas recalculate on load.
+    return values.every(v=>v!==null)
+      ?inject(next,'val','numRef','num',values):next;
+  });
+  if(index!==2)throw new Error('MISSING_BUDGET_CHART_SERIES');
+  zip.file(paths[0],xml);
+  const output=Buffer.from(await zip.generateAsync({
+    type:'nodebuffer',compression:'DEFLATE'
+  }));
+  const report=await validate(output);
+  if(report.valid!==true)throw new Error('BUDGET_CHART_INVALID');
+  return output;
+}
+
 export async function renderXLSXWithChart(plan){
   const original=await renderXLSXV3(plan);
 
@@ -64,7 +161,7 @@ export async function renderXLSXWithChart(plan){
   const ws=book.getWorksheet('AP Variance')||
     book.getWorksheet('AP Variance Analysis');
 
-  if(!ws)return original;
+  if(!ws)return chartMonthlyBudget(original,book);
 
   const labels=[];
   const planned=[];

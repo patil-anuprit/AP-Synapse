@@ -106,9 +106,20 @@ export async function renderXLSXV2(plan){
   }
 
   const summaries=sheets.map((source,index)=>{
-    const numericIndex=source.columns.findIndex(c=>
-      c.type==='number'||c.type==='currency'
+    const labelKey=source.columns[0]?.key;
+    const profitIndex=source.rows.findIndex(record=>
+      /^net\s+(profit|income)$/i.test(String(record?.[labelKey]||'').trim())
     );
+    const annualIndex=source.columns.findIndex(c=>
+      /^(annual|yearly|year)\s*total$/i.test(String(c.header||'').trim())
+    );
+    const isBudget=profitIndex>=0 && annualIndex>=1 &&
+      source.columns.length===14 &&
+      String(source.columns[1]?.header||'').toLowerCase().startsWith('jan');
+    const numericIndex=isBudget?annualIndex:
+      source.columns.findIndex(c=>
+        c.type==='number'||c.type==='currency'
+      );
 
     const metric=numericIndex>=0
       ? source.columns[numericIndex]
@@ -119,7 +130,8 @@ export async function renderXLSXV2(plan){
       worksheet:dataSheets[index],
       count:source.rows.length,
       numericIndex,
-      metric
+      metric,
+      profitRow:isBudget?profitIndex+5:null
     };
   });
 
@@ -142,7 +154,7 @@ export async function renderXLSXV2(plan){
     rows:summaries.map(item=>[
       item.worksheet.name,
       item.count,
-      item.metric?.header||'No numeric metric',
+      item.profitRow?'Annual Net Profit':(item.metric?.header||'No numeric metric'),
       null,
       item.metric?.type||'text'
     ])
@@ -198,6 +210,16 @@ export async function renderXLSXV2(plan){
 
     if(item.numericIndex<0){
       row.getCell(5).value='—';
+      continue;
+    }
+
+    if(item.profitRow){
+      const q=item.worksheet.name.replace(/'/g,"''");
+      const column=columnLetter(item.numericIndex+1);
+      row.getCell(5).value={formula:`'${q}'!${column}${item.profitRow}`};
+      row.getCell(5).numFmt= item.metric.type==='currency'
+        ? `"${symbol}"#,##0.00;[Red](#,##0.00)`
+        : '#,##0.00';
       continue;
     }
 

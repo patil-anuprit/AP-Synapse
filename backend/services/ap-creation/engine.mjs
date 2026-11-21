@@ -1,5 +1,5 @@
 import {createHash} from 'node:crypto';
-import {routeIntent,cleanText} from './intent.mjs';
+import {routeIntent,cleanText,inferNaturalCreation} from './intent.mjs';
 import {assembleContext} from './context.mjs';
 import {geminiPlan,geminiImage} from './providers.mjs';
 import {renderPDF,renderDOCX,renderSlides} from './renderers.mjs';
@@ -131,7 +131,7 @@ export function createUniversalEngine({getContext=async()=>({}),identify,planPro
     const requestedKind = String(req.body?.kind || "").toLowerCase();
     const kind = ["image", "pdf", "docx", "slides", "xlsx"].includes(requestedKind)
       ? requestedKind
-      : routeIntent(message, prev?.kind);
+      : inferNaturalCreation(message,prev?.kind)||routeIntent(message,prev?.kind);
 
     if(!kind)return null;
     const trusted=(await getContext(req,{userKey,sessionId:req.headers?.['x-session-id']}))||{};
@@ -227,7 +227,7 @@ export function createUniversalEngine({getContext=async()=>({}),identify,planPro
   const chatMiddleware=async(req,res,next)=>{
     if(!chatEnabled)return next();
     const prior=(()=>{try{return cacheGet(keyFor(req,identify));}catch{return null;}})();
-    const kind=routeIntent(req.body?.message,prior?.kind);
+    const kind=inferNaturalCreation(req.body?.message,prior?.kind)||routeIntent(req.body?.message,prior?.kind);
     if(!kind||kind==='image'&&!allowImageIntercept)return next();
     return handler(req,res);
   };

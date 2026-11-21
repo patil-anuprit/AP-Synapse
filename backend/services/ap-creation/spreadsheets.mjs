@@ -90,6 +90,74 @@ function repairMonthlyBudget(sheet,cols,records,totals){
   return true;
 }
 
+
+// Reconcile financial KPI dashboards against rendered sheet positions.
+function reconcileBudgetDashboard(book){
+  const months=['jan','feb','mar','apr','may','jun',
+    'jul','aug','sep','oct','nov','dec'];
+
+  const source=book.worksheets.find(w=>
+    months.every((m,i)=>
+      String(w.getRow(4).getCell(i+2).value||'')
+        .toLowerCase().startsWith(m)
+    ) &&
+    /^revenue$/i.test(String(w.getCell('A5').value||''))
+  );
+
+  if(!source)return;
+
+  let profit=-1;
+
+  for(let r=7;r<=Math.min(source.rowCount,50);r++){
+    if(/^(?:net\s+(?:annual\s+)?profit|monthly\s+profit)$/i.test(
+      String(source.getCell(`A${r}`).value||'')
+    )){
+      profit=r;
+      break;
+    }
+  }
+
+  if(profit<=6)return;
+
+  const expense=/^(?:payroll|salar(?:y|ies)|wages?|marketing|advertising|operating expenses?|rent|utilities|hosting|software|insurance|travel|taxes|costs?|expenses?|supplies|maintenance|subscriptions|professional fees)\b/i;
+
+  for(let r=6;r<profit;r++){
+    if(!expense.test(
+      String(source.getCell(`A${r}`).value||'')
+    ))return;
+  }
+
+  const q="'"+source.name.replace(/'/g,"''")+"'";
+
+  const formulas={
+    'total annual revenue':`${q}!N5`,
+    'total annual expenses':`SUM(${q}!N6:N${profit-1})`,
+    'net annual profit':`${q}!N${profit}`
+  };
+
+  for(const ws of book.worksheets){
+    if(ws===source ||
+       String(ws.getCell('A4').value||'').toLowerCase()!=='metric' ||
+       String(ws.getCell('B4').value||'').toLowerCase()!=='value')
+      continue;
+
+    const rows=[];
+
+    for(let r=5;r<=Math.min(ws.rowCount,25);r++){
+      const label=String(ws.getCell(`A${r}`).value||'')
+        .trim().toLowerCase();
+
+      if(Object.hasOwn(formulas,label))
+        rows.push([r,formulas[label]]);
+    }
+
+    if(rows.length!==3)continue;
+
+    for(const [r,formula] of rows)
+      ws.getCell(`B${r}`).value={formula};
+  }
+}
+
 export async function renderXLSX(plan) {
   const sheets = plan?.sheets;
   if (!Array.isArray(sheets) || !sheets.length || sheets.length > 6)
@@ -231,5 +299,6 @@ export async function renderXLSX(plan) {
     };
   }
 
+  reconcileBudgetDashboard(workbook);
   return Buffer.from(await workbook.xlsx.writeBuffer());
 }

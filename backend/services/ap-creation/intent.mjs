@@ -27,3 +27,46 @@ export function routeIntent(message, priorKind = null) {
 export function cleanText(s, max=8000) {
   return String(s ?? '').replace(/\u0000/g,'').slice(0,max).trim();
 }
+
+
+// Natural creation intent without requiring file extensions.
+export function inferNaturalCreation(message,priorKind=null){
+  const s=String(message||'').trim();
+
+  if(!s ||
+     /^(?:what|why|how|explain|tell me|is it|can i|should i)\b/i.test(s))
+    return null;
+
+  if(/\b(?:do not|don't|without)\s+(?:create|make|generate|build|write)\b/i.test(s))
+    return null;
+
+  const action=/\b(?:create|generate|make|build|prepare|draft|produce|design|develop|write|plan|give me|i need|i want|put together)\b/i.test(s);
+
+  const short=/^(?:(?:a|an|my)\s+)?(?:(?:12|annual|monthly)[ -]?(?:month)?\s+)?(?:business\s+)?(?:budget|spreadsheet|pitch deck|presentation|proposal|report|tracker)\b/i.test(s);
+
+  if(!action&&!short)return null;
+
+  if(/\bpdf\b/i.test(s))return 'pdf';
+  if(/\b(?:pptx?|powerpoint|presentation|slides?|pitch deck)\b/i.test(s))return 'slides';
+  if(/\b(?:xlsx|excel|spreadsheet|workbook|worksheet)\b/i.test(s))return 'xlsx';
+  if(/\b(?:docx|word document|editable document)\b/i.test(s))return 'docx';
+
+  if(/\b(?:image|picture|poster|logo|banner|illustration|thumbnail)\b/i.test(s))
+    return 'image';
+
+  if(/\b(?:budget|cash[ -]?flow|expense tracker|financial model|forecast|sales tracker|inventory tracker|price list|profit[ -]and[ -]loss)\b/i.test(s))
+    return 'xlsx';
+
+  if(/\b(?:proposal|business plan|contract|letter|resume|meeting minutes|memo)\b/i.test(s))
+    return 'docx';
+
+  if(/\b(?:report|research brief|handout|guide|study notes)\b/i.test(s))
+    return 'pdf';
+
+  if(priorKind &&
+     /\b(?:revise|update|edit|fix|change|improve)\b/i.test(s) &&
+     /\b(?:it|this|previous|same)\b/i.test(s))
+    return priorKind;
+
+  return null;
+}

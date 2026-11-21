@@ -914,7 +914,7 @@ async function apResilientFetch(
             /\b(pdf|docx?|word document|powerpoint|pptx?|presentation|slides?|excel|xlsx|spreadsheet|workbook)\b/i
                 .test(creationText);
 
-        if (creationAction && documentFormat) {
+        if (apStagingPreview) {
             // Direct staging request: no production failover.
             return fetch(
                 "https://ap-synapse-creation-staging.onrender.com/chat",

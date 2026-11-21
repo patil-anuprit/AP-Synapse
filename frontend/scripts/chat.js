@@ -877,6 +877,53 @@ async function apResilientFetch(
     const originalURL =
         String(url || "");
 
+
+    // AP_PREVIEW_CREATION_STAGING_V1
+    // Explicit opt-in on AP Synapse Vercel previews only.
+    // Never affects production domains or ordinary chat.
+    const apStagingPreview =
+        typeof window !== "undefined" &&
+        /-ap-synapse\.vercel\.app$/i.test(
+            window.location.hostname
+        ) &&
+        new URLSearchParams(
+            window.location.search
+        ).get("ap-create-staging") === "1";
+
+    if (
+        apStagingPreview &&
+        originalURL === AP_PRIMARY_API_BASE + "/chat" &&
+        typeof options.body === "string"
+    ) {
+        let creationText = "";
+
+        try {
+            const payload = JSON.parse(options.body);
+            creationText = String(payload?.message || "")
+                .trim()
+                .replace(/^please\s+/i, "");
+        } catch {
+            creationText = "";
+        }
+
+        const creationAction =
+            /^(create|generate|make|build|prepare|draft|design|produce|convert|revise|update|edit)\b/i
+                .test(creationText);
+
+        const documentFormat =
+            /\b(pdf|docx?|word document|powerpoint|pptx?|presentation|slides?|excel|xlsx|spreadsheet|workbook)\b/i
+                .test(creationText);
+
+        if (creationAction && documentFormat) {
+            // Direct staging request: no production failover.
+            return fetch(
+                "https://ap-synapse-creation-staging.onrender.com/chat",
+                options
+            );
+        }
+    }
+
+
     let candidates = [
         originalURL
     ];

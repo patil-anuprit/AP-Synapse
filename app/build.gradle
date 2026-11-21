@@ -29,7 +29,7 @@ def apCanSignRelease = apKeystore.exists() &&
 
 def twaManifest = [
     applicationId: 'com.apsynapse.app',
-    hostName: 'ap-synapse.vercel.app', // The domain being opened in the TWA.
+    hostName: 'www.ap-synapse.com', // The domain being opened in the TWA.
     launchUrl: '/', // The start path for the TWA. Must be relative to the domain.
     name: 'AP Synapse', // The application name.
     launcherName: 'AP Synapse', // The name shown on the Android Launcher.
@@ -88,12 +88,12 @@ android {
             // The URL the Web Manifest for the Progressive Web App that the TWA points to. This
             // is used by Chrome OS and Meta Quest to open the Web version of the PWA instead of
             // the TWA, as it will probably give a better user experience for non-mobile devices.
-            resValue "string", "webManifestUrl", 'https://ap-synapse.vercel.app/manifest.json'
+            resValue "string", "webManifestUrl", 'https://www.ap-synapse.com/manifest.json'
         
 
         
             // This is used by Meta Quest.
-            resValue "string", "fullScopeUrl", 'https://ap-synapse.vercel.app/'
+            resValue "string", "fullScopeUrl", 'https://www.ap-synapse.com/'
         
 
         

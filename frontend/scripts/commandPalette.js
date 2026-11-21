@@ -220,7 +220,13 @@ async function handleGoogleSignIn(response) {
         );
 
         const authResponse = await fetch(
-            "https://api.ap-synapse.com/auth/google",
+            (
+    window.location.hostname.endsWith("-ap-synapse.vercel.app") &&
+    new URLSearchParams(window.location.search)
+        .get("ap-create-staging") === "1"
+        ? "https://ap-synapse-creation-staging.onrender.com/auth/google"
+        : "https://api.ap-synapse.com/auth/google"
+),
             {
                 method: "POST",
 

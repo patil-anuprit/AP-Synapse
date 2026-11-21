@@ -1741,9 +1741,10 @@ const thinkingInterval =
                     "font-size:14px;line-height:1.65;";
 
                 description.textContent =
-                    "Sign in with Google using the AP profile icon " +
-                    "to continue creating with your account allowance " +
-                    "and enjoy a more personalized AP Synapse experience.";
+                    "To continue creating, click the AP icon in the " +
+                    "top-right corner and sign in with Google. " +
+                    "Access your account's creation allowance and enjoy " +
+                    "a more personalized AP Synapse experience.";
 
                 card.append(heading, description);
                 chatWindow.append(card);

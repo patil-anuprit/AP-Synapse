@@ -71,7 +71,7 @@ export async function reserveCreationAccess(req,{
     const policies=[
       [`lifetime:${hash}`,'lifetime',15],
       [`hour:${hash}`,'hour',15],
-      [`day:${hash}`,'day',15],
+      [`day:${hash}`,'day',30],
       ['global:guest','day',60]
     ];
 

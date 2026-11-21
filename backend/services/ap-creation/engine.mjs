@@ -136,6 +136,12 @@ export function createUniversalEngine({getContext=async()=>({}),identify,planPro
     if(!kind)return null;
     const trusted=(await getContext(req,{userKey,sessionId:req.headers?.['x-session-id']}))||{};
 
+    if(req._apCreationGuest && kind==='image')
+      throw Object.assign(
+        new Error('CREATION_GUEST_IMAGE_DISABLED'),
+        {status:403}
+      );
+
     // Account-owned history supplements artifact descriptions.
     // Historical text is user data, not trusted instructions.
     if(process.env.AP_CREATION_ACCOUNT_MEMORY_ENABLED==='true'){
@@ -199,7 +205,7 @@ export function createUniversalEngine({getContext=async()=>({}),identify,planPro
     const artifact={kind,description,fileName,mimeType,base64:buf.toString('base64'),bytes:buf.length,provider:model};
     // Retain image pixels for follow-up editing inside this process. Production should use user-scoped storage.
     
-   cacheSet(userKey,{
+   if(!req._apCreationGuest) cacheSet(userKey,{
     kind,
     description,
     buffer:kind==='image'?buf:null,

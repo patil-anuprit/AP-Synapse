@@ -900,12 +900,19 @@ function createCitationCleaner() {
 const apUniversalCreator = createUniversalEngine({
     // AP_CREATION_VERIFIED_QUOTA_INTEGRATION_V1
     beforeCreate: async(req) => {
-        const {reserveVerifiedCreation} = await import('./services/ap-creation/authQuota.mjs');
-        return reserveVerifiedCreation(req);
+        // AP_CREATION_GUEST_V1
+        const {reserveCreationAccess} =
+            await import('./services/ap-creation/guestQuota.mjs');
+        return reserveCreationAccess(req);
     },
     // AP_VERIFIED_CREATION_MEMORY_V1
     // Never retrieve legacy session-only history using a client session ID.
     getContext: async (req) => {
+        if(req._apCreationGuest) return {
+            history: [],
+            documentText: typeof req.body?.document === 'string'
+                ? req.body.document : ''
+        };
         const {loadVerifiedArtifactHistory} =
             await import('./services/ap-creation/verifiedContext.mjs');
 
@@ -920,6 +927,8 @@ const apUniversalCreator = createUniversalEngine({
         };
     },
     onCreated: async (req, artifact) => {
+        // Guests cannot access or write private account history.
+        if(req._apCreationGuest) return;
         const {recordVerifiedArtifact} =
             await import('./services/ap-creation/verifiedContext.mjs');
 

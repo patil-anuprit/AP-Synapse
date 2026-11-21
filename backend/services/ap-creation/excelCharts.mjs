@@ -77,10 +77,15 @@ async function chartMonthlyBudget(original,book){
     const income=marker(/^(income|revenue)$/i);
     const expenses=marker(/^expenses?$/i,income+1);
     const profit=marker(/^net\s+(profit|income)$/i,expenses+1);
-    if(income<0||expenses<=income+1||profit<=expenses+1)continue;
+    const expenseCategory=/^(payroll|salar(?:y|ies)|wages?|marketing|advertising|operating expenses?|rent|utilities|hosting|software|insurance|travel|taxes|cost of goods|costs?|expenses?|supplies|maintenance|subscriptions|professional fees)\b/i;
+    const flat=income===5 && expenses===-1 && profit>=income+2 &&
+      Array.from({length:profit-income-1},(_,i)=>
+        String(sheet.getCell(`A${income+i+1}`).value||'').trim()
+      ).every(label=>expenseCategory.test(label));
+    if(!flat && (income<0||expenses<=income+1||profit<=expenses+1))continue;
 
-    const revenueRow=income+1;
-    if(revenueRow>=expenses)continue;
+    const revenueRow=flat?income:income+1;
+    if(!flat && revenueRow>=expenses)continue;
 
     const actualRevenue=months.map((_,i)=>
       cachedValue(sheet.getRow(revenueRow).getCell(i+2))
@@ -88,9 +93,9 @@ async function chartMonthlyBudget(original,book){
     const actualProfit=months.map((_,i)=>{
       const revenueValues=[];
       const expenseValues=[];
-      for(let r=income+1;r<expenses;r++)
+      for(let r=flat?income:income+1;r<(flat?income+1:expenses);r++)
         revenueValues.push(cachedValue(sheet.getRow(r).getCell(i+2)));
-      for(let r=expenses+1;r<profit;r++)
+      for(let r=flat?income+1:expenses+1;r<profit;r++)
         expenseValues.push(cachedValue(sheet.getRow(r).getCell(i+2)));
       if([...revenueValues,...expenseValues].some(v=>v===null))return null;
       return revenueValues.reduce((sum,v)=>sum+v,0)-

@@ -38,17 +38,28 @@ function repairMonthlyBudget(sheet,cols,records,totals){
   const income=labels.findIndex(label=>/^(income|revenue)$/i.test(label));
   const expenses=labels.findIndex(label=>/^expenses?$/i.test(label));
   const profit=labels.findIndex(label=>/^net\s+(profit|income)$/i.test(label));
-  if(income<0 || expenses<=income+1 || profit<=expenses+1)return false;
+  // Some valid budgets have a flat Revenue / Cost categories / Net Profit
+  // layout rather than dedicated INCOME and EXPENSES section rows.
+  const expenseCategory=/^(payroll|salar(?:y|ies)|wages?|marketing|advertising|operating expenses?|rent|utilities|hosting|software|insurance|travel|taxes|cost of goods|costs?|expenses?|supplies|maintenance|subscriptions|professional fees)\b/i;
+  const flat=income===0 && expenses===-1 &&
+    profit===labels.length-1 && profit>=2 &&
+    labels.slice(1,profit).every(label=>expenseCategory.test(label));
+  if(!flat && (income<0 || expenses<=income+1 || profit<=expenses+1))return false;
 
   const incomes=[];
   const costs=[];
-  for(let i=income+1;i<expenses;i++){
-    if(!labels[i] || /\b(sub)?totals?\b/i.test(labels[i]))return false;
-    incomes.push(i+5);
-  }
-  for(let i=expenses+1;i<profit;i++){
-    if(!labels[i] || /\b(sub)?totals?\b/i.test(labels[i]))return false;
-    costs.push(i+5);
+  if(flat){
+    incomes.push(income+5);
+    for(let i=income+1;i<profit;i++)costs.push(i+5);
+  }else{
+    for(let i=income+1;i<expenses;i++){
+      if(!labels[i] || /\b(sub)?totals?\b/i.test(labels[i]))return false;
+      incomes.push(i+5);
+    }
+    for(let i=expenses+1;i<profit;i++){
+      if(!labels[i] || /\b(sub)?totals?\b/i.test(labels[i]))return false;
+      costs.push(i+5);
+    }
   }
   if(!incomes.length || !costs.length)return false;
 

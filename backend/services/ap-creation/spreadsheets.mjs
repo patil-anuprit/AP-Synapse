@@ -37,7 +37,7 @@ function repairMonthlyBudget(sheet,cols,records,totals){
   const labels=records.map(row=>String(row[cols[0].key]??'').trim());
   const income=labels.findIndex(label=>/^(income|revenue)$/i.test(label));
   const expenses=labels.findIndex(label=>/^expenses?$/i.test(label));
-  const profit=labels.findIndex(label=>/^net\s+(profit|income)$/i.test(label));
+  const profit=labels.findIndex(label=>/^(?:net\s+(?:profit|income)|monthly\s+profit)$/i.test(label));
   // Some valid budgets have a flat Revenue / Cost categories / Net Profit
   // layout rather than dedicated INCOME and EXPENSES section rows.
   const expenseCategory=/^(payroll|salar(?:y|ies)|wages?|marketing|advertising|operating expenses?|rent|utilities|hosting|software|insurance|travel|taxes|cost of goods|costs?|expenses?|supplies|maintenance|subscriptions|professional fees)\b/i;

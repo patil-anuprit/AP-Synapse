@@ -108,7 +108,7 @@ export async function renderXLSXV2(plan){
   const summaries=sheets.map((source,index)=>{
     const labelKey=source.columns[0]?.key;
     const profitIndex=source.rows.findIndex(record=>
-      /^net\s+(profit|income)$/i.test(String(record?.[labelKey]||'').trim())
+      /^(?:net\s+(?:profit|income)|monthly\s+profit)$/i.test(String(record?.[labelKey]||'').trim())
     );
     const annualIndex=source.columns.findIndex(c=>
       /^(annual|yearly|year)\s*total$/i.test(String(c.header||'').trim())

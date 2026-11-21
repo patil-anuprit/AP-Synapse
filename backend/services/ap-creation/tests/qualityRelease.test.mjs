@@ -146,3 +146,36 @@ test('flat monthly budget corrects row references and embeds a chart',async()=>{
     /^xl\/charts\/chart\d+\.xml$/.test(name)
   ),'flat budget must contain an embedded chart');
 });
+
+test('monthly profit label corrects formulas and chart',async()=>{
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const columns=[
+    {key:'category',header:'Category',type:'text'},
+    ...months.map((name,i)=>({key:`m${i}`,header:name,type:'currency'})),
+    {key:'annual',header:'Annual Total',type:'currency'}
+  ];
+  const row=(category,amount)=>({
+    category,
+    ...Object.fromEntries(months.map((_,i)=>[`m${i}`,amount])),
+    annual:{formula:'SUM(B2:M2)'}
+  });
+  const plan={title:'Annual Budget',sheets:[{
+    name:'Annual Budget',columns,rows:[
+      row('Revenue',1000),row('Payroll',200),row('Marketing',100),
+      row('Operating Expenses',50),row('Monthly Profit',0)
+    ]
+  }]};
+  const bytes=await renderXLSXWithChart(plan);
+  const workbook=new ExcelJS.Workbook();
+  await workbook.xlsx.load(bytes);
+  const sheet=workbook.getWorksheet('Annual Budget');
+  assert.equal(sheet.getCell('N5').formula,'SUM(B5:M5)');
+  assert.equal(sheet.getCell('N6').formula,'SUM(B6:M6)');
+  assert.equal(sheet.getCell('N8').formula,'SUM(B8:M8)');
+  assert.equal(sheet.getCell('B9').formula,'SUM(B5:B5)-SUM(B6:B8)');
+  assert.equal(sheet.getCell('N9').formula,'SUM(B9:M9)');
+  const zip=await JSZip.loadAsync(bytes);
+  assert.ok(Object.keys(zip.files).some(name=>
+    /^xl\/charts\/chart\d+\.xml$/.test(name)
+  ),'flat budget must contain an embedded chart');
+});

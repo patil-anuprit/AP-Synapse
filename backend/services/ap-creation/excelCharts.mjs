@@ -76,7 +76,7 @@ async function chartMonthlyBudget(original,book){
 
     const income=marker(/^(income|revenue)$/i);
     const expenses=marker(/^expenses?$/i,income+1);
-    const profit=marker(/^net\s+(profit|income)$/i,expenses+1);
+    const profit=marker(/^(?:net\s+(?:profit|income)|monthly\s+profit)$/i,expenses+1);
     const expenseCategory=/^(payroll|salar(?:y|ies)|wages?|marketing|advertising|operating expenses?|rent|utilities|hosting|software|insurance|travel|taxes|cost of goods|costs?|expenses?|supplies|maintenance|subscriptions|professional fees)\b/i;
     const flat=income===5 && expenses===-1 && profit>=income+2 &&
       Array.from({length:profit-income-1},(_,i)=>

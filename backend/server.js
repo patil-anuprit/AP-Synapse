@@ -1,6 +1,8 @@
 import aprishaSttRouter from "./routes/aprishaTranscribe.js";
 import {createMediaEngine} from './services/ap-media/engine.mjs';
 import { createUniversalEngine } from './services/ap-creation/engine.mjs';
+import {verifiedCreationUser} from './services/ap-creation/authQuota.mjs';
+import {createArtifactVaultRouter} from './services/ap-creation/artifactVaultRoutes.mjs';
 import adminWeeklyIntelligenceRouter from "./routes/adminWeeklyIntelligence.js";
 
 // AP_WEEKLY_ADMIN_TRIGGER_V1
@@ -898,31 +900,65 @@ function createCitationCleaner() {
 const apUniversalCreator = createUniversalEngine({
     // AP_CREATION_VERIFIED_QUOTA_INTEGRATION_V1
     beforeCreate: async(req) => {
-        const {reserveVerifiedCreation} = await import('./services/ap-creation/authQuota.mjs');
-        return reserveVerifiedCreation(req);
+        // AP_CREATION_GUEST_V1
+        const {reserveCreationAccess} =
+            await import('./services/ap-creation/guestQuota.mjs');
+        return reserveCreationAccess(req);
     },
-    getContext: async (req, { sessionId }) => {
-        // Use AP Synapse's EXISTING conversation memory rather than client-submitted history.
-        const { buildConversation } = await import('./memory/memoryManager.js');
-        const turns = typeof buildConversation === 'function'
-            ? await buildConversation(String(sessionId || ''))
-            : [];
+    // AP_VERIFIED_CREATION_MEMORY_V1
+    // Never retrieve legacy session-only history using a client session ID.
+    getContext: async (req) => {
+        if(req._apCreationGuest) return {
+            history: [],
+            documentText: typeof req.body?.document === 'string'
+                ? req.body.document : ''
+        };
+        const {loadVerifiedArtifactHistory} =
+            await import('./services/ap-creation/verifiedContext.mjs');
+
+        const history = await loadVerifiedArtifactHistory({
+            accountId: verifiedCreationUser(req)
+        });
+
         return {
-            history: Array.isArray(turns) ? turns : [],
-            documentText: typeof req.body?.document === 'string' ? req.body.document : ''
+            history,
+            documentText: typeof req.body?.document === 'string'
+                ? req.body.document : ''
         };
     },
     onCreated: async (req, artifact) => {
-        // Keep generated-artifact metadata in the same conversation context.
-        // Add user-scoped durable binary storage separately before promising persistence.
-        const sessionId = String(req.get('x-session-id') || '');
-        if (!sessionId) return;
-        const { remember } = await import('./memory/memoryManager.js');
-        if (typeof remember === 'function') {
-            await remember(sessionId, 'user', String(req.body?.message || '').slice(0,2000));
-            await remember(sessionId, 'assistant', 'Created ' +
-                artifact.kind + ': ' + artifact.fileName);
+        // Guests cannot access or write private account history.
+        if(req._apCreationGuest) return;
+        const {recordVerifiedArtifact} =
+            await import('./services/ap-creation/verifiedContext.mjs');
+
+        await recordVerifiedArtifact({
+            accountId: verifiedCreationUser(req),
+            sessionId: String(req.get('x-session-id') || ''),
+            userMessage: String(req.body?.message || ''),
+            artifact: 'Created ' + artifact.kind +
+                ': ' + artifact.fileName
+        });
+        // Private binary storage is opt-in, never enabled implicitly.
+        if (process.env.AP_CREATION_VAULT_ENABLED === 'true') {
+            const {saveArtifact} =
+                await import('./services/ap-creation/artifactVault.mjs');
+
+            await saveArtifact({
+                accountId: verifiedCreationUser(req),
+                sessionId: String(req.get('x-session-id') || ''),
+                kind: artifact.kind,
+                mimeType: artifact.mimeType,
+                fileName: artifact.fileName,
+                userMessage: String(req.body?.message || ''),
+                buffer: artifact.buffer,
+                creationPlan: (
+                  process.env.AP_CREATION_PLAN_PERSIST_ENABLED === 'true' &&
+                  artifact.kind !== 'image'
+                ) ? (artifact.plan ?? null) : null
+            });
         }
+
     },
     chatEnabled: process.env.AP_CREATION_ENABLED === 'true' &&
         process.env.AP_CREATION_CHAT_ENABLED === 'true',
@@ -932,6 +968,7 @@ app.post('/ap/create', (req, res, next) => {
     if (process.env.AP_CREATION_ENABLED !== 'true') return res.sendStatus(404);
     return next();
 }, apUniversalCreator.handler);
+app.use('/ap/artifacts',createArtifactVaultRouter());
 // AP_MEDIA_CHAT_ENGINE_V1: media creation uses original chat, no Canvas hooks.
 const apMediaEngine = createMediaEngine({
   getContext: async (req, {sessionId}) => {
@@ -949,6 +986,40 @@ app.post('/chat', apMediaEngine.captureChat);
 app.post('/chat', apMediaEngine.chatMiddleware);
 
 app.post('/chat', apUniversalCreator.chatMiddleware);
+
+// AP_CREATION_ACCOUNT_MEMORY_V1
+// Future signed-in ordinary user prompts only.
+// Does not change existing response rendering or guest chat.
+app.post('/chat', async (req,res,next)=>{
+  if(process.env.AP_CREATION_ACCOUNT_MEMORY_ENABLED!=='true')
+    return next();
+
+  try{
+    const accountId=verifiedCreationUser(req);
+    const message=req.body?.message;
+
+    if(typeof message==='string'&&message.trim()){
+      const {recordOwnedConversationTurn}=
+        await import('./services/ap-creation/ownedConversationMemory.mjs');
+
+      await recordOwnedConversationTurn({
+        accountId,
+        sessionId:String(req.get('x-session-id')||''),
+        role:'user',
+        content:message
+      });
+    }
+  }catch(error){
+    // Never block ordinary chat or log private message content.
+    console.warn(
+      '[AP Creation Memory] capture unavailable:',
+      error?.code||'SKIPPED'
+    );
+  }
+
+  next();
+});
+
 
 app.post("/chat", async (req, res) => {
 
@@ -2272,6 +2343,38 @@ if (validSources.length > 0) {
     );
 
     res.end();
+
+    // AP_CREATION_ASSISTANT_REPLY_MEMORY_V1
+    // Run only after the existing response has completed.
+    // Never alter streaming, guest chat or APRISHA.
+    if(process.env.AP_CREATION_ACCOUNT_MEMORY_ENABLED==='true'){
+      try{
+        const {saveCompletedAssistantReply}=
+          await import('./services/ap-creation/completedReplyMemory.mjs');
+
+        const {recordOwnedConversationTurn}=
+          await import('./services/ap-creation/ownedConversationMemory.mjs');
+
+        const result=await saveCompletedAssistantReply({
+          req,
+          text:validateResponse(finalResponse),
+          enabled:true,
+          verifiedOwner:verifiedCreationUser,
+          record:recordOwnedConversationTurn
+        });
+
+        if(!result.stored && result.reason==='unavailable'){
+          console.warn(
+            '[AP Creation Memory] completed reply save unavailable'
+          );
+        }
+      }catch{
+        console.warn(
+          '[AP Creation Memory] completion hook unavailable'
+        );
+      }
+    }
+
 
 }
 

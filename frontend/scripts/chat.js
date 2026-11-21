@@ -877,6 +877,53 @@ async function apResilientFetch(
     const originalURL =
         String(url || "");
 
+
+    // AP_PREVIEW_CREATION_STAGING_V1
+    // Explicit opt-in on AP Synapse Vercel previews only.
+    // Never affects production domains or ordinary chat.
+    const apStagingPreview =
+        typeof window !== "undefined" &&
+        /-ap-synapse\.vercel\.app$/i.test(
+            window.location.hostname
+        ) &&
+        new URLSearchParams(
+            window.location.search
+        ).get("ap-create-staging") === "1";
+
+    if (
+        apStagingPreview &&
+        originalURL === AP_PRIMARY_API_BASE + "/chat" &&
+        typeof options.body === "string"
+    ) {
+        let creationText = "";
+
+        try {
+            const payload = JSON.parse(options.body);
+            creationText = String(payload?.message || "")
+                .trim()
+                .replace(/^please\s+/i, "");
+        } catch {
+            creationText = "";
+        }
+
+        const creationAction =
+            /^(create|generate|make|build|prepare|draft|design|produce|convert|revise|update|edit)\b/i
+                .test(creationText);
+
+        const documentFormat =
+            /\b(pdf|docx?|word document|powerpoint|pptx?|presentation|slides?|excel|xlsx|spreadsheet|workbook)\b/i
+                .test(creationText);
+
+        if (apStagingPreview) {
+            // Direct staging request: no production failover.
+            return fetch(
+                "https://ap-synapse-creation-staging.onrender.com/chat",
+                options
+            );
+        }
+    }
+
+
     let candidates = [
         originalURL
     ];
@@ -1656,6 +1703,55 @@ const thinkingInterval =
             }
         );
 
+
+        // AP_GUEST_15_SIGNIN_NOTICE_V1
+        if (response.status === 429) {
+            let guestError = null;
+            try {
+                guestError = (await response.clone().json())?.error;
+            } catch {}
+
+            if (
+                guestError === "CREATION_GUEST_SIGNIN_REQUIRED" ||
+                guestError === "CREATION_GUEST_LIMIT"
+            ) {
+                clearInterval(thinkingInterval);
+                document.getElementById("thinking")?.remove();
+
+                const card = document.createElement("div");
+                card.className = "ap-guest-creation-signin";
+                card.style.cssText =
+                    "margin:12px 0;padding:18px 20px;" +
+                    "border:1px solid rgba(191,157,92,.45);" +
+                    "border-radius:15px;background:rgba(22,22,22,.9);" +
+                    "color:#f4efe4;max-width:540px;";
+
+                const heading = document.createElement("div");
+                heading.style.cssText =
+                    "color:#d9bb79;font-size:16px;" +
+                    "font-weight:650;margin-bottom:8px;";
+
+                heading.textContent =
+                    guestError === "CREATION_GUEST_SIGNIN_REQUIRED"
+                    ? "Your 15 complimentary creations are complete"
+                    : "Guest creation capacity reached";
+
+                const description = document.createElement("div");
+                description.style.cssText =
+                    "font-size:14px;line-height:1.65;";
+
+                description.textContent =
+                    "To continue creating, click the AP icon in the " +
+                    "top-right corner and sign in with Google. " +
+                    "Access your account's creation allowance and enjoy " +
+                    "a more personalized AP Synapse experience.";
+
+                card.append(heading, description);
+                chatWindow.append(card);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+                return;
+            }
+        }
 
         if (!response.ok) {
             throw new Error("Server Error");

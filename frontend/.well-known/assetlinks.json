@@ -7,7 +7,9 @@
       "namespace": "android_app",
       "package_name": "com.apsynapse.app",
       "sha256_cert_fingerprints": [
-        "16:3D:CF:F1:3C:D1:3A:AE:A4:E9:7A:F4:8F:86:5E:FC:02:88:EC:A0:E9:B5:3F:13:BD:48:CE:E7:57:13:77:B4"
+        "16:3D:CF:F1:3C:D1:3A:AE:A4:E9:7A:F4:8F:86:5E:FC:02:88:EC:A0:E9:B5:3F:13:BD:48:CE:E7:57:13:77:B4",
+        "C4:EC:CC:13:C3:71:90:73:D0:9E:D9:07:43:EE:56:60:FE:39:F2:26:69:E3:5A:83:8D:45:D4:AE:30:98:98:92",
+        "65:9C:1C:E3:93:B7:BC:D3:80:49:67:D1:1B:0B:36:E0:EE:B0:80:08:9B:53:E4:0B:A3:83:09:F0:FD:9E:82:60"
       ]
     }
   }
